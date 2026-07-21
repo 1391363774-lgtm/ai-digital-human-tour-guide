@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>导览图坐标校准</title>
+<style>
+  body { font-family: sans-serif; background: #1a1a2e; color: #fff; padding: 20px; }
+  h2 { margin: 0 0 8px; }
+  .top { display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; }
+  .container { position: relative; display: inline-block; cursor: crosshair; border: 2px solid #f59e0b; }
+  .container img { display: block; max-height: 85vh; }
+  .marker { position: absolute; width: 14px; height: 14px; background: rgb(255 50 50 / 80%); border: 2px solid #fff; border-radius: 50%; transform: translate(-50%, -50%); pointer-events: none; }
+  .marker::after { content: attr(data-label); position: absolute; left: 18px; top: -4px; color: #fff; font-size: 11px; font-weight: 700; white-space: nowrap; text-shadow: 0 0 4px black; }
+  .panel { background: #16213e; border-radius: 12px; padding: 16px; max-width: 420px; max-height: 85vh; overflow-y: auto; }
+  .panel select { width: 100%; padding: 8px; border-radius: 8px; font-size: 14px; margin-bottom: 10px; }
+  .panel button { width: 100%; padding: 10px; border: 0; border-radius: 8px; background: #f59e0b; color: #111; font-weight: 700; cursor: pointer; margin-top: 6px; }
+  .panel button.copy { background: #10b981; }
+  .coords { font-size: 13px; color: #94a3b8; margin-top: 4px; }
+  pre { background: #0f172a; padding: 12px; border-radius: 8px; overflow-x: auto; font-size: 12px; color: #fde68a; }
+  .status { color: #f59e0b; font-size: 13px; margin-top: 10px; min-height: 20px; }
+</style>
+</head>
+<body>
+
+<h2>灵山胜境导览图 · 坐标校准器</h2>
+<p style="color:#94a3b8;margin-top:0">在左侧图片上<b style="color:#f59e0b">点击</b>每个景点的正确位置，圆点会自动移到你点的地方。全部校准完点击底部"复制坐标"。</p>
+
+<div class="top">
+  <div class="container" id="container">
+    <img src="/assets/maps/lingshan-guide.png" id="mapImg" alt="导览图">
+  </div>
+
+  <div class="panel">
+    <label>当前景点：</label>
+    <select id="spotSelect"></select>
+    <div class="coords" id="coordDisplay">点击图片选择位置</div>
+    <button onclick="nextSpot()">下一个景点 →</button>
+    <button onclick="resetAll()" style="background:#64748b;margin-top:4px">重置全部</button>
+    <button class="copy" onclick="copyResult()">复制坐标代码</button>
+    <div class="status" id="status"></div>
+    <pre id="output"></pre>
+  </div>
+</div>
+
+<script>
+const POINTS = [
+  '无尽意斋', '灵山大佛', '佛教文化博览馆', '祥符禅寺',
+  '阿育王柱', '百子戏弥勒', '降魔浮雕', '九龙灌浴',
+  '佛足坛', '菩提大道', '五智门', '灵山大照壁',
+  '五明桥', '灵山梵宫', '五印坛城', '曼飞龙塔'
+];
+
+// 默认坐标：当前代码里的值
+const defaults = {
+  '无尽意斋': [10.1, 24.6],
+  '灵山大佛': [22.8, 18.5],
+  '佛教文化博览馆': [26.6, 27.6],
+  '祥符禅寺': [37.9, 29.0],
+  '阿育王柱': [29.8, 36.6],
+  '百子戏弥勒': [42.6, 38.2],
+  '降魔浮雕': [27.9, 34.4],
+  '九龙灌浴': [29.0, 55.5],
+  '佛足坛': [29.8, 62.0],
+  '菩提大道': [29.0, 69.0],
+  '五智门': [35.6, 86.0],
+  '灵山大照壁': [34.2, 78.0],
+  '五明桥': [40.8, 81.5],
+  '灵山梵宫': [80.0, 39.8],
+  '五印坛城': [60.0, 60.0],
+  '曼飞龙塔': [87.5, 56.0],
+};
+
+const positions = {};
+const markers = {};
+const img = document.getElementById('mapImg');
+const container = document.getElementById('container');
+const select = document.getElementById('spotSelect');
+const coordDisplay = document.getElementById('coordDisplay');
+const output = document.getElementById('output');
+const status = document.getElementById('status');
+
+let current = POINTS[0];
+
+// Init
+POINTS.forEach(name => {
+  positions[name] = [...defaults[name]];
+  const opt = document.createElement('option');
+  opt.value = name;
+  opt.textContent = name;
+  select.appendChild(opt);
+
+  // Create marker
+  const el = document.createElement('div');
+  el.className = 'marker';
+  el.setAttribute('data-label', name);
+  container.appendChild(el);
+  markers[name] = el;
+});
+
+select.value = current;
+updateAllMarkers();
+updateDisplay();
+
+// Click on image
+container.addEventListener('click', (e) => {
+  const rect = img.getBoundingClientRect();
+  const xPct = ((e.clientX - rect.left) / rect.width * 100).toFixed(2);
+  const yPct = ((e.clientY - rect.top) / rect.height * 100).toFixed(2);
+  positions[current] = [parseFloat(xPct), parseFloat(yPct)];
+  updateAllMarkers();
+  updateDisplay();
+  status.textContent = `✅ ${current} → ${xPct}%, ${yPct}%`;
+});
+
+// Select change
+select.addEventListener('change', () => {
+  current = select.value;
+  updateDisplay();
+});
+
+function updateAllMarkers() {
+  POINTS.forEach(name => {
+    const [x, y] = positions[name];
+    const el = markers[name];
+    el.style.left = x + '%';
+    el.style.top = y + '%';
+    el.style.background = name === current
+      ? 'rgb(245 158 11 / 90%)'
+      : 'rgb(255 50 50 / 60%)';
+    el.style.width = name === current ? '18px' : '12px';
+    el.style.height = name === current ? '18px' : '12px';
+  });
+}
+
+function updateDisplay() {
+  const [x, y] = positions[current];
+  coordDisplay.textContent = `坐标：${x.toFixed(2)}%, ${y.toFixed(2)}%`;
+  generateOutput();
+}
+
+function nextSpot() {
+  const idx = POINTS.indexOf(current);
+  const next = POINTS[(idx + 1) % POINTS.length];
+  select.value = next;
+  current = next;
+  updateAllMarkers();
+  updateDisplay();
+  status.textContent = `切换到：${next}`;
+  // Scroll into view
+  markers[next].scrollIntoView?.({ behavior: 'smooth', block: 'center' });
+}
+
+function resetAll() {
+  POINTS.forEach(name => { positions[name] = [...defaults[name]]; });
+  current = POINTS[0];
+  select.value = current;
+  updateAllMarkers();
+  updateDisplay();
+  status.textContent = '已重置为默认坐标';
+}
+
+function generateOutput() {
+  let code = 'const GUIDE_MAP_POINTS: Record<string, { mapX: number; mapY: number; width?: number; height?: number }> = {\n';
+  for (const name of POINTS) {
+    const [x, y] = positions[name];
+    const w = (3.0).toFixed(1);
+    const h = (9.0).toFixed(1);
+    code += `  '${name}': { mapX: ${x.toFixed(1)}, mapY: ${y.toFixed(1)}, width: ${w}, height: ${h} },\n`;
+  }
+  code += '}';
+  output.textContent = code;
+}
+
+function copyResult() {
+  generateOutput();
+  navigator.clipboard.writeText(output.textContent).then(() => {
+    status.textContent = '📋 坐标已复制到剪贴板！粘贴到 MapView.vue 替换 GUIDE_MAP_POINTS';
+  }).catch(() => {
+    status.textContent = '复制失败，请手动选中上方代码复制';
+  });
+}
+
+generateOutput();
+</script>
+</body>
+</html>

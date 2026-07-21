@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+.mypy_cache/
+.ruff_cache/
+
+# Node
+node_modules/
+dist/
+coverage/
+
+# Env
+.env
+.env.*
+!.env.example
+
+# Data and generated assets
+data/vector_store/*
+!data/vector_store/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+uploads/
+logs/
+
+# IDE
+.idea/
+.vscode/
+*.local
+
+# Build / packaging artifacts (PyInstaller etc.)
+build_pyinstaller/
+dist_exe/
+*.exe
+
+# Large / generated assets not needed in repo
+*.zip
+*.7z
+*.rar

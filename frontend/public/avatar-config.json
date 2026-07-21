@@ -1,0 +1,65 @@
+{
+  "avatar": {
+    "name": "灵山导游·灵汐",
+    "engine": "live2d",
+    "avatarImage": "",
+    "greeting": "你好，我是灵山胜境 AI 数字人导游。我可以讲景点故事、推荐路线，也可以用语音为你讲解。",
+    "appearance": {
+      "hairColor": "#27111e",
+      "hairStyle": "long",
+      "eyeColor": "#7c4a2f",
+      "skinColor": "#ffd9bf",
+      "outfitStyle": "guide-hanfu",
+      "outfitPrimary": "#111a4f",
+      "outfitAccent": "#f6c453",
+      "accessories": [
+        "golden-hairpin",
+        "gold-earrings",
+        "lotus-brooch",
+        "purple-shawl"
+      ]
+    },
+    "voice": {
+      "provider": "edge-tts",
+      "voiceName": "zh-CN-XiaoxiaoNeural",
+      "label": "晓晓自然女声",
+      "rate": 1
+    },
+    "image3d": {
+      "landmarks": {
+        "faceLeft": 25,
+        "faceTop": 16,
+        "faceWidth": 50,
+        "faceHeight": 38,
+        "leftEyeX": 38,
+        "leftEyeY": 31,
+        "rightEyeX": 62,
+        "rightEyeY": 31,
+        "eyeWidth": 10,
+        "eyeHeight": 4.8,
+        "mouthX": 50.5,
+        "mouthY": 41.2,
+        "mouthWidth": 7.8,
+        "mouthHeight": 4.2
+      }
+    },
+    "live2d": {
+      "modelUrl": "/models/haru/Haru.model3.json",
+      "idleMotionGroup": "Idle",
+      "expressions": [
+        "F01",
+        "F03",
+        "F06"
+      ],
+      "modelMap": {
+        "guide-hanfu": "/models/haru/Haru.model3.json",
+        "ceremonial": "/models/hiyori/Hiyori.model3.json",
+        "modern": "/models/mark/Mark.model3.json"
+      }
+    },
+    "background": {
+      "gradient": "radial-gradient(circle at 30% 20%, rgb(251 191 36 / 12%), transparent 32%), linear-gradient(135deg, #0f172a, #1c1917)",
+      "haloColor": "rgb(251 191 36 / 35%)"
+    }
+  }
+}
