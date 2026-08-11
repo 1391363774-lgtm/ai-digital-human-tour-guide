@@ -1,0 +1,73 @@
+{
+  "data": [
+    {
+      "id": "page-dashboard",
+      "title": "数据大屏",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1752582000000,
+      "canvasData": {
+        "x": 0,
+        "y": 0,
+        "group": 0
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/dashboard.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-knowledge",
+      "title": "知识库管理",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1752582000000,
+      "canvasData": {
+        "x": 620,
+        "y": 0,
+        "group": 0
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/knowledge.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-avatar",
+      "title": "数字人管理",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1752582000000,
+      "canvasData": {
+        "x": 1240,
+        "y": 0,
+        "group": 0
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/avatar.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-analytics",
+      "title": "游客分析",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1752582000000,
+      "canvasData": {
+        "x": 1860,
+        "y": 0,
+        "group": 0
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/analytics.html",
+        "interactions": []
+      }
+    }
+  ],
+  "config": {
+    "autoLayout": true,
+    "deviceType": "desktop",
+    "projectName": "灵山胜境AI数字人导览 - 管理后台"
+  }
+}

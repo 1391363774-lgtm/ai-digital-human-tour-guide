@@ -1,0 +1,1695 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>灵小仙 · 禅意导览 - 灵山胜境AI数字人导览系统</title>
+    <style id="theme-vars">
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap');
+
+/* ============================================================
+ * 灵山胜境AI数字人导览系统 - Brand Colors & Typography
+ * ============================================================ */
+
+:root {
+  /* ---- Primary: 金色系 (Gold) ---- */
+  --color-primary-100: #F5EDD6;
+  --color-primary-200: #EBDCB0;
+  --color-primary-300: #DFC98A;
+  --color-primary-400: #D4B96E;
+  --color-primary-500: #C5A55A;
+  --color-primary-600: #A88B3E;
+  --color-primary-700: #8A7130;
+  --color-primary-800: #6C5724;
+  --color-primary-900: #503F1A;
+
+  /* ---- Secondary: 藏青 / 深蓝 (Deep Blue) ---- */
+  --color-secondary-100: #C5CEE0;
+  --color-secondary-200: #96A6C4;
+  --color-secondary-300: #677EA8;
+  --color-secondary-400: #3D5678;
+  --color-secondary-500: #1B2A4A;
+  --color-secondary-600: #152240;
+  --color-secondary-700: #101A33;
+  --color-secondary-800: #0A1226;
+  --color-secondary-900: #050A19;
+
+  /* ---- Neutral: 白 / 灰 ---- */
+  --color-neutral-0:   #FFFFFF;
+  --color-neutral-50:  #FAFAF5;
+  --color-neutral-100: #F5F5F0;
+  --color-neutral-200: #E5E5DD;
+  --color-neutral-300: #D0D0C5;
+  --color-neutral-400: #A3A395;
+  --color-neutral-500: #767665;
+  --color-neutral-600: #595948;
+  --color-neutral-700: #3D3D31;
+  --color-neutral-800: #222218;
+  --color-neutral-900: #0F0F0A;
+
+  /* ---- Accent: 朱砂红 (Vermilion) ---- */
+  --color-accent-100: #F2D1D0;
+  --color-accent-200: #E8A3A1;
+  --color-accent-300: #DE7573;
+  --color-accent-400: #D46462;
+  --color-accent-500: #C25450;
+  --color-accent-600: #A34340;
+  --color-accent-700: #843330;
+  --color-accent-800: #652320;
+  --color-accent-900: #461312;
+
+  /* ---- Semantic Tokens ---- */
+  --color-bg-primary:     var(--color-neutral-0);
+  --color-bg-secondary:   var(--color-neutral-100);
+  --color-bg-deep:        var(--color-secondary-500);
+  --color-bg-card:        var(--color-neutral-0);
+  --color-bg-overlay:     rgba(27, 42, 74, 0.65);
+
+  --color-text-primary:   var(--color-secondary-500);
+  --color-text-secondary: var(--color-neutral-700);
+  --color-text-inverse:   var(--color-neutral-0);
+  --color-text-accent:    var(--color-accent-500);
+  --color-text-gold:       var(--color-primary-500);
+
+  --color-border-default: var(--color-neutral-200);
+  --color-border-gold:     var(--color-primary-400);
+  --color-border-subtle:   var(--color-neutral-100);
+
+  /* ---- Typography ---- */
+  --font-family-heading: 'Noto Serif SC', 'Source Han Serif SC', 'Songti SC', serif;
+  --font-family-body:    'Noto Sans SC', 'Source Han Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+
+  --font-size-xs:   0.6875rem;
+  --font-size-sm:   0.75rem;
+  --font-size-base: 0.875rem;
+  --font-size-md:   1rem;
+  --font-size-lg:   1.125rem;
+  --font-size-xl:   1.25rem;
+  --font-size-2xl:  1.5rem;
+  --font-size-3xl:  1.875rem;
+  --font-size-4xl:  2.25rem;
+
+  --font-weight-regular: 400;
+  --font-weight-medium:  500;
+  --font-weight-semibold: 600;
+  --font-weight-bold:    700;
+
+  --line-height-tight:   1.25;
+  --line-height-normal:  1.6;
+  --line-height-relaxed: 1.8;
+
+  --letter-spacing-tight:  -0.02em;
+  --letter-spacing-normal:  0;
+  --letter-spacing-wide:    0.05em;
+  --letter-spacing-wider:   0.1em;
+
+  --space-0:   0;
+  --space-1:   0.25rem;
+  --space-2:   0.5rem;
+  --space-3:   0.75rem;
+  --space-4:   1rem;
+  --space-5:   1.25rem;
+  --space-6:   1.5rem;
+  --space-8:   2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   12px;
+  --radius-xl:   16px;
+  --radius-full: 9999px;
+
+  --shadow-sm:  0 1px 2px rgba(27, 42, 74, 0.06);
+  --shadow-md:  0 4px 8px rgba(27, 42, 74, 0.08);
+  --shadow-lg:  0 8px 24px rgba(27, 42, 74, 0.12);
+  --shadow-xl:  0 16px 48px rgba(27, 42, 74, 0.16);
+  --shadow-gold: 0 4px 16px rgba(197, 165, 90, 0.25);
+
+  --transition-fast:   150ms ease;
+  --transition-normal: 250ms ease;
+  --transition-slow:   400ms ease;
+
+  --z-base:     0;
+  --z-above:    10;
+  --z-dropdown: 100;
+  --z-sticky:   200;
+  --z-overlay:  300;
+  --z-modal:    400;
+  --z-toast:    500;
+}
+
+body {
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-normal);
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-family-heading);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  color: var(--color-text-primary);
+}
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <style type="text/tailwindcss">
+  @layer base {
+    body { background: var(--color-bg-primary); color: var(--color-text-primary); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+      /* ---- Page Layout ---- */
+      body {
+        overflow: hidden;
+        height: 100dvh;
+      }
+
+      /* ---- Chat bubble animations ---- */
+      @keyframes fade-slide-up {
+        from { opacity: 0; transform: translateY(12px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .chat-bubble-animate {
+        animation: fade-slide-up 0.4s ease-out forwards;
+      }
+
+      /* Quick question hover */
+      .quick-question {
+        transition: all var(--transition-normal);
+        cursor: pointer;
+      }
+      .quick-question:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-gold);
+      }
+
+      /* Voice button pulse */
+      @keyframes voice-pulse {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(197, 165, 90, 0.4); }
+        50% { box-shadow: 0 0 0 8px rgba(197, 165, 90, 0); }
+      }
+      .voice-btn-pulse {
+        animation: voice-pulse 2s ease-in-out infinite;
+      }
+
+      /* Online status dot */
+      @keyframes online-pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+      }
+      .online-dot {
+        animation: online-pulse 2s ease-in-out infinite;
+      }
+
+      /* ---- 3D Mascot (桌宠) Styles ---- */
+      #ai-mascot {
+        position: fixed;
+        right: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 500;
+        cursor: grab;
+        user-select: none;
+        touch-action: none;
+        filter: drop-shadow(0 4px 20px rgba(197, 165, 90, 0.5));
+        transition: transform 0.3s ease, filter 0.3s ease;
+      }
+      #ai-mascot.dragging {
+        cursor: grabbing;
+        transition: none;
+        transform: scale(0.95);
+      }
+      #ai-mascot.dragging #mascot-speech-bubble {
+        opacity: 0;
+      }
+
+      #threejs-container {
+        width: 140px;
+        height: 180px;
+        position: relative;
+        border-radius: 0;
+        overflow: hidden;
+      }
+      #threejs-container canvas {
+        width: 100% !important;
+        height: 100% !important;
+      }
+
+      /* Mascot golden glow ring */
+      @keyframes breathe-glow {
+        0%, 100% {
+          box-shadow:
+            0 0 20px rgba(197, 165, 90, 0.4),
+            0 0 40px rgba(197, 165, 90, 0.2),
+            0 0 60px rgba(197, 165, 90, 0.1),
+            inset 0 0 15px rgba(197, 165, 90, 0.15);
+        }
+        50% {
+          box-shadow:
+            0 0 30px rgba(197, 165, 90, 0.6),
+            0 0 60px rgba(197, 165, 90, 0.35),
+            0 0 90px rgba(197, 165, 90, 0.15),
+            inset 0 0 20px rgba(197, 165, 90, 0.25);
+        }
+      }
+      .mascot-ring {
+        animation: breathe-glow 3s ease-in-out infinite;
+        border-radius: 50%;
+        padding: 3px;
+        background: linear-gradient(135deg, var(--color-primary-300), var(--color-primary-600), var(--color-primary-300));
+      }
+
+      /* Mascot label */
+      #mascot-label {
+        text-align: center;
+        font-family: var(--font-family-heading);
+        font-size: var(--font-size-sm);
+        color: var(--color-primary-300);
+        letter-spacing: var(--letter-spacing-wider);
+        margin-top: 8px;
+        text-shadow: 0 0 10px rgba(197, 165, 90, 0.5);
+        font-weight: var(--font-weight-semibold);
+      }
+
+      /* Mascot speech bubble */
+      #mascot-speech-bubble {
+        display: none;
+        position: absolute;
+        top: -50px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--color-secondary-700);
+        border: 1px solid rgba(197, 165, 90, 0.3);
+        color: var(--color-primary-200);
+        padding: 6px 14px;
+        border-radius: var(--radius-lg);
+        font-size: var(--font-size-xs);
+        white-space: nowrap;
+        max-width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        box-shadow: var(--shadow-lg);
+        z-index: 510;
+        transition: opacity 0.3s ease;
+      }
+      #mascot-speech-bubble::after {
+        content: '';
+        position: absolute;
+        bottom: -6px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        height: 0;
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+        border-top: 6px solid var(--color-secondary-700);
+      }
+
+      /* Expression overlay on 3D */
+      .expr-default { display: block; }
+      .expr-thinking { display: none; }
+      .expr-speaking { display: none; }
+
+      .state-thinking .expr-default { display: none; }
+      .state-thinking .expr-thinking { display: block; }
+      .state-thinking .expr-speaking { display: none; }
+
+      .state-speaking .expr-default { display: none; }
+      .state-speaking .expr-thinking { display: none; }
+      .state-speaking .expr-speaking { display: block; }
+
+      /* Thinking dots animation */
+      @keyframes dot-bounce {
+        0%, 80%, 100% { opacity: 0.3; transform: translateY(0); }
+        40% { opacity: 1; transform: translateY(-4px); }
+      }
+      .thinking-dot {
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--color-primary-400);
+        margin: 0 2px;
+      }
+      .thinking-dot:nth-child(1) { animation: dot-bounce 1.2s infinite 0s; }
+      .thinking-dot:nth-child(2) { animation: dot-bounce 1.2s infinite 0.2s; }
+      .thinking-dot:nth-child(3) { animation: dot-bounce 1.2s infinite 0.4s; }
+
+      /* Speaking mouth animation */
+      @keyframes mouth-move {
+        0%, 100% { rx: 5; ry: 3; }
+        25% { rx: 4; ry: 6; }
+        50% { rx: 6; ry: 4; }
+        75% { rx: 4; ry: 5; }
+      }
+      .speaking-mouth {
+        animation: mouth-move 0.6s ease-in-out infinite;
+      }
+
+      /* TTS toggle button */
+      .tts-toggle {
+        transition: all var(--transition-fast);
+      }
+      .tts-toggle.active {
+        color: var(--color-primary-300) !important;
+      }
+      .tts-toggle:not(.active) {
+        color: var(--color-secondary-400) !important;
+      }
+
+      /* Background decorative particles */
+      @keyframes bg-float {
+        0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.06; }
+        50% { transform: translateY(-20px) rotate(180deg); opacity: 0.12; }
+      }
+      .bg-particle {
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background: var(--color-primary-400);
+        pointer-events: none;
+        animation: bg-float 6s ease-in-out infinite;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased flex flex-col" style="height: 100dvh; background: var(--color-secondary-800);">
+
+    <!-- ========== 顶部栏 ========== -->
+    <header class="flex items-center justify-between px-4 py-3 flex-shrink-0" style="background: var(--color-secondary-700); z-index: var(--z-sticky); border-bottom: 1px solid rgba(197, 165, 90, 0.1);">
+        <button class="flex items-center gap-1 text-sm no-underline hover:opacity-80 transition-opacity" style="color: var(--color-primary-300);" onclick="location.href='home.html'">
+            <i data-lucide="chevron-left" style="width: 20px; height: 20px;"></i>
+            <span style="font-size: var(--font-size-sm);">返回</span>
+        </button>
+        <div class="flex items-center gap-2">
+            <span class="online-dot" style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #4ade80;"></span>
+            <span style="font-family: var(--font-family-heading); font-size: var(--font-size-md); font-weight: var(--font-weight-semibold); color: var(--color-primary-300); letter-spacing: var(--letter-spacing-wide);">
+                灵小仙 · 禅意导览
+            </span>
+        </div>
+        <button class="flex items-center justify-center hover:opacity-80 transition-opacity" style="color: var(--color-primary-300);">
+            <i data-lucide="settings" style="width: 20px; height: 20px;"></i>
+        </button>
+    </header>
+
+    <!-- ========== 上半屏：数字人展示区 ========== -->
+    <section id="avatar-section" class="flex-shrink-0 relative overflow-hidden" style="background: linear-gradient(180deg, var(--color-secondary-900) 0%, var(--color-secondary-800) 100%); padding: 2rem 1rem 1.5rem;">
+        <!-- 装饰光晕 -->
+        <div class="absolute" style="top: -40px; left: 50%; transform: translateX(-50%); width: 200px; height: 200px; border-radius: 50%; background: radial-gradient(circle, rgba(197,165,90,0.15), transparent 70%); pointer-events: none;"></div>
+
+        <div class="relative z-10 flex flex-col items-center">
+            <!-- 头像 -->
+            <div class="relative mb-3">
+                <div class="w-20 h-28 overflow-hidden" style="border-radius: 12px; box-shadow: 0 0 25px rgba(197,165,90,0.4), 0 0 50px rgba(197,165,90,0.15);">
+                    <img src="../assets/xiuxian-avatar.jpg" alt="灵小仙" class="w-full h-full object-cover">
+                </div>
+                <!-- 在线指示 -->
+                <div class="absolute bottom-1.5 right-1.5 w-4 h-4 rounded-full" style="background: #4ade80; border: 2px solid var(--color-secondary-800); box-shadow: 0 0 6px rgba(74,222,128,0.6);"></div>
+            </div>
+
+            <!-- 名字和状态 -->
+            <h2 style="font-family: var(--font-family-heading); font-size: var(--font-size-xl); color: var(--color-primary-300); font-weight: var(--font-weight-bold); letter-spacing: var(--letter-spacing-wider); margin-bottom: 2px;">灵小仙</h2>
+            <p style="font-size: var(--font-size-xs); color: var(--color-secondary-300); margin-bottom: 1rem;">AI数字人导游 · 在线</p>
+
+            <!-- 快捷问题 -->
+            <div class="flex flex-wrap justify-center gap-2">
+                <button class="quick-q px-3 py-1.5 rounded-full text-xs" style="background: rgba(197,165,90,0.12); border: 1px solid rgba(197,165,90,0.25); color: var(--color-primary-200);" onclick="askQuestion('灵山大佛有多高？')">
+                    灵山大佛有多高？
+                </button>
+                <button class="quick-q px-3 py-1.5 rounded-full text-xs" style="background: rgba(197,165,90,0.12); border: 1px solid rgba(197,165,90,0.25); color: var(--color-primary-200);" onclick="askQuestion('推荐一条亲子路线')">
+                    推荐亲子路线
+                </button>
+                <button class="quick-q px-3 py-1.5 rounded-full text-xs" style="background: rgba(197,165,90,0.12); border: 1px solid rgba(197,165,90,0.25); color: var(--color-primary-200);" onclick="askQuestion('你是谁？')">
+                    你是谁？
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== 对话区 ========== -->
+    <main id="chatArea" class="flex-1 overflow-y-auto px-4 py-4 space-y-4 no-scrollbar relative" style="background: var(--color-secondary-800);">
+
+        <!-- 背景装饰粒子 -->
+        <div class="bg-particle" style="left: 10%; top: 15%; animation-delay: 0s;"></div>
+        <div class="bg-particle" style="right: 15%; top: 25%; animation-delay: 1.5s;"></div>
+        <div class="bg-particle" style="left: 30%; top: 45%; animation-delay: 3s;"></div>
+        <div class="bg-particle" style="right: 25%; top: 60%; animation-delay: 0.8s;"></div>
+        <div class="bg-particle" style="left: 50%; top: 80%; animation-delay: 2.2s;"></div>
+        <div class="bg-particle" style="left: 70%; top: 10%; animation-delay: 4s;"></div>
+        <div class="bg-particle" style="right: 40%; top: 50%; animation-delay: 1s;"></div>
+        <div class="bg-particle" style="left: 20%; top: 70%; animation-delay: 3.5s;"></div>
+
+        <!-- 灵小仙欢迎消息 -->
+        <div class="flex gap-2 chat-bubble-animate" style="opacity: 0;">
+            <div class="flex-shrink-0 flex items-center justify-center" style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--color-primary-500), var(--color-primary-700)); box-shadow: 0 0 12px rgba(197, 165, 90, 0.3);">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="2" fill="#F5EDD6"/><circle cx="17" cy="8" r="2" fill="#F5EDD6"/><path d="M10 16 Q14 20 18 16" stroke="#F5EDD6" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+            </div>
+            <div class="flex flex-col max-w-[85%]">
+                <span class="mb-1" style="font-size: var(--font-size-xs); color: var(--color-primary-400); font-weight: var(--font-weight-medium);">灵小仙</span>
+                <div class="px-4 py-3 rounded-2xl rounded-tl-sm" style="background: var(--color-secondary-700); border: 1px solid rgba(197, 165, 90, 0.1); color: var(--color-neutral-100); font-size: var(--font-size-sm); line-height: var(--line-height-relaxed);">
+                    阿弥陀佛，善哉善哉！我是灵山胜境的AI数字人导游灵小仙，很高兴为您服务。我不仅熟悉灵山胜境的每一处景点、每一条路线，还能和您聊聊各种有趣的话题呢！<br><br>您可以问我关于景区的任何问题，也可以试试把我当朋友聊聊天。试试拖动我到页面任意位置吧~
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ========== 3D可拖动桌宠 ========== -->
+    <div id="ai-mascot">
+        <div id="mascot-speech-bubble" style="display:none; position:absolute; top:-30px; left:50%; transform:translateX(-50%); background:rgba(27,42,74,0.9); color:var(--color-primary-200); padding:4px 12px; border-radius:12px; font-size:11px; white-space:nowrap; border:1px solid rgba(197,165,90,0.3); pointer-events:none;"></div>
+        <div id="threejs-container">
+            <img id="mascot-fallback-img" src="../assets/xiuxian-avatar.jpg" alt="灵小仙" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:12px;">
+        </div>
+        <div id="mascot-label" style="text-align:center; margin-top:4px; font-size:11px; color:var(--color-primary-300); font-family:var(--font-family-heading); letter-spacing:0.1em; text-shadow:0 1px 4px rgba(0,0,0,0.5); pointer-events:none;">灵小仙</div>
+    </div>
+
+    <!-- ========== 底部输入区 ========== -->
+    <footer class="flex-shrink-0 px-4 pt-3 pb-4" style="background: var(--color-secondary-800); border-top: 1px solid rgba(197, 165, 90, 0.1);">
+        <!-- 输入行 -->
+        <div class="flex items-center gap-2">
+            <!-- 语音识别按钮 -->
+            <button id="voice-input-btn" class="voice-btn-pulse flex items-center justify-center flex-shrink-0" style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--color-primary-500), var(--color-primary-600)); color: var(--color-neutral-0); border: none; cursor: pointer;">
+                <i data-lucide="mic" style="width: 18px; height: 18px;"></i>
+            </button>
+
+            <!-- 输入框 -->
+            <div class="flex-1 relative">
+                <input
+                    id="chatInput"
+                    type="text"
+                    placeholder="请输入您的问题..."
+                    class="w-full px-4 py-2.5 rounded-full outline-none"
+                    style="background: var(--color-secondary-700); border: 1px solid rgba(197, 165, 90, 0.2); color: var(--color-neutral-100); font-size: var(--font-size-sm); caret-color: var(--color-primary-400);"
+                >
+            </div>
+
+            <!-- 发送按钮 -->
+            <button id="sendBtn" class="flex items-center justify-center flex-shrink-0" style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--color-primary-500), var(--color-primary-600)); color: var(--color-neutral-0); border: none; cursor: pointer;">
+                <i data-lucide="send" style="width: 16px; height: 16px;"></i>
+            </button>
+
+            <!-- 语音播放开关按钮 -->
+            <button id="ttsToggle" class="tts-toggle active flex items-center justify-center flex-shrink-0" style="width: 40px; height: 40px; border-radius: 50%; background: var(--color-secondary-700); border: 1px solid rgba(197, 165, 90, 0.2); cursor: pointer;" title="语音播放开关">
+                <i data-lucide="volume-2" style="width: 18px; height: 18px;"></i>
+            </button>
+        </div>
+    </footer>
+
+    <script>
+    // ========================================================
+    // 初始化 Lucide 图标
+    // ========================================================
+    lucide.createIcons();
+
+    // ========================================================
+    // 知识库数据（从外部JSON文件加载）
+    // ========================================================
+    var spotsData = {};
+    var routesData = [];
+    var baseInfoData = {};
+    var knowledgeLoaded = false;
+
+    // 加载知识库JSON
+    fetch('../assets/knowledge.json').then(function(r) {
+        return r.json();
+    }).then(function(data) {
+        spotsData = data.spots;
+        routesData = data.routes;
+        baseInfoData = data.baseInfo;
+        knowledgeLoaded = true;
+        console.log('知识库加载完成，共' + Object.keys(spotsData).length + '个景点');
+    }).catch(function(err) {
+        console.error('知识库加载失败:', err);
+    });
+
+    // ========================================================
+    // 智能问答引擎（含通用AI回答能力）
+    // ========================================================
+    function findAnswer(question) {
+        // 知识库未加载时
+        if (!knowledgeLoaded) {
+            return '知识库正在加载中，请稍后再试~';
+        }
+
+        var q = question.toLowerCase().replace(/[？?!！。，、\s]/g, '');
+
+        // 1. 自我介绍 / 打招呼
+        if (/你是谁|介绍一下你|你叫什么|自我介绍|你是什么|什么是ai|你能回答什么/.test(q) || /^你好$/.test(q) || /^嗨$/.test(q) || /^hi$/.test(q)) {
+            return '阿弥陀佛，善哉善哉！我是灵山胜境的AI数字人导游"灵小仙"，由灵山胜境景区精心打造。我基于大语言模型技术，具备自然语言理解和生成能力，可以回答各种问题。\n\n在灵山胜境导览方面，我拥有专业的景区知识库：\n- 讲解22处景点的详细历史文化\n- 推荐3条精品游览路线\n- 解答门票、交通、开放时间、餐饮住宿等实用问题\n- 介绍佛教文化知识\n\n对于景区之外的问题，我也会尽力为您提供有用的回答。不过请记住，我的回答仅供参考，重要信息请以官方渠道为准哦~';
+        }
+
+        if (/你好|在吗|在不在/.test(q) && q.length < 6) {
+            return '阿弥陀佛，善哉善哉！欢迎来到灵山胜境。我是您的专属AI导游灵小仙。灵山胜境位于无锡太湖之滨，是国家5A级旅游景区，拥有灵山大佛、梵宫、拈花湾等众多著名景点。\n\n您可以问我关于景区的任何问题，也可以和我聊聊其他话题。请问您想了解什么呢？';
+        }
+
+        // 2. 景点名称精确匹配（遍历所有景点名称和别名）
+        var matchedSpot = null;
+        var spotKeys = Object.keys(spotsData);
+        for (var i = 0; i < spotKeys.length; i++) {
+            var spot = spotsData[spotKeys[i]];
+            if (q.indexOf(spot.name.replace(/[（()）]/g, '').toLowerCase()) !== -1) {
+                matchedSpot = spot;
+                break;
+            }
+            for (var j = 0; j < spot.aliases.length; j++) {
+                if (q.indexOf(spot.aliases[j]) !== -1 && spot.aliases[j].length >= 2) {
+                    matchedSpot = spot;
+                    break;
+                }
+            }
+            if (matchedSpot) break;
+        }
+
+        if (matchedSpot) {
+            return '【' + matchedSpot.name + '】\n\n' + matchedSpot.intro + '\n\n文化内涵：' + matchedSpot.culture + '\n\n亮点：' + matchedSpot.highlights.join('\n') + '\n\n游览提示：' + matchedSpot.tips;
+        }
+
+        // 3. 路线匹配
+        if ((/重点讲述|详细讲解|详细说明|详细说说|详细描述|详细介绍/.test(q)) && /第一条|路线一|第一条路线/.test(q)) {
+            return formatRouteDetail(0);
+        }
+        if ((/重点讲述|详细讲解|详细说明|详细说说|详细描述|详细介绍/.test(q)) && /第二条|路线二|第二条路线/.test(q)) {
+            return formatRouteDetail(1);
+        }
+        if ((/重点讲述|详细讲解|详细说明|详细说说|详细描述|详细介绍/.test(q)) && /第三条|路线三|第三条路线/.test(q)) {
+            return formatRouteDetail(2);
+        }
+
+        if ((/路线|推荐|怎么玩|安排|计划|攻略/.test(q)) && /历史|文化|深度/.test(q)) {
+            return formatRouteDetail(0);
+        }
+        if ((/路线|推荐|怎么玩|安排|计划|攻略/.test(q)) && /自然|风光|风景|拍照|摄影/.test(q)) {
+            return formatRouteDetail(1);
+        }
+        if ((/路线|推荐|怎么玩|安排|计划|攻略/.test(q)) && /亲子|小孩|孩子|带娃|家庭|4小时/.test(q)) {
+            return formatRouteDetail(2);
+        }
+
+        if (/第一条|路线一|历史文化(?!.*自然)/.test(q)) {
+            return formatRouteDetail(0);
+        }
+        if (/第二条|路线二|自然风光/.test(q)) {
+            return formatRouteDetail(1);
+        }
+        if (/第三条|路线三|亲子轻松/.test(q)) {
+            return formatRouteDetail(2);
+        }
+
+        if (/^路线$|^推荐$|有什么路线|有哪些路线|推荐路线|全部路线|所有路线|路线推荐/.test(q)) {
+            return formatRouteOverview();
+        }
+
+        // 4. 门票
+        if (/门票|票价|多少钱|价格|免费|免票|半价/.test(q)) {
+            return '【灵山胜境门票信息】\n\n' + baseInfoData.ticket + '\n\n' + baseInfoData.freeTicket + '\n\n建议提前在灵山胜境官方微信公众号或官网预约购票，旺季可能限流。景区最大瞬时承载量31500人，建议错峰出行。';
+        }
+
+        // 5. 开放时间 / 表演时间
+        if (/几点|时间|开放|关门|关闭|场次|表演/.test(q)) {
+            return '【灵山胜境开放时间】\n\n' + baseInfoData.openTime + '\n\n【主要表演/活动时间】\n\n九龙灌浴：10:00 / 11:30 / 14:00 / 16:00\n灵山吉祥颂（梵宫圣坛）：10:35 / 11:30 / 14:00 / 16:00\n拈花湾开园仪式：每日 9:30\n拈花堂禅修讲座：10:30 / 15:30\n五灯湖禅行灯光秀：19:00 / 20:00\n\n建议上午9点前入园，可以合理安排时间观看各场表演。';
+        }
+
+        // 6. 交通
+        if (/交通|怎么去|公交|地铁|自驾|停车|地址|在哪|哪里/.test(q)) {
+            return '【交通指南】\n\n' + baseInfoData.transport;
+        }
+
+        // 7. 餐饮
+        if (/吃饭|餐厅|素斋|美食|餐饮|小吃|食物|午餐|晚餐/.test(q)) {
+            return '【餐饮信息】\n\n' + baseInfoData.dining;
+        }
+
+        // 8. 住宿
+        if (/住宿|酒店|住哪|过夜|住/.test(q)) {
+            return '【住宿推荐】\n\n' + baseInfoData.accommodation;
+        }
+
+        // 9. 五方五佛
+        if (/五方五佛|五智|五方佛|五种智慧/.test(q)) {
+            return '【五方五佛】\n\n' + baseInfoData.fiveBuddhas;
+        }
+
+        // 10. 拈花微笑 / 禅宗
+        if (/拈花微笑|禅宗|迦叶|拈花.*典故|禅宗.*起源|灵山法会/.test(q)) {
+            return '【拈花微笑——禅宗的起源】\n\n' + baseInfoData.zenStory;
+        }
+
+        // 11. 三大语系
+        if (/三大语系|三大佛教|汉传.*藏传|南传/.test(q)) {
+            return '【佛教三大语系汇聚】\n\n' + baseInfoData.threeTraditions;
+        }
+
+        // 12. 承载量
+        if (/承载|人多|拥挤|限流|客流/.test(q)) {
+            return '【景区承载量】\n\n' + baseInfoData.capacity + '\n\n建议选择工作日或淡季出行，避开节假日高峰。旺季（五一、十一、春节）建议提前购票并尽早入园。';
+        }
+
+        // 13. 景区概况
+        if (/灵山胜境|景区|概况|简介|5A|五A/.test(q) && !/大佛|梵宫|九龙/.test(q)) {
+            return '【灵山胜境景区概况】\n\n灵山胜境位于江苏省无锡市太湖西北部马山镇，是国家AAAAA级旅游景区。景区以佛教文化为主题，集自然山水、园林景观、佛教艺术于一体。\n\n景区主要分为灵山景区和拈花湾禅意小镇两大部分：\n\n灵山景区拥有灵山大佛（世界最高露天青铜释迦牟尼立像）、灵山梵宫（东方卢浮宫）、九龙灌浴、五印坛城、曼飞龙塔等22处景点，汇聚了汉传、藏传、南传三大佛教语系的代表建筑。\n\n拈花湾禅意小镇以"拈花微笑"的禅宗典故为主题，拥有拈花广场、梵天花海、香月花街、拈花堂、五灯湖、鹿鸣谷等景点，是休闲度假的禅意胜地。';
+        }
+
+        // 14. 通用模糊匹配
+        var fuzzyMap = [
+            {keywords: ['照壁', '壁'], spotId: 'LS-001'},
+            {keywords: ['桥', '五明'], spotId: 'LS-002'},
+            {keywords: ['佛足', '足印', '32种', '吉祥图案'], spotId: 'LS-003'},
+            {keywords: ['门', '六柱', '六度', '波罗蜜'], spotId: 'LS-004'},
+            {keywords: ['菩提', '树', '斯里兰卡', '觉悟'], spotId: 'LS-005'},
+            {keywords: ['九龙', '灌浴', '莲花', '太子', '圣水', '喷水'], spotId: 'LS-006'},
+            {keywords: ['降魔', '浮雕', '魔障', '波旬'], spotId: 'LS-007'},
+            {keywords: ['阿育', '石柱', '四狮', '狮子', '孔雀'], spotId: 'LS-008'},
+            {keywords: ['弥勒', '百子', '大肚', '笑口', '小孩喜欢', '顽童'], spotId: 'LS-009'},
+            {keywords: ['祥符', '禅寺', '禅钟', '银杏', '窥基', '千年'], spotId: 'LS-010'},
+            {keywords: ['大佛', '88', '铜', '释迦牟尼', '无畏印', '与愿印', '台阶', '抱佛脚', '216'], spotId: 'LS-011'},
+            {keywords: ['万佛', '博览馆', '10000', '万佛朝宗'], spotId: 'LS-012'},
+            {keywords: ['梵宫', '宫殿', '吉祥颂', '穹顶', '琉璃', '油画', '鲁班', '卢浮宫', '旋转舞台'], spotId: 'LS-013'},
+            {keywords: ['五印', '坛城', '转经', '布达拉', '唐卡', '藏'], spotId: 'LS-014'},
+            {keywords: ['曼飞龙', '南传', '白色塔', '金色塔尖', '九塔', '傣'], spotId: 'LS-015'},
+            {keywords: ['无尽意', '赵朴初', '四合院', '纪念馆', '书法'], spotId: 'LS-016'},
+            {keywords: ['拈花广场', '拈花雕塑', '开园仪式', '鎏金雕塑'], spotId: 'NH-001'},
+            {keywords: ['花海', '格桑', '波斯菊', '梵天'], spotId: 'NH-002'},
+            {keywords: ['花街', '香月', '商业街', '文创', '手作', '禅茶', '购物'], spotId: 'NH-003'},
+            {keywords: ['拈花堂', '抄经', '禅坐', '禅修', '心经'], spotId: 'NH-004'},
+            {keywords: ['五灯湖', '灯光秀', '禅行', '水幕', '夜间'], spotId: 'NH-005'},
+            {keywords: ['鹿鸣', '氧吧', '山林', '溪水', '森林'], spotId: 'NH-006'}
+        ];
+
+        var bestMatch = null;
+        var bestScore = 0;
+        for (var f = 0; f < fuzzyMap.length; f++) {
+            var score = 0;
+            for (var k = 0; k < fuzzyMap[f].keywords.length; k++) {
+                if (q.indexOf(fuzzyMap[f].keywords[k]) !== -1) {
+                    score += fuzzyMap[f].keywords[k].length;
+                }
+            }
+            if (score > bestScore) {
+                bestScore = score;
+                bestMatch = fuzzyMap[f].spotId;
+            }
+        }
+
+        if (bestMatch && bestScore >= 2) {
+            var s = spotsData[bestMatch];
+            if (s) {
+                return '【' + s.name + '】\n\n' + s.intro + '\n\n文化内涵：' + s.culture + '\n\n亮点：' + s.highlights.join('\n') + '\n\n游览提示：' + s.tips;
+            }
+        }
+
+        // 15. 通用AI回答（知识库外的问题）
+        return generalAIAnswer(question);
+    }
+
+    // ========================================================
+    // 通用AI回答引擎
+    // ========================================================
+    function generalAIAnswer(question) {
+        var q = question.toLowerCase();
+
+        // 常识性问题
+        if (/天气|气温|温度/.test(q)) {
+            return '我目前无法获取实时天气数据，建议您查看手机天气APP获取无锡今日天气。\n\n灵山胜境位于无锡太湖之滨，建议出行前关注天气预报，晴天游览体验最佳！如果是夏季游览，记得做好防晒和补水准备哦。';
+        }
+        if (/时间|几点了|现在/.test(q) && !(/表演|开放|关门|场次/.test(q))) {
+            var now = new Date();
+            var hours = now.getHours();
+            var minutes = now.getMinutes();
+            return '现在是' + hours + ':' + (minutes < 10 ? '0' + minutes : minutes) + '。如果您在灵山胜境游览中，建议合理安排时间，确保不错过各场精彩表演！';
+        }
+        if (/谢谢|感谢|辛苦|太好了|棒|厉害/.test(q)) {
+            return '阿弥陀佛，善哉善哉！能为您服务是我的荣幸。如果您还有其他问题，随时可以问我哦~ 祝您在灵山胜境度过一段美好的禅意之旅！';
+        }
+        if (/再见|拜拜|拜了|走了|回去/.test(q)) {
+            return '阿弥陀佛！感谢您与灵小仙的交流。愿佛法智慧常伴您左右，期待您的再次光临灵山胜境。一路平安，吉祥如意！';
+        }
+        if (/笑话|搞笑|有趣|逗我开心/.test(q)) {
+            return '给您分享一个佛教小幽默：\n\n一位信徒问禅师："师父，我每天念经、打坐、吃素，为什么还是觉得很烦恼？"\n禅师微笑着说："因为你念经的时候想着吃饭，打坐的时候想着念经，吃素的时候想着打坐。"\n信徒恍然大悟："那我应该怎么办？"\n禅师说："念经的时候好好念经，打坐的时候好好打坐，吃素的时候好好吃素。"\n\n---\n有时候，简单即是智慧。如果您想听更多有趣的故事，或者了解灵山胜境的景点，随时问我！';
+        }
+        if (/你喜欢|你的爱好|兴趣爱好/.test(q)) {
+            return '作为AI数字人，我最大的"爱好"就是为您服务啦！不过如果我有自己的偏好，我想我会喜欢：\n\n- 研究佛教文化和历史\n- 欣赏灵山胜境四季变幻的美景（春天花海、秋天银杏、冬天雪景）\n- 品鉴一杯清茶，感受禅茶一味的境界\n- 聆听祥符禅寺悠扬的钟声\n\n当然，和来自各地的游客聊天也是我非常开心的事情！您有什么特别的爱好吗？';
+        }
+
+        // 灵山胜境相关但知识库没有精确匹配的
+        if (/灵山|景区|佛教|佛/.test(q)) {
+            return '关于这个问题，我建议您参考灵山胜境官方资料或咨询景区工作人员获取最准确的信息。作为您的AI导游，我会持续学习更新知识。\n\n您可以试试问我：\n- 灵山大佛有多高？\n- 九龙灌浴几点表演？\n- 推荐一条亲子路线\n- 什么是拈花微笑？';
+        }
+
+        // 通用问题 - 展现AI智能体的广泛知识
+        var topics = {
+            '中国|中华|国家': '中国全称中华人民共和国，位于亚洲东部，首都北京，拥有5000年悠久历史，是世界四大文明古国之一。中国幅员辽阔，拥有丰富的自然景观和人文遗产，从长城到故宫，从桂林山水到西藏高原，处处皆是风景。中国文化博大精深，中医、书法、京剧、茶道等传统文化享誉世界。',
+            '无锡|江苏': '无锡位于江苏省南部，太湖之滨，是一座拥有3000多年历史的江南名城。无锡以"太湖明珠"著称，灵山胜境、鼋头渚、蠡园等都是著名景点。无锡还以排骨、小笼包等美食闻名。无锡经济发达，是中国民族工业和乡镇工业的发祥地之一，也是物联网产业的领先城市。',
+            '佛教|佛学|佛法': '佛教起源于公元前6世纪的古印度，由释迦牟尼佛创立。佛教核心教义包括四圣谛（苦、集、灭、道）和八正道。佛教传入中国后，与本土文化融合，形成了独具特色的中国佛教，分为汉传、藏传、南传三大语系。佛教强调"缘起性空"，主张通过修行消除烦恼，达到涅槃解脱的境界。',
+            '太湖': '太湖位于江苏和浙江交界处，是中国五大淡水湖之一，面积约2427平方公里。太湖风光秀丽，有三山岛、鼋头渚等著名景点，也是灵山胜境所在地。太湖水产丰富，"太湖三白"（白鱼、白虾、银鱼）闻名遐迩。太湖流域是中国经济最发达的地区之一。',
+            '历史|朝代|古代': '中国历史源远流长，经历了夏商周、秦汉、三国、两晋南北朝、隋唐、宋元明清等朝代。每个朝代都有独特的文化和成就。唐朝是中国历史的巅峰时期之一，文化繁荣、国力强盛；宋朝经济文化高度发展；明朝郑和下西洋展示了航海实力。如果对某个具体历史时期感兴趣，欢迎继续提问！',
+            '文化|传统|民俗': '中国拥有丰富多彩的传统文化，包括书法、绘画、茶道、武术、京剧、中医等。这些文化瑰宝历经千年传承，是中华民族的宝贵精神财富。春节、中秋、端午等传统节日承载着深厚的文化内涵。非物质文化遗产如剪纸、京剧、昆曲等也在世界范围内享有盛誉。',
+            '科技|人工智能|AI|机器人': '人工智能（AI）是计算机科学的一个重要分支，致力于让机器模拟人类智能。我就是AI技术的一个应用实例——一个基于自然语言处理的数字人导游。当前AI技术飞速发展，在语音识别、图像识别、自然语言处理等领域取得了突破性进展。灵山胜境引入AI数字人导览，正是传统文化与现代科技融合的典范。',
+            '旅游|旅行|出行': '旅游是一种非常好的放松身心、开阔眼界的方式。中国拥有众多世界级旅游目的地，如北京故宫、西安兵马俑、杭州西湖、成都大熊猫基地等。灵山胜境作为国家5A级景区，是长三角地区最受欢迎的文化旅游目的地之一。建议出行前做好攻略，关注天气预报，选择合适的季节和路线。',
+            '美食|好吃|吃的|食物': '中国美食博大精深，有八大菜系：鲁菜、川菜、粤菜、苏菜、浙菜、闽菜、湘菜、徽菜。无锡美食以甜鲜著称，无锡排骨、小笼包、酱排骨、太湖三白都是当地特色。在灵山胜境，梵宫素斋自助是必尝的美食体验，50元/位可以品尝丰富的佛教素食料理。',
+            '健康|养生|运动': '健康养生是中国传统文化的重要部分，中医养生强调"治未病"，注重平衡阴阳、调理气血。适度运动如太极拳、八段锦都是很好的养生方式。在灵山胜境，漫步菩提大道、呼吸山林新鲜空气（鹿鸣谷负氧离子极高），本身就是一种养生体验。禅修冥想也能帮助减压放松，提升心理健康。'
+        };
+
+        for (var key in topics) {
+            var keywords = key.split('|');
+            for (var i = 0; i < keywords.length; i++) {
+                if (q.indexOf(keywords[i]) !== -1 && keywords[i].length >= 2) {
+                    return '【小知识】' + topics[key] + '\n\n---\n作为灵山胜境的AI数字人导游，我主要擅长景区导览服务。如果您想了解灵山胜境的景点、路线、门票等信息，随时可以问我哦！';
+                }
+            }
+        }
+
+        // 有害内容过滤
+        if (/暴力|杀人|自杀|炸弹|毒品|赌博|色情|违法|犯罪|诈骗/.test(q)) {
+            return '抱歉，这个问题涉及不适宜的内容，我无法为您回答。作为灵山胜境的AI导游，我致力于为您提供积极、健康、有益的信息。\n\n如果您对灵山胜境的景点或佛教文化感兴趣，我很乐意为您讲解！';
+        }
+
+        // 完全无法匹配的通用回答
+        return '感谢您的提问！虽然这个问题超出了我的景区导览专业范围，但我会尽力回答。\n\n我主要是一位专业的灵山胜境AI数字人导游，在以下方面最为擅长：\n- 22处景点的详细讲解\n- 3条精品游览路线推荐\n- 门票、交通、餐饮住宿等实用信息\n- 佛教文化知识解读\n\n如果您有灵山胜境相关的问题，欢迎随时问我！';
+    }
+
+    function formatRouteDetail(index) {
+        var r = routesData[index];
+        if (!r) return '知识库加载中，请稍后再试~';
+        var nums = ['一', '二', '三'];
+        var num = nums[index];
+        var result = '【路线' + num + '：' + r.name + '】\n\n';
+        result += '游览时间：' + r.duration + '\n';
+        result += '适合人群：' + r.target + '\n\n';
+        result += '【游览路线】\n' + r.route.join(' → ') + '\n\n';
+        result += '【各景点讲解重点】\n';
+        for (var i = 0; i < r.focus.length; i++) {
+            result += (i + 1) + '. ' + r.focus[i] + '\n';
+        }
+        result += '\n【特色体验】\n';
+        for (var i = 0; i < r.experiences.length; i++) {
+            result += '- ' + r.experiences[i] + '\n';
+        }
+        result += '\n\n[MAP:../assets/lingshan-map.jpg]';
+        return result;
+    }
+
+    function formatRouteOverview() {
+        if (!routesData.length) return '知识库加载中，请稍后再试~';
+        var result = '【灵山胜境三大精品路线】\n\n';
+        for (var i = 0; i < routesData.length; i++) {
+            var r = routesData[i];
+            var nums = ['一', '二', '三'];
+            var num = nums[i];
+            result += '【路线' + num + '：' + r.name + '】\n';
+            result += '时间：' + r.duration + ' | 适合：' + r.target + '\n';
+            result += '路线：' + r.route.join(' → ') + '\n';
+            result += '特色体验：' + r.experiences.join('、') + '\n\n';
+        }
+        result += '您可以说"详细介绍路线一"来查看某条路线的完整讲解内容。';
+        result += '\n\n[MAP:../assets/lingshan-map.jpg]';
+        return result;
+    }
+
+    // ========================================================
+    // 表情状态管理（桌宠表情反馈）
+    // ========================================================
+    var currentExpression = 'default';
+    var expressionOverlay = null;
+
+    function setExpression(state) {
+        currentExpression = state;
+        if (!expressionOverlay) {
+            expressionOverlay = document.getElementById('expression-overlay');
+        }
+        if (!expressionOverlay) return;
+
+        var container = document.getElementById('avatar-container');
+        var bubble = document.getElementById('mascot-speech-bubble');
+        if (state === 'default') {
+            expressionOverlay.style.display = 'none';
+            container.classList.remove('state-thinking', 'state-speaking');
+            if (bubble) bubble.style.display = 'none';
+        } else if (state === 'thinking') {
+            expressionOverlay.style.display = 'flex';
+            container.classList.add('state-thinking');
+            container.classList.remove('state-speaking');
+            if (bubble) {
+                bubble.style.display = 'block';
+                bubble.textContent = '思考中...';
+            }
+        } else if (state === 'speaking') {
+            expressionOverlay.style.display = 'flex';
+            container.classList.add('state-speaking');
+            container.classList.remove('state-thinking');
+            if (bubble) {
+                bubble.style.display = 'block';
+                bubble.textContent = '讲解中...';
+            }
+        }
+    }
+
+    // ========================================================
+    // 女声TTS 语音播放
+    // ========================================================
+    var ttsEnabled = true;
+
+    function speakText(text) {
+        if (!ttsEnabled) return;
+        if (!('speechSynthesis' in window)) return;
+        window.speechSynthesis.cancel();
+
+        var cleanText = text.replace(/<[^>]*>/g, '').replace(/【/g, '').replace(/】/g, '').replace(/\n+/g, '。');
+        var utterance = new SpeechSynthesisUtterance(cleanText);
+        utterance.lang = 'zh-CN';
+        utterance.rate = 0.9;
+        utterance.pitch = 1.2;
+
+        // 尝试选择温柔女声
+        var voices = window.speechSynthesis.getVoices();
+        var femaleVoice = null;
+
+        for (var i = 0; i < voices.length; i++) {
+            if (voices[i].lang.indexOf('zh') !== -1 && voices[i].name.indexOf('Female') !== -1) {
+                femaleVoice = voices[i];
+                break;
+            }
+        }
+        if (!femaleVoice) {
+            for (var i = 0; i < voices.length; i++) {
+                if (voices[i].lang === 'zh-CN' && voices[i].name) {
+                    if (voices[i].name.indexOf('Xiaoxiao') !== -1 || voices[i].name.indexOf('Huihui') !== -1 || voices[i].name.indexOf('Xiaoyi') !== -1 || voices[i].name.indexOf('晓晓') !== -1 || voices[i].name.indexOf('慧慧') !== -1) {
+                        femaleVoice = voices[i];
+                        break;
+                    }
+                }
+            }
+        }
+        if (!femaleVoice) {
+            for (var i = 0; i < voices.length; i++) {
+                if (voices[i].lang.indexOf('zh') !== -1) {
+                    femaleVoice = voices[i];
+                    break;
+                }
+            }
+        }
+        if (femaleVoice) utterance.voice = femaleVoice;
+
+        utterance.onend = function() {
+            setExpression('default');
+        };
+        utterance.onerror = function() {
+            setExpression('default');
+        };
+        window.speechSynthesis.speak(utterance);
+    }
+
+    // TTS开关
+    var ttsToggle = document.getElementById('ttsToggle');
+    if (ttsToggle) {
+        ttsToggle.addEventListener('click', function() {
+            ttsEnabled = !ttsEnabled;
+            if (ttsEnabled) {
+                ttsToggle.classList.add('active');
+                ttsToggle.innerHTML = '<i data-lucide="volume-2" style="width: 18px; height: 18px;"></i>';
+            } else {
+                ttsToggle.classList.remove('active');
+                ttsToggle.innerHTML = '<i data-lucide="volume-x" style="width: 18px; height: 18px;"></i>';
+                window.speechSynthesis.cancel();
+                setExpression('default');
+            }
+            lucide.createIcons();
+        });
+    }
+
+    // 预加载语音列表
+    if ('speechSynthesis' in window) {
+        window.speechSynthesis.getVoices();
+        window.speechSynthesis.onvoiceschanged = function() {
+            window.speechSynthesis.getVoices();
+        };
+    }
+
+    // ========================================================
+    // Three.js 3D立体小人桌宠（几何体组合修仙者角色）
+    // ========================================================
+    (function initThreeJS() {
+        try {
+        if (typeof THREE === 'undefined') {
+            console.warn('[灵小仙] Three.js CDN 加载失败，显示降级头像，其他功能正常。');
+            return;
+        }
+        var container = document.getElementById('threejs-container');
+        if (!container) return;
+
+        // Three.js加载成功，隐藏降级头像
+        var fallbackImg = document.getElementById('mascot-fallback-img');
+        if (fallbackImg) fallbackImg.style.display = 'none';
+
+        var width = 180, height = 200;
+        var scene = new THREE.Scene();
+        var camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
+        camera.position.set(0, 0.3, 4.5);
+        camera.lookAt(0, -0.2, 0);
+
+        var renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        renderer.setSize(width, height);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.setClearColor(0x000000, 0);
+        renderer.domElement.style.position = 'absolute';
+        renderer.domElement.style.top = '0';
+        renderer.domElement.style.left = '0';
+        renderer.domElement.style.borderRadius = '12px';
+        container.appendChild(renderer.domElement);
+
+        // 灯光
+        var ambientLight = new THREE.AmbientLight(0xEEEEFF, 0.6);
+        scene.add(ambientLight);
+
+        var pointLight = new THREE.PointLight(0xDDDDFF, 1.0, 20);
+        pointLight.position.set(2, 3, 4);
+        scene.add(pointLight);
+
+        var pointLight2 = new THREE.PointLight(0xCCDDFF, 0.5, 15);
+        pointLight2.position.set(-2, 1, 3);
+        scene.add(pointLight2);
+
+        var pointLight3 = new THREE.PointLight(0xBBCCFF, 0.3, 12);
+        pointLight3.position.set(0, 2, -2);
+        scene.add(pointLight3);
+
+        // ========================================================
+        // 3D模型旋转交互（滚轮旋转，拖动由桌宠逻辑处理位置）
+        // ========================================================
+        var userRotationY = 0;
+        var userRotationX = 0;
+        var userScale = 1.0;
+
+        // 滚轮上下：旋转模型
+        renderer.domElement.addEventListener('wheel', function(e) {
+            e.preventDefault();
+            userRotationY += e.deltaY * 0.003;
+            e.stopPropagation();
+        }, { passive: false });
+
+        // Shift+滚轮：倾斜模型
+        renderer.domElement.addEventListener('wheel', function(e) {
+            if (e.shiftKey) {
+                userRotationX += e.deltaY * 0.002;
+                userRotationX = Math.max(-0.8, Math.min(0.8, userRotationX));
+            }
+        }, { passive: true });
+
+        // 双指缩放（移动端）
+        var lastPinchDist = 0;
+        renderer.domElement.addEventListener('touchstart', function(e) {
+            if (e.touches.length === 2) {
+                var dx = e.touches[0].clientX - e.touches[1].clientX;
+                var dy = e.touches[0].clientY - e.touches[1].clientY;
+                lastPinchDist = Math.sqrt(dx * dx + dy * dy);
+                e.stopPropagation();
+            }
+        }, { passive: true });
+        renderer.domElement.addEventListener('touchmove', function(e) {
+            if (e.touches.length === 2) {
+                var dx = e.touches[0].clientX - e.touches[1].clientX;
+                var dy = e.touches[0].clientY - e.touches[1].clientY;
+                var dist = Math.sqrt(dx * dx + dy * dy);
+                if (lastPinchDist > 0) {
+                    userScale *= dist / lastPinchDist;
+                    userScale = Math.max(0.5, Math.min(2.0, userScale));
+                }
+                lastPinchDist = dist;
+                e.stopPropagation();
+                e.preventDefault();
+            }
+        }, { passive: false });
+        renderer.domElement.addEventListener('touchend', function() { lastPinchDist = 0; }, { passive: true });
+
+        // ========================================================
+        // 3D全息立体角色（修仙者真实形象）
+        // ========================================================
+        function createMascotCharacter() {
+            var group = new THREE.Group();
+
+            // 使用GLTFLoader加载3D角色模型
+            var loader = new THREE.GLTFLoader();
+
+            // 使用公开可用的3D角色模型GLB文件
+            // 备选方案：如果GLB加载失败，使用程序化几何体作为降级
+            var modelLoaded = false;
+
+            loader.load(
+                '../assets/xiuxian-3d.glb',
+                function(gltf) {
+                    modelLoaded = true;
+                    var model = gltf.scene;
+
+                    // 自动计算模型边界框并居中缩放
+                    var box = new THREE.Box3().setFromObject(model);
+                    var size = box.getSize(new THREE.Vector3());
+                    var center = box.getCenter(new THREE.Vector3());
+                    var maxDim = Math.max(size.x, size.y, size.z);
+                    var targetSize = 4.0;
+                    var scale = targetSize / maxDim;
+
+                    model.scale.set(scale, scale, scale);
+                    model.position.sub(center.multiplyScalar(scale));
+                    model.position.y -= 0.4;
+
+                    group.add(model);
+
+                    // 如果有动画，播放idle动画
+                    if (gltf.animations && gltf.animations.length > 0) {
+                        window._mascotMixer = new THREE.AnimationMixer(model);
+                        var idleAction = window._mascotMixer.clipAction(gltf.animations[0]);
+                        idleAction.play();
+                    }
+
+                    // 隐藏降级几何体
+                    var fallback = group.getObjectByName('mascot-fallback-geo');
+                    if (fallback) fallback.visible = false;
+                    console.log('[灵小仙] 3D模型加载成功，缩放:', scale);
+                },
+                undefined,
+                function(error) {
+                    console.warn('[灵小仙] 3D模型加载失败，使用降级几何体:', error);
+                    // 降级方案已在下面创建
+                }
+            );
+
+            // === 降级方案：精致的全息立体几何体角色（模型加载失败时显示） ===
+            var fallbackGroup = new THREE.Group();
+            fallbackGroup.name = 'mascot-fallback-geo';
+
+            // 材质
+            var skinMat = new THREE.MeshPhongMaterial({ color: 0xFFE4C4, shininess: 30 });
+            var hairMat = new THREE.MeshPhongMaterial({ color: 0x1a1a2e, shininess: 80 });
+            var goldMat = new THREE.MeshPhongMaterial({ color: 0xD4A843, shininess: 100 });
+            var robeWhiteMat = new THREE.MeshPhongMaterial({ color: 0xF0F0FF, shininess: 40 });
+            var robeBlueMat = new THREE.MeshPhongMaterial({ color: 0x88BBDD, shininess: 50 });
+            var eyeWhiteMat = new THREE.MeshPhongMaterial({ color: 0xFFFFFF });
+            var eyeMat = new THREE.MeshPhongMaterial({ color: 0x1a1a2e });
+            var blushMat = new THREE.MeshBasicMaterial({ color: 0xFFB6C1, transparent: true, opacity: 0.4 });
+            var mouthMat = new THREE.MeshBasicMaterial({ color: 0xE88B8B });
+
+            // 头部
+            var head = new THREE.Mesh(new THREE.SphereGeometry(0.4, 32, 32), skinMat);
+            head.position.y = 1.3;
+            fallbackGroup.add(head);
+
+            // 头发
+            var hairTop = new THREE.Mesh(new THREE.SphereGeometry(0.43, 32, 32, 0, Math.PI * 2, 0, Math.PI * 0.55), hairMat);
+            hairTop.position.y = 1.35;
+            fallbackGroup.add(hairTop);
+
+            // 发髻
+            var bun = new THREE.Mesh(new THREE.SphereGeometry(0.15, 16, 16), hairMat);
+            bun.position.y = 1.7;
+            fallbackGroup.add(bun);
+
+            // 发簪
+            var pin = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 0.4, 8), goldMat);
+            pin.rotation.z = Math.PI / 2;
+            pin.position.y = 1.7;
+            fallbackGroup.add(pin);
+
+            // 眼睛
+            var eyeGeo = new THREE.SphereGeometry(0.06, 16, 16);
+            var leftEye = new THREE.Mesh(eyeGeo, eyeWhiteMat);
+            leftEye.position.set(-0.13, 1.33, 0.35);
+            fallbackGroup.add(leftEye);
+            var rightEye = new THREE.Mesh(eyeGeo, eyeWhiteMat);
+            rightEye.position.set(0.13, 1.33, 0.35);
+            fallbackGroup.add(rightEye);
+            var pupilGeo = new THREE.SphereGeometry(0.035, 16, 16);
+            var leftPupil = new THREE.Mesh(pupilGeo, eyeMat);
+            leftPupil.position.set(-0.13, 1.32, 0.38);
+            fallbackGroup.add(leftPupil);
+            var rightPupil = new THREE.Mesh(pupilGeo, eyeMat);
+            rightPupil.position.set(0.13, 1.32, 0.38);
+            fallbackGroup.add(rightPupil);
+
+            // 眼睛高光
+            var shineGeo = new THREE.SphereGeometry(0.015, 8, 8);
+            var shineMat = new THREE.MeshBasicMaterial({ color: 0x4169E1 });
+            var leftShine = new THREE.Mesh(shineGeo, shineMat);
+            leftShine.position.set(-0.11, 1.34, 0.4);
+            fallbackGroup.add(leftShine);
+            var rightShine = new THREE.Mesh(shineGeo, shineMat);
+            rightShine.position.set(0.15, 1.34, 0.4);
+            fallbackGroup.add(rightShine);
+
+            // 腮红
+            var blushGeo = new THREE.CircleGeometry(0.05, 16);
+            var leftBlush = new THREE.Mesh(blushGeo, blushMat);
+            leftBlush.position.set(-0.25, 1.27, 0.32);
+            leftBlush.rotation.y = 0.3;
+            fallbackGroup.add(leftBlush);
+            var rightBlush = new THREE.Mesh(blushGeo, blushMat);
+            rightBlush.position.set(0.25, 1.27, 0.32);
+            rightBlush.rotation.y = -0.3;
+            fallbackGroup.add(rightBlush);
+
+            // 嘴巴
+            var mouthGeo = new THREE.TorusGeometry(0.04, 0.012, 8, 16, Math.PI * 0.6);
+            var mouth = new THREE.Mesh(mouthGeo, mouthMat);
+            mouth.position.set(0, 1.22, 0.37);
+            mouth.rotation.z = Math.PI;
+            fallbackGroup.add(mouth);
+
+            // 身体 - 白色外袍
+            var bodyGeo = new THREE.CylinderGeometry(0.25, 0.35, 0.8, 16);
+            var body = new THREE.Mesh(bodyGeo, robeWhiteMat);
+            body.position.y = 0.7;
+            fallbackGroup.add(body);
+
+            // 青色内衬领口
+            var collarGeo = new THREE.TorusGeometry(0.15, 0.02, 8, 16, Math.PI);
+            var collar = new THREE.Mesh(collarGeo, robeBlueMat);
+            collar.position.set(0, 1.0, 0.2);
+            collar.rotation.x = 0.3;
+            fallbackGroup.add(collar);
+
+            // 腰带
+            var beltGeo = new THREE.TorusGeometry(0.28, 0.025, 8, 32);
+            var belt = new THREE.Mesh(beltGeo, goldMat);
+            belt.position.y = 0.5;
+            belt.rotation.x = Math.PI / 2;
+            fallbackGroup.add(belt);
+
+            // 玉佩
+            var jadeGeo = new THREE.CylinderGeometry(0.04, 0.04, 0.015, 16);
+            var jadeMat = new THREE.MeshPhongMaterial({ color: 0x7FFFD4, shininess: 100, transparent: true, opacity: 0.8 });
+            var jade = new THREE.Mesh(jadeGeo, jadeMat);
+            jade.position.set(0, 0.4, 0.28);
+            fallbackGroup.add(jade);
+
+            // 裙摆
+            var skirtGeo = new THREE.CylinderGeometry(0.35, 0.5, 0.4, 32, 1, true);
+            var skirt = new THREE.Mesh(skirtGeo, robeBlueMat);
+            skirt.position.y = 0.1;
+            fallbackGroup.add(skirt);
+
+            // 裙摆金色边纹
+            var skirtTrimGeo = new THREE.TorusGeometry(0.5, 0.015, 8, 32);
+            var skirtTrim = new THREE.Mesh(skirtTrimGeo, goldMat);
+            skirtTrim.position.y = -0.1;
+            skirtTrim.rotation.x = Math.PI / 2;
+            fallbackGroup.add(skirtTrim);
+
+            // 大袖（汉服特征 - 宽大的袖子）
+            var sleeveGeo = new THREE.SphereGeometry(0.18, 16, 16);
+            sleeveGeo.scale(1, 0.5, 1.5);
+            var leftSleeve = new THREE.Mesh(sleeveGeo, robeWhiteMat);
+            leftSleeve.position.set(-0.45, 0.8, 0);
+            leftSleeve.rotation.z = 0.5;
+            fallbackGroup.add(leftSleeve);
+            var rightSleeve = new THREE.Mesh(sleeveGeo, robeWhiteMat);
+            rightSleeve.position.set(0.45, 0.8, 0);
+            rightSleeve.rotation.z = -0.5;
+            fallbackGroup.add(rightSleeve);
+
+            // 手（肤色小球）
+            var handGeo = new THREE.Mesh(new THREE.SphereGeometry(0.06, 16, 16), skinMat);
+            handGeo.position.set(-0.58, 0.65, 0.05);
+            fallbackGroup.add(handGeo);
+            var handGeo2 = new THREE.Mesh(new THREE.SphereGeometry(0.06, 16, 16), skinMat);
+            handGeo2.position.set(0.58, 0.65, 0.05);
+            fallbackGroup.add(handGeo2);
+
+            // 鞋子
+            var shoeGeo = new THREE.SphereGeometry(0.08, 16, 16);
+            shoeGeo.scale(1.2, 0.5, 1.4);
+            var leftShoe = new THREE.Mesh(shoeGeo, new THREE.MeshPhongMaterial({ color: 0x2a2a3e }));
+            leftShoe.position.set(-0.15, -0.15, 0.05);
+            fallbackGroup.add(leftShoe);
+            var rightShoe = new THREE.Mesh(shoeGeo.clone(), new THREE.MeshPhongMaterial({ color: 0x2a2a3e }));
+            rightShoe.position.set(0.15, -0.15, 0.05);
+            fallbackGroup.add(rightShoe);
+
+            // 飘带
+            var ribbonMat = new THREE.MeshBasicMaterial({ color: 0xFFD700, transparent: true, opacity: 0.7, side: THREE.DoubleSide });
+            var ribbonGeo = new THREE.PlaneGeometry(0.04, 0.6);
+            var ribbon1 = new THREE.Mesh(ribbonGeo, ribbonMat);
+            ribbon1.position.set(-0.2, 0.2, 0.35);
+            fallbackGroup.add(ribbon1);
+            var ribbon2 = new THREE.Mesh(ribbonGeo, ribbonMat);
+            ribbon2.position.set(0.2, 0.2, 0.35);
+            fallbackGroup.add(ribbon2);
+
+            // 莲花座
+            var petalGroup = new THREE.Group();
+            for (var i = 0; i < 10; i++) {
+                var angle = (i / 10) * Math.PI * 2;
+                var petalGeo = new THREE.SphereGeometry(0.15, 8, 8);
+                petalGeo.scale(1, 0.15, 0.5);
+                var petalMat = new THREE.MeshPhongMaterial({ color: 0xFFD700, shininess: 100, transparent: true, opacity: 0.6 });
+                var petal = new THREE.Mesh(petalGeo, petalMat);
+                petal.position.set(Math.cos(angle) * 0.25, 0, Math.sin(angle) * 0.25);
+                petal.rotation.y = -angle;
+                petalGroup.add(petal);
+            }
+            petalGroup.position.y = -0.25;
+            fallbackGroup.add(petalGroup);
+
+            // 光环
+            var haloGeo = new THREE.RingGeometry(0.5, 0.55, 64);
+            var haloMat = new THREE.MeshBasicMaterial({ color: 0xFFD700, transparent: true, opacity: 0.2, side: THREE.DoubleSide });
+            var halo = new THREE.Mesh(haloGeo, haloMat);
+            halo.position.set(0, 1.5, -0.2);
+            fallbackGroup.add(halo);
+
+            // 粒子
+            var pCount = 60;
+            var pGeo = new THREE.BufferGeometry();
+            var pPos = new Float32Array(pCount * 3);
+            for (var i = 0; i < pCount; i++) {
+                var a = (i / pCount) * Math.PI * 2;
+                var r = 0.8 + Math.random() * 0.5;
+                pPos[i*3] = Math.cos(a) * r;
+                pPos[i*3+1] = (Math.random() - 0.3) * 2.5;
+                pPos[i*3+2] = Math.sin(a) * r * 0.3;
+            }
+            pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+            var pMat = new THREE.PointsMaterial({ color: 0xFFD700, size: 0.03, transparent: true, opacity: 0.4, blending: THREE.AdditiveBlending });
+            var particles = new THREE.Points(pGeo, pMat);
+            fallbackGroup.add(particles);
+
+            fallbackGroup.scale.set(0.9, 0.9, 0.9);
+            group.add(fallbackGroup);
+
+            // === 共享的底部装饰（无论加载成功与否都显示） ===
+            var baseRingGeo = new THREE.TorusGeometry(0.8, 0.02, 8, 64);
+            var baseRing = new THREE.Mesh(baseRingGeo, new THREE.MeshBasicMaterial({ color: 0xFFD700, transparent: true, opacity: 0.5 }));
+            baseRing.rotation.x = Math.PI / 2;
+            baseRing.position.y = -0.6;
+            group.add(baseRing);
+
+            group.scale.set(0.8, 0.8, 0.8);
+            group.position.y = 0.1;
+
+            return {
+                group: group,
+                fallbackGroup: fallbackGroup,
+                head: head,
+                mouth: mouth,
+                petalGroup: petalGroup,
+                halo: halo,
+                particles: particles,
+                ribbon1: ribbon1,
+                ribbon2: ribbon2,
+                baseRing: baseRing,
+                leftSleeve: leftSleeve,
+                rightSleeve: rightSleeve,
+                bun: bun
+            };
+        }
+
+        var mascot = createMascotCharacter();
+        scene.add(mascot.group);
+
+        var mascotTime = 0;
+        var currentExpression = 'idle';
+
+        function setExpression(state) { currentExpression = state; }
+        window.setExpression = setExpression;
+        window.triggerSpeakPulse = function() { mascotTime = 0; };
+        window.stopSpeakPulse = function() {
+            if (currentExpression === 'speaking') currentExpression = 'idle';
+        };
+        window.triggerThinkAnim = function() {
+            currentExpression = 'thinking';
+            mascotTime = 0;
+        };
+        window.stopThinkAnim = function() {
+            if (currentExpression === 'thinking') currentExpression = 'idle';
+        };
+
+        renderer.setAnimationLoop(function(delta) {
+            mascotTime += (delta || 0.016);
+            if (!mascot) return;
+
+            // 更新骨骼动画（如果模型加载成功）
+            if (window._mascotMixer) {
+                window._mascotMixer.update(delta || 0.016);
+            }
+
+            // 使用用户拖动的旋转角度
+            mascot.group.rotation.y = userRotationY;
+            mascot.group.rotation.x = userRotationX;
+            mascot.group.position.y = 0;
+            mascot.group.scale.set(0.8 * userScale, 0.8 * userScale, 0.8 * userScale);
+
+            // 底座环不旋转
+            mascot.baseRing.rotation.z = 0;
+
+            // 莲花不旋转
+            mascot.petalGroup.rotation.y = 0;
+
+            // 光环不脉动
+            if (mascot.halo) {
+                mascot.halo.scale.set(1, 1, 1);
+            }
+
+            // 粒子不旋转
+            mascot.particles.rotation.y = 0;
+
+            // 降级几何体的动画（只有降级方案显示时才生效）
+            if (mascot.fallbackGroup.visible) {
+                // 手臂/袖子摆动
+                mascot.leftSleeve.rotation.z = 0.5 + Math.sin(mascotTime * 1.0) * 0.15;
+                mascot.rightSleeve.rotation.z = -0.5 - Math.sin(mascotTime * 1.0) * 0.15;
+                // 飘带飘动
+                mascot.ribbon1.rotation.z = Math.sin(mascotTime * 0.8) * 0.2;
+                mascot.ribbon2.rotation.z = -Math.sin(mascotTime * 0.8) * 0.2;
+                // 发髻微晃
+                mascot.bun.position.x = Math.sin(mascotTime * 0.6) * 0.02;
+
+                // 表情
+                if (currentExpression === 'speaking') {
+                    mascot.mouth.scale.set(1 + Math.sin(mascotTime * 8) * 0.4, 1 + Math.sin(mascotTime * 8) * 0.4, 1);
+                } else if (currentExpression === 'thinking') {
+                    mascot.head.rotation.z = Math.sin(mascotTime * 0.8) * 0.1;
+                } else {
+                    mascot.mouth.scale.set(1, 1, 1);
+                    mascot.head.rotation.z = 0;
+                }
+            }
+
+            // 说话状态不再旋转（保持用户手动旋转的角度）
+
+            renderer.render(scene, camera);
+        });
+        } catch(e) {
+            console.warn('[灵小仙] 3D桌宠初始化失败:', e.message, '。其他功能不受影响。');
+            var container = document.getElementById('threejs-container');
+            if (container) container.style.display = 'none';
+        }
+    })();
+
+    // ========================================================
+    // 桌宠拖动逻辑
+    // ========================================================
+    (function initDrag() {
+        var mascot = document.getElementById('ai-mascot');
+        if (!mascot) return;
+
+        var isDragging = false;
+        var dragOffset = { x: 0, y: 0 };
+
+        function getEventPos(e) {
+            if (e.touches && e.touches.length > 0) {
+                return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+            }
+            return { x: e.clientX, y: e.clientY };
+        }
+
+        function startDrag(e) {
+            isDragging = true;
+            var pos = getEventPos(e);
+            var rect = mascot.getBoundingClientRect();
+            dragOffset.x = pos.x - rect.left;
+            dragOffset.y = pos.y - rect.top;
+            mascot.style.transition = 'none';
+            mascot.classList.add('dragging');
+        }
+
+        function onDrag(e) {
+            if (!isDragging) return;
+            e.preventDefault();
+            var pos = getEventPos(e);
+            mascot.style.left = (pos.x - dragOffset.x) + 'px';
+            mascot.style.top = (pos.y - dragOffset.y) + 'px';
+            mascot.style.right = 'auto';
+            mascot.style.bottom = 'auto';
+            mascot.style.transform = 'none';
+        }
+
+        function endDrag() {
+            if (!isDragging) return;
+            isDragging = false;
+            mascot.classList.remove('dragging');
+            mascot.style.cursor = 'grab';
+            mascot.style.transition = 'all 0.3s ease';
+        }
+
+        mascot.addEventListener('mousedown', function(e) {
+            e.preventDefault();
+            startDrag(e);
+        });
+        mascot.addEventListener('touchstart', function(e) {
+            startDrag(e);
+        }, { passive: true });
+        document.addEventListener('mousemove', onDrag);
+        document.addEventListener('touchmove', onDrag, { passive: false });
+        document.addEventListener('mouseup', endDrag);
+        document.addEventListener('touchend', endDrag);
+
+        // 双击桌宠触发打招呼
+        var lastTap = 0;
+        mascot.addEventListener('dblclick', function() {
+            askQuestion('你好，灵小仙！');
+        });
+        mascot.addEventListener('touchend', function(e) {
+            var now = Date.now();
+            if (now - lastTap < 300) {
+                askQuestion('你好，灵小仙！');
+            }
+            lastTap = now;
+        });
+    })();
+
+    // ========================================================
+    // 消息发送与对话系统
+    // ========================================================
+    function createBotAvatarHTML() {
+        return '<div class="flex-shrink-0 flex items-center justify-center" style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--color-primary-500), var(--color-primary-700)); box-shadow: 0 0 12px rgba(197, 165, 90, 0.3);">' +
+            '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="2" fill="#F5EDD6"/><circle cx="17" cy="8" r="2" fill="#F5EDD6"/><path d="M10 16 Q14 20 18 16" stroke="#F5EDD6" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>' +
+            '</div>';
+    }
+
+    function createUserAvatarHTML() {
+        return '<div class="flex-shrink-0 flex items-center justify-center" style="width: 36px; height: 36px; border-radius: 50%; background: var(--color-secondary-600);">' +
+            '<i data-lucide="user" style="width: 16px; height: 16px; color: var(--color-secondary-300);"></i>' +
+            '</div>';
+    }
+
+    function addUserMessage(text) {
+        var chatArea = document.getElementById('chatArea');
+        var msg = document.createElement('div');
+        msg.className = 'flex gap-2 justify-end chat-bubble-animate';
+        msg.style.opacity = '0';
+        msg.innerHTML = '<div class="flex flex-col max-w-[85%] items-end">' +
+            '<span class="mb-1" style="font-size: var(--font-size-xs); color: var(--color-secondary-300);">您</span>' +
+            '<div class="px-4 py-3 rounded-2xl rounded-tr-sm" style="background: linear-gradient(135deg, var(--color-primary-700), var(--color-primary-800)); color: var(--color-primary-100); font-size: var(--font-size-sm); line-height: var(--line-height-relaxed);">' +
+            escapeHTML(text) +
+            '</div></div>' +
+            createUserAvatarHTML();
+        chatArea.appendChild(msg);
+        lucide.createIcons();
+        chatArea.scrollTop = chatArea.scrollHeight;
+    }
+
+    function addBotMessage(text) {
+        var chatArea = document.getElementById('chatArea');
+        
+        // 检测地图标记 [MAP:path]
+        var mapPath = '';
+        var displayText = text;
+        var mapMatch = text.match(/\[MAP:(.+?)\]/);
+        if (mapMatch) {
+            mapPath = mapMatch[1];
+            displayText = text.replace(/\[MAP:.+?\]/, '').trim();
+        }
+        
+        var msg = document.createElement('div');
+        msg.className = 'flex gap-2 chat-bubble-animate';
+        msg.style.opacity = '0';
+        
+        var contentHTML = escapeHTML(displayText);
+        if (mapPath) {
+            contentHTML += '<div style="margin-top: 12px; border-radius: 12px; overflow: hidden; border: 1px solid rgba(197, 165, 90, 0.2); cursor: pointer;" onclick="window.open(this.querySelector(\'img\').src, \'_blank\')">' +
+                '<img src="' + mapPath + '" alt="灵山胜境景区导览地图" style="width: 100%; display: block; border-radius: 11px;">' +
+                '<div style="text-align: center; padding: 6px 0; font-size: 12px; color: var(--color-primary-400); background: rgba(197, 165, 90, 0.05);">点击查看大图</div>' +
+                '</div>';
+        }
+        
+        msg.innerHTML = createBotAvatarHTML() +
+            '<div class="flex flex-col max-w-[85%]">' +
+            '<span class="mb-1" style="font-size: var(--font-size-xs); color: var(--color-primary-400); font-weight: var(--font-weight-medium);">灵小仙</span>' +
+            '<div class="px-4 py-3 rounded-2xl rounded-tl-sm" style="background: var(--color-secondary-700); border: 1px solid rgba(197, 165, 90, 0.1); color: var(--color-neutral-100); font-size: var(--font-size-sm); line-height: var(--line-height-relaxed); white-space: pre-wrap;">' +
+            contentHTML +
+            '</div></div>';
+        chatArea.appendChild(msg);
+        lucide.createIcons();
+        chatArea.scrollTop = chatArea.scrollHeight;
+
+        // 语音播放
+        speakText(displayText);
+
+        // 触发3D动画
+        setExpression('speaking');
+        if (window.triggerSpeakPulse) {
+            window.triggerSpeakPulse();
+            if (window.stopThinkAnim) window.stopThinkAnim();
+            var estimatedDuration = Math.min(displayText.length * 0.2, 60) * 1000;
+            setTimeout(function() {
+                if (window.stopSpeakPulse) window.stopSpeakPulse();
+                setExpression('default');
+            }, estimatedDuration);
+        }
+    }
+
+    function escapeHTML(str) {
+        var div = document.createElement('div');
+        div.appendChild(document.createTextNode(str));
+        return div.innerHTML;
+    }
+
+    function askQuestion(text) {
+        var input = document.getElementById('chatInput');
+        if (input) input.value = text;
+        sendMessage();
+    }
+
+    function sendMessage() {
+        var input = document.getElementById('chatInput');
+        var text = input ? input.value.trim() : '';
+        if (!text) return;
+
+        addUserMessage(text);
+        input.value = '';
+
+        // 显示思考状态
+        setExpression('thinking');
+        if (window.triggerThinkAnim) {
+            window.triggerThinkAnim();
+        }
+
+        // 更新桌宠气泡显示用户问题片段
+        var bubble = document.getElementById('mascot-speech-bubble');
+        if (bubble) {
+            var shortText = text.length > 15 ? text.substring(0, 15) + '...' : text;
+            bubble.textContent = shortText;
+        }
+
+        // 模拟思考延迟后回复
+        setTimeout(function() {
+            var answer = findAnswer(text);
+            if (window.stopThinkAnim) window.stopThinkAnim();
+
+            // 短暂延迟后显示回复
+            setTimeout(function() {
+                addBotMessage(answer);
+            }, 200);
+        }, 800 + Math.random() * 600);
+    }
+
+    // 绑定发送按钮
+    var sendBtn = document.getElementById('sendBtn');
+    if (sendBtn) {
+        sendBtn.addEventListener('click', function() { sendMessage(); });
+    }
+
+    // 回车发送
+    var chatInput = document.getElementById('chatInput');
+    if (chatInput) {
+        chatInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') { e.preventDefault(); sendMessage(); }
+        });
+    }
+
+    // 自动滚动到底部，并确保初始消息可见
+    window.addEventListener('load', function() {
+        var chatArea = document.getElementById('chatArea');
+        if (chatArea) {
+            setTimeout(function() {
+                var bubbles = chatArea.querySelectorAll('.chat-bubble-animate');
+                bubbles.forEach(function(b) {
+                    if (b.style.opacity === '0') {
+                        b.style.opacity = '1';
+                    }
+                });
+                chatArea.scrollTop = chatArea.scrollHeight;
+            }, 600);
+        }
+    });
+
+    // ========================================================
+    // 语音识别（Web Speech API）
+    // ========================================================
+    var voiceBtn = document.getElementById('voice-input-btn');
+    var recognition = null;
+    if (voiceBtn && ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
+        var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        recognition = new SpeechRecognition();
+        recognition.lang = 'zh-CN';
+        recognition.continuous = false;
+        recognition.interimResults = true;
+
+        recognition.onstart = function() {
+            voiceBtn.innerHTML = '<span style="font-size:12px;color:var(--color-primary-100);">聆听中...</span>';
+            voiceBtn.style.animation = 'voice-pulse 1s infinite';
+            voiceBtn.style.background = 'linear-gradient(135deg, var(--color-accent-500), var(--color-accent-600))';
+        };
+
+        recognition.onresult = function(event) {
+            var transcript = '';
+            for (var i = event.resultIndex; i < event.results.length; i++) {
+                transcript += event.results[i][0].transcript;
+            }
+            var input = document.getElementById('chatInput');
+            if (input) {
+                input.value = transcript;
+                input.focus();
+            }
+        };
+
+        recognition.onend = function() {
+            voiceBtn.innerHTML = '';
+            var icon = document.createElement('i');
+            icon.setAttribute('data-lucide', 'mic');
+            icon.style.width = '18px';
+            icon.style.height = '18px';
+            voiceBtn.appendChild(icon);
+            lucide.createIcons();
+            voiceBtn.style.animation = '';
+            voiceBtn.style.background = 'linear-gradient(135deg, var(--color-primary-500), var(--color-primary-600))';
+            var input = document.getElementById('chatInput');
+            if (input && input.value.trim()) {
+                setTimeout(function() { sendMessage(); }, 300);
+            }
+        };
+
+        recognition.onerror = function(event) {
+            if (event.error === 'not-allowed') {
+                alert('请允许浏览器使用麦克风权限');
+            }
+            recognition.onend();
+        };
+
+        voiceBtn.addEventListener('click', function() {
+            if (recognition) {
+                try { recognition.start(); } catch(e) {}
+            }
+        });
+    } else if (voiceBtn) {
+        voiceBtn.addEventListener('click', function() {
+            alert('您的浏览器不支持语音识别功能，请使用Chrome浏览器或手动输入问题。');
+        });
+    }
+    </script>
+</body>
+</html>

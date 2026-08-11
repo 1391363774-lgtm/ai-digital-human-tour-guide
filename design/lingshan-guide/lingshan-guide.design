@@ -1,0 +1,197 @@
+{
+  "data": [
+    {
+      "id": "page-home",
+      "title": "首页",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1752581000000,
+      "canvasData": {
+        "x": 0,
+        "y": 0,
+        "group": 0
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/home.html",
+        "interactions": [
+          {
+            "domId": "btn-start-guide",
+            "targetPageId": "page-guide"
+          },
+          {
+            "domId": "btn-ticket",
+            "targetPageId": "page-route",
+            "hideEdge": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "page-guide",
+      "title": "数字人导览",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1752581000000,
+      "canvasData": {
+        "x": 420,
+        "y": 0,
+        "group": 0
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/guide.html",
+        "interactions": [
+          {
+            "domId": "back-home",
+            "targetPageId": "page-home",
+            "hideEdge": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "page-exhibit-detail",
+      "title": "景点详情",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1752581000000,
+      "canvasData": {
+        "x": 0,
+        "y": 851,
+        "group": 0
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/exhibit-detail.html",
+        "interactions": [
+          {
+            "domId": "back-guide",
+            "targetPageId": "page-guide",
+            "hideEdge": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "page-route",
+      "title": "游览路线",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1752581000000,
+      "canvasData": {
+        "x": 420,
+        "y": 851,
+        "group": 0
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/route.html",
+        "interactions": [
+          {
+            "domId": "back-home",
+            "targetPageId": "page-home",
+            "hideEdge": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "page-nianhua",
+      "title": "拈花湾",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1752581000000,
+      "canvasData": {
+        "x": 840,
+        "y": 851,
+        "group": 0
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/nianhua.html",
+        "interactions": [
+          {
+            "domId": "back-home",
+            "targetPageId": "page-home",
+            "hideEdge": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "image-001",
+      "title": "数字人形象 - 灵小仙",
+      "type": "image",
+      "version": 1,
+      "createdAt": 1752581000000,
+      "canvasData": {
+        "x": 0,
+        "y": 2260
+      },
+      "devMetadata": {
+        "imageSrc": "assets/xiuxian-avatar.jpg"
+      }
+    },
+    {
+      "id": "pending-page-avatar",
+      "title": "avatar",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1784119140462,
+      "canvasData": {
+        "x": 1260,
+        "y": 851,
+        "group": 0
+      },
+      "devMetadata": {
+        "htmlSrc": ""
+      }
+    },
+    {
+      "id": "pending-page-dashboard",
+      "title": "dashboard",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1784119140462,
+      "canvasData": {
+        "x": 1680,
+        "y": 851,
+        "group": 0
+      },
+      "devMetadata": {
+        "htmlSrc": ""
+      }
+    },
+    {
+      "id": "pending-page-analytics",
+      "title": "analytics",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1784119140462,
+      "canvasData": {
+        "x": 2100,
+        "y": 851,
+        "group": 0
+      },
+      "devMetadata": {
+        "htmlSrc": ""
+      }
+    },
+    {
+      "id": "pending-page-knowledge",
+      "title": "knowledge",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1784119140462,
+      "canvasData": {
+        "x": 2520,
+        "y": 851,
+        "group": 0
+      },
+      "devMetadata": {
+        "htmlSrc": ""
+      }
+    }
+  ],
+  "config": {
+    "autoLayout": true,
+    "deviceType": "mobile",
+    "projectName": "灵山胜境AI数字人导览 - 游客端"
+  }
+}

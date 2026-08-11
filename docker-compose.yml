@@ -1,54 +1,57 @@
+version: '3.8'
 services:
-  postgres:
-    image: postgres:16-alpine
-    container_name: scenic-ai-postgres
-    restart: unless-stopped
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB:-scenic_ai_guide}
-      POSTGRES_USER: ${POSTGRES_USER:-scenic_user}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-scenic_password}
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-scenic_user} -d ${POSTGRES_DB:-scenic_ai_guide}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    container_name: scenic-ai-backend
-    restart: unless-stopped
-    env_file:
-      - .env
-    environment:
-      POSTGRES_HOST: postgres
-      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-scenic_user}:${POSTGRES_PASSWORD:-scenic_password}@postgres:5432/${POSTGRES_DB:-scenic_ai_guide}
-      CHROMA_PERSIST_DIR: /app/data/vector_store/chroma
+    build: ./backend
     ports:
       - "8000:8000"
-    volumes:
-      - ./data:/app/data
+    env_file:
+      - ./backend/.env
     depends_on:
-      postgres:
-        condition: service_healthy
+      - mysql
+      - redis
+    volumes:
+      - ./backend:/app
+    restart: always
+
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: lingshan2026
+      MYSQL_DATABASE: lingshan_guide
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: always
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    restart: always
+
+  milvus:
+    image: milvusdb/milvus:v2.4.0
+    ports:
+      - "19530:19530"
+      - "9091:9091"
+    environment:
+      ETCD_USE_EMBED: "true"
+      COMMON_STORAGETYPE: local
+    volumes:
+      - milvus_data:/var/lib/milvus
+    restart: always
 
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    container_name: scenic-ai-frontend
-    restart: unless-stopped
-    environment:
-      VITE_API_BASE_URL: http://localhost:8000
+    image: nginx:alpine
     ports:
-      - "5173:5173"
+      - "80:80"
+    volumes:
+      - ./frontend/dist:/usr/share/nginx/html
     depends_on:
       - backend
+    restart: always
 
 volumes:
-  postgres_data:
+  mysql_data:
+  milvus_data:

@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据大屏 - 灵山胜境AI数字人导览系统</title>
+    <style id="theme-vars">
+/* ============================================================
+ * 灵山胜境AI数字人导览系统 - Brand Colors & Typography
+ * Design Token Convention (CSS Custom Properties)
+ * ============================================================ */
+
+:root {
+  /* ---- Primary: 金色系 (Gold) ---- */
+  --color-primary-100: #F5EDD6;
+  --color-primary-200: #EBDCB0;
+  --color-primary-300: #DFC98A;
+  --color-primary-400: #D4B96E;
+  --color-primary-500: #C5A55A;
+  --color-primary-600: #A88B3E;
+  --color-primary-700: #8A7130;
+  --color-primary-800: #6C5724;
+  --color-primary-900: #503F1A;
+
+  /* ---- Secondary: 藏青 / 深蓝 (Deep Blue) ---- */
+  --color-secondary-100: #C5CEE0;
+  --color-secondary-200: #96A6C4;
+  --color-secondary-300: #677EA8;
+  --color-secondary-400: #3D5678;
+  --color-secondary-500: #1B2A4A;
+  --color-secondary-600: #152240;
+  --color-secondary-700: #101A33;
+  --color-secondary-800: #0A1226;
+  --color-secondary-900: #050A19;
+
+  /* ---- Neutral: 白 / 灰 ---- */
+  --color-neutral-0:   #FFFFFF;
+  --color-neutral-50:  #FAFAF5;
+  --color-neutral-100: #F5F5F0;
+  --color-neutral-200: #E5E5DD;
+  --color-neutral-300: #D0D0C5;
+  --color-neutral-400: #A3A395;
+  --color-neutral-500: #767665;
+  --color-neutral-600: #595948;
+  --color-neutral-700: #3D3D31;
+  --color-neutral-800: #222218;
+  --color-neutral-900: #0F0F0A;
+
+  /* ---- Accent: 朱砂红 (Vermilion) ---- */
+  --color-accent-100: #F2D1D0;
+  --color-accent-200: #E8A3A1;
+  --color-accent-300: #DE7573;
+  --color-accent-400: #D46462;
+  --color-accent-500: #C25450;
+  --color-accent-600: #A34340;
+  --color-accent-700: #843330;
+  --color-accent-800: #652320;
+  --color-accent-900: #461312;
+
+  /* ---- Semantic Tokens ---- */
+  --color-bg-primary:     var(--color-neutral-0);
+  --color-bg-secondary:   var(--color-neutral-100);
+  --color-bg-deep:        var(--color-secondary-500);
+  --color-bg-card:        var(--color-neutral-0);
+  --color-bg-overlay:     rgba(27, 42, 74, 0.65);
+
+  --color-text-primary:   var(--color-secondary-500);
+  --color-text-secondary: var(--color-neutral-700);
+  --color-text-inverse:   var(--color-neutral-0);
+  --color-text-accent:    var(--color-accent-500);
+  --color-text-gold:       var(--color-primary-500);
+
+  --color-border-default: var(--color-neutral-200);
+  --color-border-gold:     var(--color-primary-400);
+  --color-border-subtle:   var(--color-neutral-100);
+
+  /* ---- Typography ---- */
+  --font-family-heading: 'Noto Serif SC', 'Source Han Serif SC', 'Songti SC', serif;
+  --font-family-body:    'Noto Sans SC', 'Source Han Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+
+  /* Font Sizes (Mobile-first) */
+  --font-size-xs:   0.6875rem;   /* 11px */
+  --font-size-sm:   0.75rem;     /* 12px */
+  --font-size-base: 0.875rem;    /* 14px */
+  --font-size-md:   1rem;        /* 16px */
+  --font-size-lg:   1.125rem;    /* 18px */
+  --font-size-xl:   1.25rem;     /* 20px */
+  --font-size-2xl:  1.5rem;      /* 24px */
+  --font-size-3xl:  1.875rem;    /* 30px */
+  --font-size-4xl:  2.25rem;     /* 36px */
+
+  /* Font Weights */
+  --font-weight-regular: 400;
+  --font-weight-medium:  500;
+  --font-weight-semibold: 600;
+  --font-weight-bold:    700;
+
+  /* Line Heights */
+  --line-height-tight:   1.25;
+  --line-height-normal:  1.6;
+  --line-height-relaxed: 1.8;
+
+  /* Letter Spacing */
+  --letter-spacing-tight:  -0.02em;
+  --letter-spacing-normal:  0;
+  --letter-spacing-wide:    0.05em;
+  --letter-spacing-wider:   0.1em;
+
+  /* ---- Spacing Scale ---- */
+  --space-0:   0;
+  --space-1:   0.25rem;   /* 4px  */
+  --space-2:   0.5rem;    /* 8px  */
+  --space-3:   0.75rem;   /* 12px */
+  --space-4:   1rem;      /* 16px */
+  --space-5:   1.25rem;   /* 20px */
+  --space-6:   1.5rem;    /* 24px */
+  --space-8:   2rem;      /* 32px */
+  --space-10:  2.5rem;    /* 40px */
+  --space-12:  3rem;      /* 48px */
+  --space-16:  4rem;      /* 64px */
+  --space-20:  5rem;      /* 80px */
+
+  /* ---- Border Radius ---- */
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   12px;
+  --radius-xl:   16px;
+  --radius-full: 9999px;
+
+  /* ---- Shadows ---- */
+  --shadow-sm:  0 1px 2px rgba(27, 42, 74, 0.06);
+  --shadow-md:  0 4px 8px rgba(27, 42, 74, 0.08);
+  --shadow-lg:  0 8px 24px rgba(27, 42, 74, 0.12);
+  --shadow-xl:  0 16px 48px rgba(27, 42, 74, 0.16);
+  --shadow-gold: 0 4px 16px rgba(197, 165, 90, 0.25);
+
+  /* ---- Transitions ---- */
+  --transition-fast:   150ms ease;
+  --transition-normal: 250ms ease;
+  --transition-slow:   400ms ease;
+
+  /* ---- Z-Index Scale ---- */
+  --z-base:     0;
+  --z-above:    10;
+  --z-dropdown: 100;
+  --z-sticky:   200;
+  --z-overlay:  300;
+  --z-modal:    400;
+  --z-toast:    500;
+}
+
+/* ============================================================
+ * Base Typography Styles
+ * ============================================================ */
+
+body {
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-normal);
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-family-heading);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  color: var(--color-text-primary);
+}
+
+h1 {
+  font-size: var(--font-size-3xl);
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+h2 {
+  font-size: var(--font-size-2xl);
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+h3 {
+  font-size: var(--font-size-xl);
+  letter-spacing: var(--letter-spacing-normal);
+}
+
+h4 {
+  font-size: var(--font-size-lg);
+}
+
+h5 {
+  font-size: var(--font-size-md);
+}
+
+h6 {
+  font-size: var(--font-size-base);
+}
+
+p {
+  margin-bottom: var(--space-4);
+}
+
+a {
+  color: var(--color-primary-600);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--color-primary-700);
+}
+
+small, .text-sm {
+  font-size: var(--font-size-sm);
+}
+
+.text-xs {
+  font-size: var(--font-size-xs);
+}
+
+.text-gold {
+  color: var(--color-text-gold);
+}
+
+.text-accent {
+  color: var(--color-text-accent);
+}
+
+.text-inverse {
+  color: var(--color-text-inverse);
+}
+
+/* ============================================================
+ * Google Fonts Import
+ * ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap');
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  
+  @layer base {
+    body { background: #1a1a2e; color: #e0e0e0; }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+
+      /* ====================== Dashboard Custom Styles ====================== */
+      .dashboard-layout {
+        display: flex;
+        min-height: 100vh;
+      }
+
+      /* Sidebar */
+      .sidebar {
+        width: 240px;
+        min-width: 240px;
+        background: linear-gradient(180deg, #0f0f23 0%, #1a1a2e 100%);
+        border-right: 1px solid rgba(197, 165, 90, 0.15);
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        z-index: 200;
+      }
+
+      .sidebar-logo {
+        padding: 24px 20px;
+        border-bottom: 1px solid rgba(197, 165, 90, 0.1);
+      }
+
+      .sidebar-logo h1 {
+        font-family: 'Noto Serif SC', serif;
+        font-size: 20px;
+        font-weight: 700;
+        color: #C5A55A;
+        letter-spacing: 0.1em;
+        margin: 0;
+      }
+
+      .sidebar-logo .sub {
+        font-size: 12px;
+        color: rgba(197, 165, 90, 0.6);
+        margin-top: 4px;
+        letter-spacing: 0.05em;
+      }
+
+      .sidebar-nav {
+        flex: 1;
+        padding: 16px 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 12px;
+        border-radius: 8px;
+        color: rgba(224, 224, 224, 0.6);
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        cursor: pointer;
+      }
+
+      .nav-item:hover {
+        color: rgba(224, 224, 224, 0.9);
+        background: rgba(197, 165, 90, 0.08);
+      }
+
+      .nav-item.active {
+        color: #C5A55A;
+        background: rgba(197, 165, 90, 0.12);
+        border: 1px solid rgba(197, 165, 90, 0.2);
+      }
+
+      .nav-item:not(.active) {
+        border: 1px solid transparent;
+      }
+
+      .nav-item .nav-icon {
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+      }
+
+      .sidebar-footer {
+        padding: 16px 20px;
+        border-top: 1px solid rgba(197, 165, 90, 0.1);
+      }
+
+      .admin-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .admin-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #C5A55A, #8A7130);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 600;
+        flex-shrink: 0;
+      }
+
+      .admin-detail {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .admin-name {
+        font-size: 13px;
+        font-weight: 600;
+        color: #e0e0e0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .admin-role {
+        font-size: 11px;
+        color: rgba(224, 224, 224, 0.4);
+      }
+
+      /* Main Content */
+      .main-content {
+        margin-left: 240px;
+        flex: 1;
+        min-height: 100vh;
+        background: #1a1a2e;
+        padding: 0;
+      }
+
+      /* Top Bar */
+      .top-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 32px;
+        border-bottom: 1px solid rgba(197, 165, 90, 0.1);
+      }
+
+      .top-bar h2 {
+        font-family: 'Noto Serif SC', serif;
+        font-size: 22px;
+        font-weight: 700;
+        color: #e0e0e0;
+        margin: 0;
+        letter-spacing: 0.05em;
+      }
+
+      .top-bar-actions {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .date-display {
+        font-size: 13px;
+        color: rgba(224, 224, 224, 0.5);
+      }
+
+      .refresh-btn {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 16px;
+        border-radius: 8px;
+        background: rgba(197, 165, 90, 0.1);
+        border: 1px solid rgba(197, 165, 90, 0.25);
+        color: #C5A55A;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .refresh-btn:hover {
+        background: rgba(197, 165, 90, 0.18);
+        border-color: rgba(197, 165, 90, 0.4);
+      }
+
+      /* Content Area */
+      .content-area {
+        padding: 24px 32px;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+      }
+
+      /* KPI Cards */
+      .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+      }
+
+      .kpi-card {
+        background: linear-gradient(135deg, rgba(27, 42, 74, 0.5), rgba(16, 26, 51, 0.6));
+        border: 1px solid rgba(197, 165, 90, 0.12);
+        border-radius: 12px;
+        padding: 20px 24px;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+      }
+
+      .kpi-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #C5A55A, transparent);
+        opacity: 0.6;
+      }
+
+      .kpi-card:hover {
+        border-color: rgba(197, 165, 90, 0.25);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(197, 165, 90, 0.08);
+      }
+
+      .kpi-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+      }
+
+      .kpi-label {
+        font-size: 13px;
+        color: rgba(224, 224, 224, 0.5);
+        font-weight: 500;
+      }
+
+      .kpi-icon-wrap {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        background: rgba(197, 165, 90, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .kpi-icon-wrap svg {
+        width: 18px;
+        height: 18px;
+        color: #C5A55A;
+      }
+
+      .kpi-value {
+        font-family: 'Noto Serif SC', serif;
+        font-size: 32px;
+        font-weight: 700;
+        color: #F5EDD6;
+        line-height: 1.2;
+        margin-bottom: 4px;
+      }
+
+      .kpi-change {
+        font-size: 12px;
+        font-weight: 500;
+      }
+
+      .kpi-change.positive {
+        color: #4ade80;
+      }
+
+      .kpi-change.neutral {
+        color: rgba(224, 224, 224, 0.4);
+      }
+
+      /* Chart Grid */
+      .chart-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+
+      .chart-card {
+        background: linear-gradient(135deg, rgba(27, 42, 74, 0.5), rgba(16, 26, 51, 0.6));
+        border: 1px solid rgba(197, 165, 90, 0.12);
+        border-radius: 12px;
+        padding: 20px 24px;
+        transition: all 0.3s ease;
+      }
+
+      .chart-card:hover {
+        border-color: rgba(197, 165, 90, 0.2);
+      }
+
+      .chart-title {
+        font-family: 'Noto Serif SC', serif;
+        font-size: 15px;
+        font-weight: 600;
+        color: #F5EDD6;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .chart-title svg {
+        width: 16px;
+        height: 16px;
+        color: #C5A55A;
+      }
+
+      /* Line Chart SVG */
+      .line-chart-wrap {
+        position: relative;
+        width: 100%;
+        height: 220px;
+      }
+
+      .line-chart-wrap svg {
+        width: 100%;
+        height: 100%;
+      }
+
+      /* Hot Questions List */
+      .hot-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .hot-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .hot-rank {
+        width: 22px;
+        height: 22px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+
+      .hot-rank.top1 { background: #C5A55A; color: #0f0f23; }
+      .hot-rank.top2 { background: #A88B3E; color: #0f0f23; }
+      .hot-rank.top3 { background: #8A7130; color: #fff; }
+      .hot-rank.normal { background: rgba(197, 165, 90, 0.15); color: rgba(224, 224, 224, 0.5); }
+
+      .hot-text {
+        flex: 1;
+        font-size: 13px;
+        color: rgba(224, 224, 224, 0.8);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .hot-bar-bg {
+        width: 120px;
+        height: 6px;
+        border-radius: 3px;
+        background: rgba(197, 165, 90, 0.1);
+        flex-shrink: 0;
+        overflow: hidden;
+      }
+
+      .hot-bar-fill {
+        height: 100%;
+        border-radius: 3px;
+        background: linear-gradient(90deg, #C5A55A, #D4B96E);
+        transition: width 0.6s ease;
+      }
+
+      /* Attraction Heat Bars */
+      .attraction-list {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      .attraction-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .attraction-name {
+        width: 80px;
+        font-size: 13px;
+        color: rgba(224, 224, 224, 0.7);
+        text-align: right;
+        flex-shrink: 0;
+      }
+
+      .attraction-bar-bg {
+        flex: 1;
+        height: 22px;
+        border-radius: 6px;
+        background: rgba(197, 165, 90, 0.08);
+        overflow: hidden;
+        position: relative;
+      }
+
+      .attraction-bar-fill {
+        height: 100%;
+        border-radius: 6px;
+        transition: width 0.6s ease;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding-right: 8px;
+      }
+
+      .attraction-count {
+        font-size: 11px;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.85);
+      }
+
+      /* Sentiment Ring */
+      .sentiment-wrap {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 32px;
+        padding: 8px 0;
+      }
+
+      .sentiment-ring {
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+        position: relative;
+        background: conic-gradient(
+          #4ade80 0deg 259.2deg,
+          #facc15 259.2deg 338.4deg,
+          #ef4444 338.4deg 360deg
+        );
+        flex-shrink: 0;
+      }
+
+      .sentiment-ring::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 110px;
+        height: 110px;
+        border-radius: 50%;
+        background: rgba(16, 26, 51, 0.95);
+      }
+
+      .sentiment-center {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        z-index: 1;
+      }
+
+      .sentiment-center .total-label {
+        font-size: 11px;
+        color: rgba(224, 224, 224, 0.4);
+      }
+
+      .sentiment-center .total-value {
+        font-family: 'Noto Serif SC', serif;
+        font-size: 22px;
+        font-weight: 700;
+        color: #F5EDD6;
+      }
+
+      .sentiment-legend {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .legend-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+
+      .legend-dot.green { background: #4ade80; }
+      .legend-dot.yellow { background: #facc15; }
+      .legend-dot.red { background: #ef4444; }
+
+      .legend-label {
+        font-size: 13px;
+        color: rgba(224, 224, 224, 0.6);
+        width: 36px;
+      }
+
+      .legend-value {
+        font-size: 18px;
+        font-weight: 700;
+        color: #F5EDD6;
+        font-family: 'Noto Serif SC', serif;
+      }
+
+      .legend-pct {
+        font-size: 12px;
+        color: rgba(224, 224, 224, 0.4);
+        margin-left: 4px;
+      }
+
+      /* Real-time Activity */
+      .activity-section {
+        background: linear-gradient(135deg, rgba(27, 42, 74, 0.5), rgba(16, 26, 51, 0.6));
+        border: 1px solid rgba(197, 165, 90, 0.12);
+        border-radius: 12px;
+        padding: 20px 24px;
+      }
+
+      .activity-title {
+        font-family: 'Noto Serif SC', serif;
+        font-size: 15px;
+        font-weight: 600;
+        color: #F5EDD6;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .activity-title svg {
+        width: 16px;
+        height: 16px;
+        color: #C5A55A;
+      }
+
+      .activity-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+      }
+
+      .activity-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(197, 165, 90, 0.06);
+      }
+
+      .activity-item:last-child {
+        border-bottom: none;
+      }
+
+      .activity-dot-wrap {
+        position: relative;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        gap: 0;
+      }
+
+      .activity-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #C5A55A;
+      }
+
+      .activity-dot.pulse {
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(197, 165, 90, 0.4); }
+        50% { box-shadow: 0 0 0 6px rgba(197, 165, 90, 0); }
+      }
+
+      .activity-time {
+        font-size: 12px;
+        color: rgba(224, 224, 224, 0.35);
+        width: 52px;
+        flex-shrink: 0;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .activity-content {
+        flex: 1;
+        font-size: 13px;
+        color: rgba(224, 224, 224, 0.7);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .activity-content .highlight {
+        color: #C5A55A;
+        font-weight: 500;
+      }
+
+      .activity-tag {
+        font-size: 11px;
+        padding: 2px 8px;
+        border-radius: 4px;
+        flex-shrink: 0;
+        font-weight: 500;
+      }
+
+      .activity-tag.success {
+        background: rgba(74, 222, 128, 0.12);
+        color: #4ade80;
+      }
+
+      .activity-tag.info {
+        background: rgba(197, 165, 90, 0.12);
+        color: #C5A55A;
+      }
+
+      /* Scrollbar */
+      .main-content ::-webkit-scrollbar {
+        width: 6px;
+      }
+      .main-content ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .main-content ::-webkit-scrollbar-thumb {
+        background: rgba(197, 165, 90, 0.2);
+        border-radius: 3px;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+    <div class="dashboard-layout">
+        <!-- ==================== Sidebar ==================== -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <h1>灵山胜境</h1>
+                <div class="sub">管理后台</div>
+            </div>
+            <nav class="sidebar-nav">
+                <a class="nav-item active" href="#">
+                    <i data-icon="layout-dashboard" class="nav-icon"></i>
+                    <span>数据大屏</span>
+                </a>
+                <a class="nav-item" href="#">
+                    <i data-icon="book-open" class="nav-icon"></i>
+                    <span>知识库管理</span>
+                </a>
+                <a class="nav-item" href="#">
+                    <i data-icon="user" class="nav-icon"></i>
+                    <span>数字人管理</span>
+                </a>
+                <a class="nav-item" href="#">
+                    <i data-icon="bar-chart-3" class="nav-icon"></i>
+                    <span>游客分析</span>
+                </a>
+                <a class="nav-item" href="#">
+                    <i data-icon="settings" class="nav-icon"></i>
+                    <span>系统设置</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="admin-info">
+                    <div class="admin-avatar">管</div>
+                    <div class="admin-detail">
+                        <div class="admin-name">管理员</div>
+                        <div class="admin-role">超级管理员</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ==================== Main Content ==================== -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <h2>数据大屏概览</h2>
+                <div class="top-bar-actions">
+                    <span class="date-display">2026-07-15 14:32</span>
+                    <button class="refresh-btn">
+                        <i data-icon="refresh-cw" style="width:14px;height:14px;"></i>
+                        刷新
+                    </button>
+                </div>
+            </div>
+
+            <div class="content-area">
+                <!-- KPI Cards -->
+                <div class="kpi-grid">
+                    <!-- KPI 1: Today Services -->
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <span class="kpi-label">今日服务人次</span>
+                            <div class="kpi-icon-wrap">
+                                <i data-icon="users" style="width:18px;height:18px;color:#C5A55A;"></i>
+                            </div>
+                        </div>
+                        <div class="kpi-value">1,286</div>
+                        <div class="kpi-change positive">
+                            <i data-icon="trending-up" style="width:12px;height:12px;display:inline-block;vertical-align:middle;margin-right:2px;"></i>
+                            +12% 较昨日
+                        </div>
+                    </div>
+                    <!-- KPI 2: Weekly Total -->
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <span class="kpi-label">本周累计</span>
+                            <div class="kpi-icon-wrap">
+                                <i data-icon="calendar" style="width:18px;height:18px;color:#C5A55A;"></i>
+                            </div>
+                        </div>
+                        <div class="kpi-value">8,452</div>
+                        <div class="kpi-change neutral">周一至今</div>
+                    </div>
+                    <!-- KPI 3: Satisfaction -->
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <span class="kpi-label">游客满意度</span>
+                            <div class="kpi-icon-wrap">
+                                <i data-icon="star" style="width:18px;height:18px;color:#C5A55A;"></i>
+                            </div>
+                        </div>
+                        <div class="kpi-value">4.7<span style="font-size:16px;color:rgba(224,224,224,0.4);font-weight:400;">/5.0</span></div>
+                        <div class="kpi-change positive">
+                            <i data-icon="trending-up" style="width:12px;height:12px;display:inline-block;vertical-align:middle;margin-right:2px;"></i>
+                            +0.3 较上周
+                        </div>
+                    </div>
+                    <!-- KPI 4: Online Devices -->
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <span class="kpi-label">在线设备</span>
+                            <div class="kpi-icon-wrap">
+                                <i data-icon="monitor" style="width:18px;height:18px;color:#C5A55A;"></i>
+                            </div>
+                        </div>
+                        <div class="kpi-value">3<span style="font-size:14px;color:rgba(224,224,224,0.4);font-weight:400;margin-left:4px;">台</span></div>
+                        <div class="kpi-change neutral">总部署 5 台</div>
+                    </div>
+                </div>
+
+                <!-- Charts 2x2 Grid -->
+                <div class="chart-grid">
+                    <!-- Chart 1: 7-day Service Line Chart -->
+                    <div class="chart-card">
+                        <div class="chart-title">
+                            <i data-icon="activity"></i>
+                            近7日服务人次
+                        </div>
+                        <div class="line-chart-wrap">
+                            <svg viewBox="0 0 520 200" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                                <!-- Grid lines -->
+                                <line x1="40" y1="20" x2="40" y2="170" stroke="rgba(197,165,90,0.08)" stroke-width="1"/>
+                                <line x1="40" y1="170" x2="500" y2="170" stroke="rgba(197,165,90,0.12)" stroke-width="1"/>
+                                <line x1="40" y1="130" x2="500" y2="130" stroke="rgba(197,165,90,0.06)" stroke-width="1" stroke-dasharray="4,4"/>
+                                <line x1="40" y1="90" x2="500" y2="90" stroke="rgba(197,165,90,0.06)" stroke-width="1" stroke-dasharray="4,4"/>
+                                <line x1="40" y1="50" x2="500" y2="50" stroke="rgba(197,165,90,0.06)" stroke-width="1" stroke-dasharray="4,4"/>
+
+                                <!-- Y-axis labels -->
+                                <text x="32" y="174" fill="rgba(224,224,224,0.3)" font-size="10" text-anchor="end">800</text>
+                                <text x="32" y="134" fill="rgba(224,224,224,0.3)" font-size="10" text-anchor="end">1000</text>
+                                <text x="32" y="94" fill="rgba(224,224,224,0.3)" font-size="10" text-anchor="end">1200</text>
+                                <text x="32" y="54" fill="rgba(224,224,224,0.3)" font-size="10" text-anchor="end">1400</text>
+
+                                <!-- Gradient fill -->
+                                <defs>
+                                    <linearGradient id="lineGrad" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" stop-color="#C5A55A" stop-opacity="0.3"/>
+                                        <stop offset="100%" stop-color="#C5A55A" stop-opacity="0"/>
+                                    </linearGradient>
+                                </defs>
+
+                                <!-- Area fill -->
+                                <path d="M60,140 L137,120 L214,132 L291,95 L368,80 L445,45 L500,55 L500,170 L60,170 Z"
+                                      fill="url(#lineGrad)"/>
+
+                                <!-- Line -->
+                                <polyline
+                                    points="60,140 137,120 214,132 291,95 368,80 445,45 500,55"
+                                    fill="none"
+                                    stroke="#C5A55A"
+                                    stroke-width="2.5"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                />
+
+                                <!-- Data points -->
+                                <circle cx="60" cy="140" r="4" fill="#1a1a2e" stroke="#C5A55A" stroke-width="2"/>
+                                <circle cx="137" cy="120" r="4" fill="#1a1a2e" stroke="#C5A55A" stroke-width="2"/>
+                                <circle cx="214" cy="132" r="4" fill="#1a1a2e" stroke="#C5A55A" stroke-width="2"/>
+                                <circle cx="291" cy="95" r="4" fill="#1a1a2e" stroke="#C5A55A" stroke-width="2"/>
+                                <circle cx="368" cy="80" r="4" fill="#1a1a2e" stroke="#C5A55A" stroke-width="2"/>
+                                <circle cx="445" cy="45" r="4" fill="#1a1a2e" stroke="#C5A55A" stroke-width="2"/>
+                                <circle cx="500" cy="55" r="5" fill="#C5A55A" stroke="#C5A55A" stroke-width="2"/>
+
+                                <!-- Value labels -->
+                                <text x="60" y="132" fill="rgba(224,224,224,0.5)" font-size="10" text-anchor="middle">980</text>
+                                <text x="137" y="112" fill="rgba(224,224,224,0.5)" font-size="10" text-anchor="middle">1080</text>
+                                <text x="214" y="124" fill="rgba(224,224,224,0.5)" font-size="10" text-anchor="middle">1010</text>
+                                <text x="291" y="87" fill="rgba(224,224,224,0.5)" font-size="10" text-anchor="middle">1230</text>
+                                <text x="368" y="72" fill="rgba(224,224,224,0.5)" font-size="10" text-anchor="middle">1300</text>
+                                <text x="445" y="37" fill="#C5A55A" font-size="11" font-weight="600" text-anchor="middle">1420</text>
+                                <text x="500" y="47" fill="rgba(224,224,224,0.5)" font-size="10" text-anchor="middle">1286</text>
+
+                                <!-- X-axis labels -->
+                                <text x="60" y="188" fill="rgba(224,224,224,0.35)" font-size="10" text-anchor="middle">周一</text>
+                                <text x="137" y="188" fill="rgba(224,224,224,0.35)" font-size="10" text-anchor="middle">周二</text>
+                                <text x="214" y="188" fill="rgba(224,224,224,0.35)" font-size="10" text-anchor="middle">周三</text>
+                                <text x="291" y="188" fill="rgba(224,224,224,0.35)" font-size="10" text-anchor="middle">周四</text>
+                                <text x="368" y="188" fill="rgba(224,224,224,0.35)" font-size="10" text-anchor="middle">周五</text>
+                                <text x="445" y="188" fill="rgba(224,224,224,0.35)" font-size="10" text-anchor="middle">周六</text>
+                                <text x="500" y="188" fill="rgba(224,224,224,0.35)" font-size="10" text-anchor="middle">周日</text>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Chart 2: Hot Questions Top 10 -->
+                    <div class="chart-card">
+                        <div class="chart-title">
+                            <i data-icon="flame"></i>
+                            热门问答 Top 10
+                        </div>
+                        <div class="hot-list">
+                            <div class="hot-item">
+                                <span class="hot-rank top1">1</span>
+                                <span class="hot-text">灵山大佛有多高</span>
+                                <div class="hot-bar-bg"><div class="hot-bar-fill" style="width:100%"></div></div>
+                            </div>
+                            <div class="hot-item">
+                                <span class="hot-rank top2">2</span>
+                                <span class="hot-text">九龙灌浴表演时间</span>
+                                <div class="hot-bar-bg"><div class="hot-bar-fill" style="width:92%"></div></div>
+                            </div>
+                            <div class="hot-item">
+                                <span class="hot-rank top3">3</span>
+                                <span class="hot-text">推荐亲子游路线</span>
+                                <div class="hot-bar-bg"><div class="hot-bar-fill" style="width:78%"></div></div>
+                            </div>
+                            <div class="hot-item">
+                                <span class="hot-rank normal">4</span>
+                                <span class="hot-text">梵宫门票多少钱</span>
+                                <div class="hot-bar-bg"><div class="hot-bar-fill" style="width:65%"></div></div>
+                            </div>
+                            <div class="hot-item">
+                                <span class="hot-rank normal">5</span>
+                                <span class="hot-text">五印坛城开放时间</span>
+                                <div class="hot-bar-bg"><div class="hot-bar-fill" style="width:58%"></div></div>
+                            </div>
+                            <div class="hot-item">
+                                <span class="hot-rank normal">6</span>
+                                <span class="hot-text">祥符禅寺历史介绍</span>
+                                <div class="hot-bar-bg"><div class="hot-bar-fill" style="width:48%"></div></div>
+                            </div>
+                            <div class="hot-item">
+                                <span class="hot-rank normal">7</span>
+                                <span class="hot-text">景区停车场位置</span>
+                                <div class="hot-bar-bg"><div class="hot-bar-fill" style="width:42%"></div></div>
+                            </div>
+                            <div class="hot-item">
+                                <span class="hot-rank normal">8</span>
+                                <span class="hot-text">有无无障碍通道</span>
+                                <div class="hot-bar-bg"><div class="hot-bar-fill" style="width:35%"></div></div>
+                            </div>
+                            <div class="hot-item">
+                                <span class="hot-rank normal">9</span>
+                                <span class="hot-text">附近美食推荐</span>
+                                <div class="hot-bar-bg"><div class="hot-bar-fill" style="width:28%"></div></div>
+                            </div>
+                            <div class="hot-item">
+                                <span class="hot-rank normal">10</span>
+                                <span class="hot-text">纪念品商店位置</span>
+                                <div class="hot-bar-bg"><div class="hot-bar-fill" style="width:22%"></div></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chart 3: Attraction Heat Horizontal Bars -->
+                    <div class="chart-card">
+                        <div class="chart-title">
+                            <i data-icon="map-pin"></i>
+                            景点热度排行
+                        </div>
+                        <div class="attraction-list">
+                            <div class="attraction-item">
+                                <span class="attraction-name">灵山大佛</span>
+                                <div class="attraction-bar-bg">
+                                    <div class="attraction-bar-fill" style="width:95%;background:linear-gradient(90deg,#C5A55A,#D4B96E);">
+                                        <span class="attraction-count">2,340</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="attraction-item">
+                                <span class="attraction-name">九龙灌浴</span>
+                                <div class="attraction-bar-bg">
+                                    <div class="attraction-bar-fill" style="width:82%;background:linear-gradient(90deg,#A88B3E,#C5A55A);">
+                                        <span class="attraction-count">1,890</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="attraction-item">
+                                <span class="attraction-name">梵宫</span>
+                                <div class="attraction-bar-bg">
+                                    <div class="attraction-bar-fill" style="width:68%;background:linear-gradient(90deg,#8A7130,#A88B3E);">
+                                        <span class="attraction-count">1,520</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="attraction-item">
+                                <span class="attraction-name">五印坛城</span>
+                                <div class="attraction-bar-bg">
+                                    <div class="attraction-bar-fill" style="width:52%;background:linear-gradient(90deg,#6C5724,#8A7130);">
+                                        <span class="attraction-count">1,160</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="attraction-item">
+                                <span class="attraction-name">祥符禅寺</span>
+                                <div class="attraction-bar-bg">
+                                    <div class="attraction-bar-fill" style="width:38%;background:linear-gradient(90deg,#503F1A,#6C5724);">
+                                        <span class="attraction-count">820</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="attraction-item">
+                                <span class="attraction-name">菩提大道</span>
+                                <div class="attraction-bar-bg">
+                                    <div class="attraction-bar-fill" style="width:25%;background:linear-gradient(90deg,#503F1A,#6C5724);">
+                                        <span class="attraction-count">540</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chart 4: Visitor Sentiment Ring -->
+                    <div class="chart-card">
+                        <div class="chart-title">
+                            <i data-icon="heart"></i>
+                            游客情感分析
+                        </div>
+                        <div class="sentiment-wrap">
+                            <div class="sentiment-ring">
+                                <div class="sentiment-center">
+                                    <div class="total-label">总交互</div>
+                                    <div class="total-value">8,452</div>
+                                </div>
+                            </div>
+                            <div class="sentiment-legend">
+                                <div class="legend-item">
+                                    <span class="legend-dot green"></span>
+                                    <span class="legend-label">积极</span>
+                                    <span class="legend-value">72</span><span class="legend-pct">%</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span class="legend-dot yellow"></span>
+                                    <span class="legend-label">中性</span>
+                                    <span class="legend-value">22</span><span class="legend-pct">%</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span class="legend-dot red"></span>
+                                    <span class="legend-label">消极</span>
+                                    <span class="legend-value">6</span><span class="legend-pct">%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottom: Real-time Activity -->
+                <div class="activity-section">
+                    <div class="activity-title">
+                        <i data-icon="radio"></i>
+                        实时动态
+                    </div>
+                    <div class="activity-list">
+                        <div class="activity-item">
+                            <span class="activity-dot pulse"></span>
+                            <span class="activity-time">14:32</span>
+                            <span class="activity-content">游客 <span class="highlight">李先生</span> 在灵山大佛点位询问"大佛高度"并获得满意回答</span>
+                            <span class="activity-tag success">已完成</span>
+                        </div>
+                        <div class="activity-item">
+                            <span class="activity-dot"></span>
+                            <span class="activity-time">14:28</span>
+                            <span class="activity-content">数字人 <span class="highlight">灵灵</span> 正在为游客 <span class="highlight">张女士</span> 推荐亲子游路线</span>
+                            <span class="activity-tag info">进行中</span>
+                        </div>
+                        <div class="activity-item">
+                            <span class="activity-dot"></span>
+                            <span class="activity-time">14:25</span>
+                            <span class="activity-content">九龙灌浴点位设备 <span class="highlight">#02</span> 已重新上线</span>
+                            <span class="activity-tag success">已恢复</span>
+                        </div>
+                        <div class="activity-item">
+                            <span class="activity-dot"></span>
+                            <span class="activity-time">14:19</span>
+                            <span class="activity-content">知识库更新: 新增"夏季防暑指南"等 <span class="highlight">3条</span> FAQ条目</span>
+                            <span class="activity-tag info">系统</span>
+                        </div>
+                        <div class="activity-item">
+                            <span class="activity-dot"></span>
+                            <span class="activity-time">14:12</span>
+                            <span class="activity-content">游客 <span class="highlight">王同学</span> 在梵宫点位完成多轮对话交互（共 <span class="highlight">6轮</span>）</span>
+                            <span class="activity-tag success">已完成</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

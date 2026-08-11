@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>游客感受度分析 - 灵山胜境AI数字人导览系统</title>
+    <style id="theme-vars">
+/* ============================================================
+ * 灵山胜境AI数字人导览系统 - Brand Colors & Typography
+ * Design Token Convention (CSS Custom Properties)
+ * ============================================================ */
+
+:root {
+  /* ---- Primary: 金色系 (Gold) ---- */
+  --color-primary-100: #F5EDD6;
+  --color-primary-200: #EBDCB0;
+  --color-primary-300: #DFC98A;
+  --color-primary-400: #D4B96E;
+  --color-primary-500: #C5A55A;
+  --color-primary-600: #A88B3E;
+  --color-primary-700: #8A7130;
+  --color-primary-800: #6C5724;
+  --color-primary-900: #503F1A;
+
+  /* ---- Secondary: 藏青 / 深蓝 (Deep Blue) ---- */
+  --color-secondary-100: #C5CEE0;
+  --color-secondary-200: #96A6C4;
+  --color-secondary-300: #677EA8;
+  --color-secondary-400: #3D5678;
+  --color-secondary-500: #1B2A4A;
+  --color-secondary-600: #152240;
+  --color-secondary-700: #101A33;
+  --color-secondary-800: #0A1226;
+  --color-secondary-900: #050A19;
+
+  /* ---- Neutral: 白 / 灰 ---- */
+  --color-neutral-0:   #FFFFFF;
+  --color-neutral-50:  #FAFAF5;
+  --color-neutral-100: #F5F5F0;
+  --color-neutral-200: #E5E5DD;
+  --color-neutral-300: #D0D0C5;
+  --color-neutral-400: #A3A395;
+  --color-neutral-500: #767665;
+  --color-neutral-600: #595948;
+  --color-neutral-700: #3D3D31;
+  --color-neutral-800: #222218;
+  --color-neutral-900: #0F0F0A;
+
+  /* ---- Accent: 朱砂红 (Vermilion) ---- */
+  --color-accent-100: #F2D1D0;
+  --color-accent-200: #E8A3A1;
+  --color-accent-300: #DE7573;
+  --color-accent-400: #D46462;
+  --color-accent-500: #C25450;
+  --color-accent-600: #A34340;
+  --color-accent-700: #843330;
+  --color-accent-800: #652320;
+  --color-accent-900: #461312;
+
+  /* ---- Semantic Tokens ---- */
+  --color-bg-primary:     var(--color-neutral-0);
+  --color-bg-secondary:   var(--color-neutral-100);
+  --color-bg-deep:        var(--color-secondary-500);
+  --color-bg-card:        var(--color-neutral-0);
+  --color-bg-overlay:     rgba(27, 42, 74, 0.65);
+
+  --color-text-primary:   var(--color-secondary-500);
+  --color-text-secondary: var(--color-neutral-700);
+  --color-text-inverse:   var(--color-neutral-0);
+  --color-text-accent:    var(--color-accent-500);
+  --color-text-gold:       var(--color-primary-500);
+
+  --color-border-default: var(--color-neutral-200);
+  --color-border-gold:     var(--color-primary-400);
+  --color-border-subtle:   var(--color-neutral-100);
+
+  /* ---- Typography ---- */
+  --font-family-heading: 'Noto Serif SC', 'Source Han Serif SC', 'Songti SC', serif;
+  --font-family-body:    'Noto Sans SC', 'Source Han Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+
+  /* Font Sizes (Mobile-first) */
+  --font-size-xs:   0.6875rem;   /* 11px */
+  --font-size-sm:   0.75rem;     /* 12px */
+  --font-size-base: 0.875rem;    /* 14px */
+  --font-size-md:   1rem;        /* 16px */
+  --font-size-lg:   1.125rem;    /* 18px */
+  --font-size-xl:   1.25rem;     /* 20px */
+  --font-size-2xl:  1.5rem;      /* 24px */
+  --font-size-3xl:  1.875rem;    /* 30px */
+  --font-size-4xl:  2.25rem;     /* 36px */
+
+  /* Font Weights */
+  --font-weight-regular: 400;
+  --font-weight-medium:  500;
+  --font-weight-semibold: 600;
+  --font-weight-bold:    700;
+
+  /* Line Heights */
+  --line-height-tight:   1.25;
+  --line-height-normal:  1.6;
+  --line-height-relaxed: 1.8;
+
+  /* Letter Spacing */
+  --letter-spacing-tight:  -0.02em;
+  --letter-spacing-normal:  0;
+  --letter-spacing-wide:    0.05em;
+  --letter-spacing-wider:   0.1em;
+
+  /* ---- Spacing Scale ---- */
+  --space-0:   0;
+  --space-1:   0.25rem;   /* 4px  */
+  --space-2:   0.5rem;    /* 8px  */
+  --space-3:   0.75rem;   /* 12px */
+  --space-4:   1rem;      /* 16px */
+  --space-5:   1.25rem;   /* 20px */
+  --space-6:   1.5rem;    /* 24px */
+  --space-8:   2rem;      /* 32px */
+  --space-10:  2.5rem;    /* 40px */
+  --space-12:  3rem;      /* 48px */
+  --space-16:  4rem;      /* 64px */
+  --space-20:  5rem;      /* 80px */
+
+  /* ---- Border Radius ---- */
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   12px;
+  --radius-xl:   16px;
+  --radius-full: 9999px;
+
+  /* ---- Shadows ---- */
+  --shadow-sm:  0 1px 2px rgba(27, 42, 74, 0.06);
+  --shadow-md:  0 4px 8px rgba(27, 42, 74, 0.08);
+  --shadow-lg:  0 8px 24px rgba(27, 42, 74, 0.12);
+  --shadow-xl:  0 16px 48px rgba(27, 42, 74, 0.16);
+  --shadow-gold: 0 4px 16px rgba(197, 165, 90, 0.25);
+
+  /* ---- Transitions ---- */
+  --transition-fast:   150ms ease;
+  --transition-normal: 250ms ease;
+  --transition-slow:   400ms ease;
+
+  /* ---- Z-Index Scale ---- */
+  --z-base:     0;
+  --z-above:    10;
+  --z-dropdown: 100;
+  --z-sticky:   200;
+  --z-overlay:  300;
+  --z-modal:    400;
+  --z-toast:    500;
+}
+
+/* ============================================================
+ * Base Typography Styles
+ * ============================================================ */
+
+body {
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-normal);
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-family-heading);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  color: var(--color-text-primary);
+}
+
+h1 {
+  font-size: var(--font-size-3xl);
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+h2 {
+  font-size: var(--font-size-2xl);
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+h3 {
+  font-size: var(--font-size-xl);
+  letter-spacing: var(--letter-spacing-normal);
+}
+
+h4 {
+  font-size: var(--font-size-lg);
+}
+
+h5 {
+  font-size: var(--font-size-md);
+}
+
+h6 {
+  font-size: var(--font-size-base);
+}
+
+p {
+  margin-bottom: var(--space-4);
+}
+
+a {
+  color: var(--color-primary-600);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--color-primary-700);
+}
+
+small, .text-sm {
+  font-size: var(--font-size-sm);
+}
+
+.text-xs {
+  font-size: var(--font-size-xs);
+}
+
+.text-gold {
+  color: var(--color-text-gold);
+}
+
+.text-accent {
+  color: var(--color-text-accent);
+}
+
+.text-inverse {
+  color: var(--color-text-inverse);
+}
+
+/* ============================================================
+ * Google Fonts Import
+ * ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap');
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  
+  @layer base {
+    body { background: var(--color-bg-primary); color: var(--color-text-primary); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+
+  /* Dark mode overrides */
+  .dark {
+    --color-bg-primary:   var(--color-secondary-800);
+    --color-bg-secondary: var(--color-secondary-700);
+    --color-bg-card:      var(--color-secondary-700);
+    --color-bg-overlay:   rgba(5, 10, 25, 0.75);
+    --color-text-primary:   var(--color-neutral-100);
+    --color-text-secondary: var(--color-neutral-400);
+    --color-text-inverse:   var(--color-secondary-800);
+    --color-border-default: var(--color-secondary-600);
+    --color-border-subtle:   var(--color-secondary-600);
+  }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+      .sidebar-link {
+        transition: background-color var(--transition-fast), color var(--transition-fast);
+      }
+      .sidebar-link:hover,
+      .sidebar-link.active {
+        background-color: var(--color-secondary-600);
+        color: var(--color-primary-300);
+      }
+      .sidebar-link.active {
+        border-left: 3px solid var(--color-primary-500);
+      }
+      .kpi-card {
+        background: var(--color-secondary-700);
+        border: 1px solid var(--color-secondary-600);
+        transition: border-color var(--transition-normal), box-shadow var(--transition-normal);
+      }
+      .kpi-card:hover {
+        border-color: var(--color-primary-600);
+        box-shadow: var(--shadow-gold);
+      }
+      .tag-cloud-item {
+        display: inline-block;
+        padding: var(--space-2) var(--space-4);
+        border-radius: var(--radius-full);
+        border: 1px solid var(--color-secondary-500);
+        color: var(--color-neutral-200);
+        transition: all var(--transition-fast);
+        cursor: default;
+      }
+      .tag-cloud-item:hover {
+        border-color: var(--color-primary-500);
+        color: var(--color-primary-300);
+        box-shadow: var(--shadow-gold);
+      }
+      .tag-xl { font-size: var(--font-size-2xl); font-weight: 700; color: var(--color-primary-300); border-color: var(--color-primary-700); background: rgba(197,165,90,0.08); }
+      .tag-lg { font-size: var(--font-size-xl); font-weight: 600; color: var(--color-primary-400); border-color: var(--color-primary-800); }
+      .tag-md { font-size: var(--font-size-lg); font-weight: 500; }
+      .tag-sm { font-size: var(--font-size-base); font-weight: 400; opacity: 0.75; }
+      .sentiment-positive { background: rgba(45,138,78,0.15); color: #6FCF8A; border-color: rgba(45,138,78,0.3); }
+      .sentiment-neutral  { background: rgba(197,165,90,0.15); color: #DFC98A; border-color: rgba(197,165,90,0.3); }
+      .sentiment-negative { background: rgba(194,84,80,0.15); color: #E8A3A1; border-color: rgba(194,84,80,0.3); }
+      .status-processed { color: var(--color-neutral-400); }
+      .status-pending   { color: var(--color-primary-400); }
+      .btn-gold {
+        background: linear-gradient(135deg, var(--color-primary-600), var(--color-primary-500));
+        color: var(--color-neutral-900);
+        font-weight: var(--font-weight-semibold);
+        transition: all var(--transition-fast);
+      }
+      .btn-gold:hover {
+        background: linear-gradient(135deg, var(--color-primary-500), var(--color-primary-400));
+        box-shadow: var(--shadow-gold);
+      }
+      .date-btn {
+        padding: var(--space-2) var(--space-4);
+        border-radius: var(--radius-md);
+        font-size: var(--font-size-sm);
+        border: 1px solid var(--color-secondary-500);
+        color: var(--color-neutral-300);
+        background: transparent;
+        cursor: pointer;
+        transition: all var(--transition-fast);
+      }
+      .date-btn:hover { border-color: var(--color-primary-600); color: var(--color-primary-300); }
+      .date-btn.active {
+        background: linear-gradient(135deg, var(--color-primary-700), var(--color-primary-600));
+        border-color: var(--color-primary-500);
+        color: var(--color-neutral-100);
+      }
+      .ai-card {
+        background: var(--color-secondary-700);
+        border: 1px solid var(--color-secondary-500);
+        border-left: 3px solid var(--color-primary-500);
+        transition: all var(--transition-normal);
+      }
+      .ai-card:hover {
+        border-left-color: var(--color-primary-400);
+        box-shadow: var(--shadow-gold);
+      }
+      table { border-collapse: collapse; width: 100%; }
+      th { text-align: left; }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased" style="background: var(--color-secondary-800); color: var(--color-neutral-100);">
+    <main class="flex min-h-screen">
+        <!-- ======== 左侧侧边栏 ======== -->
+        <aside class="w-60 flex-shrink-0 flex flex-col no-scrollbar" style="background: var(--color-secondary-900); border-right: 1px solid var(--color-secondary-700);">
+            <!-- Logo区域 -->
+            <div class="flex items-center gap-3 px-5 py-5" style="border-bottom: 1px solid var(--color-secondary-700);">
+                <div class="w-9 h-9 rounded-lg flex items-center justify-center" style="background: linear-gradient(135deg, var(--color-primary-500), var(--color-primary-700));">
+                    <i data-icon="mountain" style="width:20px;height:20px;color:var(--color-neutral-100);"></i>
+                </div>
+                <div>
+                    <div class="text-sm font-semibold" style="color: var(--color-primary-300);">灵山胜境</div>
+                    <div class="text-xs" style="color: var(--color-neutral-500);">AI导览管理后台</div>
+                </div>
+            </div>
+
+            <!-- 导航菜单 -->
+            <nav class="flex-1 py-4 px-3 space-y-1">
+                <div class="text-xs uppercase tracking-wider px-3 mb-3" style="color: var(--color-neutral-500);">功能模块</div>
+                <a href="#" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm" style="color: var(--color-neutral-300);">
+                    <i data-icon="layout-dashboard" style="width:18px;height:18px;"></i>
+                    <span>数据大屏</span>
+                </a>
+                <a href="#" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm" style="color: var(--color-neutral-300);">
+                    <i data-icon="book-open" style="width:18px;height:18px;"></i>
+                    <span>知识库管理</span>
+                </a>
+                <a href="#" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm" style="color: var(--color-neutral-300);">
+                    <i data-icon="user-circle" style="width:18px;height:18px;"></i>
+                    <span>数字人管理</span>
+                </a>
+                <a href="#" class="sidebar-link active flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm" style="color: var(--color-primary-300);">
+                    <i data-icon="bar-chart-3" style="width:18px;height:18px;"></i>
+                    <span>游客分析</span>
+                </a>
+
+                <div class="text-xs uppercase tracking-wider px-3 mb-3 mt-6" style="color: var(--color-neutral-500);">系统设置</div>
+                <a href="#" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm" style="color: var(--color-neutral-300);">
+                    <i data-icon="settings" style="width:18px;height:18px;"></i>
+                    <span>系统配置</span>
+                </a>
+                <a href="#" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm" style="color: var(--color-neutral-300);">
+                    <i data-icon="shield" style="width:18px;height:18px;"></i>
+                    <span>权限管理</span>
+                </a>
+            </nav>
+
+            <!-- 底部用户 -->
+            <div class="px-4 py-4 flex items-center gap-3" style="border-top: 1px solid var(--color-secondary-700);">
+                <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold" style="background: var(--color-primary-800); color: var(--color-primary-300);">管</div>
+                <div class="flex-1 min-w-0">
+                    <div class="text-sm truncate" style="color: var(--color-neutral-200);">管理员</div>
+                    <div class="text-xs" style="color: var(--color-neutral-500);">admin@lingshan.cn</div>
+                </div>
+                <i data-icon="log-out" style="width:16px;height:16px;color:var(--color-neutral-500);cursor:pointer;"></i>
+            </div>
+        </aside>
+
+        <!-- ======== 右侧主内容 ======== -->
+        <div class="flex-1 overflow-y-auto no-scrollbar">
+            <!-- 顶部标题栏 -->
+            <div class="flex items-center justify-between px-8 py-5" style="border-bottom: 1px solid var(--color-secondary-700); background: var(--color-secondary-800);">
+                <div>
+                    <h1 class="text-2xl font-bold" style="font-family: var(--font-family-heading); color: var(--color-primary-300); letter-spacing: var(--letter-spacing-wide);">游客感受度分析</h1>
+                    <p class="text-sm mt-1" style="color: var(--color-neutral-400);">基于AI数字人导览交互数据，实时监测游客满意度与关注热点</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <!-- 日期范围 -->
+                    <div class="flex items-center gap-2 px-1 py-1 rounded-lg" style="background: var(--color-secondary-700); border: 1px solid var(--color-secondary-600);">
+                        <button class="date-btn active" onclick="this.parentElement.querySelectorAll('.date-btn').forEach(b=>b.classList.remove('active'));this.classList.add('active');">本周</button>
+                        <button class="date-btn" onclick="this.parentElement.querySelectorAll('.date-btn').forEach(b=>b.classList.remove('active'));this.classList.add('active');">本月</button>
+                        <button class="date-btn" onclick="this.parentElement.querySelectorAll('.date-btn').forEach(b=>b.classList.remove('active'));this.classList.add('active');">本季度</button>
+                    </div>
+                    <!-- 导出报告 -->
+                    <button class="btn-gold flex items-center gap-2 px-4 py-2 rounded-lg text-sm">
+                        <i data-icon="download" style="width:16px;height:16px;"></i>
+                        <span>导出报告</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 内容区域 -->
+            <div class="px-8 py-6 space-y-6">
+
+                <!-- ======== 核心指标 4 列 ======== -->
+                <div class="grid grid-cols-4 gap-5">
+                    <!-- 平均满意度 -->
+                    <div class="kpi-card rounded-xl p-5">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-sm" style="color: var(--color-neutral-400);">平均满意度</span>
+                            <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background: rgba(197,165,90,0.12);">
+                                <i data-icon="star" style="width:16px;height:16px;color:var(--color-primary-400);"></i>
+                            </div>
+                        </div>
+                        <div class="flex items-baseline gap-2">
+                            <span class="text-3xl font-bold" style="color: var(--color-primary-300);">3.72</span>
+                            <span class="text-sm" style="color: var(--color-neutral-500);">/ 5.0</span>
+                        </div>
+                        <div class="mt-3 flex items-center gap-1">
+                            <div class="flex-1 h-1.5 rounded-full" style="background: var(--color-secondary-600);">
+                                <div class="h-full rounded-full" style="width: 74.4%; background: linear-gradient(90deg, var(--color-primary-700), var(--color-primary-400));"></div>
+                            </div>
+                            <span class="text-xs ml-2" style="color: var(--color-primary-400);">74.4%</span>
+                        </div>
+                    </div>
+                    <!-- 积极评价占比 -->
+                    <div class="kpi-card rounded-xl p-5">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-sm" style="color: var(--color-neutral-400);">积极评价占比</span>
+                            <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background: rgba(111,207,138,0.12);">
+                                <i data-icon="thumbs-up" style="width:16px;height:16px;color:#6FCF8A;"></i>
+                            </div>
+                        </div>
+                        <div class="flex items-baseline gap-2">
+                            <span class="text-3xl font-bold" style="color: #6FCF8A;">62.8%</span>
+                        </div>
+                        <div class="mt-3 flex items-center gap-1">
+                            <i data-icon="trending-up" style="width:14px;height:14px;color:#6FCF8A;"></i>
+                            <span class="text-xs" style="color: #6FCF8A;">+5.2% 较上周</span>
+                        </div>
+                    </div>
+                    <!-- 问答准确率 -->
+                    <div class="kpi-card rounded-xl p-5">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-sm" style="color: var(--color-neutral-400);">问答准确率</span>
+                            <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background: rgba(103,126,168,0.15);">
+                                <i data-icon="brain" style="width:16px;height:16px;color:var(--color-secondary-300);"></i>
+                            </div>
+                        </div>
+                        <div class="flex items-baseline gap-2">
+                            <span class="text-3xl font-bold" style="color: var(--color-secondary-200);">93.5%</span>
+                        </div>
+                        <div class="mt-3 flex items-center gap-1">
+                            <i data-icon="trending-up" style="width:14px;height:14px;color:var(--color-secondary-300);"></i>
+                            <span class="text-xs" style="color: var(--color-neutral-400);">+1.8% 较上周</span>
+                        </div>
+                    </div>
+                    <!-- 平均响应时间 -->
+                    <div class="kpi-card rounded-xl p-5">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-sm" style="color: var(--color-neutral-400);">平均响应时间</span>
+                            <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background: rgba(212,185,110,0.12);">
+                                <i data-icon="zap" style="width:16px;height:16px;color:var(--color-primary-400);"></i>
+                            </div>
+                        </div>
+                        <div class="flex items-baseline gap-2">
+                            <span class="text-3xl font-bold" style="color: var(--color-primary-300);">2.3</span>
+                            <span class="text-sm" style="color: var(--color-neutral-500);">秒</span>
+                        </div>
+                        <div class="mt-3 flex items-center gap-1">
+                            <i data-icon="trending-down" style="width:14px;height:14px;color:#6FCF8A;"></i>
+                            <span class="text-xs" style="color: #6FCF8A;">-0.4s 较上周</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ======== 中间行：词云 + 趋势图 ======== -->
+                <div class="grid grid-cols-2 gap-5">
+                    <!-- 游客关注点词云 -->
+                    <div class="rounded-xl p-6" style="background: var(--color-secondary-700); border: 1px solid var(--color-secondary-600);">
+                        <div class="flex items-center gap-2 mb-5">
+                            <i data-icon="tag" style="width:18px;height:18px;color:var(--color-primary-400);"></i>
+                            <h3 class="text-lg font-semibold" style="font-family: var(--font-family-heading); color: var(--color-primary-300);">游客关注点词云</h3>
+                        </div>
+                        <div class="flex flex-wrap gap-3 items-center justify-center py-4">
+                            <!-- 大号标签 -->
+                            <span class="tag-cloud-item tag-xl">灵山大佛</span>
+                            <span class="tag-cloud-item tag-xl">九龙灌浴</span>
+                            <span class="tag-cloud-item tag-xl">梵宫</span>
+                            <!-- 中号标签 -->
+                            <span class="tag-cloud-item tag-lg">五印坛城</span>
+                            <span class="tag-cloud-item tag-lg">菩提大道</span>
+                            <span class="tag-cloud-item tag-lg">百子戏弥勒</span>
+                            <span class="tag-cloud-item tag-lg">拈花湾</span>
+                            <!-- 小号标签 -->
+                            <span class="tag-cloud-item tag-sm">门票</span>
+                            <span class="tag-cloud-item tag-sm">交通</span>
+                            <span class="tag-cloud-item tag-sm">素斋</span>
+                            <span class="tag-cloud-item tag-sm">祈福</span>
+                            <span class="tag-cloud-item tag-sm">转经筒</span>
+                        </div>
+                        <div class="mt-4 pt-4 flex items-center justify-between text-xs" style="border-top: 1px solid var(--color-secondary-600); color: var(--color-neutral-500);">
+                            <span>数据来源：近7天游客问答关键词提取</span>
+                            <span>共提取 1,286 个关键词</span>
+                        </div>
+                    </div>
+
+                    <!-- 满意度趋势 -->
+                    <div class="rounded-xl p-6" style="background: var(--color-secondary-700); border: 1px solid var(--color-secondary-600);">
+                        <div class="flex items-center justify-between mb-5">
+                            <div class="flex items-center gap-2">
+                                <i data-icon="trending-up" style="width:18px;height:18px;color:var(--color-primary-400);"></i>
+                                <h3 class="text-lg font-semibold" style="font-family: var(--font-family-heading); color: var(--color-primary-300);">满意度趋势</h3>
+                            </div>
+                            <span class="text-xs px-2 py-1 rounded" style="background: rgba(111,207,138,0.1); color: #6FCF8A;">持续上升</span>
+                        </div>
+                        <div class="mt-2">
+                            <svg viewBox="0 0 420 200" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: auto;">
+                                <!-- 网格线 -->
+                                <line x1="40" y1="10" x2="40" y2="170" stroke="#1B2A4A" stroke-width="1"/>
+                                <line x1="40" y1="170" x2="400" y2="170" stroke="#1B2A4A" stroke-width="1"/>
+                                <line x1="40" y1="130" x2="400" y2="130" stroke="#1B2A4A" stroke-width="0.5" stroke-dasharray="4,4"/>
+                                <line x1="40" y1="90" x2="400" y2="90" stroke="#1B2A4A" stroke-width="0.5" stroke-dasharray="4,4"/>
+                                <line x1="40" y1="50" x2="400" y2="50" stroke="#1B2A4A" stroke-width="0.5" stroke-dasharray="4,4"/>
+                                <!-- Y轴标签 -->
+                                <text x="30" y="174" text-anchor="end" fill="#767665" font-size="11">3.0</text>
+                                <text x="30" y="134" text-anchor="end" fill="#767665" font-size="11">3.5</text>
+                                <text x="30" y="94" text-anchor="end" fill="#767665" font-size="11">4.0</text>
+                                <text x="30" y="54" text-anchor="end" fill="#767665" font-size="11">4.5</text>
+                                <!-- 渐变填充 -->
+                                <defs>
+                                    <linearGradient id="goldGrad" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" stop-color="#C5A55A" stop-opacity="0.3"/>
+                                        <stop offset="100%" stop-color="#C5A55A" stop-opacity="0.02"/>
+                                    </linearGradient>
+                                    <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
+                                        <stop offset="0%" stop-color="#A88B3E"/>
+                                        <stop offset="100%" stop-color="#DFC98A"/>
+                                    </linearGradient>
+                                </defs>
+                                <!-- 面积填充: 3.2→150, 3.35→138, 3.45→130, 3.55→122, 3.72→110, 3.85→98, 3.95→88, 4.1→76, 4.3→60, 4.5→42 -->
+                                <path d="M60,150 L98,138 L136,130 L174,122 L212,110 L250,98 L288,88 L326,76 L364,60 L395,42 L395,170 L60,170 Z" fill="url(#goldGrad)"/>
+                                <!-- 折线 -->
+                                <polyline points="60,150 98,138 136,130 174,122 212,110 250,98 288,88 326,76 364,60 395,42" stroke="url(#lineGrad)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                                <!-- 数据点 -->
+                                <circle cx="60" cy="150" r="4" fill="#1B2A4A" stroke="#A88B3E" stroke-width="2"/>
+                                <circle cx="98" cy="138" r="4" fill="#1B2A4A" stroke="#A88B3E" stroke-width="2"/>
+                                <circle cx="136" cy="130" r="4" fill="#1B2A4A" stroke="#B09948" stroke-width="2"/>
+                                <circle cx="174" cy="122" r="4" fill="#1B2A4A" stroke="#B9A34F" stroke-width="2"/>
+                                <circle cx="212" cy="110" r="4" fill="#1B2A4A" stroke="#C5A55A" stroke-width="2"/>
+                                <circle cx="250" cy="98" r="4" fill="#1B2A4A" stroke="#CBB062" stroke-width="2"/>
+                                <circle cx="288" cy="88" r="4" fill="#1B2A4A" stroke="#D4BA72" stroke-width="2"/>
+                                <circle cx="326" cy="76" r="4" fill="#1B2A4A" stroke="#DFC98A" stroke-width="2"/>
+                                <circle cx="364" cy="60" r="4" fill="#1B2A4A" stroke="#DFC98A" stroke-width="2"/>
+                                <!-- 最后一个点高亮 -->
+                                <circle cx="395" cy="42" r="5" fill="#DFC98A" stroke="#F5EDD6" stroke-width="2"/>
+                                <text x="395" y="34" text-anchor="middle" fill="#DFC98A" font-size="12" font-weight="600">4.5</text>
+                                <!-- X轴标签 -->
+                                <text x="60" y="190" text-anchor="middle" fill="#767665" font-size="10">1月</text>
+                                <text x="136" y="190" text-anchor="middle" fill="#767665" font-size="10">3月</text>
+                                <text x="212" y="190" text-anchor="middle" fill="#767665" font-size="10">5月</text>
+                                <text x="288" y="190" text-anchor="middle" fill="#767665" font-size="10">7月</text>
+                                <text x="364" y="190" text-anchor="middle" fill="#767665" font-size="10">9月</text>
+                                <!-- 当前值标注 -->
+                                <text x="60" y="165" text-anchor="middle" fill="#767665" font-size="10">3.2</text>
+                                <text x="212" y="124" text-anchor="middle" fill="#C5A55A" font-size="10">3.72</text>
+                            </svg>
+                        </div>
+                        <div class="mt-3 pt-3 flex items-center justify-between text-xs" style="border-top: 1px solid var(--color-secondary-600); color: var(--color-neutral-500);">
+                            <span>统计周期：2026年1月 - 9月</span>
+                            <span>满意度提升 <span style="color: #6FCF8A;">+40.6%</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ======== 游客反馈表格 ======== -->
+                <div class="rounded-xl overflow-hidden" style="background: var(--color-secondary-700); border: 1px solid var(--color-secondary-600);">
+                    <div class="flex items-center justify-between px-6 py-4" style="border-bottom: 1px solid var(--color-secondary-600);">
+                        <div class="flex items-center gap-2">
+                            <i data-icon="message-square" style="width:18px;height:18px;color:var(--color-primary-400);"></i>
+                            <h3 class="text-lg font-semibold" style="font-family: var(--font-family-heading); color: var(--color-primary-300);">游客反馈明细</h3>
+                            <span class="text-xs px-2 py-0.5 rounded-full" style="background: var(--color-secondary-600); color: var(--color-neutral-400);">近7天</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button class="date-btn" style="padding: 4px 12px;">
+                                <span class="flex items-center gap-1">
+                                    <i data-icon="filter" style="width:12px;height:12px;"></i> 筛选
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                    <table class="w-full">
+                        <thead>
+                            <tr style="background: var(--color-secondary-800); border-bottom: 1px solid var(--color-secondary-600);">
+                                <th class="px-6 py-3 text-xs font-medium uppercase tracking-wider" style="color: var(--color-neutral-500);">时间</th>
+                                <th class="px-4 py-3 text-xs font-medium uppercase tracking-wider" style="color: var(--color-neutral-500);">游客</th>
+                                <th class="px-4 py-3 text-xs font-medium uppercase tracking-wider" style="color: var(--color-neutral-500);">反馈内容</th>
+                                <th class="px-4 py-3 text-xs font-medium uppercase tracking-wider" style="color: var(--color-neutral-500);">情感</th>
+                                <th class="px-4 py-3 text-xs font-medium uppercase tracking-wider" style="color: var(--color-neutral-500);">满意度</th>
+                                <th class="px-6 py-3 text-xs font-medium uppercase tracking-wider" style="color: var(--color-neutral-500);">状态</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- 行1: 积极 -->
+                            <tr style="border-bottom: 1px solid var(--color-secondary-600);">
+                                <td class="px-6 py-4 text-sm" style="color: var(--color-neutral-400); white-space: nowrap;">2026-07-15 14:32</td>
+                                <td class="px-4 py-4">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold" style="background: var(--color-primary-800); color: var(--color-primary-300);">张</div>
+                                        <span class="text-sm" style="color: var(--color-neutral-200);">张先生</span>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-4 text-sm" style="color: var(--color-neutral-300); max-width: 320px;">AI数字人讲解灵山大佛非常专业，历史典故讲解生动有趣，体验非常好！</td>
+                                <td class="px-4 py-4">
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium sentiment-positive">积极</span>
+                                </td>
+                                <td class="px-4 py-4">
+                                    <div class="flex items-center gap-1">
+                                        <i data-icon="star" style="width:14px;height:14px;color:var(--color-primary-400);fill:var(--color-primary-400);"></i>
+                                        <span class="text-sm font-medium" style="color: var(--color-primary-300);">4.8</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="text-xs status-processed flex items-center gap-1">
+                                        <i data-icon="check-circle" style="width:14px;height:14px;"></i> 已处理
+                                    </span>
+                                </td>
+                            </tr>
+                            <!-- 行2: 积极 -->
+                            <tr style="border-bottom: 1px solid var(--color-secondary-600);">
+                                <td class="px-6 py-4 text-sm" style="color: var(--color-neutral-400); white-space: nowrap;">2026-07-15 11:20</td>
+                                <td class="px-4 py-4">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold" style="background: var(--color-secondary-600); color: var(--color-secondary-200);">李</div>
+                                        <span class="text-sm" style="color: var(--color-neutral-200);">李女士</span>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-4 text-sm" style="color: var(--color-neutral-300); max-width: 320px;">九龙灌浴表演时间讲解得很清楚，提前安排好了行程，推荐指数五颗星！</td>
+                                <td class="px-4 py-4">
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium sentiment-positive">积极</span>
+                                </td>
+                                <td class="px-4 py-4">
+                                    <div class="flex items-center gap-1">
+                                        <i data-icon="star" style="width:14px;height:14px;color:var(--color-primary-400);fill:var(--color-primary-400);"></i>
+                                        <span class="text-sm font-medium" style="color: var(--color-primary-300);">4.5</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="text-xs status-processed flex items-center gap-1">
+                                        <i data-icon="check-circle" style="width:14px;height:14px;"></i> 已处理
+                                    </span>
+                                </td>
+                            </tr>
+                            <!-- 行3: 中性 -->
+                            <tr style="border-bottom: 1px solid var(--color-secondary-600);">
+                                <td class="px-6 py-4 text-sm" style="color: var(--color-neutral-400); white-space: nowrap;">2026-07-14 16:45</td>
+                                <td class="px-4 py-4">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold" style="background: var(--color-accent-800); color: var(--color-accent-200);">王</div>
+                                        <span class="text-sm" style="color: var(--color-neutral-200);">王先生</span>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-4 text-sm" style="color: var(--color-neutral-300); max-width: 320px;">梵宫内部展品介绍基本准确，但部分互动体验项目的开放时间信息不够及时。</td>
+                                <td class="px-4 py-4">
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium sentiment-neutral">中性</span>
+                                </td>
+                                <td class="px-4 py-4">
+                                    <div class="flex items-center gap-1">
+                                        <i data-icon="star" style="width:14px;height:14px;color:var(--color-primary-500);"></i>
+                                        <span class="text-sm font-medium" style="color: var(--color-neutral-300);">3.5</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="text-xs status-pending flex items-center gap-1">
+                                        <i data-icon="clock" style="width:14px;height:14px;"></i> 待跟进
+                                    </span>
+                                </td>
+                            </tr>
+                            <!-- 行4: 消极 -->
+                            <tr style="border-bottom: 1px solid var(--color-secondary-600);">
+                                <td class="px-6 py-4 text-sm" style="color: var(--color-neutral-400); white-space: nowrap;">2026-07-14 09:15</td>
+                                <td class="px-4 py-4">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold" style="background: var(--color-neutral-700); color: var(--color-neutral-300);">赵</div>
+                                        <span class="text-sm" style="color: var(--color-neutral-200);">赵女士</span>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-4 text-sm" style="color: var(--color-neutral-300); max-width: 320px;">关于停车场位置的引导不够详细，绕了很久才找到入口，希望增加更明确的交通指引。</td>
+                                <td class="px-4 py-4">
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium sentiment-negative">消极</span>
+                                </td>
+                                <td class="px-4 py-4">
+                                    <div class="flex items-center gap-1">
+                                        <i data-icon="star" style="width:14px;height:14px;color:var(--color-accent-400);"></i>
+                                        <span class="text-sm font-medium" style="color: var(--color-accent-300);">2.8</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="text-xs status-pending flex items-center gap-1">
+                                        <i data-icon="clock" style="width:14px;height:14px;"></i> 待跟进
+                                    </span>
+                                </td>
+                            </tr>
+                            <!-- 行5: 积极 -->
+                            <tr>
+                                <td class="px-6 py-4 text-sm" style="color: var(--color-neutral-400); white-space: nowrap;">2026-07-13 15:08</td>
+                                <td class="px-4 py-4">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold" style="background: var(--color-primary-700); color: var(--color-primary-200);">陈</div>
+                                        <span class="text-sm" style="color: var(--color-neutral-200);">陈先生</span>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-4 text-sm" style="color: var(--color-neutral-300); max-width: 320px;">带家人来祈福，AI推荐了素斋餐厅和最佳观景路线，服务很贴心，下次还会来！</td>
+                                <td class="px-4 py-4">
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium sentiment-positive">积极</span>
+                                </td>
+                                <td class="px-4 py-4">
+                                    <div class="flex items-center gap-1">
+                                        <i data-icon="star" style="width:14px;height:14px;color:var(--color-primary-400);fill:var(--color-primary-400);"></i>
+                                        <span class="text-sm font-medium" style="color: var(--color-primary-300);">4.6</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="text-xs status-processed flex items-center gap-1">
+                                        <i data-icon="check-circle" style="width:14px;height:14px;"></i> 已处理
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- ======== AI 建议 ======== -->
+                <div>
+                    <div class="flex items-center gap-2 mb-4">
+                        <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background: linear-gradient(135deg, var(--color-primary-700), var(--color-primary-500));">
+                            <i data-icon="sparkles" style="width:16px;height:16px;color:var(--color-neutral-900);"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold" style="font-family: var(--font-family-heading); color: var(--color-primary-300);">AI 智能建议</h3>
+                        <span class="text-xs px-2 py-0.5 rounded-full" style="background: rgba(197,165,90,0.12); color: var(--color-primary-400);">基于数据分析自动生成</span>
+                    </div>
+                    <div class="grid grid-cols-3 gap-5">
+                        <!-- 建议1 -->
+                        <div class="ai-card rounded-xl p-5">
+                            <div class="flex items-start gap-3">
+                                <div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style="background: rgba(111,207,138,0.12);">
+                                    <i data-icon="navigation" style="width:20px;height:20px;color:#6FCF8A;"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-semibold mb-2" style="color: var(--color-neutral-100);">优化交通指引信息</h4>
+                                    <p class="text-xs leading-relaxed" style="color: var(--color-neutral-400);">近7天有12.3%的消极反馈集中在交通/停车方面。建议在数字人导览首页增加"交通指南"快捷入口，并在停车场附近部署蓝牙信标，实现精准室内导航。</p>
+                                    <div class="mt-3 flex items-center gap-2">
+                                        <span class="text-xs px-2 py-0.5 rounded" style="background: var(--color-secondary-600); color: var(--color-neutral-400);">优先级：高</span>
+                                        <span class="text-xs" style="color: var(--color-neutral-500);">预计提升满意度 +0.15</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 建议2 -->
+                        <div class="ai-card rounded-xl p-5">
+                            <div class="flex items-start gap-3">
+                                <div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style="background: rgba(197,165,90,0.12);">
+                                    <i data-icon="refresh-cw" style="width:20px;height:20px;color:var(--color-primary-400);"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-semibold mb-2" style="color: var(--color-neutral-100);">实时更新互动项目信息</h4>
+                                    <p class="text-xs leading-relaxed" style="color: var(--color-neutral-400);">梵宫互动体验项目的开放时间变动频繁，导致15.6%中性反馈。建议接入景区实时排班系统，确保数字人回答的时效性，并在信息变更时主动推送通知。</p>
+                                    <div class="mt-3 flex items-center gap-2">
+                                        <span class="text-xs px-2 py-0.5 rounded" style="background: var(--color-secondary-600); color: var(--color-neutral-400);">优先级：中</span>
+                                        <span class="text-xs" style="color: var(--color-neutral-500);">预计提升满意度 +0.10</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 建议3 -->
+                        <div class="ai-card rounded-xl p-5">
+                            <div class="flex items-start gap-3">
+                                <div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style="background: rgba(103,126,168,0.15);">
+                                    <i data-icon="users" style="width:20px;height:20px;color:var(--color-secondary-300);"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-semibold mb-2" style="color: var(--color-neutral-100);">针对37.8岁核心客群深化内容</h4>
+                                    <p class="text-xs leading-relaxed" style="color: var(--color-neutral-400);">游客平均年龄37.8岁、平均门票消费99.73元，该群体对文化深度讲解需求高。建议增加佛教文化故事线、历史背景专题讲解等深度内容模块，提升文化体验感。</p>
+                                    <div class="mt-3 flex items-center gap-2">
+                                        <span class="text-xs px-2 py-0.5 rounded" style="background: var(--color-secondary-600); color: var(--color-neutral-400);">优先级：中</span>
+                                        <span class="text-xs" style="color: var(--color-neutral-500);">预计提升满意度 +0.12</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+    <script>lucide.createIcons();</script>
+</body>
+</html>
