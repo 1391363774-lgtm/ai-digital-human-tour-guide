@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>灵山胜境AI数字人导览系统</title>
+    <style id="theme-vars">
+/* ============================================================
+ * 灵山胜境AI数字人导览系统 - Brand Colors & Typography
+ * Design Token Convention (CSS Custom Properties)
+ * ============================================================ */
+
+:root {
+  /* ---- Primary: 金色系 (Gold) ---- */
+  --color-primary-100: #F5EDD6;
+  --color-primary-200: #EBDCB0;
+  --color-primary-300: #DFC98A;
+  --color-primary-400: #D4B96E;
+  --color-primary-500: #C5A55A;
+  --color-primary-600: #A88B3E;
+  --color-primary-700: #8A7130;
+  --color-primary-800: #6C5724;
+  --color-primary-900: #503F1A;
+
+  /* ---- Secondary: 藏青 / 深蓝 (Deep Blue) ---- */
+  --color-secondary-100: #C5CEE0;
+  --color-secondary-200: #96A6C4;
+  --color-secondary-300: #677EA8;
+  --color-secondary-400: #3D5678;
+  --color-secondary-500: #1B2A4A;
+  --color-secondary-600: #152240;
+  --color-secondary-700: #101A33;
+  --color-secondary-800: #0A1226;
+  --color-secondary-900: #050A19;
+
+  /* ---- Neutral: 白 / 灰 ---- */
+  --color-neutral-0:   #FFFFFF;
+  --color-neutral-50:  #FAFAF5;
+  --color-neutral-100: #F5F5F0;
+  --color-neutral-200: #E5E5DD;
+  --color-neutral-300: #D0D0C5;
+  --color-neutral-400: #A3A395;
+  --color-neutral-500: #767665;
+  --color-neutral-600: #595948;
+  --color-neutral-700: #3D3D31;
+  --color-neutral-800: #222218;
+  --color-neutral-900: #0F0F0A;
+
+  /* ---- Accent: 朱砂红 (Vermilion) ---- */
+  --color-accent-100: #F2D1D0;
+  --color-accent-200: #E8A3A1;
+  --color-accent-300: #DE7573;
+  --color-accent-400: #D46462;
+  --color-accent-500: #C25450;
+  --color-accent-600: #A34340;
+  --color-accent-700: #843330;
+  --color-accent-800: #652320;
+  --color-accent-900: #461312;
+
+  /* ---- Semantic Tokens ---- */
+  --color-bg-primary:     var(--color-neutral-0);
+  --color-bg-secondary:   var(--color-neutral-100);
+  --color-bg-deep:        var(--color-secondary-500);
+  --color-bg-card:        var(--color-neutral-0);
+  --color-bg-overlay:     rgba(27, 42, 74, 0.65);
+
+  --color-text-primary:   var(--color-secondary-500);
+  --color-text-secondary: var(--color-neutral-700);
+  --color-text-inverse:   var(--color-neutral-0);
+  --color-text-accent:    var(--color-accent-500);
+  --color-text-gold:       var(--color-primary-500);
+
+  --color-border-default: var(--color-neutral-200);
+  --color-border-gold:     var(--color-primary-400);
+  --color-border-subtle:   var(--color-neutral-100);
+
+  /* ---- Typography ---- */
+  --font-family-heading: 'Noto Serif SC', 'Source Han Serif SC', 'Songti SC', serif;
+  --font-family-body:    'Noto Sans SC', 'Source Han Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+
+  /* Font Sizes (Mobile-first) */
+  --font-size-xs:   0.6875rem;   /* 11px */
+  --font-size-sm:   0.75rem;     /* 12px */
+  --font-size-base: 0.875rem;    /* 14px */
+  --font-size-md:   1rem;        /* 16px */
+  --font-size-lg:   1.125rem;    /* 18px */
+  --font-size-xl:   1.25rem;     /* 20px */
+  --font-size-2xl:  1.5rem;      /* 24px */
+  --font-size-3xl:  1.875rem;    /* 30px */
+  --font-size-4xl:  2.25rem;     /* 36px */
+
+  /* Font Weights */
+  --font-weight-regular: 400;
+  --font-weight-medium:  500;
+  --font-weight-semibold: 600;
+  --font-weight-bold:    700;
+
+  /* Line Heights */
+  --line-height-tight:   1.25;
+  --line-height-normal:  1.6;
+  --line-height-relaxed: 1.8;
+
+  /* Letter Spacing */
+  --letter-spacing-tight:  -0.02em;
+  --letter-spacing-normal:  0;
+  --letter-spacing-wide:    0.05em;
+  --letter-spacing-wider:   0.1em;
+
+  /* ---- Spacing Scale ---- */
+  --space-0:   0;
+  --space-1:   0.25rem;   /* 4px  */
+  --space-2:   0.5rem;    /* 8px  */
+  --space-3:   0.75rem;   /* 12px */
+  --space-4:   1rem;      /* 16px */
+  --space-5:   1.25rem;   /* 20px */
+  --space-6:   1.5rem;    /* 24px */
+  --space-8:   2rem;      /* 32px */
+  --space-10:  2.5rem;    /* 40px */
+  --space-12:  3rem;      /* 48px */
+  --space-16:  4rem;      /* 64px */
+  --space-20:  5rem;      /* 80px */
+
+  /* ---- Border Radius ---- */
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   12px;
+  --radius-xl:   16px;
+  --radius-full: 9999px;
+
+  /* ---- Shadows ---- */
+  --shadow-sm:  0 1px 2px rgba(27, 42, 74, 0.06);
+  --shadow-md:  0 4px 8px rgba(27, 42, 74, 0.08);
+  --shadow-lg:  0 8px 24px rgba(27, 42, 74, 0.12);
+  --shadow-xl:  0 16px 48px rgba(27, 42, 74, 0.16);
+  --shadow-gold: 0 4px 16px rgba(197, 165, 90, 0.25);
+
+  /* ---- Transitions ---- */
+  --transition-fast:   150ms ease;
+  --transition-normal: 250ms ease;
+  --transition-slow:   400ms ease;
+
+  /* ---- Z-Index Scale ---- */
+  --z-base:     0;
+  --z-above:    10;
+  --z-dropdown: 100;
+  --z-sticky:   200;
+  --z-overlay:  300;
+  --z-modal:    400;
+  --z-toast:    500;
+}
+
+/* ============================================================
+ * Base Typography Styles
+ * ============================================================ */
+
+body {
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-normal);
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-family-heading);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  color: var(--color-text-primary);
+}
+
+h1 {
+  font-size: var(--font-size-3xl);
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+h2 {
+  font-size: var(--font-size-2xl);
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+h3 {
+  font-size: var(--font-size-xl);
+  letter-spacing: var(--letter-spacing-normal);
+}
+
+h4 {
+  font-size: var(--font-size-lg);
+}
+
+h5 {
+  font-size: var(--font-size-md);
+}
+
+h6 {
+  font-size: var(--font-size-base);
+}
+
+p {
+  margin-bottom: var(--space-4);
+}
+
+a {
+  color: var(--color-primary-600);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--color-primary-700);
+}
+
+small, .text-sm {
+  font-size: var(--font-size-sm);
+}
+
+.text-xs {
+  font-size: var(--font-size-xs);
+}
+
+.text-gold {
+  color: var(--color-text-gold);
+}
+
+.text-accent {
+  color: var(--color-text-accent);
+}
+
+.text-inverse {
+  color: var(--color-text-inverse);
+}
+
+/* ============================================================
+ * Google Fonts Import
+ * ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap');
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  
+  @theme inline {
+    --color-background: var(--color-bg-primary);
+    --color-foreground: var(--color-text-primary);
+    --color-border: var(--color-border-default);
+    --color-ring: var(--color-primary-500);
+    --color-card: var(--color-bg-card);
+    --color-card-foreground: var(--color-text-primary);
+    --color-primary: var(--color-primary-500);
+    --color-primary-foreground: var(--color-neutral-0);
+    --color-secondary: var(--color-secondary-500);
+    --color-secondary-foreground: var(--color-neutral-0);
+    --color-muted: var(--color-neutral-100);
+    --color-muted-foreground: var(--color-neutral-600);
+    --radius-sm: var(--radius-sm);
+    --radius-md: var(--radius-md);
+    --radius-lg: var(--radius-lg);
+    --radius-xl: var(--radius-xl);
+  }
+  @layer base {
+    body { background: var(--color-bg-primary); color: var(--color-text-primary); max-width: 430px; margin: 0 auto; }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+    <main class="pb-20">
+      <!-- ========== 1. 顶部栏 ========== -->
+      <header class="sticky top-0 z-[var(--z-sticky)] bg-white/95 backdrop-blur-md border-b border-[var(--color-border-subtle)] px-4 py-3 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-full bg-gradient-to-br from-[var(--color-primary-400)] to-[var(--color-primary-600)] flex items-center justify-center">
+            <span class="text-white font-bold text-xs" style="font-family:var(--font-family-heading);">灵</span>
+          </div>
+          <div class="leading-tight">
+            <p class="text-sm font-bold" style="color:var(--color-secondary-500);font-family:var(--font-family-heading);">灵山胜境</p>
+            <p class="text-xs" style="color:var(--color-primary-500);">灵山胜境 · 东方佛国</p>
+          </div>
+        </div>
+        <button data-dom-id="btn-ticket" class="px-3 py-1.5 rounded-full text-xs font-medium text-white" style="background:linear-gradient(135deg,var(--color-primary-500),var(--color-primary-600));box-shadow:var(--shadow-gold);">
+          门票购买
+        </button>
+      </header>
+
+      <!-- ========== 2. 欢迎横幅 ========== -->
+      <section class="relative overflow-hidden" style="background:linear-gradient(135deg,var(--color-secondary-500) 0%,var(--color-secondary-700) 60%,var(--color-primary-900) 100%);">
+        <!-- 装饰纹理 -->
+        <div class="absolute inset-0 opacity-[0.06]" style="background-image:repeating-linear-gradient(45deg,transparent,transparent 10px,var(--color-primary-300) 10px,var(--color-primary-300) 11px);"></div>
+        <!-- 金色光晕 -->
+        <div class="absolute -top-20 right-0 w-48 h-48 rounded-full opacity-20" style="background:radial-gradient(circle,var(--color-primary-400),transparent 70%);"></div>
+        <div class="relative z-10 px-5 py-8 text-center">
+          <p class="text-xs tracking-[0.2em] mb-2" style="color:var(--color-primary-300);">LINGSHAN HOLY LAND</p>
+          <h1 class="text-3xl font-bold tracking-[0.15em] mb-2" style="color:var(--color-primary-300);font-family:var(--font-family-heading);text-shadow:0 2px 8px rgba(197,165,90,0.3);">
+            灵山胜境
+          </h1>
+          <p class="text-xs mb-5" style="color:var(--color-secondary-100);">
+            国家5A级 · 世界佛教论坛永久会址
+          </p>
+          <!-- 实时人数 -->
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full" style="background:rgba(255,255,255,0.1);backdrop-filter:blur(4px);border:1px solid rgba(197,165,90,0.2);">
+            <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+            <span class="text-xs" style="color:var(--color-primary-200);">当前</span>
+            <span class="text-sm font-bold" style="color:var(--color-primary-300);" id="visitor-count">9,297</span>
+            <span class="text-xs" style="color:var(--color-primary-200);">人在园</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========== 3. 数字人入口卡片 ========== -->
+      <section class="px-4 -mt-4 relative z-[var(--z-above)]">
+        <div class="rounded-2xl p-4 flex items-center gap-4 relative overflow-hidden" style="background:white;border:2px solid var(--color-primary-400);box-shadow:var(--shadow-gold),inset 0 1px 0 rgba(197,165,90,0.15);">
+          <!-- 金色发光效果 -->
+          <div class="absolute -top-4 -right-4 w-24 h-24 rounded-full opacity-15" style="background:radial-gradient(circle,var(--color-primary-400),transparent 70%);"></div>
+          <div class="w-16 h-16 rounded-full overflow-hidden flex-shrink-0 ring-2 ring-[var(--color-primary-300)] ring-offset-2 ring-offset-white">
+            <img src="../assets/xiuxian-avatar.jpg" alt="灵小仙" class="w-full h-full object-cover">
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-1.5 mb-1">
+              <span class="text-xs px-1.5 py-0.5 rounded" style="background:var(--color-primary-100);color:var(--color-primary-700);font-weight:500;">AI</span>
+              <h3 class="text-base font-bold truncate" style="color:var(--color-secondary-500);font-family:var(--font-family-heading);">AI数字人导游 灵小仙</h3>
+            </div>
+            <p class="text-xs mb-3" style="color:var(--color-primary-500);font-style:italic;">禅意之旅，我来引路</p>
+            <button data-dom-id="btn-start-guide" class="px-5 py-2 rounded-full text-sm font-medium text-white transition-all duration-200 hover:scale-[1.03] active:scale-[0.98]" style="background:linear-gradient(135deg,var(--color-primary-400),var(--color-primary-600));box-shadow:var(--shadow-gold);">
+              开始导览
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========== 4. 快捷功能 2x3 网格 ========== -->
+      <section class="px-4 mt-6">
+        <div class="grid grid-cols-3 gap-3">
+          <!-- 智能问答 -->
+          <a href="#" data-nav="guide.html" class="flex flex-col items-center gap-2 p-3 rounded-xl transition-colors duration-200 hover:bg-[var(--color-primary-100)]" style="background:var(--color-bg-secondary);">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background:linear-gradient(135deg,var(--color-primary-100),var(--color-primary-200));">
+              <i data-lucide="message-circle-question" class="w-5 h-5" style="color:var(--color-primary-600);"></i>
+            </div>
+            <span class="text-xs font-medium" style="color:var(--color-secondary-500);">智能问答</span>
+          </a>
+          <!-- 游览路线 -->
+          <a href="#" data-nav="route.html" class="flex flex-col items-center gap-2 p-3 rounded-xl transition-colors duration-200 hover:bg-[var(--color-primary-100)]" style="background:var(--color-bg-secondary);">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background:linear-gradient(135deg,var(--color-primary-100),var(--color-primary-200));">
+              <i data-lucide="map" class="w-5 h-5" style="color:var(--color-primary-600);"></i>
+            </div>
+            <span class="text-xs font-medium" style="color:var(--color-secondary-500);">游览路线</span>
+          </a>
+          <!-- 必看景点 -->
+          <a href="#" data-nav="exhibit-detail.html" class="flex flex-col items-center gap-2 p-3 rounded-xl transition-colors duration-200 hover:bg-[var(--color-primary-100)]" style="background:var(--color-bg-secondary);">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background:linear-gradient(135deg,var(--color-primary-100),var(--color-primary-200));">
+              <i data-lucide="landmark" class="w-5 h-5" style="color:var(--color-primary-600);"></i>
+            </div>
+            <span class="text-xs font-medium" style="color:var(--color-secondary-500);">必看景点</span>
+          </a>
+          <!-- 九龙灌浴 -->
+          <a href="#" data-nav="guide.html" class="flex flex-col items-center gap-2 p-3 rounded-xl transition-colors duration-200 hover:bg-[var(--color-primary-100)]" style="background:var(--color-bg-secondary);">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background:linear-gradient(135deg,var(--color-primary-100),var(--color-primary-200));">
+              <i data-lucide="droplets" class="w-5 h-5" style="color:var(--color-primary-600);"></i>
+            </div>
+            <span class="text-xs font-medium" style="color:var(--color-secondary-500);">九龙灌浴</span>
+          </a>
+          <!-- 梵宫艺术 -->
+          <a href="#" data-nav="guide.html" class="flex flex-col items-center gap-2 p-3 rounded-xl transition-colors duration-200 hover:bg-[var(--color-primary-100)]" style="background:var(--color-bg-secondary);">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background:linear-gradient(135deg,var(--color-primary-100),var(--color-primary-200));">
+              <i data-lucide="castle" class="w-5 h-5" style="color:var(--color-primary-600);"></i>
+            </div>
+            <span class="text-xs font-medium" style="color:var(--color-secondary-500);">梵宫艺术</span>
+          </a>
+          <!-- 拈花湾 -->
+          <a href="#" data-nav="nianhua.html" class="flex flex-col items-center gap-2 p-3 rounded-xl transition-colors duration-200 hover:bg-[var(--color-primary-100)]" style="background:var(--color-bg-secondary);">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background:linear-gradient(135deg,var(--color-primary-100),var(--color-primary-200));">
+              <i data-lucide="flower-2" class="w-5 h-5" style="color:var(--color-primary-600);"></i>
+            </div>
+            <span class="text-xs font-medium" style="color:var(--color-secondary-500);">拈花湾</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- ========== 5. 今日推荐 - 横向滑动卡片 ========== -->
+      <section class="mt-6">
+        <div class="flex items-center justify-between px-4 mb-3">
+          <h2 class="text-lg font-bold" style="color:var(--color-secondary-500);font-family:var(--font-family-heading);">
+            <span class="inline-block w-1 h-5 rounded-full mr-2" style="background:var(--color-primary-500);"></span>
+            今日推荐
+          </h2>
+          <a href="#" data-dom-id="btn-view-all" class="text-xs" style="color:var(--color-primary-600);">查看更多 →</a>
+        </div>
+        <div class="flex gap-3 overflow-x-auto no-scrollbar px-4 pb-2">
+          <!-- 卡片1：灵山大佛 -->
+          <div class="flex-shrink-0 w-56 rounded-xl overflow-hidden cursor-pointer" style="background:white;box-shadow:var(--shadow-md);border:1px solid var(--color-border-subtle);" onclick="location.href='exhibit-detail.html'">
+            <div class="h-32 relative">
+              <img src="../assets/lingshan-buddha.jpg" alt="灵山大佛" class="w-full h-full object-cover">
+              <span class="absolute top-2 left-2 px-2 py-0.5 rounded text-xs font-medium text-white" style="background:rgba(197,165,90,0.9);">必看</span>
+            </div>
+            <div class="p-3">
+              <h4 class="text-sm font-bold mb-1" style="color:var(--color-secondary-500);font-family:var(--font-family-heading);">灵山大佛</h4>
+              <p class="text-xs leading-relaxed" style="color:var(--color-neutral-500);">世界最高露天青铜大佛，高88米</p>
+            </div>
+          </div>
+          <!-- 卡片2：九龙灌浴 -->
+          <div class="flex-shrink-0 w-56 rounded-xl overflow-hidden cursor-pointer" style="background:white;box-shadow:var(--shadow-md);border:1px solid var(--color-border-subtle);" onclick="location.href='exhibit-detail.html'">
+            <div class="h-32 relative">
+              <img src="../assets/jiulong-guanyu.jpg" alt="九龙灌浴" class="w-full h-full object-cover">
+              <span class="absolute top-2 left-2 px-2 py-0.5 rounded text-xs font-medium text-white" style="background:rgba(197,165,90,0.9);">推荐</span>
+            </div>
+            <div class="p-3">
+              <h4 class="text-sm font-bold mb-1" style="color:var(--color-secondary-500);font-family:var(--font-family-heading);">九龙灌浴</h4>
+              <p class="text-xs leading-relaxed" style="color:var(--color-neutral-500);">花开见佛，九龙沐浴</p>
+            </div>
+          </div>
+          <!-- 卡片3：灵山梵宫 -->
+          <div class="flex-shrink-0 w-56 rounded-xl overflow-hidden cursor-pointer" style="background:white;box-shadow:var(--shadow-md);border:1px solid var(--color-border-subtle);" onclick="location.href='exhibit-detail.html'">
+            <div class="h-32 relative">
+              <img src="../assets/fangong-palace.jpg" alt="灵山梵宫" class="w-full h-full object-cover">
+              <span class="absolute top-2 left-2 px-2 py-0.5 rounded text-xs font-medium text-white" style="background:rgba(197,165,90,0.9);">精选</span>
+            </div>
+            <div class="p-3">
+              <h4 class="text-sm font-bold mb-1" style="color:var(--color-secondary-500);font-family:var(--font-family-heading);">灵山梵宫</h4>
+              <p class="text-xs leading-relaxed" style="color:var(--color-neutral-500);">东方卢浮宫，佛教艺术殿堂</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========== 6. 表演时间提醒 ========== -->
+      <section class="px-4 mt-6">
+        <h2 class="text-lg font-bold mb-3" style="color:var(--color-secondary-500);font-family:var(--font-family-heading);">
+          <span class="inline-block w-1 h-5 rounded-full mr-2" style="background:var(--color-accent-500);"></span>
+          今日表演
+        </h2>
+        <div class="space-y-3">
+          <!-- 九龙灌浴 -->
+          <div class="rounded-xl p-4" style="background:white;box-shadow:var(--shadow-sm);border:1px solid var(--color-border-subtle);">
+            <div class="flex items-center justify-between mb-2">
+              <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:var(--color-primary-100);">
+                  <i data-lucide="droplets" class="w-4 h-4" style="color:var(--color-primary-600);"></i>
+                </div>
+                <h4 class="text-sm font-bold" style="color:var(--color-secondary-500);font-family:var(--font-family-heading);">九龙灌浴</h4>
+              </div>
+              <span class="px-2 py-0.5 rounded-full text-xs font-medium" style="background:var(--color-primary-100);color:var(--color-primary-700);">震撼演出</span>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <span class="px-2.5 py-1 rounded text-xs font-medium text-white" style="background:var(--color-primary-500);">10:00</span>
+              <span class="px-2.5 py-1 rounded text-xs font-medium" style="background:var(--color-bg-secondary);color:var(--color-secondary-500);border:1px solid var(--color-border-default);">11:30</span>
+              <span class="px-2.5 py-1 rounded text-xs font-medium" style="background:var(--color-bg-secondary);color:var(--color-secondary-500);border:1px solid var(--color-border-default);">13:30</span>
+              <span class="px-2.5 py-1 rounded text-xs font-medium" style="background:var(--color-bg-secondary);color:var(--color-secondary-500);border:1px solid var(--color-border-default);">15:00</span>
+            </div>
+          </div>
+          <!-- 吉祥颂 -->
+          <div class="rounded-xl p-4" style="background:white;box-shadow:var(--shadow-sm);border:1px solid var(--color-border-subtle);">
+            <div class="flex items-center justify-between mb-2">
+              <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:var(--color-accent-100);">
+                  <i data-lucide="music" class="w-4 h-4" style="color:var(--color-accent-500);"></i>
+                </div>
+                <h4 class="text-sm font-bold" style="color:var(--color-secondary-500);font-family:var(--font-family-heading);">吉祥颂</h4>
+              </div>
+              <span class="px-2 py-0.5 rounded-full text-xs font-medium" style="background:var(--color-accent-100);color:var(--color-accent-600);">大型演出</span>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <span class="px-2.5 py-1 rounded text-xs font-medium text-white" style="background:var(--color-primary-500);">10:35</span>
+              <span class="px-2.5 py-1 rounded text-xs font-medium" style="background:var(--color-bg-secondary);color:var(--color-secondary-500);border:1px solid var(--color-border-default);">11:30</span>
+              <span class="px-2.5 py-1 rounded text-xs font-medium" style="background:var(--color-bg-secondary);color:var(--color-secondary-500);border:1px solid var(--color-border-default);">14:00</span>
+              <span class="px-2.5 py-1 rounded text-xs font-medium" style="background:var(--color-bg-secondary);color:var(--color-secondary-500);border:1px solid var(--color-border-default);">16:00</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 底部留白 -->
+      <div class="h-4"></div>
+    </main>
+
+    <!-- ========== 7. 底部导航 ========== -->
+    <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] z-[var(--z-sticky)] bg-white/95 backdrop-blur-md border-t border-[var(--color-border-subtle)]" style="padding-bottom:env(safe-area-inset-bottom);">
+      <div class="grid grid-cols-4 h-14">
+        <!-- 首页 (active) -->
+        <a href="#" class="flex flex-col items-center justify-center gap-0.5" style="color:var(--color-primary-500);">
+          <i data-lucide="home" class="w-5 h-5"></i>
+          <span class="text-xs font-medium">首页</span>
+        </a>
+        <!-- 导览 -->
+        <a href="#" class="flex flex-col items-center justify-center gap-0.5" style="color:var(--color-neutral-400);">
+          <i data-lucide="compass" class="w-5 h-5"></i>
+          <span class="text-xs">导览</span>
+        </a>
+        <!-- 拈花湾 -->
+        <a href="#" class="flex flex-col items-center justify-center gap-0.5" style="color:var(--color-neutral-400);">
+          <i data-lucide="flower-2" class="w-5 h-5"></i>
+          <span class="text-xs">拈花湾</span>
+        </a>
+        <!-- 我的 -->
+        <a href="profile.html" class="flex flex-col items-center justify-center gap-0.5" style="color:var(--color-neutral-400);">
+          <i data-lucide="user" class="w-5 h-5"></i>
+          <span class="text-xs">我的</span>
+        </a>
+      </div>
+    </nav>
+
+    <script>
+    lucide.createIcons();
+    // 页面跳转逻辑
+    document.querySelector('[data-dom-id="btn-start-guide"]')?.addEventListener('click', function(e) {
+      e.preventDefault();
+      window.location.href = 'guide.html';
+    });
+    document.querySelector('[data-dom-id="btn-ticket"]')?.addEventListener('click', function(e) {
+      e.preventDefault();
+      window.location.href = 'route.html';
+    });
+    document.querySelector('[data-dom-id="btn-view-all"]')?.addEventListener('click', function(e) {
+      e.preventDefault();
+      window.location.href = 'exhibit-detail.html';
+    });
+    var navMap = {
+      '智能问答': 'guide.html',
+      '导览': 'guide.html',
+      '游览路线': 'route.html',
+      '拈花湾': 'nianhua.html',
+      '必看景点': 'exhibit-detail.html',
+      '九龙灌浴': 'guide.html',
+      '梵宫艺术': 'guide.html',
+      '我的': 'home.html',
+      '首页': null
+    };
+    document.querySelectorAll('a[href="#"]').forEach(function(a) {
+      var text = a.textContent.trim();
+      if (navMap[text] !== undefined) {
+        a.addEventListener('click', function(e) {
+          e.preventDefault();
+          if (navMap[text]) window.location.href = navMap[text];
+        });
+      }
+    });
+    // data-nav 直接匹配
+    document.querySelectorAll('[data-nav]').forEach(function(el) {
+      el.addEventListener('click', function(e) {
+        e.preventDefault();
+        var target = el.getAttribute('data-nav');
+        if (target) window.location.href = target;
+      });
+    });
+    </script>
+</body>
+</html>

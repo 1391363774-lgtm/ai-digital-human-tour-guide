@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的 - 灵山胜境AI数字人导览系统</title>
+    <style id="theme-vars">
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap');
+
+:root {
+  /* ---- Primary: 金色系 (Gold) ---- */
+  --color-primary-100: #F5EDD6;
+  --color-primary-200: #EBDCB0;
+  --color-primary-300: #DFC98A;
+  --color-primary-400: #D4B96E;
+  --color-primary-500: #C5A55A;
+  --color-primary-600: #A88B3E;
+  --color-primary-700: #8A7130;
+  --color-primary-800: #6C5724;
+  --color-primary-900: #503F1A;
+
+  /* ---- Secondary: 藏青 / 深蓝 (Deep Blue) ---- */
+  --color-secondary-100: #C5CEE0;
+  --color-secondary-200: #96A6C4;
+  --color-secondary-300: #677EA8;
+  --color-secondary-400: #3D5678;
+  --color-secondary-500: #1B2A4A;
+  --color-secondary-600: #152240;
+  --color-secondary-700: #101A33;
+  --color-secondary-800: #0A1226;
+  --color-secondary-900: #050A19;
+
+  /* ---- Neutral: 白 / 灰 ---- */
+  --color-neutral-0:   #FFFFFF;
+  --color-neutral-50:  #FAFAF5;
+  --color-neutral-100: #F5F5F0;
+  --color-neutral-200: #E5E5DD;
+  --color-neutral-300: #D0D0C5;
+  --color-neutral-400: #A3A395;
+  --color-neutral-500: #767665;
+  --color-neutral-600: #595948;
+  --color-neutral-700: #3D3D31;
+  --color-neutral-800: #222218;
+  --color-neutral-900: #0F0F0A;
+
+  /* ---- Accent: 朱砂红 (Vermilion) ---- */
+  --color-accent-100: #F2D1D0;
+  --color-accent-200: #E8A3A1;
+  --color-accent-300: #DE7573;
+  --color-accent-400: #D46462;
+  --color-accent-500: #C25450;
+  --color-accent-600: #A34340;
+  --color-accent-700: #843330;
+  --color-accent-800: #652320;
+  --color-accent-900: #461312;
+
+  /* ---- Semantic Tokens ---- */
+  --color-bg-primary:     var(--color-neutral-0);
+  --color-bg-secondary:   var(--color-neutral-100);
+  --color-bg-deep:        var(--color-secondary-500);
+  --color-bg-card:        var(--color-neutral-0);
+  --color-bg-overlay:     rgba(27, 42, 74, 0.65);
+
+  --color-text-primary:   var(--color-secondary-500);
+  --color-text-secondary: var(--color-neutral-700);
+  --color-text-inverse:   var(--color-neutral-0);
+  --color-text-accent:    var(--color-accent-500);
+  --color-text-gold:       var(--color-primary-500);
+
+  --color-border-default: var(--color-neutral-200);
+  --color-border-gold:     var(--color-primary-400);
+  --color-border-subtle:   var(--color-neutral-100);
+
+  /* ---- Typography ---- */
+  --font-family-heading: 'Noto Serif SC', 'Source Han Serif SC', 'Songti SC', serif;
+  --font-family-body:    'Noto Sans SC', 'Source Han Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+
+  /* Font Sizes (Mobile-first) */
+  --font-size-xs:   0.6875rem;   /* 11px */
+  --font-size-sm:   0.75rem;     /* 12px */
+  --font-size-base: 0.875rem;    /* 14px */
+  --font-size-md:   1rem;        /* 16px */
+  --font-size-lg:   1.125rem;    /* 18px */
+  --font-size-xl:   1.25rem;     /* 20px */
+  --font-size-2xl:  1.5rem;      /* 24px */
+  --font-size-3xl:  1.875rem;    /* 30px */
+
+  /* Font Weights */
+  --font-weight-regular: 400;
+  --font-weight-medium:  500;
+  --font-weight-semibold: 600;
+  --font-weight-bold:    700;
+
+  /* Line Heights */
+  --line-height-tight:   1.25;
+  --line-height-normal:  1.6;
+  --line-height-relaxed: 1.8;
+
+  /* Letter Spacing */
+  --letter-spacing-tight:  -0.02em;
+  --letter-spacing-normal:  0;
+  --letter-spacing-wide:    0.05em;
+
+  /* ---- Spacing Scale ---- */
+  --space-0:   0;
+  --space-1:   0.25rem;
+  --space-2:   0.5rem;
+  --space-3:   0.75rem;
+  --space-4:   1rem;
+  --space-5:   1.25rem;
+  --space-6:   1.5rem;
+  --space-8:   2rem;
+  --space-10: 2.5rem;
+
+  /* ---- Border Radius ---- */
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   12px;
+  --radius-xl:   16px;
+  --radius-full: 9999px;
+
+  /* ---- Shadows ---- */
+  --shadow-sm:  0 1px 2px rgba(27, 42, 74, 0.06);
+  --shadow-md:  0 4px 8px rgba(27, 42, 74, 0.08);
+  --shadow-lg:  0 8px 24px rgba(27, 42, 74, 0.12);
+  --shadow-gold: 0 4px 16px rgba(197, 165, 90, 0.25);
+
+  /* ---- Transitions ---- */
+  --transition-fast:   150ms ease;
+  --transition-normal: 250ms ease;
+
+  /* ---- Z-Index Scale ---- */
+  --z-sticky:   200;
+  --z-overlay:  300;
+  --z-modal:    400;
+  --z-toast:    500;
+}
+
+body {
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  padding: 0;
+  background: var(--color-secondary-900);
+  color: var(--color-neutral-0);
+  min-height: 100vh;
+  max-width: 430px;
+  margin: 0 auto;
+}
+
+a {
+  color: var(--color-primary-600);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+* { box-sizing: border-box; }
+    </style>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style>
+        /* Header */
+        .profile-header {
+            position: sticky;
+            top: 0;
+            z-index: var(--z-sticky);
+            background: var(--color-secondary-900);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 16px;
+        }
+        .profile-header .back-btn {
+            position: absolute;
+            left: 16px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: var(--color-neutral-0);
+            font-size: var(--font-size-base);
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-family: var(--font-family-body);
+        }
+        .profile-header .back-btn:hover {
+            opacity: 0.8;
+        }
+        .profile-header h1 {
+            font-family: var(--font-family-heading);
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-bold);
+            color: var(--color-neutral-0);
+            letter-spacing: var(--letter-spacing-wide);
+            margin: 0;
+        }
+
+        /* User info section */
+        .user-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 48px 20px 32px;
+        }
+        .avatar-placeholder {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--color-secondary-600);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            border: 2px solid rgba(197,165,90,0.2);
+        }
+        .avatar-placeholder i {
+            width: 36px;
+            height: 36px;
+            color: var(--color-secondary-400);
+        }
+        .user-section .not-logged-in {
+            font-size: var(--font-size-md);
+            color: var(--color-neutral-400);
+            margin-bottom: 16px;
+        }
+        .login-btn {
+            background: linear-gradient(135deg, var(--color-primary-500), var(--color-primary-600));
+            color: var(--color-secondary-900);
+            border: none;
+            padding: 10px 32px;
+            border-radius: 24px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: var(--font-family-body);
+            box-shadow: var(--shadow-gold);
+            transition: opacity var(--transition-fast);
+        }
+        .login-btn:hover {
+            opacity: 0.9;
+        }
+        .login-btn:active {
+            transform: scale(0.97);
+        }
+
+        /* Inline toast */
+        .inline-toast {
+            text-align: center;
+            font-size: var(--font-size-sm);
+            color: var(--color-primary-400);
+            margin-top: 12px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            height: 20px;
+        }
+        .inline-toast.show {
+            opacity: 1;
+        }
+
+        /* Menu list */
+        .menu-list {
+            background: var(--color-secondary-700);
+            border-radius: 16px;
+            overflow: hidden;
+            margin: 0 16px;
+        }
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .menu-item:hover {
+            background: rgba(197,165,90,0.08);
+        }
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+        .menu-item .icon {
+            width: 20px;
+            height: 20px;
+            color: var(--color-primary-400);
+            margin-right: 14px;
+            flex-shrink: 0;
+        }
+        .menu-item .text {
+            flex: 1;
+        }
+        .menu-item .text .title {
+            font-size: 15px;
+            color: var(--color-neutral-100);
+            font-weight: var(--font-weight-medium);
+        }
+        .menu-item .text .subtitle {
+            font-size: 12px;
+            color: var(--color-neutral-400);
+            margin-top: 2px;
+        }
+        .menu-item .arrow {
+            color: var(--color-neutral-500);
+            flex-shrink: 0;
+        }
+
+        /* Menu section title */
+        .menu-section-title {
+            font-size: var(--font-size-xs);
+            color: var(--color-neutral-500);
+            padding: 20px 20px 8px 20px;
+            letter-spacing: var(--letter-spacing-wide);
+        }
+
+        /* Bottom nav */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10,18,38,0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-top: 1px solid rgba(197,165,90,0.1);
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0 calc(8px + env(safe-area-inset-bottom));
+            max-width: 430px;
+            margin: 0 auto;
+            z-index: var(--z-sticky);
+        }
+        .bottom-nav a {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            color: rgba(255,255,255,0.4);
+            text-decoration: none;
+            font-size: 11px;
+        }
+        .bottom-nav a.active {
+            color: var(--color-primary-400);
+        }
+        .bottom-nav a i {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Main content bottom padding */
+        .main-content {
+            padding-bottom: calc(80px + env(safe-area-inset-bottom));
+        }
+
+        /* Global toast */
+        .global-toast {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(16, 26, 51, 0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            color: var(--color-primary-300);
+            padding: 16px 28px;
+            border-radius: 12px;
+            font-size: var(--font-size-base);
+            z-index: var(--z-toast);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            border: 1px solid rgba(197,165,90,0.15);
+            text-align: center;
+            max-width: 260px;
+        }
+        .global-toast.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ========== Header ========== -->
+    <header class="profile-header">
+        <button class="back-btn" onclick="location.href='home.html'">
+            <i data-lucide="chevron-left" style="width:20px;height:20px;"></i>
+            <span>返回</span>
+        </button>
+        <h1>我的</h1>
+    </header>
+
+    <!-- ========== Main Content ========== -->
+    <main class="main-content">
+
+        <!-- User info (not logged in) -->
+        <section class="user-section">
+            <div class="avatar-placeholder">
+                <i data-lucide="user"></i>
+            </div>
+            <p class="not-logged-in">未登录</p>
+            <button class="login-btn" id="loginBtn">登录/注册</button>
+            <div class="inline-toast" id="loginToast">功能开发中，敬请期待~</div>
+        </section>
+
+        <!-- Function menu list -->
+        <div class="menu-section-title">常用功能</div>
+        <div class="menu-list" id="menuList">
+            <div class="menu-item" data-menu="我的门票">
+                <i data-lucide="ticket" class="icon"></i>
+                <div class="text">
+                    <div class="title">我的门票</div>
+                    <div class="subtitle">查看已购买的门票</div>
+                </div>
+                <i data-lucide="chevron-right" class="arrow" style="width:16px;height:16px;"></i>
+            </div>
+            <div class="menu-item" data-menu="游览记录">
+                <i data-lucide="footprints" class="icon"></i>
+                <div class="text">
+                    <div class="title">游览记录</div>
+                    <div class="subtitle">您的游览足迹</div>
+                </div>
+                <i data-lucide="chevron-right" class="arrow" style="width:16px;height:16px;"></i>
+            </div>
+            <div class="menu-item" data-menu="我的收藏">
+                <i data-lucide="bookmark" class="icon"></i>
+                <div class="text">
+                    <div class="title">我的收藏</div>
+                    <div class="subtitle">收藏的景点和路线</div>
+                </div>
+                <i data-lucide="chevron-right" class="arrow" style="width:16px;height:16px;"></i>
+            </div>
+            <div class="menu-item" data-menu="语音导览">
+                <i data-lucide="headphones" class="icon"></i>
+                <div class="text">
+                    <div class="title">语音导览</div>
+                    <div class="subtitle">导览语音设置</div>
+                </div>
+                <i data-lucide="chevron-right" class="arrow" style="width:16px;height:16px;"></i>
+            </div>
+        </div>
+
+        <div class="menu-section-title" style="margin-top: 8px;">系统设置</div>
+        <div class="menu-list" id="settingsMenuList">
+            <div class="menu-item" data-menu="语言设置">
+                <i data-lucide="globe" class="icon"></i>
+                <div class="text">
+                    <div class="title">语言设置</div>
+                    <div class="subtitle">简体中文</div>
+                </div>
+                <i data-lucide="chevron-right" class="arrow" style="width:16px;height:16px;"></i>
+            </div>
+            <div class="menu-item" data-menu="意见反馈">
+                <i data-lucide="message-square" class="icon"></i>
+                <div class="text">
+                    <div class="title">意见反馈</div>
+                    <div class="subtitle">帮助我们做得更好</div>
+                </div>
+                <i data-lucide="chevron-right" class="arrow" style="width:16px;height:16px;"></i>
+            </div>
+            <div class="menu-item" data-menu="关于我们">
+                <i data-lucide="info" class="icon"></i>
+                <div class="text">
+                    <div class="title">关于我们</div>
+                    <div class="subtitle">版本 1.0.0</div>
+                </div>
+                <i data-lucide="chevron-right" class="arrow" style="width:16px;height:16px;"></i>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ========== Global Toast ========== -->
+    <div class="global-toast" id="globalToast">功能开发中，敬请期待~</div>
+
+    <!-- ========== Bottom Nav ========== -->
+    <nav class="bottom-nav">
+        <a href="home.html">
+            <i data-lucide="home"></i>
+            <span>首页</span>
+        </a>
+        <a href="guide.html">
+            <i data-lucide="compass"></i>
+            <span>导览</span>
+        </a>
+        <a href="nianhua.html">
+            <i data-lucide="flower-2"></i>
+            <span>拈花湾</span>
+        </a>
+        <a href="profile.html" class="active">
+            <i data-lucide="user"></i>
+            <span>我的</span>
+        </a>
+    </nav>
+
+    <script>
+    lucide.createIcons();
+
+    // Show inline toast helper
+    function showLoginToast() {
+        var toast = document.getElementById('loginToast');
+        toast.classList.add('show');
+        setTimeout(function() {
+            toast.classList.remove('show');
+        }, 3000);
+    }
+
+    // Show global toast helper
+    var globalToastTimer = null;
+    function showGlobalToast() {
+        var toast = document.getElementById('globalToast');
+        if (globalToastTimer) clearTimeout(globalToastTimer);
+        toast.classList.add('show');
+        globalToastTimer = setTimeout(function() {
+            toast.classList.remove('show');
+            globalToastTimer = null;
+        }, 2000);
+    }
+
+    // Login button
+    document.getElementById('loginBtn').addEventListener('click', function(e) {
+        e.preventDefault();
+        showLoginToast();
+    });
+
+    // Menu items click
+    document.querySelectorAll('.menu-item').forEach(function(item) {
+        item.addEventListener('click', function() {
+            showGlobalToast();
+        });
+    });
+    </script>
+</body>
+</html>

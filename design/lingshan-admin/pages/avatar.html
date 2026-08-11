@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数字人形象管理 - 灵山胜境AI数字人导览系统</title>
+    <style id="theme-vars">
+/* ============================================================
+ * 灵山胜境AI数字人导览系统 - Brand Colors & Typography
+ * Design Token Convention (CSS Custom Properties)
+ * ============================================================ */
+
+:root {
+  /* ---- Primary: 金色系 (Gold) ---- */
+  --color-primary-100: #F5EDD6;
+  --color-primary-200: #EBDCB0;
+  --color-primary-300: #DFC98A;
+  --color-primary-400: #D4B96E;
+  --color-primary-500: #C5A55A;
+  --color-primary-600: #A88B3E;
+  --color-primary-700: #8A7130;
+  --color-primary-800: #6C5724;
+  --color-primary-900: #503F1A;
+
+  /* ---- Secondary: 藏青 / 深蓝 (Deep Blue) ---- */
+  --color-secondary-100: #C5CEE0;
+  --color-secondary-200: #96A6C4;
+  --color-secondary-300: #677EA8;
+  --color-secondary-400: #3D5678;
+  --color-secondary-500: #1B2A4A;
+  --color-secondary-600: #152240;
+  --color-secondary-700: #101A33;
+  --color-secondary-800: #0A1226;
+  --color-secondary-900: #050A19;
+
+  /* ---- Neutral: 白 / 灰 ---- */
+  --color-neutral-0:   #FFFFFF;
+  --color-neutral-50:  #FAFAF5;
+  --color-neutral-100: #F5F5F0;
+  --color-neutral-200: #E5E5DD;
+  --color-neutral-300: #D0D0C5;
+  --color-neutral-400: #A3A395;
+  --color-neutral-500: #767665;
+  --color-neutral-600: #595948;
+  --color-neutral-700: #3D3D31;
+  --color-neutral-800: #222218;
+  --color-neutral-900: #0F0F0A;
+
+  /* ---- Accent: 朱砂红 (Vermilion) ---- */
+  --color-accent-100: #F2D1D0;
+  --color-accent-200: #E8A3A1;
+  --color-accent-300: #DE7573;
+  --color-accent-400: #D46462;
+  --color-accent-500: #C25450;
+  --color-accent-600: #A34340;
+  --color-accent-700: #843330;
+  --color-accent-800: #652320;
+  --color-accent-900: #461312;
+
+  /* ---- Semantic Tokens ---- */
+  --color-bg-primary:     var(--color-neutral-0);
+  --color-bg-secondary:   var(--color-neutral-100);
+  --color-bg-deep:        var(--color-secondary-500);
+  --color-bg-card:        var(--color-neutral-0);
+  --color-bg-overlay:     rgba(27, 42, 74, 0.65);
+
+  --color-text-primary:   var(--color-secondary-500);
+  --color-text-secondary: var(--color-neutral-700);
+  --color-text-inverse:   var(--color-neutral-0);
+  --color-text-accent:    var(--color-accent-500);
+  --color-text-gold:       var(--color-primary-500);
+
+  --color-border-default: var(--color-neutral-200);
+  --color-border-gold:     var(--color-primary-400);
+  --color-border-subtle:   var(--color-neutral-100);
+
+  /* ---- Typography ---- */
+  --font-family-heading: 'Noto Serif SC', 'Source Han Serif SC', 'Songti SC', serif;
+  --font-family-body:    'Noto Sans SC', 'Source Han Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+
+  /* Font Sizes (Mobile-first) */
+  --font-size-xs:   0.6875rem;   /* 11px */
+  --font-size-sm:   0.75rem;     /* 12px */
+  --font-size-base: 0.875rem;    /* 14px */
+  --font-size-md:   1rem;        /* 16px */
+  --font-size-lg:   1.125rem;    /* 18px */
+  --font-size-xl:   1.25rem;     /* 20px */
+  --font-size-2xl:  1.5rem;      /* 24px */
+  --font-size-3xl:  1.875rem;    /* 30px */
+  --font-size-4xl:  2.25rem;     /* 36px */
+
+  /* Font Weights */
+  --font-weight-regular: 400;
+  --font-weight-medium:  500;
+  --font-weight-semibold: 600;
+  --font-weight-bold:    700;
+
+  /* Line Heights */
+  --line-height-tight:   1.25;
+  --line-height-normal:  1.6;
+  --line-height-relaxed: 1.8;
+
+  /* Letter Spacing */
+  --letter-spacing-tight:  -0.02em;
+  --letter-spacing-normal:  0;
+  --letter-spacing-wide:    0.05em;
+  --letter-spacing-wider:   0.1em;
+
+  /* ---- Spacing Scale ---- */
+  --space-0:   0;
+  --space-1:   0.25rem;   /* 4px  */
+  --space-2:   0.5rem;    /* 8px  */
+  --space-3:   0.75rem;   /* 12px */
+  --space-4:   1rem;      /* 16px */
+  --space-5:   1.25rem;   /* 20px */
+  --space-6:   1.5rem;    /* 24px */
+  --space-8:   2rem;      /* 32px */
+  --space-10:  2.5rem;    /* 40px */
+  --space-12:  3rem;      /* 48px */
+  --space-16:  4rem;      /* 64px */
+  --space-20:  5rem;      /* 80px */
+
+  /* ---- Border Radius ---- */
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   12px;
+  --radius-xl:   16px;
+  --radius-full: 9999px;
+
+  /* ---- Shadows ---- */
+  --shadow-sm:  0 1px 2px rgba(27, 42, 74, 0.06);
+  --shadow-md:  0 4px 8px rgba(27, 42, 74, 0.08);
+  --shadow-lg:  0 8px 24px rgba(27, 42, 74, 0.12);
+  --shadow-xl:  0 16px 48px rgba(27, 42, 74, 0.16);
+  --shadow-gold: 0 4px 16px rgba(197, 165, 90, 0.25);
+
+  /* ---- Transitions ---- */
+  --transition-fast:   150ms ease;
+  --transition-normal: 250ms ease;
+  --transition-slow:   400ms ease;
+
+  /* ---- Z-Index Scale ---- */
+  --z-base:     0;
+  --z-above:    10;
+  --z-dropdown: 100;
+  --z-sticky:   200;
+  --z-overlay:  300;
+  --z-modal:    400;
+  --z-toast:    500;
+}
+
+/* ============================================================
+ * Dark Mode Overrides
+ * ============================================================ */
+
+html.dark {
+  --color-bg-primary:     var(--color-secondary-900);
+  --color-bg-secondary:   var(--color-secondary-800);
+  --color-bg-card:        var(--color-secondary-700);
+  --color-bg-overlay:     rgba(5, 10, 25, 0.75);
+
+  --color-text-primary:   var(--color-neutral-100);
+  --color-text-secondary: var(--color-neutral-400);
+  --color-text-gold:      var(--color-primary-400);
+
+  --color-border-default: var(--color-secondary-500);
+  --color-border-gold:     var(--color-primary-500);
+  --color-border-subtle:   var(--color-secondary-600);
+}
+
+/* ============================================================
+ * Base Typography Styles
+ * ============================================================ */
+
+body {
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-normal);
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-family-heading);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  color: var(--color-text-primary);
+}
+
+h1 {
+  font-size: var(--font-size-3xl);
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+h2 {
+  font-size: var(--font-size-2xl);
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+h3 {
+  font-size: var(--font-size-xl);
+  letter-spacing: var(--letter-spacing-normal);
+}
+
+h4 {
+  font-size: var(--font-size-lg);
+}
+
+h5 {
+  font-size: var(--font-size-md);
+}
+
+h6 {
+  font-size: var(--font-size-base);
+}
+
+p {
+  margin-bottom: var(--space-4);
+}
+
+a {
+  color: var(--color-primary-400);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--color-primary-300);
+}
+
+small, .text-sm {
+  font-size: var(--font-size-sm);
+}
+
+.text-xs {
+  font-size: var(--font-size-xs);
+}
+
+.text-gold {
+  color: var(--color-text-gold);
+}
+
+.text-accent {
+  color: var(--color-text-accent);
+}
+
+.text-inverse {
+  color: var(--color-text-inverse);
+}
+
+/* ============================================================
+ * Google Fonts Import
+ * ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap');
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  
+  @layer base {
+    body { background: var(--color-bg-primary); color: var(--color-text-primary); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+
+      /* Avatar card glow on hover */
+      .avatar-card {
+        transition: box-shadow var(--transition-normal), border-color var(--transition-normal), transform var(--transition-normal);
+      }
+      .avatar-card:hover {
+        box-shadow: var(--shadow-gold);
+        border-color: var(--color-primary-500) !important;
+        transform: translateY(-2px);
+      }
+      .avatar-card.selected {
+        border-color: var(--color-primary-400) !important;
+        box-shadow: 0 0 0 2px var(--color-primary-500), var(--shadow-gold);
+      }
+
+      /* Status dot pulse */
+      @keyframes pulse-online {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+      }
+      .status-online::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background: #4ade80;
+        animation: pulse-online 2s ease-in-out infinite;
+      }
+
+      /* Config panel tab */
+      .config-tab {
+        transition: color var(--transition-fast), border-color var(--transition-fast);
+        border-bottom: 2px solid transparent;
+        padding-bottom: var(--space-2);
+      }
+      .config-tab:hover {
+        color: var(--color-primary-300);
+      }
+      .config-tab.active {
+        color: var(--color-primary-400);
+        border-bottom-color: var(--color-primary-400);
+      }
+
+      /* Toggle switch */
+      .toggle-track {
+        transition: background-color var(--transition-fast);
+      }
+      .toggle-thumb {
+        transition: transform var(--transition-fast);
+      }
+      .toggle-active .toggle-track {
+        background-color: var(--color-primary-500);
+      }
+      .toggle-active .toggle-thumb {
+        transform: translateX(16px);
+      }
+
+      /* Sidebar nav item */
+      .sidebar-nav-item {
+        transition: background-color var(--transition-fast), color var(--transition-fast);
+        border-radius: var(--radius-md);
+        padding: var(--space-2) var(--space-3);
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+        font-size: var(--font-size-sm);
+        color: var(--color-text-secondary);
+        cursor: pointer;
+      }
+      .sidebar-nav-item:hover {
+        background-color: rgba(197, 165, 90, 0.08);
+        color: var(--color-primary-300);
+      }
+      .sidebar-nav-item.active {
+        background-color: rgba(197, 165, 90, 0.12);
+        color: var(--color-primary-400);
+      }
+
+      /* Select / Input dark styles */
+      .dark-input {
+        background: var(--color-secondary-800);
+        border: 1px solid var(--color-border-default);
+        border-radius: var(--radius-md);
+        color: var(--color-text-primary);
+        padding: var(--space-2) var(--space-3);
+        font-size: var(--font-size-sm);
+        width: 100%;
+        transition: border-color var(--transition-fast);
+        outline: none;
+        font-family: var(--font-family-body);
+      }
+      .dark-input:focus {
+        border-color: var(--color-primary-500);
+      }
+      .dark-input::placeholder {
+        color: var(--color-neutral-500);
+      }
+
+      /* Custom scrollbar for sidebar */
+      .sidebar-scroll::-webkit-scrollbar { width: 4px; }
+      .sidebar-scroll::-webkit-scrollbar-track { background: transparent; }
+      .sidebar-scroll::-webkit-scrollbar-thumb { background: var(--color-secondary-500); border-radius: 4px; }
+      .sidebar-scroll::-webkit-scrollbar-thumb:hover { background: var(--color-secondary-400); }
+
+      /* Add card dashed border animation */
+      .add-card {
+        transition: border-color var(--transition-normal), background-color var(--transition-normal);
+      }
+      .add-card:hover {
+        border-color: var(--color-primary-500);
+        background-color: rgba(197, 165, 90, 0.04);
+      }
+
+      /* Badge checkbox */
+      .badge-check {
+        width: 18px;
+        height: 18px;
+        border-radius: var(--radius-sm);
+        border: 1.5px solid var(--color-border-default);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: border-color var(--transition-fast), background-color var(--transition-fast);
+      }
+      .badge-check.checked {
+        background-color: var(--color-primary-500);
+        border-color: var(--color-primary-500);
+      }
+
+      /* Range slider */
+      input[type="range"] {
+        -webkit-appearance: none;
+        appearance: none;
+        height: 4px;
+        background: var(--color-secondary-500);
+        border-radius: 2px;
+        outline: none;
+      }
+      input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: var(--color-primary-400);
+        cursor: pointer;
+        box-shadow: 0 2px 6px rgba(197, 165, 90, 0.4);
+      }
+
+      /* Expression card */
+      .expr-card {
+        transition: border-color var(--transition-fast), background-color var(--transition-fast);
+        cursor: pointer;
+      }
+      .expr-card:hover {
+        border-color: var(--color-primary-600);
+      }
+      .expr-card.active {
+        border-color: var(--color-primary-400);
+        background-color: rgba(197, 165, 90, 0.08);
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+    <main class="flex min-h-screen">
+        <!-- ===== 左侧侧边栏 ===== -->
+        <aside class="w-60 flex-shrink-0 flex flex-col border-r" style="border-color: var(--color-border-default); background: var(--color-bg-secondary);">
+            <!-- Logo -->
+            <div class="flex items-center gap-3 px-5 py-5 border-b" style="border-color: var(--color-border-default);">
+                <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background: linear-gradient(135deg, var(--color-primary-500), var(--color-primary-700));">
+                    <i data-lucide="mountain" style="width:18px;height:18px;color:var(--color-neutral-0);"></i>
+                </div>
+                <div>
+                    <div class="text-sm font-semibold" style="color: var(--color-text-primary); font-family: var(--font-family-heading);">灵山胜境</div>
+                    <div class="text-xs" style="color: var(--color-text-secondary);">AI数字人导览</div>
+                </div>
+            </div>
+
+            <!-- 导航菜单 -->
+            <nav class="flex-1 overflow-y-auto sidebar-scroll px-3 py-4 space-y-1">
+                <div class="px-3 py-2 text-xs font-medium uppercase tracking-wider" style="color: var(--color-neutral-500);">概览</div>
+                <div class="sidebar-nav-item">
+                    <i data-lucide="layout-dashboard" style="width:16px;height:16px;"></i>
+                    <span>数据面板</span>
+                </div>
+
+                <div class="px-3 py-2 mt-4 text-xs font-medium uppercase tracking-wider" style="color: var(--color-neutral-500);">核心管理</div>
+                <div class="sidebar-nav-item active">
+                    <i data-lucide="user-circle" style="width:16px;height:16px;"></i>
+                    <span>数字人管理</span>
+                </div>
+                <div class="sidebar-nav-item">
+                    <i data-lucide="map-pin" style="width:16px;height:16px;"></i>
+                    <span>景点管理</span>
+                </div>
+                <div class="sidebar-nav-item">
+                    <i data-lucide="message-square" style="width:16px;height:16px;"></i>
+                    <span>导览脚本</span>
+                </div>
+                <div class="sidebar-nav-item">
+                    <i data-lucide="mic" style="width:16px;height:16px;"></i>
+                    <span>语音配置</span>
+                </div>
+
+                <div class="px-3 py-2 mt-4 text-xs font-medium uppercase tracking-wider" style="color: var(--color-neutral-500);">运营</div>
+                <div class="sidebar-nav-item">
+                    <i data-lucide="bar-chart-3" style="width:16px;height:16px;"></i>
+                    <span>数据统计</span>
+                </div>
+                <div class="sidebar-nav-item">
+                    <i data-lucide="users" style="width:16px;height:16px;"></i>
+                    <span>游客反馈</span>
+                </div>
+                <div class="sidebar-nav-item">
+                    <i data-lucide="file-text" style="width:16px;height:16px;"></i>
+                    <span>操作日志</span>
+                </div>
+
+                <div class="px-3 py-2 mt-4 text-xs font-medium uppercase tracking-wider" style="color: var(--color-neutral-500);">系统</div>
+                <div class="sidebar-nav-item">
+                    <i data-lucide="settings" style="width:16px;height:16px;"></i>
+                    <span>系统设置</span>
+                </div>
+            </nav>
+
+            <!-- 用户信息 -->
+            <div class="px-4 py-4 border-t flex items-center gap-3" style="border-color: var(--color-border-default);">
+                <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold" style="background: var(--color-secondary-600); color: var(--color-primary-400);">管</div>
+                <div class="flex-1 min-w-0">
+                    <div class="text-sm truncate" style="color: var(--color-text-primary);">管理员</div>
+                    <div class="text-xs truncate" style="color: var(--color-text-secondary);">admin@lingshan.cn</div>
+                </div>
+                <i data-lucide="log-out" style="width:14px;height:14px;color:var(--color-neutral-500);cursor:pointer;"></i>
+            </div>
+        </aside>
+
+        <!-- ===== 右侧主内容区 ===== -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- 顶部栏 -->
+            <header class="flex items-center justify-between px-8 py-5 border-b flex-shrink-0" style="border-color: var(--color-border-default); background: var(--color-bg-secondary);">
+                <div>
+                    <h1 class="text-xl" style="color: var(--color-text-primary); font-family: var(--font-family-heading);">数字人形象管理</h1>
+                    <p class="text-sm mt-1" style="color: var(--color-text-secondary);">管理数字人外观、语音、表情及行为配置</p>
+                </div>
+                <button class="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all" style="background: linear-gradient(135deg, var(--color-primary-600), var(--color-primary-500)); color: var(--color-neutral-0); box-shadow: var(--shadow-gold);" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+                    <i data-lucide="plus" style="width:16px;height:16px;"></i>
+                    新增数字人
+                </button>
+            </header>
+
+            <!-- 内容区域：上方卡片 + 下方配置面板 -->
+            <div class="flex-1 overflow-y-auto no-scrollbar px-8 py-6 space-y-6" style="background: var(--color-bg-primary);">
+
+                <!-- ===== 数字人卡片网格 2x2 ===== -->
+                <section>
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-lg" style="color: var(--color-text-primary); font-family: var(--font-family-heading);">数字人列表</h2>
+                        <div class="flex items-center gap-2 text-sm" style="color: var(--color-text-secondary);">
+                            <span>共 3 个数字人</span>
+                            <span style="color: var(--color-neutral-600);">|</span>
+                            <span class="flex items-center gap-1"><span class="inline-block w-2 h-2 rounded-full" style="background: #4ade80;"></span> 1 在线</span>
+                            <span style="color: var(--color-neutral-600);">|</span>
+                            <span class="flex items-center gap-1"><span class="inline-block w-2 h-2 rounded-full" style="background: var(--color-neutral-500);"></span> 2 离线</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-5">
+                        <!-- 卡片 1: 灵小仙（在线） -->
+                        <div class="avatar-card selected rounded-xl overflow-hidden cursor-pointer" style="background: var(--color-bg-card); border: 2px solid var(--color-primary-500);">
+                            <div class="h-44 relative overflow-hidden" style="background: linear-gradient(160deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%);">
+                                <img src="../assets/xiuxian-avatar.jpg" alt="灵小仙" class="w-full h-full object-cover opacity-90">
+                                <!-- 在线状态 -->
+                                <div class="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium" style="background: rgba(74, 222, 128, 0.15); color: #4ade80; backdrop-filter: blur(8px);">
+                                    <span class="relative w-2 h-2 rounded-full status-online" style="background: #4ade80;"></span>
+                                    在线
+                                </div>
+                                <!-- 类型标签 -->
+                                <div class="absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs font-medium" style="background: rgba(197, 165, 90, 0.2); color: var(--color-primary-300); backdrop-filter: blur(8px);">
+                                    修仙者风格
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h3 class="text-base font-semibold" style="color: var(--color-text-primary);">灵小仙</h3>
+                                        <p class="text-xs mt-1" style="color: var(--color-text-secondary);">白金长袍 + 莲花徽章 | 温柔女声 | 唐制发型</p>
+                                    </div>
+                                    <div class="flex gap-1.5">
+                                        <button class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors" style="background: var(--color-secondary-800);" title="编辑" onmouseover="this.style.background='rgba(197,165,90,0.15)'" onmouseout="this.style.background='var(--color-secondary-800)'">
+                                            <i data-lucide="pencil" style="width:14px;height:14px;color:var(--color-primary-400);"></i>
+                                        </button>
+                                        <button class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors" style="background: var(--color-secondary-800);" title="复制" onmouseover="this.style.background='rgba(197,165,90,0.15)'" onmouseout="this.style.background='var(--color-secondary-800)'">
+                                            <i data-lucide="copy" style="width:14px;height:14px;color:var(--color-text-secondary);"></i>
+                                        </button>
+                                        <button class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors" style="background: var(--color-secondary-800);" title="更多" onmouseover="this.style.background='rgba(197,165,90,0.15)'" onmouseout="this.style.background='var(--color-secondary-800)'">
+                                            <i data-lucide="more-vertical" style="width:14px;height:14px;color:var(--color-text-secondary);"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2 mt-3">
+                                    <span class="px-2 py-0.5 rounded text-xs" style="background: var(--color-secondary-800); color: var(--color-neutral-400);">灵山梵宫</span>
+                                    <span class="px-2 py-0.5 rounded text-xs" style="background: var(--color-secondary-800); color: var(--color-neutral-400);">九龙灌浴</span>
+                                    <span class="px-2 py-0.5 rounded text-xs" style="background: var(--color-secondary-800); color: var(--color-neutral-400);">五印坛城</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 卡片 2: 灵小仙·禅服版（离线） -->
+                        <div class="avatar-card rounded-xl overflow-hidden cursor-pointer" style="background: var(--color-bg-card); border: 1.5px solid var(--color-border-default);">
+                            <div class="h-44 relative overflow-hidden" style="background: linear-gradient(160deg, #2d2d3f 0%, #1f1f30 40%, #2a1f1f 100%);">
+                                <!-- 禅服版占位图 -->
+                                <div class="w-full h-full flex flex-col items-center justify-center">
+                                    <div class="w-20 h-20 rounded-full flex items-center justify-center mb-3" style="background: linear-gradient(135deg, rgba(160,140,120,0.3), rgba(100,80,60,0.3)); border: 2px solid rgba(197,165,90,0.3);">
+                                        <i data-lucide="user" style="width:40px;height:40px;color:var(--color-neutral-400);"></i>
+                                    </div>
+                                    <span class="text-sm" style="color: var(--color-neutral-500);">禅服形象预览</span>
+                                </div>
+                                <!-- 离线状态 -->
+                                <div class="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium" style="background: rgba(160,160,160,0.15); color: var(--color-neutral-400); backdrop-filter: blur(8px);">
+                                    <span class="w-2 h-2 rounded-full" style="background: var(--color-neutral-500);"></span>
+                                    离线
+                                </div>
+                                <div class="absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs font-medium" style="background: rgba(160,140,120,0.2); color: var(--color-neutral-300); backdrop-filter: blur(8px);">
+                                    禅修风格
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h3 class="text-base font-semibold" style="color: var(--color-text-primary);">灵小仙 · 禅服版</h3>
+                                        <p class="text-xs mt-1" style="color: var(--color-text-secondary);">素色禅服 | 适合梵宫导览场景</p>
+                                    </div>
+                                    <div class="flex gap-1.5">
+                                        <button class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors" style="background: var(--color-secondary-800);" title="编辑" onmouseover="this.style.background='rgba(197,165,90,0.15)'" onmouseout="this.style.background='var(--color-secondary-800)'">
+                                            <i data-lucide="pencil" style="width:14px;height:14px;color:var(--color-primary-400);"></i>
+                                        </button>
+                                        <button class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors" style="background: var(--color-secondary-800);" title="复制" onmouseover="this.style.background='rgba(197,165,90,0.15)'" onmouseout="this.style.background='var(--color-secondary-800)'">
+                                            <i data-lucide="copy" style="width:14px;height:14px;color:var(--color-text-secondary);"></i>
+                                        </button>
+                                        <button class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors" style="background: var(--color-secondary-800);" title="更多" onmouseover="this.style.background='rgba(197,165,90,0.15)'" onmouseout="this.style.background='var(--color-secondary-800)'">
+                                            <i data-lucide="more-vertical" style="width:14px;height:14px;color:var(--color-text-secondary);"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2 mt-3">
+                                    <span class="px-2 py-0.5 rounded text-xs" style="background: var(--color-secondary-800); color: var(--color-neutral-400);">灵山梵宫</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 卡片 3: 灵小仙·现代版（离线） -->
+                        <div class="avatar-card rounded-xl overflow-hidden cursor-pointer" style="background: var(--color-bg-card); border: 1.5px solid var(--color-border-default);">
+                            <div class="h-44 relative overflow-hidden" style="background: linear-gradient(160deg, #1e2a3a 0%, #1a2535 40%, #253545 100%);">
+                                <!-- 现代版占位图 -->
+                                <div class="w-full h-full flex flex-col items-center justify-center">
+                                    <div class="w-20 h-20 rounded-full flex items-center justify-center mb-3" style="background: linear-gradient(135deg, rgba(100,130,170,0.3), rgba(60,90,130,0.3)); border: 2px solid rgba(197,165,90,0.3);">
+                                        <i data-lucide="user" style="width:40px;height:40px;color:var(--color-neutral-400);"></i>
+                                    </div>
+                                    <span class="text-sm" style="color: var(--color-neutral-500);">现代形象预览</span>
+                                </div>
+                                <!-- 离线状态 -->
+                                <div class="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium" style="background: rgba(160,160,160,0.15); color: var(--color-neutral-400); backdrop-filter: blur(8px);">
+                                    <span class="w-2 h-2 rounded-full" style="background: var(--color-neutral-500);"></span>
+                                    离线
+                                </div>
+                                <div class="absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs font-medium" style="background: rgba(100,130,170,0.2); color: var(--color-secondary-200); backdrop-filter: blur(8px);">
+                                    现代风格
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h3 class="text-base font-semibold" style="color: var(--color-text-primary);">灵小仙 · 现代版</h3>
+                                        <p class="text-xs mt-1" style="color: var(--color-text-secondary);">现代职业装 | 适合拈花湾场景</p>
+                                    </div>
+                                    <div class="flex gap-1.5">
+                                        <button class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors" style="background: var(--color-secondary-800);" title="编辑" onmouseover="this.style.background='rgba(197,165,90,0.15)'" onmouseout="this.style.background='var(--color-secondary-800)'">
+                                            <i data-lucide="pencil" style="width:14px;height:14px;color:var(--color-primary-400);"></i>
+                                        </button>
+                                        <button class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors" style="background: var(--color-secondary-800);" title="复制" onmouseover="this.style.background='rgba(197,165,90,0.15)'" onmouseout="this.style.background='var(--color-secondary-800)'">
+                                            <i data-lucide="copy" style="width:14px;height:14px;color:var(--color-text-secondary);"></i>
+                                        </button>
+                                        <button class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors" style="background: var(--color-secondary-800);" title="更多" onmouseover="this.style.background='rgba(197,165,90,0.15)'" onmouseout="this.style.background='var(--color-secondary-800)'">
+                                            <i data-lucide="more-vertical" style="width:14px;height:14px;color:var(--color-text-secondary);"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2 mt-3">
+                                    <span class="px-2 py-0.5 rounded text-xs" style="background: var(--color-secondary-800); color: var(--color-neutral-400);">拈花湾</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 卡片 4: + 新增数字人 -->
+                        <div class="add-card rounded-xl overflow-hidden cursor-pointer flex flex-col items-center justify-center min-h-[280px]" style="border: 2px dashed var(--color-secondary-400); background: transparent;">
+                            <div class="w-12 h-12 rounded-full flex items-center justify-center mb-3" style="border: 2px dashed var(--color-secondary-400);">
+                                <i data-lucide="plus" style="width:24px;height:24px;color:var(--color-neutral-500);"></i>
+                            </div>
+                            <span class="text-sm font-medium" style="color: var(--color-text-secondary);">新增数字人</span>
+                            <span class="text-xs mt-1" style="color: var(--color-neutral-600);">创建新的数字人形象</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ===== 配置面板 ===== -->
+                <section class="rounded-xl overflow-hidden" style="background: var(--color-bg-card); border: 1px solid var(--color-border-default);">
+                    <!-- 面板头部 -->
+                    <div class="flex items-center justify-between px-6 py-4 border-b" style="border-color: var(--color-border-default);">
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-lg flex items-center justify-center" style="background: linear-gradient(135deg, var(--color-primary-700), var(--color-primary-500));">
+                                <i data-lucide="sparkles" style="width:18px;height:18px;color:var(--color-neutral-0);"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-base font-semibold" style="color: var(--color-text-primary); font-family: var(--font-family-heading);">灵小仙 - 配置面板</h3>
+                                <p class="text-xs" style="color: var(--color-text-secondary);">修仙者风格 | 在线服务中</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors" style="border: 1px solid var(--color-border-default); color: var(--color-text-secondary);" onmouseover="this.style.borderColor='var(--color-primary-600)';this.style.color='var(--color-primary-400)'" onmouseout="this.style.borderColor='var(--color-border-default)';this.style.color='var(--color-text-secondary)'">
+                                <i data-lucide="rotate-ccw" style="width:12px;height:12px;"></i>
+                                重置
+                            </button>
+                            <button class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors" style="border: 1px solid var(--color-border-default); color: var(--color-text-secondary);" onmouseover="this.style.borderColor='var(--color-primary-600)';this.style.color='var(--color-primary-400)'" onmouseout="this.style.borderColor='var(--color-border-default)';this.style.color='var(--color-text-secondary)'">
+                                <i data-lucide="eye" style="width:12px;height:12px;"></i>
+                                预览
+                            </button>
+                            <button class="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-xs font-medium" style="background: linear-gradient(135deg, var(--color-primary-600), var(--color-primary-500)); color: var(--color-neutral-0);" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+                                <i data-lucide="save" style="width:12px;height:12px;"></i>
+                                保存配置
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 配置标签页 -->
+                    <div class="px-6 pt-4 border-b flex gap-6" style="border-color: var(--color-border-default);">
+                        <button class="config-tab active text-sm font-medium" onclick="switchTab('appearance')" id="tab-appearance">
+                            <span class="flex items-center gap-1.5"><i data-lucide="palette" style="width:14px;height:14px;"></i> 外观</span>
+                        </button>
+                        <button class="config-tab text-sm font-medium" onclick="switchTab('voice')" id="tab-voice" style="color: var(--color-text-secondary);">
+                            <span class="flex items-center gap-1.5"><i data-lucide="volume-2" style="width:14px;height:14px;"></i> 语音</span>
+                        </button>
+                        <button class="config-tab text-sm font-medium" onclick="switchTab('expression')" id="tab-expression" style="color: var(--color-text-secondary);">
+                            <span class="flex items-center gap-1.5"><i data-lucide="smile" style="width:14px;height:14px;"></i> 表情</span>
+                        </button>
+                        <button class="config-tab text-sm font-medium" onclick="switchTab('behavior')" id="tab-behavior" style="color: var(--color-text-secondary);">
+                            <span class="flex items-center gap-1.5"><i data-lucide="brain" style="width:14px;height:14px;"></i> 行为</span>
+                        </button>
+                    </div>
+
+                    <!-- 配置内容 -->
+                    <div class="px-6 py-5">
+
+                        <!-- ===== 外观配置 ===== -->
+                        <div id="panel-appearance" class="config-panel">
+                            <div class="grid grid-cols-2 gap-6">
+                                <!-- 发型 -->
+                                <div>
+                                    <label class="block text-sm font-medium mb-2" style="color: var(--color-text-primary);">发型</label>
+                                    <select class="dark-input">
+                                        <option selected>唐制高髻</option>
+                                        <option>宋制盘发</option>
+                                        <option>飞天髻</option>
+                                        <option>双丫髻</option>
+                                        <option>现代长发</option>
+                                    </select>
+                                    <p class="text-xs mt-1.5" style="color: var(--color-text-secondary);">选择数字人的发型样式</p>
+                                </div>
+                                <!-- 服装 -->
+                                <div>
+                                    <label class="block text-sm font-medium mb-2" style="color: var(--color-text-primary);">服装</label>
+                                    <select class="dark-input">
+                                        <option selected>白金长袍</option>
+                                        <option>素色禅服</option>
+                                        <option>现代职业装</option>
+                                        <option>汉服襦裙</option>
+                                        <option>唐装</option>
+                                    </select>
+                                    <p class="text-xs mt-1.5" style="color: var(--color-text-secondary);">选择数字人的服装风格</p>
+                                </div>
+                                <!-- 徽章 -->
+                                <div>
+                                    <label class="block text-sm font-medium mb-2" style="color: var(--color-text-primary);">徽章</label>
+                                    <select class="dark-input">
+                                        <option selected>莲花徽章</option>
+                                        <option>灵山标志</option>
+                                        <option>祥云纹饰</option>
+                                        <option>无徽章</option>
+                                    </select>
+                                    <p class="text-xs mt-1.5" style="color: var(--color-text-secondary);">佩戴在服饰上的装饰徽章</p>
+                                </div>
+                                <!-- 主色调 -->
+                                <div>
+                                    <label class="block text-sm font-medium mb-2" style="color: var(--color-text-primary);">主色调</label>
+                                    <div class="flex items-center gap-3">
+                                        <div class="flex gap-2">
+                                            <button class="w-8 h-8 rounded-lg ring-2 ring-offset-1 transition-all" style="background: #C5A55A; ring-color: var(--color-primary-400); ring-offset-color: var(--color-bg-card);" title="金色"></button>
+                                            <button class="w-8 h-8 rounded-lg transition-all" style="background: #96A6C4;" title="银蓝" onmouseover="this.style.outline='2px solid var(--color-primary-400)'" onmouseout="this.style.outline='none'"></button>
+                                            <button class="w-8 h-8 rounded-lg transition-all" style="background: #E8A3A1;" title="朱砂" onmouseover="this.style.outline='2px solid var(--color-primary-400)'" onmouseout="this.style.outline='none'"></button>
+                                            <button class="w-8 h-8 rounded-lg transition-all" style="background: #FFFFFF;" title="素白" onmouseover="this.style.outline='2px solid var(--color-primary-400)'" onmouseout="this.style.outline='none'"></button>
+                                            <button class="w-8 h-8 rounded-lg transition-all" style="background: #A3A395;" title="灰调" onmouseover="this.style.outline='2px solid var(--color-primary-400)'" onmouseout="this.style.outline='none'"></button>
+                                        </div>
+                                        <span class="text-xs" style="color: var(--color-text-secondary);">当前: 金色</span>
+                                    </div>
+                                    <p class="text-xs mt-1.5" style="color: var(--color-text-secondary);">数字人的整体色彩基调</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ===== 语音配置 ===== -->
+                        <div id="panel-voice" class="config-panel" style="display: none;">
+                            <div class="grid grid-cols-2 gap-6">
+                                <!-- TTS引擎 -->
+                                <div>
+                                    <label class="block text-sm font-medium mb-2" style="color: var(--color-text-primary);">TTS引擎</label>
+                                    <select class="dark-input">
+                                        <option selected>CosyVoice</option>
+                                        <option>Edge TTS</option>
+                                        <option>讯飞语音</option>
+                                    </select>
+                                    <p class="text-xs mt-1.5" style="color: var(--color-text-secondary);">文本转语音合成引擎</p>
+                                </div>
+                                <!-- 音色 -->
+                                <div>
+                                    <label class="block text-sm font-medium mb-2" style="color: var(--color-text-primary);">音色</label>
+                                    <select class="dark-input">
+                                        <option selected>温柔女声 (Xiaobei)</option>
+                                        <option>甜美少女 (Xiaoxuan)</option>
+                                        <option>知性女声 (Xiaoyu)</option>
+                                        <option>端庄女声 (Xiaohan)</option>
+                                    </select>
+                                    <p class="text-xs mt-1.5" style="color: var(--color-text-secondary);">选择语音角色的音色风格</p>
+                                </div>
+                                <!-- 语速 -->
+                                <div>
+                                    <label class="block text-sm font-medium mb-2" style="color: var(--color-text-primary);">语速</label>
+                                    <div class="flex items-center gap-3">
+                                        <input type="range" min="0.5" max="2" step="0.1" value="1.0" class="flex-1" id="speed-range" oninput="document.getElementById('speed-val').textContent=this.value+'x'">
+                                        <span id="speed-val" class="text-sm font-medium w-10 text-right" style="color: var(--color-primary-400);">1.0x</span>
+                                    </div>
+                                    <div class="flex justify-between text-xs mt-1" style="color: var(--color-neutral-500);">
+                                        <span>0.5x 慢速</span>
+                                        <span>2.0x 快速</span>
+                                    </div>
+                                </div>
+                                <!-- 方言 -->
+                                <div>
+                                    <label class="block text-sm font-medium mb-2" style="color: var(--color-text-primary);">方言支持</label>
+                                    <div class="space-y-2.5">
+                                        <label class="flex items-center gap-3 cursor-pointer">
+                                            <div class="badge-check checked" onclick="this.classList.toggle('checked')">
+                                                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 6L5 8.5L9.5 3.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                            </div>
+                                            <span class="text-sm" style="color: var(--color-text-primary);">普通话</span>
+                                            <span class="text-xs px-1.5 py-0.5 rounded" style="background: rgba(74,222,128,0.1); color: #4ade80;">默认</span>
+                                        </label>
+                                        <label class="flex items-center gap-3 cursor-pointer">
+                                            <div class="badge-check checked" onclick="this.classList.toggle('checked')">
+                                                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 6L5 8.5L9.5 3.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                            </div>
+                                            <span class="text-sm" style="color: var(--color-text-primary);">无锡话</span>
+                                            <span class="text-xs px-1.5 py-0.5 rounded" style="background: rgba(197,165,90,0.1); color: var(--color-primary-400);">已启用</span>
+                                        </label>
+                                        <label class="flex items-center gap-3 cursor-pointer">
+                                            <div class="badge-check" onclick="this.classList.toggle('checked')">
+                                                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="display:none;"><path d="M2.5 6L5 8.5L9.5 3.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                            </div>
+                                            <span class="text-sm" style="color: var(--color-text-secondary);">苏州话</span>
+                                            <span class="text-xs px-1.5 py-0.5 rounded" style="background: var(--color-secondary-800); color: var(--color-neutral-500);">未启用</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 试听按钮 -->
+                            <div class="mt-5 pt-4 border-t flex items-center gap-3" style="border-color: var(--color-border-default);">
+                                <button class="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium" style="background: var(--color-secondary-800); color: var(--color-primary-400); border: 1px solid var(--color-border-default);" onmouseover="this.style.borderColor='var(--color-primary-500)'" onmouseout="this.style.borderColor='var(--color-border-default)'">
+                                    <i data-lucide="play" style="width:14px;height:14px;"></i>
+                                    试听语音
+                                </button>
+                                <span class="text-xs" style="color: var(--color-text-secondary);">"欢迎来到灵山胜境，我是您的专属导览员灵小仙。"</span>
+                            </div>
+                        </div>
+
+                        <!-- ===== 表情配置 ===== -->
+                        <div id="panel-expression" class="config-panel" style="display: none;">
+                            <div class="grid grid-cols-3 gap-5">
+                                <!-- 标准版 -->
+                                <div class="expr-card rounded-xl p-4 text-center" style="border: 1.5px solid var(--color-border-default); background: var(--color-secondary-800);" onclick="selectExpression(this)">
+                                    <div class="w-16 h-16 rounded-full mx-auto mb-3 flex items-center justify-center" style="background: var(--color-secondary-700);">
+                                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                                            <circle cx="16" cy="16" r="14" stroke="var(--color-neutral-400)" stroke-width="1.5"/>
+                                            <circle cx="11" cy="13" r="1.5" fill="var(--color-neutral-400)"/>
+                                            <circle cx="21" cy="13" r="1.5" fill="var(--color-neutral-400)"/>
+                                            <path d="M11 21 C13 24 19 24 21 21" stroke="var(--color-neutral-400)" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+                                        </svg>
+                                    </div>
+                                    <h4 class="text-sm font-medium" style="color: var(--color-text-primary);">标准版</h4>
+                                    <p class="text-xs mt-1" style="color: var(--color-text-secondary);">温和自然，适合大部分导览场景</p>
+                                </div>
+                                <!-- 活泼版 -->
+                                <div class="expr-card active rounded-xl p-4 text-center" style="border: 1.5px solid var(--color-primary-400); background: rgba(197,165,90,0.08);" onclick="selectExpression(this)">
+                                    <div class="w-16 h-16 rounded-full mx-auto mb-3 flex items-center justify-center" style="background: rgba(197,165,90,0.1);">
+                                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                                            <circle cx="16" cy="16" r="14" stroke="var(--color-primary-400)" stroke-width="1.5"/>
+                                            <circle cx="11" cy="12" r="1.5" fill="var(--color-primary-400)"/>
+                                            <circle cx="21" cy="12" r="1.5" fill="var(--color-primary-400)"/>
+                                            <path d="M10 20 C12 24 20 24 22 20" stroke="var(--color-primary-400)" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+                                            <circle cx="8" cy="17" r="2" fill="var(--color-primary-300)" opacity="0.4"/>
+                                            <circle cx="24" cy="17" r="2" fill="var(--color-primary-300)" opacity="0.4"/>
+                                        </svg>
+                                    </div>
+                                    <h4 class="text-sm font-medium" style="color: var(--color-primary-400);">活泼版</h4>
+                                    <p class="text-xs mt-1" style="color: var(--color-text-secondary);">生动热情，适合亲子游场景</p>
+                                    <div class="mt-2">
+                                        <span class="text-xs px-2 py-0.5 rounded-full" style="background: rgba(197,165,90,0.15); color: var(--color-primary-400);">当前使用</span>
+                                    </div>
+                                </div>
+                                <!-- 沉稳版 -->
+                                <div class="expr-card rounded-xl p-4 text-center" style="border: 1.5px solid var(--color-border-default); background: var(--color-secondary-800);" onclick="selectExpression(this)">
+                                    <div class="w-16 h-16 rounded-full mx-auto mb-3 flex items-center justify-center" style="background: var(--color-secondary-700);">
+                                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                                            <circle cx="16" cy="16" r="14" stroke="var(--color-neutral-400)" stroke-width="1.5"/>
+                                            <path d="M11 13 L13 13" stroke="var(--color-neutral-400)" stroke-width="1.5" stroke-linecap="round"/>
+                                            <path d="M19 13 L21 13" stroke="var(--color-neutral-400)" stroke-width="1.5" stroke-linecap="round"/>
+                                            <path d="M12 22 C14 23.5 18 23.5 20 22" stroke="var(--color-neutral-400)" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+                                        </svg>
+                                    </div>
+                                    <h4 class="text-sm font-medium" style="color: var(--color-text-primary);">沉稳版</h4>
+                                    <p class="text-xs mt-1" style="color: var(--color-text-secondary);">庄重典雅，适合文化讲解</p>
+                                </div>
+                            </div>
+                            <!-- 表情参数 -->
+                            <div class="mt-5 pt-4 border-t" style="border-color: var(--color-border-default);">
+                                <h4 class="text-sm font-medium mb-3" style="color: var(--color-text-primary);">表情参数微调</h4>
+                                <div class="grid grid-cols-3 gap-5">
+                                    <div>
+                                        <div class="flex justify-between text-xs mb-1.5">
+                                            <span style="color: var(--color-text-secondary);">微笑幅度</span>
+                                            <span style="color: var(--color-primary-400);">65%</span>
+                                        </div>
+                                        <input type="range" min="0" max="100" value="65" class="w-full">
+                                    </div>
+                                    <div>
+                                        <div class="flex justify-between text-xs mb-1.5">
+                                            <span style="color: var(--color-text-secondary);">眨眼频率</span>
+                                            <span style="color: var(--color-primary-400);">50%</span>
+                                        </div>
+                                        <input type="range" min="0" max="100" value="50" class="w-full">
+                                    </div>
+                                    <div>
+                                        <div class="flex justify-between text-xs mb-1.5">
+                                            <span style="color: var(--color-text-secondary);">头部运动</span>
+                                            <span style="color: var(--color-primary-400);">40%</span>
+                                        </div>
+                                        <input type="range" min="0" max="100" value="40" class="w-full">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ===== 行为配置 ===== -->
+                        <div id="panel-behavior" class="config-panel" style="display: none;">
+                            <div class="grid grid-cols-2 gap-6">
+                                <!-- 问候语 -->
+                                <div class="col-span-2">
+                                    <label class="block text-sm font-medium mb-2" style="color: var(--color-text-primary);">默认问候语</label>
+                                    <textarea class="dark-input" rows="3" style="resize: vertical;">阿弥陀佛，善信您好！欢迎来到灵山胜境，我是导览员灵小仙。请问今天想先游览哪个景点呢？</textarea>
+                                    <div class="flex justify-between mt-1.5">
+                                        <p class="text-xs" style="color: var(--color-text-secondary);">支持使用 {游客姓名} 等变量</p>
+                                        <p class="text-xs" style="color: var(--color-neutral-500);">48 / 200</p>
+                                    </div>
+                                </div>
+                                <!-- 推荐策略 -->
+                                <div>
+                                    <label class="block text-sm font-medium mb-2" style="color: var(--color-text-primary);">推荐策略</label>
+                                    <select class="dark-input">
+                                        <option selected>智能推荐 (基于游客画像)</option>
+                                        <option>热度优先 (推荐热门景点)</option>
+                                        <option>时间优化 (按游览时间排序)</option>
+                                        <option>主题路线 (按文化主题推荐)</option>
+                                        <option>自定义顺序</option>
+                                    </select>
+                                    <p class="text-xs mt-1.5" style="color: var(--color-text-secondary);">控制数字人推荐景点的策略逻辑</p>
+                                </div>
+                                <!-- 导览模式 -->
+                                <div>
+                                    <label class="block text-sm font-medium mb-2" style="color: var(--color-text-primary);">导览模式</label>
+                                    <select class="dark-input">
+                                        <option selected>自由导览</option>
+                                        <option>跟随导览</option>
+                                        <option>定点讲解</option>
+                                    </select>
+                                    <p class="text-xs mt-1.5" style="color: var(--color-text-secondary);">数字人在景区中的移动与讲解模式</p>
+                                </div>
+                                <!-- 自动跟进 -->
+                                <div>
+                                    <label class="block text-sm font-medium mb-2" style="color: var(--color-text-primary);">自动跟进游客</label>
+                                    <div class="flex items-center gap-3">
+                                        <div class="toggle-active flex items-center cursor-pointer" onclick="this.classList.toggle('toggle-active')">
+                                            <div class="toggle-track w-9 h-5 rounded-full relative" style="background: var(--color-primary-500);">
+                                                <div class="toggle-thumb w-4 h-4 rounded-full absolute top-0.5 left-0.5" style="background: white; transform: translateX(16px);"></div>
+                                            </div>
+                                        </div>
+                                        <span class="text-sm" style="color: var(--color-text-primary);">已开启</span>
+                                    </div>
+                                    <p class="text-xs mt-1.5" style="color: var(--color-text-secondary);">自动检测游客位置并提供附近的景点讲解</p>
+                                </div>
+                                <!-- 互动问答 -->
+                                <div>
+                                    <label class="block text-sm font-medium mb-2" style="color: var(--color-text-primary);">互动问答</label>
+                                    <div class="flex items-center gap-3">
+                                        <div class="toggle-active flex items-center cursor-pointer" onclick="this.classList.toggle('toggle-active')">
+                                            <div class="toggle-track w-9 h-5 rounded-full relative" style="background: var(--color-primary-500);">
+                                                <div class="toggle-thumb w-4 h-4 rounded-full absolute top-0.5 left-0.5" style="background: white; transform: translateX(16px);"></div>
+                                            </div>
+                                        </div>
+                                        <span class="text-sm" style="color: var(--color-text-primary);">已开启</span>
+                                    </div>
+                                    <p class="text-xs mt-1.5" style="color: var(--color-text-secondary);">允许游客向数字人提问并获得回答</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Tab switching
+        function switchTab(tabName) {
+            // Hide all panels
+            document.querySelectorAll('.config-panel').forEach(p => p.style.display = 'none');
+            // Deactivate all tabs
+            document.querySelectorAll('.config-tab').forEach(t => {
+                t.classList.remove('active');
+                t.style.color = 'var(--color-text-secondary)';
+            });
+            // Show selected panel
+            document.getElementById('panel-' + tabName).style.display = 'block';
+            // Activate selected tab
+            const activeTab = document.getElementById('tab-' + tabName);
+            activeTab.classList.add('active');
+            activeTab.style.color = 'var(--color-primary-400)';
+        }
+
+        // Expression selection
+        function selectExpression(el) {
+            document.querySelectorAll('.expr-card').forEach(card => {
+                card.classList.remove('active');
+                card.style.borderColor = 'var(--color-border-default)';
+                card.style.background = 'var(--color-secondary-800)';
+                // Remove "当前使用" badge
+                const badge = card.querySelector('.rounded-full');
+                if (badge && badge.textContent.includes('当前使用')) {
+                    badge.parentElement.remove();
+                }
+            });
+            el.classList.add('active');
+            el.style.borderColor = 'var(--color-primary-400)';
+            el.style.background = 'rgba(197,165,90,0.08)';
+            // Add badge
+            if (!el.querySelector('.rounded-full')) {
+                const badgeDiv = document.createElement('div');
+                badgeDiv.className = 'mt-2';
+                badgeDiv.innerHTML = '<span class="text-xs px-2 py-0.5 rounded-full" style="background: rgba(197,165,90,0.15); color: var(--color-primary-400);">当前使用</span>';
+                el.appendChild(badgeDiv);
+            }
+        }
+
+        // Badge checkbox toggle - handle SVG visibility
+        document.querySelectorAll('.badge-check').forEach(bc => {
+            const svg = bc.querySelector('svg');
+            if (bc.classList.contains('checked')) {
+                if (svg) svg.style.display = 'block';
+            } else {
+                if (svg) svg.style.display = 'none';
+            }
+            bc.addEventListener('click', () => {
+                if (bc.classList.contains('checked')) {
+                    if (svg) svg.style.display = 'block';
+                } else {
+                    if (svg) svg.style.display = 'none';
+                }
+            });
+        });
+
+        // Avatar card selection
+        document.querySelectorAll('.avatar-card').forEach(card => {
+            card.addEventListener('click', function() {
+                document.querySelectorAll('.avatar-card').forEach(c => {
+                    c.classList.remove('selected');
+                    c.style.borderWidth = '1.5px';
+                });
+                this.classList.add('selected');
+                this.style.borderWidth = '2px';
+            });
+        });
+    </script>
+</body>
+</html>

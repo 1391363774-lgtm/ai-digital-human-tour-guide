@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>游览路线推荐 - 灵山胜境AI数字人导览系统</title>
+    <style id="theme-vars">
+/* ============================================================
+ * 灵山胜境AI数字人导览系统 - Brand Colors & Typography
+ * Design Token Convention (CSS Custom Properties)
+ * ============================================================ */
+
+:root {
+  /* ---- Primary: 金色系 (Gold) ---- */
+  --color-primary-100: #F5EDD6;
+  --color-primary-200: #EBDCB0;
+  --color-primary-300: #DFC98A;
+  --color-primary-400: #D4B96E;
+  --color-primary-500: #C5A55A;
+  --color-primary-600: #A88B3E;
+  --color-primary-700: #8A7130;
+  --color-primary-800: #6C5724;
+  --color-primary-900: #503F1A;
+
+  /* ---- Secondary: 藏青 / 深蓝 (Deep Blue) ---- */
+  --color-secondary-100: #C5CEE0;
+  --color-secondary-200: #96A6C4;
+  --color-secondary-300: #677EA8;
+  --color-secondary-400: #3D5678;
+  --color-secondary-500: #1B2A4A;
+  --color-secondary-600: #152240;
+  --color-secondary-700: #101A33;
+  --color-secondary-800: #0A1226;
+  --color-secondary-900: #050A19;
+
+  /* ---- Neutral: 白 / 灰 ---- */
+  --color-neutral-0:   #FFFFFF;
+  --color-neutral-50:  #FAFAF5;
+  --color-neutral-100: #F5F5F0;
+  --color-neutral-200: #E5E5DD;
+  --color-neutral-300: #D0D0C5;
+  --color-neutral-400: #A3A395;
+  --color-neutral-500: #767665;
+  --color-neutral-600: #595948;
+  --color-neutral-700: #3D3D31;
+  --color-neutral-800: #222218;
+  --color-neutral-900: #0F0F0A;
+
+  /* ---- Accent: 朱砂红 (Vermilion) ---- */
+  --color-accent-100: #F2D1D0;
+  --color-accent-200: #E8A3A1;
+  --color-accent-300: #DE7573;
+  --color-accent-400: #D46462;
+  --color-accent-500: #C25450;
+  --color-accent-600: #A34340;
+  --color-accent-700: #843330;
+  --color-accent-800: #652320;
+  --color-accent-900: #461312;
+
+  /* ---- Semantic Tokens ---- */
+  --color-bg-primary:     var(--color-neutral-0);
+  --color-bg-secondary:   var(--color-neutral-100);
+  --color-bg-deep:        var(--color-secondary-500);
+  --color-bg-card:        var(--color-neutral-0);
+  --color-bg-overlay:     rgba(27, 42, 74, 0.65);
+
+  --color-text-primary:   var(--color-secondary-500);
+  --color-text-secondary: var(--color-neutral-700);
+  --color-text-inverse:   var(--color-neutral-0);
+  --color-text-accent:    var(--color-accent-500);
+  --color-text-gold:       var(--color-primary-500);
+
+  --color-border-default: var(--color-neutral-200);
+  --color-border-gold:     var(--color-primary-400);
+  --color-border-subtle:   var(--color-neutral-100);
+
+  /* ---- Typography ---- */
+  --font-family-heading: 'Noto Serif SC', 'Source Han Serif SC', 'Songti SC', serif;
+  --font-family-body:    'Noto Sans SC', 'Source Han Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+
+  /* Font Sizes (Mobile-first) */
+  --font-size-xs:   0.6875rem;   /* 11px */
+  --font-size-sm:   0.75rem;     /* 12px */
+  --font-size-base: 0.875rem;    /* 14px */
+  --font-size-md:   1rem;        /* 16px */
+  --font-size-lg:   1.125rem;    /* 18px */
+  --font-size-xl:   1.25rem;     /* 20px */
+  --font-size-2xl:  1.5rem;      /* 24px */
+  --font-size-3xl:  1.875rem;    /* 30px */
+  --font-size-4xl:  2.25rem;     /* 36px */
+
+  /* Font Weights */
+  --font-weight-regular: 400;
+  --font-weight-medium:  500;
+  --font-weight-semibold: 600;
+  --font-weight-bold:    700;
+
+  /* Line Heights */
+  --line-height-tight:   1.25;
+  --line-height-normal: 1.6;
+  --line-height-relaxed: 1.8;
+
+  /* Letter Spacing */
+  --letter-spacing-tight:  -0.02em;
+  --letter-spacing-normal:  0;
+  --letter-spacing-wide:    0.05em;
+  --letter-spacing-wider:   0.1em;
+
+  /* ---- Spacing Scale ---- */
+  --space-0:   0;
+  --space-1:   0.25rem;   /* 4px  */
+  --space-2:   0.5rem;    /* 8px  */
+  --space-3:   0.75rem;   /* 12px */
+  --space-4:   1rem;      /* 16px */
+  --space-5:   1.25rem;   /* 20px */
+  --space-6:   1.5rem;    /* 24px */
+  --space-8:   2rem;      /* 32px */
+  --space-10:  2.5rem;    /* 40px */
+  --space-12:  3rem;      /* 48px */
+  --space-16:  4rem;      /* 64px */
+  --space-20:  5rem;      /* 80px */
+
+  /* ---- Border Radius ---- */
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   12px;
+  --radius-xl:   16px;
+  --radius-full: 9999px;
+
+  /* ---- Shadows ---- */
+  --shadow-sm:  0 1px 2px rgba(27, 42, 74, 0.06);
+  --shadow-md:  0 4px 8px rgba(27, 42, 74, 0.08);
+  --shadow-lg:  0 8px 24px rgba(27, 42, 74, 0.12);
+  --shadow-xl:  0 16px 48px rgba(27, 42, 74, 0.16);
+  --shadow-gold: 0 4px 16px rgba(197, 165, 90, 0.25);
+
+  /* ---- Transitions ---- */
+  --transition-fast:   150ms ease;
+  --transition-normal: 250ms ease;
+  --transition-slow:   400ms ease;
+
+  /* ---- Z-Index Scale ---- */
+  --z-base:     0;
+  --z-above:    10;
+  --z-dropdown: 100;
+  --z-sticky:   200;
+  --z-overlay:  300;
+  --z-modal:    400;
+  --z-toast:    500;
+}
+
+/* ============================================================
+ * Base Typography Styles
+ * ============================================================ */
+
+body {
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-normal);
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-family-heading);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  color: var(--color-text-primary);
+}
+
+h1 {
+  font-size: var(--font-size-3xl);
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+h2 {
+  font-size: var(--font-size-2xl);
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+h3 {
+  font-size: var(--font-size-xl);
+  letter-spacing: var(--letter-spacing-normal);
+}
+
+h4 {
+  font-size: var(--font-size-lg);
+}
+
+h5 {
+  font-size: var(--font-size-md);
+}
+
+h6 {
+  font-size: var(--font-size-base);
+}
+
+p {
+  margin-bottom: var(--space-4);
+}
+
+a {
+  color: var(--color-primary-600);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--color-primary-700);
+}
+
+small, .text-sm {
+  font-size: var(--font-size-sm);
+}
+
+.text-xs {
+  font-size: var(--font-size-xs);
+}
+
+.text-gold {
+  color: var(--color-text-gold);
+}
+
+.text-accent {
+  color: var(--color-text-accent);
+}
+
+.text-inverse {
+  color: var(--color-text-inverse);
+}
+
+/* ============================================================
+ * Google Fonts Import
+ * ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap');
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  
+  @layer base {
+    body { background: var(--color-bg-primary); color: var(--color-text-primary); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+
+      /* ===== Map Navigation Styles ===== */
+
+      /* Route Tabs */
+      .route-tabs {
+        display: flex;
+        gap: var(--space-2);
+        padding: var(--space-3) 0;
+      }
+      .route-tab {
+        flex: 1;
+        padding: var(--space-3) var(--space-2);
+        border-radius: var(--radius-full);
+        font-size: var(--font-size-sm);
+        font-weight: var(--font-weight-semibold);
+        border: 2px solid var(--color-border-default);
+        color: var(--color-text-secondary);
+        background: var(--color-bg-card);
+        cursor: pointer;
+        transition: all var(--transition-normal);
+        text-align: center;
+        white-space: nowrap;
+        position: relative;
+        overflow: hidden;
+      }
+      .route-tab .tab-dot {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-right: var(--space-1);
+        vertical-align: middle;
+        opacity: 0.5;
+      }
+      .route-tab[data-route="culture"] .tab-dot { background: #C25450; }
+      .route-tab[data-route="nature"] .tab-dot { background: #4A7FC1; }
+      .route-tab[data-route="family"] .tab-dot { background: #4CAF50; }
+
+      .route-tab:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-md);
+      }
+      .route-tab.active[data-route="culture"] {
+        background: #C25450;
+        color: #fff;
+        border-color: #C25450;
+        box-shadow: 0 4px 16px rgba(194, 84, 80, 0.35);
+      }
+      .route-tab.active[data-route="nature"] {
+        background: #4A7FC1;
+        color: #fff;
+        border-color: #4A7FC1;
+        box-shadow: 0 4px 16px rgba(74, 127, 193, 0.35);
+      }
+      .route-tab.active[data-route="family"] {
+        background: #4CAF50;
+        color: #fff;
+        border-color: #4CAF50;
+        box-shadow: 0 4px 16px rgba(76, 175, 80, 0.35);
+      }
+
+      /* Map Container */
+      .map-container {
+        position: relative;
+        width: 100%;
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        box-shadow: var(--shadow-lg);
+        background: var(--color-secondary-800);
+      }
+      .map-container img.map-bg {
+        display: block;
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+        cursor: zoom-in;
+      }
+
+      /* Map fullscreen overlay */
+      .map-fullscreen {
+        display: none;
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        z-index: 9999;
+        background: rgba(0,0,0,0.92);
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
+      .map-fullscreen.active { display: flex; }
+      .map-fullscreen img {
+        max-width: 95vw;
+        max-height: 88vh;
+        object-fit: contain;
+        border-radius: 12px;
+        box-shadow: 0 0 40px rgba(197,165,90,0.2);
+      }
+      .map-fullscreen .close-btn {
+        position: absolute;
+        top: 16px; right: 16px;
+        width: 40px; height: 40px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.15);
+        border: 1px solid rgba(255,255,255,0.3);
+        color: #fff;
+        font-size: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        backdrop-filter: blur(8px);
+      }
+      .map-fullscreen .close-btn:hover { background: rgba(255,255,255,0.25); }
+      .map-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+      .map-overlay svg {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+
+      /* Spot Markers */
+      .spot-marker {
+        position: absolute;
+        transform: translate(-50%, -50%);
+        cursor: pointer;
+        pointer-events: all;
+        z-index: 10;
+        transition: all var(--transition-normal);
+        text-align: center;
+      }
+      .spot-marker .marker-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--color-primary-400), var(--color-primary-600));
+        border: 2px solid #fff;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        margin: 0 auto;
+        transition: all var(--transition-normal);
+      }
+      .spot-marker .marker-label {
+        font-size: 10px;
+        font-weight: var(--font-weight-semibold);
+        color: #fff;
+        text-shadow: 0 1px 3px rgba(0,0,0,0.8), 0 0 6px rgba(0,0,0,0.5);
+        white-space: nowrap;
+        margin-top: 3px;
+        pointer-events: none;
+        transition: all var(--transition-normal);
+      }
+
+      /* Marker states */
+      .spot-marker:hover .marker-dot {
+        transform: scale(1.4);
+        box-shadow: 0 3px 12px rgba(197, 165, 90, 0.6);
+      }
+      .spot-marker:hover .marker-label {
+        color: var(--color-primary-300);
+      }
+
+      /* Highlighted marker (active route) */
+      .spot-marker.highlighted .marker-dot {
+        width: 16px;
+        height: 16px;
+        background: linear-gradient(135deg, var(--color-primary-300), var(--color-primary-500));
+        border-width: 2.5px;
+        animation: pulse-marker 2s ease-in-out infinite;
+      }
+      .spot-marker.highlighted .marker-label {
+        font-size: 11px;
+        color: var(--color-primary-200);
+      }
+
+      /* Dimmed marker (not in current route) */
+      .spot-marker.dimmed {
+        opacity: 0.7;
+        pointer-events: none;
+      }
+      .spot-marker.dimmed .marker-dot {
+        background: var(--color-neutral-500);
+        border-color: var(--color-neutral-400);
+        box-shadow: none;
+        animation: none;
+      }
+
+      /* Pulse animation for highlighted markers */
+      @keyframes pulse-marker {
+        0%, 100% {
+          box-shadow: 0 2px 6px rgba(197, 165, 90, 0.4), 0 0 0 0 rgba(197, 165, 90, 0.4);
+        }
+        50% {
+          box-shadow: 0 2px 6px rgba(197, 165, 90, 0.4), 0 0 0 8px rgba(197, 165, 90, 0);
+        }
+      }
+
+      /* Route line styles */
+      .route-line {
+        fill: none;
+        stroke-width: 2.5;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-dasharray: 8 6;
+        opacity: 0;
+        transition: opacity var(--transition-slow);
+      }
+      .route-line.visible {
+        opacity: 1;
+      }
+      .route-line.culture { stroke: #C25450; }
+      .route-line.nature  { stroke: #4A7FC1; }
+      .route-line.family  { stroke: #4CAF50; }
+
+      /* Spot Info Popup */
+      .spot-popup-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: var(--z-overlay);
+        opacity: 0;
+        visibility: hidden;
+        transition: all var(--transition-normal);
+      }
+      .spot-popup-overlay.show {
+        opacity: 1;
+        visibility: visible;
+      }
+      .spot-popup {
+        position: fixed;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%) translateY(100%);
+        width: 100%;
+        max-width: 430px;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+        padding: var(--space-6) var(--space-6) calc(var(--space-6) + env(safe-area-inset-bottom));
+        z-index: var(--z-modal);
+        transition: transform var(--transition-slow);
+        box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.2);
+      }
+      .spot-popup.show {
+        transform: translateX(-50%) translateY(0);
+      }
+      .spot-popup-handle {
+        width: 36px;
+        height: 4px;
+        border-radius: 2px;
+        background: var(--color-neutral-300);
+        margin: 0 auto var(--space-4);
+      }
+      .spot-popup-name {
+        font-family: var(--font-family-heading);
+        font-size: var(--font-size-xl);
+        font-weight: var(--font-weight-bold);
+        color: var(--color-text-primary);
+        margin-bottom: var(--space-2);
+      }
+      .spot-popup-desc {
+        font-size: var(--font-size-base);
+        color: var(--color-neutral-600);
+        line-height: var(--line-height-relaxed);
+        margin-bottom: var(--space-4);
+      }
+      .spot-popup-tags {
+        display: flex;
+        gap: var(--space-2);
+        margin-bottom: var(--space-5);
+        flex-wrap: wrap;
+      }
+      .spot-popup-tag {
+        padding: var(--space-1) var(--space-3);
+        border-radius: var(--radius-full);
+        font-size: var(--font-size-xs);
+        font-weight: var(--font-weight-medium);
+        background: var(--color-primary-100);
+        color: var(--color-primary-700);
+      }
+      .spot-popup-close {
+        width: 100%;
+        padding: var(--space-3);
+        border-radius: var(--radius-md);
+        background: var(--color-neutral-100);
+        border: none;
+        font-size: var(--font-size-base);
+        font-weight: var(--font-weight-medium);
+        color: var(--color-neutral-600);
+        cursor: pointer;
+        transition: all var(--transition-fast);
+      }
+      .spot-popup-close:hover {
+        background: var(--color-neutral-200);
+      }
+
+      /* Route legend */
+      .route-legend {
+        display: flex;
+        justify-content: center;
+        gap: var(--space-5);
+        padding: var(--space-3) 0;
+      }
+      .legend-item {
+        display: flex;
+        align-items: center;
+        gap: var(--space-1);
+        font-size: var(--font-size-xs);
+        color: var(--color-text-secondary);
+      }
+      .legend-line {
+        width: 20px;
+        height: 0;
+        border-top: 2.5px dashed;
+      }
+      .legend-line.culture { border-color: #C25450; }
+      .legend-line.nature  { border-color: #4A7FC1; }
+      .legend-line.family  { border-color: #4CAF50; }
+
+      /* Tips card at bottom */
+      .tips-card-mini {
+        background: linear-gradient(135deg, var(--color-secondary-500), var(--color-secondary-700));
+        border-radius: var(--radius-xl);
+        color: var(--color-text-inverse);
+        padding: var(--space-5);
+        margin-top: var(--space-5);
+      }
+      .tips-card-mini .tip-row {
+        display: flex;
+        align-items: flex-start;
+        gap: var(--space-3);
+        padding: var(--space-2) 0;
+        font-size: var(--font-size-sm);
+        line-height: var(--line-height-relaxed);
+      }
+      .tips-card-mini .tip-row:not(:last-child) {
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding-bottom: var(--space-3);
+        margin-bottom: var(--space-1);
+      }
+      .tips-card-mini .tip-num {
+        flex-shrink: 0;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: var(--font-size-xs);
+        font-weight: var(--font-weight-semibold);
+      }
+
+      /* Performance Schedule */
+      .schedule-card {
+        background: var(--color-bg-card);
+        border-radius: var(--radius-xl);
+        border: 1px solid var(--color-border-subtle);
+        box-shadow: var(--shadow-sm);
+      }
+      .schedule-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: var(--space-4) var(--space-5);
+        border-bottom: 1px solid var(--color-border-subtle);
+      }
+      .schedule-row:last-child {
+        border-bottom: none;
+      }
+      .schedule-time {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-1);
+        padding: var(--space-1) var(--space-3);
+        border-radius: var(--radius-full);
+        font-size: var(--font-size-sm);
+        font-weight: var(--font-weight-semibold);
+        background: var(--color-primary-100);
+        color: var(--color-primary-700);
+      }
+
+      /* Section Title */
+      .section-title {
+        font-family: var(--font-family-heading);
+        font-size: var(--font-size-xl);
+        font-weight: var(--font-weight-bold);
+        color: var(--color-text-primary);
+        letter-spacing: var(--letter-spacing-wide);
+      }
+
+      /* Responsive */
+      @media (max-width: 640px) {
+        .route-tab {
+          padding: var(--space-2) var(--space-1);
+          font-size: var(--font-size-xs);
+        }
+        .spot-marker .marker-label {
+          font-size: 9px;
+        }
+        .spot-marker.highlighted .marker-label {
+          font-size: 10px;
+        }
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased" style="background: var(--color-secondary-900); color: var(--color-text-inverse);">
+
+    <!-- ===== Top Navigation Bar ===== -->
+    <header class="sticky top-0 z-50" style="background: var(--color-secondary-900); border-bottom: 1px solid rgba(255,255,255,0.1);">
+        <div class="max-w-lg mx-auto flex items-center justify-between px-4 py-3">
+            <a href="home.html" data-dom-id="back-home" class="flex items-center gap-1 no-underline" style="color: var(--color-text-inverse);">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+                <span style="font-size: var(--font-size-base); font-weight: var(--font-weight-medium);">返回</span>
+            </a>
+            <h1 style="font-size: var(--font-size-lg); letter-spacing: var(--letter-spacing-wide);">游览路线</h1>
+            <div style="width: 48px;"></div>
+        </div>
+    </header>
+
+    <main class="max-w-lg mx-auto px-4 pt-4 pb-10" style="padding-bottom: calc(5rem + env(safe-area-inset-bottom));">
+
+        <!-- ===== Route Tabs ===== -->
+        <section class="mb-4">
+            <div class="route-tabs">
+                <button class="route-tab active" data-route="culture">
+                    <span class="tab-dot"></span>文化深度游
+                </button>
+                <button class="route-tab" data-route="nature">
+                    <span class="tab-dot"></span>自然全景游
+                </button>
+                <button class="route-tab" data-route="family">
+                    <span class="tab-dot"></span>亲子轻松游
+                </button>
+            </div>
+            <!-- Fullscreen map overlay -->
+            <div class="map-fullscreen" id="mapFullscreen">
+                <div class="close-btn" id="mapCloseBtn">&times;</div>
+                <img src="../assets/lingshan-map.jpg" alt="灵山胜境景区导览地图大图">
+            </div>
+        </section>
+
+        <!-- ===== Map Area ===== -->
+        <section class="mb-4">
+            <div class="map-container" id="mapContainer">
+                <img class="map-bg" src="../assets/lingshan-map.jpg" alt="灵山胜境景区导览地图" usemap="#spots-map">
+                <div class="map-overlay" id="mapOverlay">
+                    <svg id="routeSvg" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
+                </div>
+                <!-- Markers will be injected by JS -->
+            </div>
+        </section>
+
+        <!-- ===== Route Legend ===== -->
+        <section>
+            <div class="route-legend">
+                <div class="legend-item"><span class="legend-line culture"></span>文化路线</div>
+                <div class="legend-item"><span class="legend-line nature"></span>自然路线</div>
+                <div class="legend-item"><span class="legend-line family"></span>亲子路线</div>
+            </div>
+        </section>
+
+        <!-- ===== Performance Schedule ===== -->
+        <section class="mb-6 mt-6">
+            <div class="flex items-center gap-2 mb-4">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary-500)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                <h2 class="section-title" style="color: var(--color-text-inverse);">表演时刻表</h2>
+            </div>
+
+            <div class="schedule-card">
+                <div class="schedule-row">
+                    <div>
+                        <div style="font-size: var(--font-size-base); font-weight: var(--font-weight-semibold); color: var(--color-text-primary);">九龙灌浴</div>
+                        <div style="font-size: var(--font-size-xs); color: var(--color-neutral-500); margin-top: 2px;">莲花广场</div>
+                    </div>
+                    <div class="flex flex-col items-end gap-1">
+                        <span class="schedule-time">10:00</span>
+                        <span class="schedule-time">11:30</span>
+                        <span class="schedule-time">14:00</span>
+                        <span class="schedule-time">16:00</span>
+                    </div>
+                </div>
+                <div class="schedule-row">
+                    <div>
+                        <div style="font-size: var(--font-size-base); font-weight: var(--font-weight-semibold); color: var(--color-text-primary);">吉祥颂</div>
+                        <div style="font-size: var(--font-size-xs); color: var(--color-neutral-500); margin-top: 2px;">梵宫圣坛</div>
+                    </div>
+                    <div class="flex flex-col items-end gap-1">
+                        <span class="schedule-time">10:30</span>
+                        <span class="schedule-time">11:30</span>
+                        <span class="schedule-time">14:30</span>
+                        <span class="schedule-time">16:30</span>
+                    </div>
+                </div>
+            </div>
+
+            <p style="font-size: var(--font-size-xs); color: var(--color-neutral-400); margin-top: var(--space-3); padding-left: var(--space-1);">
+                * 演出时间可能因季节调整，请以景区当日公告为准
+            </p>
+        </section>
+
+        <!-- ===== Practical Tips ===== -->
+        <section>
+            <div class="flex items-center gap-2 mb-4">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary-500)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                <h2 class="section-title" style="color: var(--color-text-inverse);">实用贴士</h2>
+            </div>
+
+            <div class="tips-card-mini">
+                <div class="tip-row">
+                    <div class="tip-num">1</div>
+                    <div>建议上午9点前入园，避开人流高峰，从大照壁方向开始游览</div>
+                </div>
+                <div class="tip-row">
+                    <div class="tip-num">2</div>
+                    <div>穿着舒适运动鞋，景区面积较大；夏季防晒，冬季保暖</div>
+                </div>
+                <div class="tip-row">
+                    <div class="tip-num">3</div>
+                    <div>点击地图上的景点标注，可查看详细介绍</div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ===== Spot Info Popup ===== -->
+    <div class="spot-popup-overlay" id="spotPopupOverlay"></div>
+    <div class="spot-popup" id="spotPopup">
+        <div class="spot-popup-handle"></div>
+        <div class="spot-popup-name" id="popupName"></div>
+        <div class="spot-popup-desc" id="popupDesc"></div>
+        <div class="spot-popup-tags" id="popupTags"></div>
+        <button class="spot-popup-close" id="popupClose">关闭</button>
+    </div>
+
+    <script>
+    // ============================================================
+    // Data: Spot positions (% of map image)
+    // ============================================================
+    var spotPositions = {
+        '南门': { x: 15, y: 92 },
+        '大照壁': { x: 22, y: 85 },
+        '五明桥': { x: 28, y: 80 },
+        '佛足坛': { x: 20, y: 74 },
+        '五智门': { x: 35, y: 72 },
+        '菩提大道': { x: 42, y: 66 },
+        '九龙灌浴': { x: 48, y: 58 },
+        '降魔浮雕': { x: 40, y: 52 },
+        '阿育王柱': { x: 55, y: 50 },
+        '百子戏弥勒': { x: 38, y: 45 },
+        '祥符禅寺': { x: 52, y: 40 },
+        '灵山大佛': { x: 62, y: 22 },
+        '梵宫': { x: 68, y: 35 },
+        '五印坛城': { x: 75, y: 28 },
+        '曼飞龙塔': { x: 45, y: 38 },
+        '三圣殿': { x: 80, y: 20 }
+    };
+
+    // Spots not on the map but in routes - placed near logical positions
+    var extraPositions = {
+        '佛手广场': { x: 44, y: 55 },
+        '万佛殿': { x: 58, y: 18 },
+        '灵山精舍': { x: 35, y: 32 },
+        '梵宫广场': { x: 63, y: 40 }
+    };
+    // Merge extra positions into main positions
+    Object.assign(spotPositions, extraPositions);
+
+    // Spot descriptions
+    var spotDescriptions = {
+        '南门': '灵山胜境正门，检票入口处，从这里开启您的佛教文化之旅',
+        '大照壁': '灵山地标建筑，大型佛教故事浮雕，展现释迦牟尼佛生平',
+        '五明桥': '横跨天王殿前的石拱桥，寓意五明智慧',
+        '佛足坛': '供奉佛足印的圣坛，四周环绕百子戏弥勒雕塑群',
+        '五智门': '仿古牌坊，代表五方佛的五智，雕工精美',
+        '菩提大道': '两侧种植菩提树的宁静步道，绿荫蔽日，禅意悠然',
+        '九龙灌浴': '大型音乐动态雕塑，莲花盛开时九龙喷水，蔚为壮观',
+        '降魔浮雕': '描绘释迦牟尼在菩提树下降魔成道的大型石雕',
+        '阿育王柱': '仿古石柱，纪念阿育王弘扬佛法的功绩',
+        '百子戏弥勒': '百态童趣雕塑围绕大肚弥勒，栩栩如生，孩子最爱',
+        '祥符禅寺': '千年古刹，始建于唐代，聆听晨钟暮鼓，感受禅修之境',
+        '灵山大佛': '88米高的露天青铜大佛，灵山标志性景观，可登高抱佛脚祈福',
+        '梵宫': '佛教艺术殿堂，华塔穹顶金碧辉煌，内有大型演出《吉祥颂》',
+        '五印坛城': '藏传佛教风格建筑群，色彩绚丽，可转经祈福',
+        '曼飞龙塔': '南传佛教佛塔，白塔造型优美，异域风情浓郁',
+        '三圣殿': '供奉西方三圣，庄严肃穆，是祈福朝拜的重要场所',
+        '佛手广场': '天下第一掌所在地，等比例复制灵山大佛右手，祈福合影必到之处',
+        '万佛殿': '殿内供奉万尊金佛，金光闪闪，庄严肃穆',
+        '灵山精舍': '禅修空间，可品茶静心，体验佛教文化内涵',
+        '梵宫广场': '梵宫前的开阔广场，夕阳下金辉照耀，是摄影的绝佳位置'
+    };
+
+    // Route spot mappings
+    var routeSpots = {
+        'culture': ['南门', '大照壁', '佛手广场', '祥符禅寺', '灵山大佛', '万佛殿', '梵宫', '五印坛城', '三圣殿'],
+        'nature': ['南门', '大照壁', '佛足坛', '五智门', '九龙灌浴', '菩提大道', '灵山大佛', '曼飞龙塔', '灵山精舍', '梵宫广场'],
+        'family': ['南门', '大照壁', '九龙灌浴', '佛手广场', '百子戏弥勒', '五印坛城', '梵宫']
+    };
+
+    var currentRoute = 'culture';
+
+    // ============================================================
+    // Render spot markers on map
+    // ============================================================
+    function renderMarkers() {
+        var container = document.getElementById('mapContainer');
+        // Remove existing markers
+        container.querySelectorAll('.spot-marker').forEach(function(m) { m.remove(); });
+
+        var activeSpots = routeSpots[currentRoute] || [];
+        var allSpots = Object.keys(spotPositions);
+
+        allSpots.forEach(function(name) {
+            var pos = spotPositions[name];
+            var marker = document.createElement('div');
+            marker.className = 'spot-marker';
+            marker.setAttribute('data-spot', name);
+
+            if (activeSpots.indexOf(name) !== -1) {
+                marker.classList.add('highlighted');
+            } else {
+                marker.classList.add('dimmed');
+            }
+
+            marker.style.left = pos.x + '%';
+            marker.style.top = pos.y + '%';
+
+            marker.innerHTML = '<div class="marker-dot"></div><div class="marker-label">' + name + '</div>';
+
+            // Click handler for popup
+            if (activeSpots.indexOf(name) !== -1) {
+                marker.addEventListener('click', function() {
+                    showSpotPopup(name);
+                });
+            }
+
+            container.appendChild(marker);
+        });
+    }
+
+    // ============================================================
+    // Draw route lines with SVG
+    // ============================================================
+    function drawRouteLines() {
+        var svg = document.getElementById('routeSvg');
+        svg.innerHTML = '';
+
+        var routes = ['culture', 'nature', 'family'];
+        routes.forEach(function(routeKey) {
+            var spots = routeSpots[routeKey];
+            if (!spots || spots.length < 2) return;
+
+            // Build path using only spots that have positions
+            var points = [];
+            spots.forEach(function(name) {
+                var pos = spotPositions[name];
+                if (pos) {
+                    points.push(pos.x + ',' + pos.y);
+                }
+            });
+
+            if (points.length < 2) return;
+
+            var pathD = 'M ' + points.join(' L ');
+
+            var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            path.setAttribute('d', pathD);
+            path.setAttribute('class', 'route-line ' + routeKey);
+
+            if (routeKey === currentRoute) {
+                path.classList.add('visible');
+            }
+
+            svg.appendChild(path);
+        });
+    }
+
+    // ============================================================
+    // Switch route
+    // ============================================================
+    function switchRoute(routeKey) {
+        currentRoute = routeKey;
+
+        // Update tabs
+        document.querySelectorAll('.route-tab').forEach(function(tab) {
+            tab.classList.remove('active');
+            if (tab.getAttribute('data-route') === routeKey) {
+                tab.classList.add('active');
+            }
+        });
+
+        // Update markers
+        renderMarkers();
+
+        // Update route lines
+        document.querySelectorAll('.route-line').forEach(function(line) {
+            line.classList.remove('visible');
+        });
+        var activeLine = document.querySelector('.route-line.' + routeKey);
+        if (activeLine) {
+            activeLine.classList.add('visible');
+        }
+    }
+
+    // ============================================================
+    // Spot popup
+    // ============================================================
+    function showSpotPopup(name) {
+        var overlay = document.getElementById('spotPopupOverlay');
+        var popup = document.getElementById('spotPopup');
+        var popupName = document.getElementById('popupName');
+        var popupDesc = document.getElementById('popupDesc');
+        var popupTags = document.getElementById('popupTags');
+
+        popupName.textContent = name;
+        popupDesc.textContent = spotDescriptions[name] || '暂无介绍';
+
+        // Determine which routes this spot belongs to
+        popupTags.innerHTML = '';
+        var routeNames = { culture: '文化深度游', nature: '自然全景游', family: '亲子轻松游' };
+        var routeColors = { culture: 'background:#C25450;color:#fff', nature: 'background:#4A7FC1;color:#fff', family: 'background:#4CAF50;color:#fff' };
+        Object.keys(routeSpots).forEach(function(key) {
+            if (routeSpots[key].indexOf(name) !== -1) {
+                var tag = document.createElement('span');
+                tag.className = 'spot-popup-tag';
+                tag.textContent = routeNames[key];
+                tag.setAttribute('style', routeColors[key]);
+                popupTags.appendChild(tag);
+            }
+        });
+
+        overlay.classList.add('show');
+        popup.classList.add('show');
+    }
+
+    function hideSpotPopup() {
+        document.getElementById('spotPopupOverlay').classList.remove('show');
+        document.getElementById('spotPopup').classList.remove('show');
+    }
+
+    // ============================================================
+    // Event listeners
+    // ============================================================
+    document.addEventListener('DOMContentLoaded', function() {
+        // Map click to fullscreen
+        var mapBg = document.querySelector('.map-bg');
+        var mapFs = document.getElementById('mapFullscreen');
+        var mapClose = document.getElementById('mapCloseBtn');
+        if (mapBg && mapFs) {
+            mapBg.addEventListener('click', function(e) {
+                if (e.target === mapBg) {
+                    mapFs.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                }
+            });
+        }
+        if (mapClose) {
+            mapClose.addEventListener('click', function() {
+                mapFs.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+        }
+        if (mapFs) {
+            mapFs.addEventListener('click', function(e) {
+                if (e.target === mapFs || e.target.tagName === 'IMG') {
+                    mapFs.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+        }
+
+        // Initial render
+        renderMarkers();
+        drawRouteLines();
+
+        // Route tab click
+        document.querySelectorAll('.route-tab').forEach(function(tab) {
+            tab.addEventListener('click', function() {
+                switchRoute(this.getAttribute('data-route'));
+            });
+        });
+
+        // Popup close
+        document.getElementById('popupClose').addEventListener('click', hideSpotPopup);
+        document.getElementById('spotPopupOverlay').addEventListener('click', hideSpotPopup);
+    });
+    </script>
+
+    <!-- 底部导航 -->
+    <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] z-[var(--z-sticky)]" style="background:rgba(5,10,25,0.95); backdrop-filter:blur(12px); border-top: 1px solid rgba(255,255,255,0.1); padding-bottom:env(safe-area-inset-bottom);">
+        <div class="grid grid-cols-4 h-14">
+            <a href="home.html" class="flex flex-col items-center justify-center gap-0.5" style="color:var(--color-primary-500);">
+                <i data-lucide="home" class="w-5 h-5"></i>
+                <span class="text-xs font-medium">首页</span>
+            </a>
+            <a href="guide.html" class="flex flex-col items-center justify-center gap-0.5" style="color:rgba(255,255,255,0.4);">
+                <i data-lucide="compass" class="w-5 h-5"></i>
+                <span class="text-xs">导览</span>
+            </a>
+            <a href="nianhua.html" class="flex flex-col items-center justify-center gap-0.5" style="color:rgba(255,255,255,0.4);">
+                <i data-lucide="flower-2" class="w-5 h-5"></i>
+                <span class="text-xs">拈花湾</span>
+            </a>
+            <a href="profile.html" class="flex flex-col items-center justify-center gap-0.5" style="color:rgba(255,255,255,0.4);">
+                <i data-lucide="user" class="w-5 h-5"></i>
+                <span class="text-xs">我的</span>
+            </a>
+        </div>
+    </nav>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>知识库管理 - 灵山胜境AI数字人导览系统</title>
+    <style id="theme-vars">
+/* ============================================================
+ * 灵山胜境AI数字人导览系统 - Brand Colors & Typography
+ * Design Token Convention (CSS Custom Properties)
+ * ============================================================ */
+
+:root {
+  /* ---- Primary: 金色系 (Gold) ---- */
+  --color-primary-100: #F5EDD6;
+  --color-primary-200: #EBDCB0;
+  --color-primary-300: #DFC98A;
+  --color-primary-400: #D4B96E;
+  --color-primary-500: #C5A55A;
+  --color-primary-600: #A88B3E;
+  --color-primary-700: #8A7130;
+  --color-primary-800: #6C5724;
+  --color-primary-900: #503F1A;
+
+  /* ---- Secondary: 藏青 / 深蓝 (Deep Blue) ---- */
+  --color-secondary-100: #C5CEE0;
+  --color-secondary-200: #96A6C4;
+  --color-secondary-300: #677EA8;
+  --color-secondary-400: #3D5678;
+  --color-secondary-500: #1B2A4A;
+  --color-secondary-600: #152240;
+  --color-secondary-700: #101A33;
+  --color-secondary-800: #0A1226;
+  --color-secondary-900: #050A19;
+
+  /* ---- Neutral: 白 / 灰 ---- */
+  --color-neutral-0:   #FFFFFF;
+  --color-neutral-50:  #FAFAF5;
+  --color-neutral-100: #F5F5F0;
+  --color-neutral-200: #E5E5DD;
+  --color-neutral-300: #D0D0C5;
+  --color-neutral-400: #A3A395;
+  --color-neutral-500: #767665;
+  --color-neutral-600: #595948;
+  --color-neutral-700: #3D3D31;
+  --color-neutral-800: #222218;
+  --color-neutral-900: #0F0F0A;
+
+  /* ---- Accent: 朱砂红 (Vermilion) ---- */
+  --color-accent-100: #F2D1D0;
+  --color-accent-200: #E8A3A1;
+  --color-accent-300: #DE7573;
+  --color-accent-400: #D46462;
+  --color-accent-500: #C25450;
+  --color-accent-600: #A34340;
+  --color-accent-700: #843330;
+  --color-accent-800: #652320;
+  --color-accent-900: #461312;
+
+  /* ---- Semantic Tokens ---- */
+  --color-bg-primary:     var(--color-neutral-0);
+  --color-bg-secondary:   var(--color-neutral-100);
+  --color-bg-deep:        var(--color-secondary-500);
+  --color-bg-card:        var(--color-neutral-0);
+  --color-bg-overlay:     rgba(27, 42, 74, 0.65);
+
+  --color-text-primary:   var(--color-secondary-500);
+  --color-text-secondary: var(--color-neutral-700);
+  --color-text-inverse:   var(--color-neutral-0);
+  --color-text-accent:    var(--color-accent-500);
+  --color-text-gold:       var(--color-primary-500);
+
+  --color-border-default: var(--color-neutral-200);
+  --color-border-gold:     var(--color-primary-400);
+  --color-border-subtle:   var(--color-neutral-100);
+
+  /* ---- Typography ---- */
+  --font-family-heading: 'Noto Serif SC', 'Source Han Serif SC', 'Songti SC', serif;
+  --font-family-body:    'Noto Sans SC', 'Source Han Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+
+  /* Font Sizes (Mobile-first) */
+  --font-size-xs:   0.6875rem;   /* 11px */
+  --font-size-sm:   0.75rem;     /* 12px */
+  --font-size-base: 0.875rem;    /* 14px */
+  --font-size-md:   1rem;        /* 16px */
+  --font-size-lg:   1.125rem;    /* 18px */
+  --font-size-xl:   1.25rem;     /* 20px */
+  --font-size-2xl:  1.5rem;      /* 24px */
+  --font-size-3xl:  1.875rem;    /* 30px */
+  --font-size-4xl:  2.25rem;     /* 36px */
+
+  /* Font Weights */
+  --font-weight-regular: 400;
+  --font-weight-medium:  500;
+  --font-weight-semibold: 600;
+  --font-weight-bold:    700;
+
+  /* Line Heights */
+  --line-height-tight:   1.25;
+  --line-height-normal:  1.6;
+  --line-height-relaxed: 1.8;
+
+  /* Letter Spacing */
+  --letter-spacing-tight:  -0.02em;
+  --letter-spacing-normal:  0;
+  --letter-spacing-wide:    0.05em;
+  --letter-spacing-wider:   0.1em;
+
+  /* ---- Spacing Scale ---- */
+  --space-0:   0;
+  --space-1:   0.25rem;   /* 4px  */
+  --space-2:   0.5rem;    /* 8px  */
+  --space-3:   0.75rem;   /* 12px */
+  --space-4:   1rem;      /* 16px */
+  --space-5:   1.25rem;   /* 20px */
+  --space-6:   1.5rem;    /* 24px */
+  --space-8:   2rem;      /* 32px */
+  --space-10:  2.5rem;    /* 40px */
+  --space-12:  3rem;      /* 48px */
+  --space-16:  4rem;      /* 64px */
+  --space-20:  5rem;      /* 80px */
+
+  /* ---- Border Radius ---- */
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   12px;
+  --radius-xl:   16px;
+  --radius-full: 9999px;
+
+  /* ---- Shadows ---- */
+  --shadow-sm:  0 1px 2px rgba(27, 42, 74, 0.06);
+  --shadow-md:  0 4px 8px rgba(27, 42, 74, 0.08);
+  --shadow-lg:  0 8px 24px rgba(27, 42, 74, 0.12);
+  --shadow-xl:  0 16px 48px rgba(27, 42, 74, 0.16);
+  --shadow-gold: 0 4px 16px rgba(197, 165, 90, 0.25);
+
+  /* ---- Transitions ---- */
+  --transition-fast:   150ms ease;
+  --transition-normal: 250ms ease;
+  --transition-slow:   400ms ease;
+
+  /* ---- Z-Index Scale ---- */
+  --z-base:     0;
+  --z-above:    10;
+  --z-dropdown: 100;
+  --z-sticky:   200;
+  --z-overlay:  300;
+  --z-modal:    400;
+  --z-toast:    500;
+}
+
+/* ============================================================
+ * Dark Mode Overrides
+ * ============================================================ */
+
+html.dark {
+  --color-bg-primary:     var(--color-secondary-900);
+  --color-bg-secondary:   var(--color-secondary-800);
+  --color-bg-card:        var(--color-secondary-700);
+  --color-bg-overlay:     rgba(5, 10, 25, 0.75);
+
+  --color-text-primary:   var(--color-neutral-100);
+  --color-text-secondary: var(--color-neutral-400);
+  --color-text-gold:      var(--color-primary-400);
+
+  --color-border-default: var(--color-secondary-500);
+  --color-border-gold:     var(--color-primary-500);
+  --color-border-subtle:   var(--color-secondary-600);
+}
+
+/* ============================================================
+ * Base Typography Styles
+ * ============================================================ */
+
+body {
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-normal);
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-family-heading);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  color: var(--color-text-primary);
+}
+
+h1 {
+  font-size: var(--font-size-3xl);
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+h2 {
+  font-size: var(--font-size-2xl);
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+h3 {
+  font-size: var(--font-size-xl);
+  letter-spacing: var(--letter-spacing-normal);
+}
+
+h4 {
+  font-size: var(--font-size-lg);
+}
+
+h5 {
+  font-size: var(--font-size-md);
+}
+
+h6 {
+  font-size: var(--font-size-base);
+}
+
+p {
+  margin-bottom: var(--space-4);
+}
+
+a {
+  color: var(--color-primary-400);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--color-primary-300);
+}
+
+small, .text-sm {
+  font-size: var(--font-size-sm);
+}
+
+.text-xs {
+  font-size: var(--font-size-xs);
+}
+
+.text-gold {
+  color: var(--color-text-gold);
+}
+
+.text-accent {
+  color: var(--color-text-accent);
+}
+
+.text-inverse {
+  color: var(--color-text-inverse);
+}
+
+/* ============================================================
+ * Google Fonts Import
+ * ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap');
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  
+  @layer base {
+    body { background: var(--color-bg-primary); color: var(--color-text-primary); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+
+      /* Sidebar nav item */
+      .sidebar-nav-item {
+        transition: background-color var(--transition-fast), color var(--transition-fast);
+        border-radius: var(--radius-md);
+        padding: var(--space-2) var(--space-3);
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+        font-size: var(--font-size-sm);
+        color: var(--color-text-secondary);
+        cursor: pointer;
+      }
+      .sidebar-nav-item:hover {
+        background-color: rgba(197, 165, 90, 0.08);
+        color: var(--color-primary-300);
+      }
+      .sidebar-nav-item.active {
+        background-color: rgba(197, 165, 90, 0.12);
+        color: var(--color-primary-400);
+      }
+
+      /* Custom scrollbar for sidebar */
+      .sidebar-scroll::-webkit-scrollbar { width: 4px; }
+      .sidebar-scroll::-webkit-scrollbar-track { background: transparent; }
+      .sidebar-scroll::-webkit-scrollbar-thumb { background: var(--color-secondary-500); border-radius: 4px; }
+      .sidebar-scroll::-webkit-scrollbar-thumb:hover { background: var(--color-secondary-400); }
+
+      /* Search input */
+      .search-input {
+        background: var(--color-secondary-800);
+        border: 1px solid var(--color-border-default);
+        border-radius: var(--radius-md);
+        color: var(--color-text-primary);
+        padding: var(--space-2) var(--space-3) var(--space-2) 36px;
+        font-size: var(--font-size-sm);
+        transition: border-color var(--transition-fast);
+        outline: none;
+        font-family: var(--font-family-body);
+      }
+      .search-input:focus {
+        border-color: var(--color-primary-500);
+      }
+      .search-input::placeholder {
+        color: var(--color-neutral-500);
+      }
+
+      /* Stat card */
+      .stat-card {
+        background: var(--color-bg-card);
+        border: 1px solid var(--color-border-default);
+        border-radius: var(--radius-lg);
+        padding: 20px 24px;
+        transition: border-color var(--transition-normal), box-shadow var(--transition-normal);
+      }
+      .stat-card:hover {
+        border-color: rgba(197, 165, 90, 0.3);
+        box-shadow: 0 4px 20px rgba(197, 165, 90, 0.08);
+      }
+
+      /* Category tab */
+      .cat-tab {
+        padding: 8px 16px;
+        border-radius: var(--radius-full);
+        font-size: var(--font-size-sm);
+        font-weight: var(--font-weight-medium);
+        color: var(--color-text-secondary);
+        cursor: pointer;
+        transition: all var(--transition-fast);
+        border: 1px solid transparent;
+        white-space: nowrap;
+      }
+      .cat-tab:hover {
+        color: var(--color-primary-300);
+        background: rgba(197, 165, 90, 0.06);
+      }
+      .cat-tab.active {
+        color: var(--color-neutral-0);
+        background: linear-gradient(135deg, var(--color-primary-600), var(--color-primary-500));
+        border-color: var(--color-primary-500);
+        box-shadow: 0 2px 8px rgba(197, 165, 90, 0.25);
+      }
+
+      /* Data table */
+      .data-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+      }
+      .data-table thead th {
+        background: var(--color-secondary-800);
+        color: var(--color-neutral-400);
+        font-size: var(--font-size-xs);
+        font-weight: var(--font-weight-semibold);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 12px 16px;
+        text-align: left;
+        border-bottom: 1px solid var(--color-border-default);
+      }
+      .data-table thead th:first-child {
+        border-radius: var(--radius-md) 0 0 0;
+      }
+      .data-table thead th:last-child {
+        border-radius: 0 var(--radius-md) 0 0;
+      }
+      .data-table tbody tr {
+        transition: background-color var(--transition-fast);
+      }
+      .data-table tbody tr:hover {
+        background: rgba(197, 165, 90, 0.06);
+      }
+      .data-table tbody td {
+        padding: 14px 16px;
+        border-bottom: 1px solid var(--color-border-subtle);
+        font-size: var(--font-size-sm);
+        color: var(--color-text-primary);
+      }
+      .data-table tbody tr:last-child td {
+        border-bottom: none;
+      }
+
+      /* Status badge */
+      .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 10px;
+        border-radius: var(--radius-full);
+        font-size: var(--font-size-xs);
+        font-weight: var(--font-weight-medium);
+      }
+      .status-badge.published {
+        background: rgba(74, 222, 128, 0.1);
+        color: #4ade80;
+      }
+      .status-badge.draft {
+        background: rgba(197, 165, 90, 0.1);
+        color: var(--color-primary-400);
+      }
+      .status-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+      .status-badge.published .status-dot {
+        background: #4ade80;
+      }
+      .status-badge.draft .status-dot {
+        background: var(--color-primary-400);
+      }
+
+      /* Action buttons in table */
+      .action-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 5px 10px;
+        border-radius: var(--radius-sm);
+        font-size: var(--font-size-xs);
+        font-weight: var(--font-weight-medium);
+        cursor: pointer;
+        transition: all var(--transition-fast);
+        border: 1px solid transparent;
+      }
+      .action-btn.edit {
+        color: var(--color-primary-400);
+        background: rgba(197, 165, 90, 0.08);
+        border-color: rgba(197, 165, 90, 0.15);
+      }
+      .action-btn.edit:hover {
+        background: rgba(197, 165, 90, 0.15);
+        border-color: rgba(197, 165, 90, 0.3);
+      }
+      .action-btn.delete {
+        color: var(--color-accent-400);
+        background: rgba(194, 84, 80, 0.08);
+        border-color: rgba(194, 84, 80, 0.15);
+      }
+      .action-btn.delete:hover {
+        background: rgba(194, 84, 80, 0.15);
+        border-color: rgba(194, 84, 80, 0.3);
+      }
+
+      /* Pagination */
+      .page-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: var(--radius-md);
+        font-size: var(--font-size-sm);
+        color: var(--color-text-secondary);
+        cursor: pointer;
+        transition: all var(--transition-fast);
+        border: 1px solid transparent;
+      }
+      .page-btn:hover {
+        background: rgba(197, 165, 90, 0.08);
+        color: var(--color-primary-400);
+      }
+      .page-btn.active {
+        background: linear-gradient(135deg, var(--color-primary-600), var(--color-primary-500));
+        color: var(--color-neutral-0);
+        box-shadow: 0 2px 8px rgba(197, 165, 90, 0.25);
+      }
+      .page-btn.arrow {
+        border: 1px solid var(--color-border-default);
+      }
+      .page-btn.arrow:hover {
+        border-color: var(--color-primary-600);
+        color: var(--color-primary-400);
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+    <main class="flex min-h-screen">
+        <!-- ===== 左侧侧边栏 ===== -->
+        <aside class="w-60 flex-shrink-0 flex flex-col border-r" style="border-color: var(--color-border-default); background: var(--color-bg-secondary);">
+            <!-- Logo -->
+            <div class="flex items-center gap-3 px-5 py-5 border-b" style="border-color: var(--color-border-default);">
+                <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background: linear-gradient(135deg, var(--color-primary-500), var(--color-primary-700));">
+                    <i data-lucide="mountain" style="width:18px;height:18px;color:var(--color-neutral-0);"></i>
+                </div>
+                <div>
+                    <div class="text-sm font-semibold" style="color: var(--color-text-primary); font-family: var(--font-family-heading);">灵山胜境</div>
+                    <div class="text-xs" style="color: var(--color-text-secondary);">AI数字人导览</div>
+                </div>
+            </div>
+
+            <!-- 导航菜单 -->
+            <nav class="flex-1 overflow-y-auto sidebar-scroll px-3 py-4 space-y-1">
+                <div class="px-3 py-2 text-xs font-medium uppercase tracking-wider" style="color: var(--color-neutral-500);">概览</div>
+                <a href="dashboard.html" class="sidebar-nav-item">
+                    <i data-lucide="layout-dashboard" style="width:16px;height:16px;"></i>
+                    <span>数据面板</span>
+                </a>
+
+                <div class="px-3 py-2 mt-4 text-xs font-medium uppercase tracking-wider" style="color: var(--color-neutral-500);">核心管理</div>
+                <a href="avatar.html" class="sidebar-nav-item">
+                    <i data-lucide="user-circle" style="width:16px;height:16px;"></i>
+                    <span>数字人管理</span>
+                </a>
+                <div class="sidebar-nav-item">
+                    <i data-lucide="map-pin" style="width:16px;height:16px;"></i>
+                    <span>景点管理</span>
+                </div>
+                <div class="sidebar-nav-item">
+                    <i data-lucide="message-square" style="width:16px;height:16px;"></i>
+                    <span>导览脚本</span>
+                </div>
+                <div class="sidebar-nav-item active">
+                    <i data-lucide="book-open" style="width:16px;height:16px;"></i>
+                    <span>知识库管理</span>
+                </div>
+                <div class="sidebar-nav-item">
+                    <i data-lucide="mic" style="width:16px;height:16px;"></i>
+                    <span>语音配置</span>
+                </div>
+
+                <div class="px-3 py-2 mt-4 text-xs font-medium uppercase tracking-wider" style="color: var(--color-neutral-500);">运营</div>
+                <a href="analytics.html" class="sidebar-nav-item">
+                    <i data-lucide="bar-chart-3" style="width:16px;height:16px;"></i>
+                    <span>数据统计</span>
+                </a>
+                <div class="sidebar-nav-item">
+                    <i data-lucide="users" style="width:16px;height:16px;"></i>
+                    <span>游客反馈</span>
+                </div>
+                <div class="sidebar-nav-item">
+                    <i data-lucide="file-text" style="width:16px;height:16px;"></i>
+                    <span>操作日志</span>
+                </div>
+
+                <div class="px-3 py-2 mt-4 text-xs font-medium uppercase tracking-wider" style="color: var(--color-neutral-500);">系统</div>
+                <div class="sidebar-nav-item">
+                    <i data-lucide="settings" style="width:16px;height:16px;"></i>
+                    <span>系统设置</span>
+                </div>
+            </nav>
+
+            <!-- 用户信息 -->
+            <div class="px-4 py-4 border-t flex items-center gap-3" style="border-color: var(--color-border-default);">
+                <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold" style="background: var(--color-secondary-600); color: var(--color-primary-400);">管</div>
+                <div class="flex-1 min-w-0">
+                    <div class="text-sm truncate" style="color: var(--color-text-primary);">管理员</div>
+                    <div class="text-xs truncate" style="color: var(--color-text-secondary);">admin@lingshan.cn</div>
+                </div>
+                <i data-lucide="log-out" style="width:14px;height:14px;color:var(--color-neutral-500);cursor:pointer;"></i>
+            </div>
+        </aside>
+
+        <!-- ===== 右侧主内容区 ===== -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- 顶部栏 -->
+            <header class="flex items-center justify-between px-8 py-5 border-b flex-shrink-0" style="border-color: var(--color-border-default); background: var(--color-bg-secondary);">
+                <h1 class="text-xl" style="color: var(--color-text-primary); font-family: var(--font-family-heading);">知识库管理</h1>
+                <div class="flex items-center gap-4">
+                    <!-- 搜索框 -->
+                    <div class="relative">
+                        <i data-lucide="search" style="width:15px;height:15px;color:var(--color-neutral-500);position:absolute;left:12px;top:50%;transform:translateY(-50%);pointer-events:none;"></i>
+                        <input type="text" placeholder="搜索知识条目..." class="search-input w-64">
+                    </div>
+                    <!-- 上传文档按钮 -->
+                    <button data-dom-id="btn-upload" class="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all" style="background: linear-gradient(135deg, var(--color-primary-600), var(--color-primary-500)); color: var(--color-neutral-0); box-shadow: var(--shadow-gold);" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+                        <i data-lucide="upload" style="width:16px;height:16px;"></i>
+                        上传文档
+                    </button>
+                </div>
+            </header>
+
+            <!-- 内容区域 -->
+            <div class="flex-1 overflow-y-auto no-scrollbar px-8 py-6 space-y-6" style="background: var(--color-bg-primary);">
+
+                <!-- ===== 统计卡片 3列 ===== -->
+                <section class="grid grid-cols-3 gap-5">
+                    <!-- 知识条目 -->
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <div class="text-xs font-medium uppercase tracking-wider" style="color: var(--color-text-secondary);">知识条目</div>
+                                <div class="text-3xl font-bold mt-2" style="color: var(--color-text-gold); font-family: var(--font-family-heading);">1,256</div>
+                                <div class="text-xs mt-1" style="color: var(--color-neutral-500);">条知识内容</div>
+                            </div>
+                            <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background: rgba(197, 165, 90, 0.1);">
+                                <i data-lucide="database" style="width:24px;height:24px;color:var(--color-primary-400);"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- FAQ -->
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <div class="text-xs font-medium uppercase tracking-wider" style="color: var(--color-text-secondary);">FAQ</div>
+                                <div class="text-3xl font-bold mt-2" style="color: var(--color-text-gold); font-family: var(--font-family-heading);">89</div>
+                                <div class="text-xs mt-1" style="color: var(--color-neutral-500);">条常见问题</div>
+                            </div>
+                            <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background: rgba(103, 126, 168, 0.15);">
+                                <i data-lucide="help-circle" style="width:24px;height:24px;color:var(--color-secondary-300);"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 景点文档 -->
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <div class="text-xs font-medium uppercase tracking-wider" style="color: var(--color-text-secondary);">景点文档</div>
+                                <div class="text-3xl font-bold mt-2" style="color: var(--color-text-gold); font-family: var(--font-family-heading);">22</div>
+                                <div class="text-xs mt-1" style="color: var(--color-neutral-500);">份景点文档</div>
+                            </div>
+                            <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background: rgba(212, 100, 98, 0.1);">
+                                <i data-lucide="file-text" style="width:24px;height:24px;color:var(--color-accent-400);"></i>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ===== 分类Tab ===== -->
+                <section class="flex items-center gap-2">
+                    <button class="cat-tab active" onclick="switchCat(this)">全部</button>
+                    <button class="cat-tab" onclick="switchCat(this)">灵山胜境景点</button>
+                    <button class="cat-tab" onclick="switchCat(this)">拈花湾景点</button>
+                    <button class="cat-tab" onclick="switchCat(this)">历史文化</button>
+                    <button class="cat-tab" onclick="switchCat(this)">FAQ</button>
+                    <button class="cat-tab" onclick="switchCat(this)">游览路线</button>
+                </section>
+
+                <!-- ===== 数据表格 ===== -->
+                <section class="rounded-xl overflow-hidden" style="background: var(--color-bg-card); border: 1px solid var(--color-border-default);">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 90px;">ID</th>
+                                <th style="width: 100px;">景区</th>
+                                <th>景点名称</th>
+                                <th style="width: 110px;">分类</th>
+                                <th style="width: 90px;">状态</th>
+                                <th style="width: 120px;">更新时间</th>
+                                <th style="width: 140px;">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- LS-001 -->
+                            <tr>
+                                <td><span style="color: var(--color-neutral-500); font-family: monospace; font-size: 13px;">LS-001</span></td>
+                                <td>
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-medium" style="background: rgba(197, 165, 90, 0.1); color: var(--color-primary-400);">灵山胜境</span>
+                                </td>
+                                <td style="font-weight: var(--font-weight-medium);">灵山大照壁</td>
+                                <td style="color: var(--color-text-secondary);">入口景观</td>
+                                <td>
+                                    <span class="status-badge published"><span class="status-dot"></span>已发布</span>
+                                </td>
+                                <td style="color: var(--color-text-secondary);">2026-07-10</td>
+                                <td>
+                                    <div class="flex items-center gap-2">
+                                        <button class="action-btn edit">
+                                            <i data-lucide="pencil" style="width:12px;height:12px;"></i>
+                                            编辑
+                                        </button>
+                                        <button class="action-btn delete">
+                                            <i data-lucide="trash-2" style="width:12px;height:12px;"></i>
+                                            删除
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- LS-006 -->
+                            <tr>
+                                <td><span style="color: var(--color-neutral-500); font-family: monospace; font-size: 13px;">LS-006</span></td>
+                                <td>
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-medium" style="background: rgba(197, 165, 90, 0.1); color: var(--color-primary-400);">灵山胜境</span>
+                                </td>
+                                <td style="font-weight: var(--font-weight-medium);">九龙灌浴</td>
+                                <td style="color: var(--color-text-secondary);">核心景观</td>
+                                <td>
+                                    <span class="status-badge published"><span class="status-dot"></span>已发布</span>
+                                </td>
+                                <td style="color: var(--color-text-secondary);">2026-07-10</td>
+                                <td>
+                                    <div class="flex items-center gap-2">
+                                        <button class="action-btn edit">
+                                            <i data-lucide="pencil" style="width:12px;height:12px;"></i>
+                                            编辑
+                                        </button>
+                                        <button class="action-btn delete">
+                                            <i data-lucide="trash-2" style="width:12px;height:12px;"></i>
+                                            删除
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- LS-011 -->
+                            <tr>
+                                <td><span style="color: var(--color-neutral-500); font-family: monospace; font-size: 13px;">LS-011</span></td>
+                                <td>
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-medium" style="background: rgba(197, 165, 90, 0.1); color: var(--color-primary-400);">灵山胜境</span>
+                                </td>
+                                <td style="font-weight: var(--font-weight-medium);">灵山大佛</td>
+                                <td style="color: var(--color-text-secondary);">核心景观</td>
+                                <td>
+                                    <span class="status-badge published"><span class="status-dot"></span>已发布</span>
+                                </td>
+                                <td style="color: var(--color-text-secondary);">2026-07-10</td>
+                                <td>
+                                    <div class="flex items-center gap-2">
+                                        <button class="action-btn edit">
+                                            <i data-lucide="pencil" style="width:12px;height:12px;"></i>
+                                            编辑
+                                        </button>
+                                        <button class="action-btn delete">
+                                            <i data-lucide="trash-2" style="width:12px;height:12px;"></i>
+                                            删除
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- LS-013 -->
+                            <tr>
+                                <td><span style="color: var(--color-neutral-500); font-family: monospace; font-size: 13px;">LS-013</span></td>
+                                <td>
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-medium" style="background: rgba(197, 165, 90, 0.1); color: var(--color-primary-400);">灵山胜境</span>
+                                </td>
+                                <td style="font-weight: var(--font-weight-medium);">灵山梵宫</td>
+                                <td style="color: var(--color-text-secondary);">核心景观</td>
+                                <td>
+                                    <span class="status-badge published"><span class="status-dot"></span>已发布</span>
+                                </td>
+                                <td style="color: var(--color-text-secondary);">2026-07-08</td>
+                                <td>
+                                    <div class="flex items-center gap-2">
+                                        <button class="action-btn edit">
+                                            <i data-lucide="pencil" style="width:12px;height:12px;"></i>
+                                            编辑
+                                        </button>
+                                        <button class="action-btn delete">
+                                            <i data-lucide="trash-2" style="width:12px;height:12px;"></i>
+                                            删除
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- LS-014 -->
+                            <tr>
+                                <td><span style="color: var(--color-neutral-500); font-family: monospace; font-size: 13px;">LS-014</span></td>
+                                <td>
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-medium" style="background: rgba(197, 165, 90, 0.1); color: var(--color-primary-400);">灵山胜境</span>
+                                </td>
+                                <td style="font-weight: var(--font-weight-medium);">五印坛城</td>
+                                <td style="color: var(--color-text-secondary);">藏传佛教</td>
+                                <td>
+                                    <span class="status-badge published"><span class="status-dot"></span>已发布</span>
+                                </td>
+                                <td style="color: var(--color-text-secondary);">2026-07-08</td>
+                                <td>
+                                    <div class="flex items-center gap-2">
+                                        <button class="action-btn edit">
+                                            <i data-lucide="pencil" style="width:12px;height:12px;"></i>
+                                            编辑
+                                        </button>
+                                        <button class="action-btn delete">
+                                            <i data-lucide="trash-2" style="width:12px;height:12px;"></i>
+                                            删除
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- NH-005 -->
+                            <tr>
+                                <td><span style="color: var(--color-neutral-500); font-family: monospace; font-size: 13px;">NH-005</span></td>
+                                <td>
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-medium" style="background: rgba(103, 126, 168, 0.15); color: var(--color-secondary-300);">拈花湾</span>
+                                </td>
+                                <td style="font-weight: var(--font-weight-medium);">五灯湖</td>
+                                <td style="color: var(--color-text-secondary);">水景演艺</td>
+                                <td>
+                                    <span class="status-badge draft"><span class="status-dot"></span>草稿</span>
+                                </td>
+                                <td style="color: var(--color-text-secondary);">2026-07-05</td>
+                                <td>
+                                    <div class="flex items-center gap-2">
+                                        <button class="action-btn edit">
+                                            <i data-lucide="pencil" style="width:12px;height:12px;"></i>
+                                            编辑
+                                        </button>
+                                        <button class="action-btn delete">
+                                            <i data-lucide="trash-2" style="width:12px;height:12px;"></i>
+                                            删除
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- NH-003 -->
+                            <tr>
+                                <td><span style="color: var(--color-neutral-500); font-family: monospace; font-size: 13px;">NH-003</span></td>
+                                <td>
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-medium" style="background: rgba(103, 126, 168, 0.15); color: var(--color-secondary-300);">拈花湾</span>
+                                </td>
+                                <td style="font-weight: var(--font-weight-medium);">香月花街</td>
+                                <td style="color: var(--color-text-secondary);">禅意商业</td>
+                                <td>
+                                    <span class="status-badge published"><span class="status-dot"></span>已发布</span>
+                                </td>
+                                <td style="color: var(--color-text-secondary);">2026-07-03</td>
+                                <td>
+                                    <div class="flex items-center gap-2">
+                                        <button class="action-btn edit">
+                                            <i data-lucide="pencil" style="width:12px;height:12px;"></i>
+                                            编辑
+                                        </button>
+                                        <button class="action-btn delete">
+                                            <i data-lucide="trash-2" style="width:12px;height:12px;"></i>
+                                            删除
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- ===== 分页 ===== -->
+                    <div class="flex items-center justify-between px-6 py-4 border-t" style="border-color: var(--color-border-default);">
+                        <div class="text-xs" style="color: var(--color-text-secondary);">
+                            共 7 条记录，第 1 / 1 页
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <button class="page-btn arrow" title="上一页">
+                                <i data-lucide="chevron-left" style="width:16px;height:16px;"></i>
+                            </button>
+                            <button class="page-btn active">1</button>
+                            <button class="page-btn arrow" title="下一页" style="opacity: 0.4; cursor: not-allowed;">
+                                <i data-lucide="chevron-right" style="width:16px;height:16px;"></i>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Category tab switching
+        function switchCat(el) {
+            document.querySelectorAll('.cat-tab').forEach(function(tab) {
+                tab.classList.remove('active');
+            });
+            el.classList.add('active');
+        }
+    </script>
+</body>
+</html>
