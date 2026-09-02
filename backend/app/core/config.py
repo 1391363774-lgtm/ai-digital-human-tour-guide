@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     llm_provider: str = Field(default="deepseek", alias="LLM_PROVIDER")
     deepseek_api_key: str | None = Field(default=None, alias="DEEPSEEK_API_KEY")
     deepseek_base_url: str = Field(default="https://api.deepseek.com", alias="DEEPSEEK_BASE_URL")
-    deepseek_model: str = Field(default="deepseek-v4-flash", alias="DEEPSEEK_MODEL")
+    deepseek_model: str = Field(default="deepseek-chat", alias="DEEPSEEK_MODEL")
     qwen_api_key: str | None = Field(default=None, alias="QWEN_API_KEY")
     qwen_base_url: str | None = Field(default="https://dashscope.aliyuncs.com/compatible-mode/v1", alias="QWEN_BASE_URL")
     qwen_model: str = Field(default="qwen-plus", alias="QWEN_MODEL")

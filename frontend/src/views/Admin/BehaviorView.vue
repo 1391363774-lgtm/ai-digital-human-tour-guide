@@ -52,7 +52,7 @@ const serviceSuggestions = computed(() => {
     items.push('暂无反馈数据，建议在游客端引导游客完成满意度反馈。')
   }
   if (negative > 0) {
-    items.push('存在负向反馈，建议优先查看“需关注反馈”，定位讲解、路线或服务体验问题。')
+    items.push('存在负向反馈，建议优先查看"需关注反馈"，定位讲解、路线或服务体验问题。')
   }
   if (avg && avg < 70) {
     items.push('满意度偏低，建议补充常见问题答案并优化热门景点讲解词。')
@@ -64,6 +64,50 @@ const serviceSuggestions = computed(() => {
     items.push('整体反馈稳定，可继续关注热门问题并定期更新知识库。')
   }
   return items
+})
+
+/** 从反馈内容中提取高频关键词（2-4字中文词组） */
+const attentionKeywords = computed(() => {
+  const attentionItems = feedbackStats.value?.attention_items
+  // 如果后端已返回关键词数据（假设可能有 keywords 字段）
+  const keywordsField = (feedbackStats.value as Record<string, unknown>)?.keywords
+  if (Array.isArray(keywordsField) && keywordsField.length > 0) {
+    return keywordsField.slice(0, 20)
+  }
+
+  // 前端提取：从反馈内容中统计高频中文词组（2-4字）
+  const allText = [
+    ...attentionItems?.map((item) => item.content || '') || [],
+  ].join(' ')
+
+  if (!allText.trim()) {
+    // 如果没有需关注反馈，也从 events 中尝试提取
+    return []
+  }
+
+  const wordFreq: Record<string, number> = {}
+  // 使用简单的滑动窗口提取2-4字中文词组
+  const chineseRegex = /[\u4e00-\u9fff]+/g
+  let match: RegExpExecArray | null
+  while ((match = chineseRegex.exec(allText)) !== null) {
+    const segment = match[0]
+    for (let len = 2; len <= Math.min(4, segment.length); len++) {
+      for (let i = 0; i <= segment.length - len; i++) {
+        const word = segment.substring(i, i + len)
+        wordFreq[word] = (wordFreq[word] || 0) + 1
+      }
+    }
+  }
+
+  // 过滤低频词并按频次排序
+  const stopWords = new Set(['我们', '他们', '什么', '怎么', '可以', '这个', '那个', '一个', '没有', '不是', '已经', '因为', '所以', '但是', '而且', '或者', '如果', '就是', '还是', '这样', '那样', '应该', '可能', '需要', '觉得', '认为', '知道', '现在', '时候', '地方', '问题', '比较', '真的', '非常', '一些'])
+  const result = Object.entries(wordFreq)
+    .filter(([word, count]) => count >= 2 && !stopWords.has(word))
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 20)
+    .map(([word, count]) => ({ word, count }))
+
+  return result
 })
 </script>
 
@@ -143,6 +187,25 @@ const serviceSuggestions = computed(() => {
           <span v-for="(count, source) in stats.source_counts" :key="source">{{ source }} {{ count }}</span>
         </p>
       </section>
+    </section>
+
+    <section class="panel attention-analysis" v-if="attentionKeywords.length > 0">
+      <h2>游客关注点分析</h2>
+      <p class="hint">基于反馈内容自动提取的高频关键词</p>
+      <div class="keyword-cloud">
+        <span
+          v-for="item in attentionKeywords"
+          :key="item.word"
+          class="keyword-tag"
+          :style="{
+            fontSize: `${14 + Math.min(20, item.count * 3)}px`,
+            opacity: Math.max(0.6, Math.min(1, item.count / 5)),
+          }"
+        >
+          {{ item.word }}
+          <small class="keyword-count">x{{ item.count }}</small>
+        </span>
+      </div>
     </section>
 
     <section class="panel events" v-if="feedbackStats?.attention_items.length">
@@ -291,6 +354,37 @@ button {
   padding-left: 18px;
   color: #475467;
   line-height: 1.7;
+}
+
+.attention-analysis {
+  max-width: 1120px;
+  margin: 0 auto 20px;
+}
+
+.keyword-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+  align-items: center;
+}
+
+.keyword-tag {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  background: linear-gradient(135deg, #f3eadf, #e8dcd0);
+  color: #8b5e34;
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-weight: 600;
+  cursor: default;
+}
+
+.keyword-count {
+  color: #b45309;
+  font-size: 12px;
+  font-weight: 400;
 }
 
 @media (max-width: 820px) {

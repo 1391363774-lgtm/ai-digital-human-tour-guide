@@ -107,6 +107,46 @@ function setLive2dModel(url: string) {
     [avatar.value.appearance.outfitStyle]: url,
   }
 }
+
+const isPlaying = ref(false)
+
+function handleVoicePreview() {
+  if (!avatar.value) return
+  if (isPlaying.value) {
+    window.speechSynthesis.cancel()
+    isPlaying.value = false
+    return
+  }
+
+  const text = '您好，我是灵山胜境AI数字人导游，很高兴为您服务'
+  const utterance = new SpeechSynthesisUtterance(text)
+  utterance.lang = 'zh-CN'
+  utterance.rate = avatar.value.voice.rate || 1
+
+  const voiceName = avatar.value.voice.voiceName
+  const voices = window.speechSynthesis.getVoices()
+  const matchedVoice = voices.find((v) => v.name === voiceName)
+  if (matchedVoice) {
+    utterance.voice = matchedVoice
+  }
+
+  utterance.onend = () => {
+    isPlaying.value = false
+  }
+  utterance.onerror = () => {
+    isPlaying.value = false
+  }
+
+  isPlaying.value = true
+  window.speechSynthesis.speak(utterance)
+}
+
+// 确保语音列表已加载（部分浏览器需要异步加载）
+onMounted(() => {
+  if (window.speechSynthesis.getVoices().length === 0) {
+    window.speechSynthesis.addEventListener('voiceschanged', () => {}, { once: true })
+  }
+})
 </script>
 
 <template>
@@ -164,12 +204,17 @@ function setLive2dModel(url: string) {
         <h2>声音</h2>
         <label>
           声线
-          <select v-model="avatar.voice.voiceName">
-            <option value="zh-CN-XiaoxiaoNeural">晓晓自然女声</option>
-            <option value="zh-CN-XiaoyiNeural">晓伊温柔女声</option>
-            <option value="zh-CN-YunxiNeural">云希男声</option>
-            <option value="zh-CN-YunjianNeural">云健男声</option>
-          </select>
+          <div class="voice-row">
+            <select v-model="avatar.voice.voiceName">
+              <option value="zh-CN-XiaoxiaoNeural">晓晓自然女声</option>
+              <option value="zh-CN-XiaoyiNeural">晓伊温柔女声</option>
+              <option value="zh-CN-YunxiNeural">云希男声</option>
+              <option value="zh-CN-YunjianNeural">云健男声</option>
+            </select>
+            <button type="button" class="preview-btn" :disabled="isPlaying" @click="handleVoicePreview">
+              {{ isPlaying ? '停止' : '试听' }}
+            </button>
+          </div>
         </label>
         <label>语速 {{ avatar.voice.rate.toFixed(1) }}x <input v-model.number="avatar.voice.rate" type="range" min="0.8" max="1.2" step="0.1" /></label>
 
@@ -259,6 +304,34 @@ button {
   color: #ffffff;
   font-weight: 800;
   cursor: pointer;
+}
+
+.voice-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.voice-row select {
+  flex: 1;
+}
+
+.preview-btn {
+  height: auto;
+  min-height: 38px;
+  padding: 8px 16px;
+  background: #b45309;
+  font-weight: 600;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.preview-btn:hover {
+  background: #92400e;
+}
+
+.preview-btn:disabled {
+  background: #cbd5e1;
 }
 
   .layout {

@@ -29,15 +29,22 @@ FRONTEND_DIST_DIR = INTERNAL_DIR / "frontend" / "dist"
 FRONTEND_MODELS_DIR = INTERNAL_DIR / "frontend" / "public" / "models"
 AI_PROMPTS_DIR = INTERNAL_DIR / "ai" / "prompts"
 
-os.environ.setdefault("DATABASE_URL", f"sqlite:///{DATA_DIR / 'vector_store' / 'chroma' / 'chroma.sqlite3'}")
 os.environ.setdefault("CHROMA_PERSIST_DIR", str(DATA_DIR / "vector_store" / "chroma"))
 os.environ.setdefault("KNOWLEDGE_RAW_DIR", str(DATA_DIR / "raw"))
 os.environ.setdefault("APP_ENV", "production")
+
+# 打包后默认使用 SQLite（接收方无需安装 PostgreSQL）
+if getattr(sys, 'frozen', False):
+    SQLITE_PATH = DATA_DIR / "app.db"
+    os.environ.setdefault("DATABASE_URL", f"sqlite:///{SQLITE_PATH}")
 
 # 加载 .env 文件（如果存在）
 ENV_FILE = BASE_DIR / ".env"
 if not ENV_FILE.is_file():
     ENV_FILE = INTERNAL_DIR / ".env"
+if not ENV_FILE.is_file():
+    # 开发模式下 .env 可能在 backend/ 目录
+    ENV_FILE = Path(__file__).resolve().parent / ".env"
 if ENV_FILE.is_file():
     for line in ENV_FILE.read_text(encoding="utf-8").splitlines():
         line = line.strip()
@@ -51,6 +58,34 @@ if ENV_FILE.is_file():
 # 确保 ai/prompts 目录可被 prompt_service 找到
 if AI_PROMPTS_DIR.is_dir():
     os.environ.setdefault("PROMPT_TEMPLATE_DIR", str(AI_PROMPTS_DIR))
+
+
+def _ensure_sqlite_tables():
+    """打包后若 SQLite 数据库文件不存在，自动创建表结构。"""
+    db_url = os.environ.get("DATABASE_URL", "")
+    if not db_url.startswith("sqlite"):
+        return
+    # 从 DATABASE_URL 提取文件路径
+    db_file_str = db_url.replace("sqlite:///", "", 1)
+    db_file = Path(db_file_str)
+    if db_file.is_file():
+        return  # 数据库文件已存在，跳过
+    print(f"[初始化] SQLite 数据库不存在，正在创建: {db_file}")
+    db_file.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        from app.core.database import Base, engine
+        # 导入所有模型以确保表全部创建
+        from app.models import (  # noqa: F401
+            avatar, conversation, favorite, feedback, knowledge,
+            recommendation, scenic, system_log, user, visitor_event,
+        )
+        Base.metadata.create_all(bind=engine)
+        print(f"[初始化] SQLite 表结构创建完成")
+    except Exception as e:
+        print(f"[警告] SQLite 初始化失败: {e}")
+
+
+_ensure_sqlite_tables()
 
 import uvicorn
 

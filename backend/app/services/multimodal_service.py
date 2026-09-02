@@ -15,6 +15,7 @@ class MultimodalAnswer:
     provider: str
     model: str
     configured: bool
+    error: str | None = None
 
 
 class MultimodalGuideService:
@@ -74,7 +75,7 @@ class MultimodalGuideService:
             answer = data["choices"][0]["message"]["content"]
         except (urllib.error.URLError, KeyError, IndexError, TypeError, json.JSONDecodeError) as exc:
             answer = f"多模态模型调用失败：{exc}。请检查 QWEN_API_KEY、网络和模型权限。"
-            return MultimodalAnswer(answer=answer, provider=provider, model=model, configured=False)
+            return MultimodalAnswer(answer=answer, provider=provider, model=model, configured=bool(settings.qwen_api_key), error=str(exc))
 
         return MultimodalAnswer(answer=answer, provider=provider, model=model, configured=True)
 

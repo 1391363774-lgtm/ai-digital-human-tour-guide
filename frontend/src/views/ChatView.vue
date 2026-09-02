@@ -29,6 +29,7 @@ const mediaRecorder = ref<MediaRecorder | null>(null)
 const audioChunks = ref<Blob[]>([])
 const conversationId = ref<number | null>(null)
 const autoSpeak = ref(true)
+const fastMode = ref(false)
 const lastLatencyMs = ref<number | null>(null)
 const messages = ref<ChatMessage[]>([
   {
@@ -65,6 +66,7 @@ async function handleSend() {
       message: content,
       conversation_id: conversationId.value,
       top_k: 5,
+      fast: fastMode.value,
     })
     conversationId.value = response.conversation_id
     lastLatencyMs.value = Math.round(performance.now() - startedAt)
@@ -300,6 +302,10 @@ function speakWithBrowser(text: string) {
         <label class="auto-speak">
           <input v-model="autoSpeak" type="checkbox" />
           自动语音播报
+        </label>
+        <label class="auto-speak">
+          <input v-model="fastMode" type="checkbox" />
+          快速回答
         </label>
         <textarea
           v-model="input"

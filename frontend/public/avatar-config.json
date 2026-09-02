@@ -54,7 +54,7 @@
       "modelMap": {
         "guide-hanfu": "/models/haru/Haru.model3.json",
         "ceremonial": "/models/hiyori/Hiyori.model3.json",
-        "modern": "/models/mark/Mark.model3.json"
+        "modern": "/models/natori/Natori.model3.json"
       }
     },
     "background": {

@@ -102,6 +102,91 @@ function formatDate(date: Date) {
   const day = `${date.getDate()}`.padStart(2, '0')
   return `${year}-${month}-${day}`
 }
+
+function formatShortDate(dateStr: string) {
+  if (!dateStr) return ''
+  const parts = dateStr.split('-')
+  if (parts.length === 3) return `${parts[1]}-${parts[2]}`
+  return dateStr.slice(5)
+}
+
+/**
+ * 生成带坐标轴的 SVG 图表数据
+ * SVG 坐标系：viewBox="0 0 420 200"
+ * 图表区域：x=50..400, y=10..160
+ */
+function toChartData<T extends Record<string, number | string>>(
+  rows: T[],
+  key: keyof T,
+  maxValue = 0,
+  labelKey: keyof T = 'date' as keyof T,
+) {
+  if (!rows.length) return { points: '', xLabels: [], yLabels: [], dataLabels: [], yMax: 0 }
+  const rawMax = maxValue || Math.max(...rows.map((row) => Number(row[key]) || 0), 1)
+  const yMax = Math.ceil(rawMax * 1.1) // 留10%顶部空间
+  const chartLeft = 50
+  const chartRight = 400
+  const chartTop = 10
+  const chartBottom = 160
+
+  const points = rows.map((row, index) => {
+    const x = rows.length === 1 ? (chartLeft + chartRight) / 2 : chartLeft + (index / (rows.length - 1)) * (chartRight - chartLeft)
+    const y = chartBottom - ((Number(row[key]) || 0) / yMax) * (chartBottom - chartTop)
+    return { x, y: Math.max(chartTop, y), value: Number(row[key]) || 0, label: String(row[labelKey] || '') }
+  })
+
+  const pointsStr = points.map((p) => `${p.x},${p.y}`).join(' ')
+
+  // X轴日期标签（最多显示6个）
+  const step = Math.max(1, Math.ceil(rows.length / 6))
+  const xLabels = points.filter((_, i) => i % step === 0 || i === rows.length - 1).map((p) => ({
+    x: p.x,
+    text: formatShortDate(p.label),
+  }))
+
+  // Y轴刻度标签（5个）
+  const yLabelCount = 5
+  const yLabels = Array.from({ length: yLabelCount }, (_, i) => {
+    const value = Math.round((yMax / (yLabelCount - 1)) * (yLabelCount - 1 - i))
+    const y = chartBottom - (i / (yLabelCount - 1)) * (chartBottom - chartTop)
+    return { y, text: String(value) }
+  })
+
+  // 数据点标注（最多显示8个，避免重叠）
+  const labelStep = Math.max(1, Math.ceil(rows.length / 8))
+  const dataLabels = points.filter((_, i) => i % labelStep === 0 || i === rows.length - 1).map((p) => ({
+    x: p.x,
+    y: p.y,
+    text: String(p.value),
+  }))
+
+  return { points: pointsStr, xLabels, yLabels, dataLabels, yMax }
+}
+
+const satisfactionChartData = computed(() =>
+  toChartData(overview.value?.daily_satisfaction || [], 'score', 5),
+)
+const trendChartData = computed(() =>
+  toChartData(overview.value?.questions_trend || [], 'count'),
+)
+
+/** 根据频次返回词云颜色 */
+function getWordCloudColor(count: number) {
+  if (count >= 15) return '#fbbf24'   // 金黄 - 高频
+  if (count >= 10) return '#fb923c'   // 橙色 - 中高频
+  if (count >= 5) return '#38bdf8'    // 蓝色 - 中频
+  if (count >= 3) return '#a78bfa'    // 紫色 - 低频
+  return '#94a3b8'                     // 灰色 - 极低频
+}
+
+/** 根据频次返回词云发光颜色 */
+function getWordCloudGlow(count: number) {
+  if (count >= 15) return 'rgb(251 191 36 / 0.4)'
+  if (count >= 10) return 'rgb(251 146 60 / 0.3)'
+  if (count >= 5) return 'rgb(56 189 248 / 0.3)'
+  if (count >= 3) return 'rgb(167 139 250 / 0.2)'
+  return 'rgb(148 163 184 / 0.15)'
+}
 </script>
 
 <template>
@@ -161,15 +246,35 @@ function formatDate(date: Date) {
 
       <section class="panel">
         <h2>满意度趋势</h2>
-        <svg viewBox="0 0 100 100" class="line-chart">
-          <polyline :points="satisfactionPoints" fill="none" stroke="#fbbf24" stroke-width="3" />
+        <svg viewBox="0 0 420 200" class="line-chart">
+          <!-- Y轴刻度线及标签 -->
+          <line v-for="yl in satisfactionChartData.yLabels" :key="yl.text" x1="50" :y1="yl.y" x2="400" :y2="yl.y" stroke="rgb(255 255 255 / 10%)" stroke-width="0.5" />
+          <text v-for="yl in satisfactionChartData.yLabels" :key="'t'+yl.text" :x="46" :y="yl.y + 3" text-anchor="end" fill="#9ca3af" font-size="8">{{ yl.text }}</text>
+          <!-- 折线 -->
+          <polyline :points="satisfactionChartData.points" fill="none" stroke="#fbbf24" stroke-width="3" stroke-linejoin="round" />
+          <!-- 数据点 -->
+          <circle v-for="(pt, i) in satisfactionChartData.dataLabels" :key="'d'+i" :cx="pt.x" :cy="pt.y" r="3" fill="#fbbf24" />
+          <!-- 数据点数值标注 -->
+          <text v-for="(pt, i) in satisfactionChartData.dataLabels" :key="'v'+i" :x="pt.x" :y="pt.y - 6" text-anchor="middle" fill="#fde68a" font-size="7">{{ pt.text }}</text>
+          <!-- X轴日期标签 -->
+          <text v-for="(xl, i) in satisfactionChartData.xLabels" :key="'x'+i" :x="xl.x" y="178" text-anchor="middle" fill="#9ca3af" font-size="7">{{ xl.text }}</text>
         </svg>
       </section>
 
       <section class="panel">
         <h2>问答服务趋势</h2>
-        <svg viewBox="0 0 100 100" class="line-chart">
-          <polyline :points="trendPoints" fill="none" stroke="#38bdf8" stroke-width="3" />
+        <svg viewBox="0 0 420 200" class="line-chart">
+          <!-- Y轴刻度线及标签 -->
+          <line v-for="yl in trendChartData.yLabels" :key="yl.text" x1="50" :y1="yl.y" x2="400" :y2="yl.y" stroke="rgb(255 255 255 / 10%)" stroke-width="0.5" />
+          <text v-for="yl in trendChartData.yLabels" :key="'t'+yl.text" :x="46" :y="yl.y + 3" text-anchor="end" fill="#9ca3af" font-size="8">{{ yl.text }}</text>
+          <!-- 折线 -->
+          <polyline :points="trendChartData.points" fill="none" stroke="#38bdf8" stroke-width="3" stroke-linejoin="round" />
+          <!-- 数据点 -->
+          <circle v-for="(pt, i) in trendChartData.dataLabels" :key="'d'+i" :cx="pt.x" :cy="pt.y" r="3" fill="#38bdf8" />
+          <!-- 数据点数值标注 -->
+          <text v-for="(pt, i) in trendChartData.dataLabels" :key="'v'+i" :x="pt.x" :y="pt.y - 6" text-anchor="middle" fill="#bae6fd" font-size="7">{{ pt.text }}</text>
+          <!-- X轴日期标签 -->
+          <text v-for="(xl, i) in trendChartData.xLabels" :key="'x'+i" :x="xl.x" y="178" text-anchor="middle" fill="#9ca3af" font-size="7">{{ xl.text }}</text>
         </svg>
       </section>
 
@@ -184,7 +289,15 @@ function formatDate(date: Date) {
       <section class="panel wide">
         <h2>游客关注点词云</h2>
         <div class="word-cloud">
-          <span v-for="item in overview.word_cloud" :key="item.word" :style="{ fontSize: `${14 + Math.min(28, item.count * 3)}px` }">{{ item.word }}</span>
+          <span
+            v-for="item in overview.word_cloud"
+            :key="item.word"
+            :style="{
+              fontSize: `${14 + Math.min(28, item.count * 3)}px`,
+              color: getWordCloudColor(item.count),
+              textShadow: `0 0 14px ${getWordCloudGlow(item.count)}`,
+            }"
+          >{{ item.word }}</span>
         </div>
       </section>
 

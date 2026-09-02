@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import logging
 import re
 import time
 from hashlib import sha256
@@ -17,6 +18,9 @@ from app.services.embedding_service import EmbeddingService
 from app.services.vector_store_service import VectorSearchResult, VectorStoreService
 
 
+logger = logging.getLogger(__name__)
+
+
 @dataclass(frozen=True)
 class RagHit:
     content: str
@@ -27,6 +31,8 @@ class RagHit:
 class RagService:
     _cache: dict[str, tuple[float, list[RagHit]]] = {}
     _cache_ttl_seconds = 30 * 60
+    _vector_disabled_until = 0.0
+    _vector_retry_seconds = 60
 
     def __init__(self, db: Session) -> None:
         self.db = db
@@ -46,13 +52,17 @@ class RagService:
             return cached[1]
 
         vector_hits: list[RagHit] = []
-        try:
-            query_embedding = self.embedding_service.embed_query(normalized_query)
-            results = self.vector_store.search(query_embedding.vector, top_k=top_k * 2)
-            if results:
-                vector_hits = [self._hit_from_vector_result(item) for item in results]
-        except RuntimeError:
-            pass
+        if now >= type(self)._vector_disabled_until:
+            try:
+                query_embedding = self.embedding_service.embed_query(normalized_query)
+                results = self.vector_store.search(query_embedding.vector, top_k=top_k * 2)
+                if results:
+                    vector_hits = [self._hit_from_vector_result(item) for item in results]
+            except Exception as exc:
+                # 向量库是增强能力而不是单点依赖。Chroma 在索引损坏、版本迁移或
+                # 文件锁异常时可能抛出 RuntimeError 以外的异常，此时继续词法检索。
+                type(self)._vector_disabled_until = now + self._vector_retry_seconds
+                logger.warning("向量检索不可用，60 秒内使用词法检索：%s", exc)
 
         spot_name_hits = self._spot_name_boost(query, vector_hits, normalized_query)
 
@@ -82,7 +92,7 @@ class RagService:
         self._prune_cache(now)
         return merged
 
-    def build_context(self, query: str, top_k: int = 5, max_chars: int = 1600) -> str:
+    def build_context(self, query: str, top_k: int = 5, max_chars: int = 2400) -> str:
         hits = self.search(query, top_k=top_k)
         parts: list[str] = []
         current_length = 0

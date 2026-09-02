@@ -52,8 +52,8 @@ async def chat_stream(
 ):
     """SSE 流式回答：首 token 在 ~1s 内到达，边生成边推送。"""
     service = ChatService(db)
-    conversation, messages, hits, refusal = service.prepare_stream(
-        payload.message, payload.top_k, payload.conversation_id,
+    conversation, messages, hits, refusal, fast_answer = service.prepare_stream(
+        payload.message, payload.top_k, payload.conversation_id, payload.fast,
     )
     started_at = time.perf_counter()
 
@@ -64,6 +64,12 @@ async def chat_stream(
             return
 
         yield f"data: {json.dumps({'type': 'conversation_id', 'id': conversation.id})}\n\n"
+
+        if fast_answer:
+            yield f"data: {json.dumps({'type': 'text', 'text': fast_answer})}\n\n"
+            service.persist_stream_answer(conversation, fast_answer, hits, started_at)
+            yield f"data: {json.dumps({'type': 'done', 'conversation_id': conversation.id})}\n\n"
+            return
 
         llm_client = get_llm_client()
         full_text = ""

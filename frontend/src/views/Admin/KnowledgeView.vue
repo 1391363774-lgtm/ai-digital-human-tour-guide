@@ -13,8 +13,27 @@ import type { KnowledgeDocument, ParsedDocument } from '../../types/knowledge'
 
 const documents = ref<KnowledgeDocument[]>([])
 const selectedFile = ref<File | null>(null)
+const selectedDocType = ref('upload')
 const preview = ref<ParsedDocument | null>(null)
 const loading = ref(false)
+
+const docTypeOptions = [
+  { value: 'upload', label: '讲解词' },
+  { value: 'historical', label: '文史资料' },
+  { value: 'faq', label: '常见问题' },
+  { value: 'other', label: '其他' },
+]
+
+const docTypeLabelMap: Record<string, string> = {
+  upload: '讲解词',
+  historical: '文史资料',
+  faq: '常见问题',
+  other: '其他',
+}
+
+function getDocTypeLabel(sourceType: string) {
+  return docTypeLabelMap[sourceType] || sourceType
+}
 
 onMounted(() => {
   refreshDocuments()
@@ -36,7 +55,7 @@ async function handleUpload() {
   }
   loading.value = true
   try {
-    await uploadKnowledgeDocument(selectedFile.value)
+    await uploadKnowledgeDocument(selectedFile.value, selectedDocType.value)
     ElMessage.success('上传成功')
     selectedFile.value = null
     await refreshDocuments()
@@ -135,6 +154,12 @@ function formatTime(value?: string | null) {
     <section class="grid">
       <div class="panel upload-panel">
         <h2>上传资料</h2>
+        <label class="doc-type-label">
+          文档类型
+          <select v-model="selectedDocType" class="doc-type-select">
+            <option v-for="opt in docTypeOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
+          </select>
+        </label>
         <input
           type="file"
           accept=".txt,.md,.csv,.tsv,.docx,.xlsx,.pdf"
@@ -164,7 +189,7 @@ function formatTime(value?: string | null) {
             <tr v-for="document in documents" :key="document.id">
               <td>{{ document.id }}</td>
               <td>{{ document.title }}</td>
-              <td>{{ document.source_type }}</td>
+              <td>{{ getDocTypeLabel(document.source_type) }}</td>
               <td>{{ document.status }}</td>
               <td>{{ formatTime(document.updated_at || document.created_at) }}</td>
               <td class="actions">
@@ -253,6 +278,20 @@ nav a {
   align-self: start;
   display: grid;
   gap: 14px;
+}
+
+.doc-type-label {
+  display: grid;
+  gap: 6px;
+  font-size: 14px;
+  color: #475467;
+}
+
+.doc-type-select {
+  border: 1px solid #d0d5dd;
+  border-radius: 10px;
+  padding: 9px 10px;
+  font: inherit;
 }
 
 button {

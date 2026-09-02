@@ -10,8 +10,8 @@
 ## 本地启动
 
 ```powershell
-cp .env.example .env
-docker compose up --build
+Copy-Item .env.example .env
+docker compose up -d --build
 ```
 
 后端容器会先执行 `alembic upgrade head`，再启动 FastAPI。
@@ -52,6 +52,7 @@ python scripts/build_index.py
 ```powershell
 docker compose config
 python scripts/smoke_test.py --base-url http://localhost:8000
+python scripts/eval_qa_accuracy.py --base-url http://localhost:8000 --limit 10
 ```
 
 ## 常见问题

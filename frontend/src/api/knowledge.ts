@@ -5,9 +5,10 @@ export function listKnowledgeDocuments() {
   return unwrap<KnowledgeDocument[]>(apiClient.get('/api/admin/knowledge'))
 }
 
-export function uploadKnowledgeDocument(file: File) {
+export function uploadKnowledgeDocument(file: File, sourceType = 'upload') {
   const formData = new FormData()
   formData.append('file', file)
+  formData.append('source_type', sourceType)
   return unwrap<KnowledgeDocument>(
     apiClient.post('/api/admin/knowledge/upload', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },

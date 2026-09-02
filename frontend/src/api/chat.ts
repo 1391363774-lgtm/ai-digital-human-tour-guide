@@ -22,6 +22,7 @@ export async function* streamChatMessage(payload: SendChatMessagePayload) {
       message: payload.message,
       conversation_id: payload.conversation_id ?? null,
       top_k: payload.top_k ?? 5,
+      ...(payload.fast !== undefined && { fast: payload.fast }),
     }),
   })
 

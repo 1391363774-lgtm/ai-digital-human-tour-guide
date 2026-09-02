@@ -1,6 +1,7 @@
 # Python
 __pycache__/
 *.py[cod]
+*.db
 .pytest_cache/
 .venv/
 venv/
@@ -11,6 +12,7 @@ venv/
 node_modules/
 dist/
 coverage/
+*.tsbuildinfo
 
 # Env
 .env
@@ -24,6 +26,11 @@ data/processed/*
 !data/processed/.gitkeep
 uploads/
 logs/
+data/eval/eval_*.json
+
+# Local deployment/research notes (not product source)
+live2d-*-prompt.md
+tts-lipsync-deploy-prompt.md
 
 # IDE
 .idea/

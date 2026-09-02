@@ -33,11 +33,15 @@
 | Knowledge | POST | `/api/admin/knowledge/{document_id}/index` | 构建向量索引 |
 | RAG | POST | `/api/rag/search` | RAG 检索 |
 | Chat | POST | `/api/chat/messages` | 文本问答与会话持久化 |
+| Chat | POST | `/api/chat/stream` | SSE 增量问答；已开始输出后不会跨模型拼接 |
 | History | GET | `/api/history` | 会话列表 |
 | History | GET | `/api/history/{conversation_id}` | 会话详情 |
 | Routes | POST | `/api/routes/recommend` | 个性化路线推荐 |
 | Speech | POST | `/api/speech/asr` | 语音转文本 |
 | Speech | POST | `/api/speech/tts` | 文本转 MP3 音频流，默认 edge-tts Xiaoxiao 女声 |
+| Speech | POST | `/api/speech/tts/segments` | 分段并行合成，返回文本段与 Base64 MP3 |
+| Speech | POST | `/api/speech/tts/stream` | NDJSON 分段语音流，首段优先返回 |
+| Multimodal | POST | `/api/multimodal/image-question` | Qwen-VL 拍照识景（需配置 Qwen Key） |
 | Favorite | POST | `/api/favorites` | 添加收藏 |
 | Favorite | GET | `/api/favorites` | 收藏列表 |
 | Favorite | DELETE | `/api/favorites/{favorite_id}` | 删除收藏 |

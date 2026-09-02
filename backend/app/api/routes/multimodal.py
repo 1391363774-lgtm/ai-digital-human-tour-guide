@@ -1,4 +1,5 @@
 from fastapi import APIRouter, File, Form, HTTPException, UploadFile
+from starlette.concurrency import run_in_threadpool
 
 from app.schemas.response import success
 from app.services.multimodal_service import MultimodalGuideService, get_multimodal_capability
@@ -23,5 +24,7 @@ async def image_question(
         raise HTTPException(status_code=400, detail="图片内容为空")
     if len(image_bytes) > 5 * 1024 * 1024:
         raise HTTPException(status_code=400, detail="图片不能超过 5MB")
-    result = MultimodalGuideService().analyze_image(image_bytes, image.content_type, question)
+    result = await run_in_threadpool(
+        MultimodalGuideService().analyze_image, image_bytes, image.content_type, question
+    )
     return success(result.__dict__)

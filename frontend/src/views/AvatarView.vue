@@ -2,7 +2,7 @@
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 import { streamChatMessage } from '../api/chat'
-import { synthesizeSpeech, transcribeAudio } from '../api/speech'
+import { synthesizeSpeech, streamSynthesizeSpeech, base64ToBlob, transcribeAudio } from '../api/speech'
 
 type AvatarStatus = 'idle' | 'thinking' | 'speaking'
 type AvatarExpression = 'smile' | 'focus' | 'surprised'
@@ -34,14 +34,13 @@ const LIVE2D_MODEL_PATH = '/models/haru/Haru.model3.json'
 const LIVE2D_MODEL_MAP: Record<string, string> = {
   'guide-hanfu': '/models/haru/Haru.model3.json',
   ceremonial: '/models/hiyori/Hiyori.model3.json',
-  modern: '/models/mark/Mark.model3.json',
+  modern: '/models/natori/Natori.model3.json',
 }
 const LIVE2D_EXPRESSION_MAP: Record<AvatarExpression, string> = {
   smile: 'F01',
   focus: 'F03',
   surprised: 'F06',
 }
-const LOW_LATENCY_BROWSER_TTS = false
 
 interface Image3dLandmarks {
   faceLeft: number
@@ -191,6 +190,10 @@ let live2dApp: any = null
 let live2dModel: any = null
 let currentLive2DModelPath = ''
 let live2dMouthParamIds: string[] = ['ParamMouthOpenY', 'PARAM_MOUTH_OPEN_Y', 'ParamMouthOpen']
+let currentTtsAbort: AbortController | null = null
+// Live2D 嘴型覆盖：模型的动作系统每帧会覆盖参数，必须在模型 update 之后强制写入
+let live2dMouthOverride = 0
+let live2dMouthActive = false
 
 const avatarVars = computed(() => ({
   '--face-left': `${avatarConfig.value.image3d.landmarks.faceLeft}%`,
@@ -226,7 +229,7 @@ const avatarVars = computed(() => ({
   '--cloth-secondary': avatarConfig.value.outfit.secondary,
   '--cloth-accent': avatarConfig.value.outfit.accent,
   '--cloth-trim': avatarConfig.value.outfit.trim,
-  '--mouth-scale': `${0.22 + mouthOpen.value * 0.95}`,
+  '--mouth-scale': `${0.15 + mouthOpen.value * 1.4}`,
 }))
 
 onMounted(() => {
@@ -350,6 +353,28 @@ async function initLive2D() {
     live2dApp.stage.addChild(live2dModel)
     live2dMouthParamIds = await resolveLive2DMouthParams(modelPath)
     live2dReady.value = true
+
+    // 关键修复：用 PIXI ticker 的 postrender 在模型更新后、渲染前覆盖嘴型参数
+    // idle 动画每帧会把 ParamMouthOpenY 重置为 0，必须在渲染前最后一刻强制写入
+    live2dApp.ticker.add(() => {
+      if (!live2dMouthActive || live2dMouthParamIds.length === 0) return
+      const core = live2dModel?.internalModel?.coreModel
+      if (!core) return
+      const value = Math.max(0, Math.min(1, live2dMouthOverride))
+      for (const paramName of live2dMouthParamIds) {
+        try {
+          const idx = core.getParameterIndex?.(paramName)
+          if (typeof idx === 'number' && idx >= 0 && core.setParameterValueByIndex) {
+            core.setParameterValueByIndex(idx, value)
+          } else {
+            core.setParameterValueById?.(paramName, value)
+          }
+        } catch {
+          // 忽略不匹配的参数名
+        }
+      }
+    })
+
     console.log('Live2D loaded:', modelPath)
     const parameterIds = live2dModel.internalModel.coreModel.getParameterIds?.() || live2dMouthParamIds
     console.log('Live2D parameters:', parameterIds)
@@ -394,6 +419,8 @@ function destroyLive2D() {
   live2dApp?.destroy?.(true)
   live2dApp = null
   currentLive2DModelPath = ''
+  live2dMouthOverride = 0
+  live2dMouthActive = false
 }
 
 function ensureAvatarImage() {
@@ -430,32 +457,75 @@ async function askAvatar() {
   expression.value = 'focus'
   subtitle.value = '...'
   try {
-    const stream = streamChatMessage({ message: content, conversation_id: conversationId.value, top_k: 5 })
+    const stream = streamChatMessage({ message: content, conversation_id: conversationId.value, top_k: 6, fast: true })
     let fullText = ''
+    let firstTtsText = ''
+    let ttsPromise: Promise<void> | null = null
+
+    /** 从已累积文本中提取第一个完整句子（以。！？\n结尾），用于提前启动 TTS */
+    const extractFirstSentence = (text: string): string => {
+      const match = text.match(/^[^。！？\n]*[。！？\n]/)
+      if (match) return match[0]
+      // 没有完整句子但文本已足够长，截取前 20 字作为首段
+      if (text.length >= 20) return text.slice(0, 20)
+      return ''
+    }
 
     for await (const event of stream) {
       if (event.type === 'conversation_id') { conversationId.value = event.id; continue }
       if (event.type === 'text') {
         fullText += event.text
         subtitle.value = fullText
-        // 全文流式到达结束
+
+        // 首句就绪时立即启动 TTS（不 await，与 Chat 剩余文本生成并行）
+        if (!ttsPromise && fullText.length >= 8) {
+          const firstSentence = extractFirstSentence(fullText)
+          if (firstSentence && firstSentence.length >= 6) {
+            firstTtsText = firstSentence
+            status.value = 'speaking'
+            expression.value = 'smile'
+            ttsPromise = speak(firstTtsText)
+          }
+        }
       }
-      if (event.type === 'refused') { subtitle.value = event.text; status.value = 'idle'; expression.value = 'focus'; continue }
-      if (event.type === 'error') { subtitle.value = `错误：${event.text}`; continue }
+      if (event.type === 'refused') {
+        fullText = event.text
+        subtitle.value = event.text
+        continue
+      }
+      if (event.type === 'error') {
+        fullText = event.text || '抱歉，服务暂时不可用。我是灵山胜境 AI 导游，可以为您介绍灵山大佛、九龙灌浴、灵山梵宫等景点，也可以推荐游览路线哦！'
+        subtitle.value = fullText
+        continue
+      }
       if (event.type === 'done') { conversationId.value = event.conversation_id; continue }
     }
 
-    // 流结束 → 播放完整 TTS
-    if (fullText) {
-      status.value = 'speaking'
-      expression.value = 'smile'
-      await speak(fullText)
+    // Chat 流结束后的处理
+    if (!ttsPromise) {
+      // 没有触发首句 TTS（拒答/短文本/错误），直接播放全部
+      if (fullText) {
+        status.value = 'speaking'
+        expression.value = 'smile'
+        await speak(fullText)
+      } else {
+        status.value = 'idle'
+        expression.value = 'smile'
+      }
+    } else {
+      // 等待首段 TTS 播完，然后播放剩余文本
+      await ttsPromise
+      const remaining = fullText.slice(firstTtsText.length).trim()
+      if (remaining) {
+        status.value = 'speaking'
+        expression.value = 'smile'
+        await speak(remaining)
+      }
     }
-  } catch (e: unknown) {
-    const message = e instanceof Error ? e.message : '未知错误'
-    subtitle.value = `回答失败：${message}`
-    expression.value = 'surprised'
-    ElMessage.error('对话失败')
+  } catch {
+    // 连接失败或异常时显示引导语，绕回景区话题
+    subtitle.value = '这个问题我暂时无法回答，可能是网络波动。我是灵山胜境 AI 导游，可以为您介绍灵山大佛、九龙灌浴、灵山梵宫等景点，也可以推荐游览路线哦！'
+    expression.value = 'focus'
     status.value = 'idle'
     mouthOpen.value = 0
   }
@@ -471,16 +541,91 @@ async function speak(text: string) {
     setLive2DMouth(0)
     stopLipSyncTimer()
   }
+
+  // 中止上一次的 TTS 流
+  currentTtsAbort?.abort()
+  const abortController = new AbortController()
+  currentTtsAbort = abortController
+
+  // 异步队列：流式到达的音频段按顺序排队播放
+  const segmentQueue: Array<{ text: string; audio_base64: string }> = []
+  let streamDone = false
+  let streamFailed = false
+  let waitingResolve: ((value: boolean) => void) | null = null
+
+  /** 等待下一段音频就绪，返回 false 表示流已结束且队列空 */
+  const waitForNextSegment = (): Promise<boolean> => {
+    if (segmentQueue.length > 0) return Promise.resolve(true)
+    if (streamDone || streamFailed) return Promise.resolve(false)
+    return new Promise((resolve) => { waitingResolve = resolve })
+  }
+
+  const onSegmentReady = (seg: { text: string; audio_base64: string }) => {
+    segmentQueue.push(seg)
+    waitingResolve?.(true)
+    waitingResolve = null
+  }
+
+  /** 流结束或失败时唤醒等待者 */
+  const wakeWaiter = (failed: boolean) => {
+    if (failed) streamFailed = true
+    else streamDone = true
+    waitingResolve?.(false)
+    waitingResolve = null
+  }
+
   try {
-    const audioBlob = await synthesizeSpeech(
+    voiceMode.value = 'edge'
+
+    // 启动流式请求（后台运行，不阻塞播放循环）
+    const streamPromise = streamSynthesizeSpeech(
       cleanText,
       avatarConfig.value.voice.voiceName,
       avatarConfig.value.voice.rate,
-    )
-    voiceMode.value = 'edge'
-    await playAudioWithSyncedLip(audioBlob, cleanText, onEnd)
+      onSegmentReady,
+      undefined,
+      abortController.signal,
+    ).then(() => {
+      wakeWaiter(false)
+    }).catch(() => {
+      wakeWaiter(true)
+    })
+
+    // 逐段播放：拿到一段播一段，播完等下一段
+    while (true) {
+      if (status.value !== 'speaking') {
+        stopLipSyncTimer()
+        onEnd()
+        return
+      }
+
+      const hasMore = await waitForNextSegment()
+      if (!hasMore && segmentQueue.length === 0) {
+        // 流失败且没有拿到任何段 → 跳到 catch 走回退逻辑
+        if (streamFailed) throw new Error('stream_failed')
+        break
+      }
+
+      const seg = segmentQueue.shift()!
+      await playOneSegmentWithLipSync(seg)
+    }
+
+    stopLipSyncTimer()
+    onEnd()
+    await streamPromise
   } catch {
-    speakBrowser(cleanText, onEnd)
+    // 流式接口失败时回退到单段模式
+    try {
+      const audioBlob = await synthesizeSpeech(
+        cleanText,
+        avatarConfig.value.voice.voiceName,
+        avatarConfig.value.voice.rate,
+      )
+      voiceMode.value = 'edge'
+      await playAudioWithSyncedLip(audioBlob, cleanText, onEnd)
+    } catch {
+      speakBrowser(cleanText, onEnd)
+    }
   }
 }
 
@@ -507,27 +652,27 @@ function precomputeMouthFrames(text: string, totalFrames: number): number[] {
   for (let f = 0; f < totalFrames; f++) {
     const startIdx = Math.floor(f * charsPerFrame)
     const endIdx = Math.floor((f + 1) * charsPerFrame)
-    let maxOpen = 0.08
+    let maxOpen = 0.06
     for (let i = startIdx; i < Math.min(endIdx, chars.length); i++) {
       const ch = chars[i]
       // 标点 → 闭嘴
-      if (/[，。！？、；：,.!?；：\n]/.test(ch)) { maxOpen = Math.max(maxOpen, 0.02); continue }
-      // 大口元音 → 张大嘴
-      if (/[啊阿哇凹噢哦喔饿哦俄恶诶哎哀爱奥澳傲熬袄嗷坳拗]/.test(ch)) { maxOpen = Math.max(maxOpen, 0.75); continue }
-      // 中口元音
-      if (/[呀牙鸭雅压崖涯哑亚讶轧娅蚜氩砑伢]/i.test(ch)) { maxOpen = Math.max(maxOpen, 0.55); continue }
-      // 一般开口
-      if (/[大那拿哪纳钠娜呐捺衲镎塔他她它踏塌榻獭挞蹋遢嗒闼哈蛤铪虾瞎匣侠峡狭暇霞辖下吓夏厦唬懗]/.test(ch)) { maxOpen = Math.max(maxOpen, 0.45); continue }
-      if (/[吧把八拔坝霸罢爸扒叭巴芭疤笆粑捌茇岜灞钯魃]/.test(ch)) { maxOpen = Math.max(maxOpen, 0.40); continue }
-      if (/[吗妈马骂麻码蚂玛嘛蟆杩犸嬷]/.test(ch)) { maxOpen = Math.max(maxOpen, 0.40); continue }
-      if (/[啦拉辣腊蜡喇垃剌藜邋旯砬瘌]/.test(ch)) { maxOpen = Math.max(maxOpen, 0.40); continue }
-      // 闭口辅音 → 微张
-      if (/[不布步部补捕卜簿哺怖埠埔卟逋瓿晡钚醭]/.test(ch)) { maxOpen = Math.max(maxOpen, 0.12); continue }
-      if (/[目木母亩幕牧墓慕穆暮牟拇募沐牡睦姆姥幂苜仫坶苜]/.test(ch)) { maxOpen = Math.max(maxOpen, 0.12); continue }
-      // 默认中等开口
-      maxOpen = Math.max(maxOpen, 0.28)
+      if (/[，。！？、；：,.!?；：\n]/.test(ch)) { maxOpen = Math.max(maxOpen, 0.01); continue }
+      // 大口元音 → 张大嘴（夸张）
+      if (/[啊阿哇凹噢哦喔饿哦俄恶诶哎哀爱奥澳傲熬袄嗷坳拗]/.test(ch)) { maxOpen = Math.max(maxOpen, 0.98); continue }
+      // 中口元音（张大）
+      if (/[呀牙鸭雅压崖涯哑亚讶轧娅蚜氩砑伢]/i.test(ch)) { maxOpen = Math.max(maxOpen, 0.85); continue }
+      // 一般开口（大幅提升）
+      if (/[大那拿哪纳钠娜呐捺衲镎塔他她它踏塌榻獭挞蹋遢嗒闼哈蛤铪虾瞎匣侠峡狭暇霞辖下吓夏厦唬懗]/.test(ch)) { maxOpen = Math.max(maxOpen, 0.75); continue }
+      if (/[吧把八拔坝霸罢爸扒叭巴芭疤笆粑捌茇岜灞钯魃]/.test(ch)) { maxOpen = Math.max(maxOpen, 0.70); continue }
+      if (/[吗妈马骂麻码蚂玛嘛蟆杩犸嬷]/.test(ch)) { maxOpen = Math.max(maxOpen, 0.70); continue }
+      if (/[啦拉辣腊蜡喇垃剌藜邋旯砬瘌]/.test(ch)) { maxOpen = Math.max(maxOpen, 0.70); continue }
+      // 闭口辅音 → 适度张开
+      if (/[不布步部补捕卜簿哺怖埠埔卟逋瓿晡钚醭]/.test(ch)) { maxOpen = Math.max(maxOpen, 0.30); continue }
+      if (/[目木母亩幕牧墓慕穆暮牟拇募沐牡睦姆姥幂苜仫坶苜]/.test(ch)) { maxOpen = Math.max(maxOpen, 0.30); continue }
+      // 默认中等偏大开口
+      maxOpen = Math.max(maxOpen, 0.50)
     }
-    frames.push(Math.min(1, maxOpen + (Math.random() - 0.5) * 0.06))
+    frames.push(Math.min(1, maxOpen + (Math.random() - 0.5) * 0.08))
   }
   return frames
 }
@@ -537,7 +682,8 @@ let lipSyncTimer: ReturnType<typeof setInterval> | null = null
 function stopLipSyncTimer() {
   if (lipSyncTimer) { clearInterval(lipSyncTimer); lipSyncTimer = null }
   mouthOpen.value = 0
-  setLive2DMouth(0)
+  live2dMouthOverride = 0
+  live2dMouthActive = false
 }
 
 async function playAudioWithSyncedLip(audioBlob: Blob, text: string, onEnd: () => void) {
@@ -547,18 +693,10 @@ async function playAudioWithSyncedLip(audioBlob: Blob, text: string, onEnd: () =
   const url = URL.createObjectURL(audioBlob)
   const audio = new Audio(url)
 
-  // 等待音频加载到能读取时长
-  await new Promise<void>((resolve) => {
-    const onReady = () => { audio.removeEventListener('loadedmetadata', onReady); audio.removeEventListener('canplay', onReady); resolve() }
-    audio.addEventListener('loadedmetadata', onReady)
-    audio.addEventListener('canplay', onReady)
-    // 超时保护：500ms后无论如何都继续
-    setTimeout(resolve, 500)
-  })
-
-  const duration = audio.duration || estimateSpeechDuration(text)
-  const fps = 30
-  const totalFrames = Math.max(1, Math.round(duration * fps))
+  // 使用估算时长，不等 metadata
+  const estimatedDuration = estimateSpeechDuration(text)
+  const fps = 60
+  const totalFrames = Math.max(1, Math.round(estimatedDuration * fps))
   const mouthFrames = precomputeMouthFrames(text, totalFrames)
 
   const onAudioEnd = () => {
@@ -573,16 +711,17 @@ async function playAudioWithSyncedLip(audioBlob: Blob, text: string, onEnd: () =
     speakBrowser(text, onEnd)
   }
 
-  // 播放期间以 30fps 驱动口型，完全同步于音频播放进度
-  const startedAt = performance.now()
+  // 立即启动口型同步，优先使用实际时长
   lipSyncTimer = setInterval(() => {
     if (!audio || audio.paused || audio.ended) {
-      // 音频结束时如果定时器还没清掉
       if (audio?.ended) stopLipSyncTimer()
       return
     }
     const playbackTime = audio.currentTime
-    const progress = duration > 0 ? playbackTime / duration : 0
+    const dur = (audio.duration && isFinite(audio.duration) && audio.duration > 0)
+      ? audio.duration
+      : estimatedDuration
+    const progress = dur > 0 ? playbackTime / dur : 0
     const frameIdx = Math.min(totalFrames - 1, Math.floor(progress * totalFrames))
     const value = mouthFrames[frameIdx] || 0.15
     mouthOpen.value = value
@@ -591,6 +730,63 @@ async function playAudioWithSyncedLip(audioBlob: Blob, text: string, onEnd: () =
 
   audioEl = audio
   try { await audio.play() } catch { audio.onerror?.(new Event('error')) }
+}
+
+/** 播放单段音频并驱动口型同步 — 优化版：跳过 metadata 等待，立即播放 */
+function playOneSegmentWithLipSync(seg: { text: string; audio_base64: string }): Promise<void> {
+  const segText = seg.text
+  const audioBlob = base64ToBlob(seg.audio_base64, 'audio/mpeg')
+  const url = URL.createObjectURL(audioBlob)
+  const audio = new Audio(url)
+
+  // 预计算口型帧，不等 metadata
+  const estimatedDuration = estimateSpeechDuration(segText)
+  const fps = 60
+  const totalFrames = Math.max(1, Math.round(estimatedDuration * fps))
+  const mouthFrames = precomputeMouthFrames(segText, totalFrames)
+
+  return new Promise<void>((resolve) => {
+    let resolved = false
+    const cleanup = () => {
+      if (resolved) return
+      resolved = true
+      stopLipSyncTimer()
+      URL.revokeObjectURL(url)
+      resolve()
+    }
+
+    audio.onended = cleanup
+    audio.onerror = cleanup
+
+    // 立即启动口型同步定时器，使用估算时长
+    lipSyncTimer = setInterval(() => {
+      if (!audio || audio.paused || audio.ended) {
+        if (audio?.ended) cleanup()
+        return
+      }
+      const playbackTime = audio.currentTime
+      // 优先使用实际时长，未知时回退到估算值
+      const dur = (audio.duration && isFinite(audio.duration) && audio.duration > 0)
+        ? audio.duration
+        : estimatedDuration
+      const progress = dur > 0 ? playbackTime / dur : 0
+      const frameIdx = Math.min(totalFrames - 1, Math.floor(progress * totalFrames))
+      const value = mouthFrames[frameIdx] || 0.15
+      mouthOpen.value = value
+      setLive2DMouth(value)
+    }, 1000 / fps)
+
+    audioEl = audio
+    // 立即播放，不等 metadata — 浏览器会自动缓冲并尽快开始播放
+    audio.play().catch(() => {
+      // 立即播放失败（浏览器尚未准备好），等待 canplay 后再试
+      audio.addEventListener('canplay', () => {
+        audio.play().catch(cleanup)
+      }, { once: true })
+      // 超时保护：2s 后仍未播放则放弃
+      setTimeout(cleanup, 2000)
+    })
+  })
 }
 
 function estimateSpeechDuration(text: string): number {
@@ -619,7 +815,7 @@ function speakBrowser(text: string, cb: () => void, showWarning = true) {
 
   // 用文本预计算口型帧，估算时长
   const duration = estimateSpeechDuration(text)
-  const totalFrames = Math.max(1, Math.round(duration * 30))
+  const totalFrames = Math.max(1, Math.round(duration * 60))
   const mouthFrames = precomputeMouthFrames(text, totalFrames)
 
   const startedAt = performance.now()
@@ -631,7 +827,7 @@ function speakBrowser(text: string, cb: () => void, showWarning = true) {
     const value = mouthFrames[frameIdx] || 0.15
     mouthOpen.value = value
     setLive2DMouth(value)
-  }, 33) // 30fps
+  }, 1000 / 60) // 60fps
 
   utterance.onstart = () => { /* 已通过定时器驱动 */ }
   utterance.onend = () => { stopLipSyncTimer(); cb() }
@@ -640,6 +836,8 @@ function speakBrowser(text: string, cb: () => void, showWarning = true) {
 }
 
 function stopSpeaking(resetStatus = true) {
+  currentTtsAbort?.abort()
+  currentTtsAbort = null
   window.speechSynthesis?.cancel()
   stopLipSyncTimer()
   audioEl?.pause()
@@ -776,21 +974,10 @@ function releaseAudioUrl() {
 }
 
 function setLive2DMouth(value: number) {
-  const coreModel = live2dModel?.internalModel?.coreModel
-  if (!coreModel) return
-  const normalized = Math.max(0, Math.min(1, value))
-  for (const paramName of live2dMouthParamIds) {
-    try {
-      const index = coreModel.getParameterIndex?.(paramName)
-      if (typeof index === 'number' && index >= 0 && coreModel.setParameterValueByIndex) {
-        coreModel.setParameterValueByIndex(index, normalized)
-        continue
-      }
-      coreModel.setParameterValueById?.(paramName, normalized)
-    } catch {
-      // 忽略不匹配的模型参数名，继续尝试下一个候选参数。
-    }
-  }
+  // 不直接设置参数 — 模型 update 会覆盖
+  // 改为写入覆盖变量，由 internalModel.update 拦截器在模型更新后强制写入
+  live2dMouthOverride = value
+  live2dMouthActive = value > 0.001
 }
 
 onBeforeUnmount(() => {
@@ -1220,7 +1407,7 @@ nav a {
   transform: scaleY(var(--mouth-scale));
   transform-origin: 50% 45%;
   opacity: 0;
-  transition: height 80ms linear, opacity 100ms ease;
+  transition: height 40ms linear, opacity 50ms ease;
   box-shadow: inset 0 -2px 3px rgb(0 0 0 / 0.35);
 }
 

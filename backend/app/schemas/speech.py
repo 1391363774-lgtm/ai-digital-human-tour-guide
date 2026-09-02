@@ -12,3 +12,9 @@ class TtsRequest(BaseModel):
     text: str
     voice: str | None = None
     rate: float = 1.0
+
+
+class TtsSegmentRequest(BaseModel):
+    text: str
+    voice: str | None = None
+    rate: float = 1.0
