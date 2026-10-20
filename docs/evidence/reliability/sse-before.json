@@ -1,0 +1,248 @@
+{
+  "scenario": "two 10x150ms fake model streams, cancel A after first text",
+  "metrics": {
+    "health_latency_ms": 1513.97,
+    "second_stream_first_text_ms": 3027.36,
+    "cancel_to_upstream_close_ms": -1.43,
+    "cancelled_stream_chunks": 10,
+    "both_upstreams_closed": true
+  },
+  "client_timeline": [
+    {
+      "event": "A_request",
+      "ms": 236.4
+    },
+    {
+      "event": "health_request",
+      "ms": 337.21
+    },
+    {
+      "event": "B_request",
+      "ms": 341.46
+    },
+    {
+      "event": "A_conversation_id",
+      "ms": 1843.6
+    },
+    {
+      "event": "A_text",
+      "ms": 1843.69
+    },
+    {
+      "event": "A_cancel_requested",
+      "ms": 1843.69
+    },
+    {
+      "event": "A_client_closed",
+      "ms": 1848.28
+    },
+    {
+      "event": "health_response",
+      "ms": 1851.18
+    },
+    {
+      "event": "B_conversation_id",
+      "ms": 3368.65
+    },
+    {
+      "event": "B_text",
+      "ms": 3368.82
+    },
+    {
+      "event": "B_text",
+      "ms": 3368.85
+    },
+    {
+      "event": "B_text",
+      "ms": 3368.86
+    },
+    {
+      "event": "B_text",
+      "ms": 3368.88
+    },
+    {
+      "event": "B_text",
+      "ms": 3368.89
+    },
+    {
+      "event": "B_text",
+      "ms": 3368.9
+    },
+    {
+      "event": "B_text",
+      "ms": 3368.91
+    },
+    {
+      "event": "B_text",
+      "ms": 3368.92
+    },
+    {
+      "event": "B_text",
+      "ms": 3368.94
+    },
+    {
+      "event": "B_text",
+      "ms": 3368.95
+    },
+    {
+      "event": "B_done",
+      "ms": 3368.96
+    },
+    {
+      "event": "B_client_closed",
+      "ms": 3372.18
+    }
+  ],
+  "server_timeline": [
+    {
+      "event": "health",
+      "label": "",
+      "ms": -1.99
+    },
+    {
+      "event": "prepare",
+      "label": "A",
+      "ms": 323.6
+    },
+    {
+      "event": "upstream_open",
+      "label": "A",
+      "ms": 324.64
+    },
+    {
+      "event": "upstream_chunk",
+      "label": "A",
+      "ms": 475.82
+    },
+    {
+      "event": "upstream_chunk",
+      "label": "A",
+      "ms": 626.87
+    },
+    {
+      "event": "upstream_chunk",
+      "label": "A",
+      "ms": 778.34
+    },
+    {
+      "event": "upstream_chunk",
+      "label": "A",
+      "ms": 929.85
+    },
+    {
+      "event": "upstream_chunk",
+      "label": "A",
+      "ms": 1081.39
+    },
+    {
+      "event": "upstream_chunk",
+      "label": "A",
+      "ms": 1233.43
+    },
+    {
+      "event": "upstream_chunk",
+      "label": "A",
+      "ms": 1385.01
+    },
+    {
+      "event": "upstream_chunk",
+      "label": "A",
+      "ms": 1536.82
+    },
+    {
+      "event": "upstream_chunk",
+      "label": "A",
+      "ms": 1689.97
+    },
+    {
+      "event": "upstream_chunk",
+      "label": "A",
+      "ms": 1841.31
+    },
+    {
+      "event": "upstream_close",
+      "label": "A",
+      "ms": 1842.26
+    },
+    {
+      "event": "persist",
+      "label": "A",
+      "ms": 1842.81
+    },
+    {
+      "event": "health",
+      "label": "",
+      "ms": 1845.51
+    },
+    {
+      "event": "prepare",
+      "label": "B",
+      "ms": 1846.87
+    },
+    {
+      "event": "upstream_open",
+      "label": "B",
+      "ms": 1847.74
+    },
+    {
+      "event": "upstream_chunk",
+      "label": "B",
+      "ms": 1999.5
+    },
+    {
+      "event": "upstream_chunk",
+      "label": "B",
+      "ms": 2151.15
+    },
+    {
+      "event": "upstream_chunk",
+      "label": "B",
+      "ms": 2303.23
+    },
+    {
+      "event": "upstream_chunk",
+      "label": "B",
+      "ms": 2454.6
+    },
+    {
+      "event": "upstream_chunk",
+      "label": "B",
+      "ms": 2605.95
+    },
+    {
+      "event": "upstream_chunk",
+      "label": "B",
+      "ms": 2759.1
+    },
+    {
+      "event": "upstream_chunk",
+      "label": "B",
+      "ms": 2911.27
+    },
+    {
+      "event": "upstream_chunk",
+      "label": "B",
+      "ms": 3063.52
+    },
+    {
+      "event": "upstream_chunk",
+      "label": "B",
+      "ms": 3215.38
+    },
+    {
+      "event": "upstream_chunk",
+      "label": "B",
+      "ms": 3366.78
+    },
+    {
+      "event": "upstream_close",
+      "label": "B",
+      "ms": 3367.4
+    },
+    {
+      "event": "persist",
+      "label": "B",
+      "ms": 3368.06
+    }
+  ]
+}

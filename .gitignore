@@ -37,6 +37,11 @@ tts-lipsync-deploy-prompt.md
 .vscode/
 *.local
 
+# Raw local test traces may contain workstation paths. Portable timings and
+# the execution summary under docs/evidence/reliability remain reviewable.
+docs/evidence/reliability/regression-*.txt
+docs/evidence/reliability/*.xml
+
 # Build / packaging artifacts (PyInstaller etc.)
 build_pyinstaller/
 dist_exe/

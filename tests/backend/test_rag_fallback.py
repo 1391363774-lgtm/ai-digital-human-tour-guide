@@ -27,6 +27,8 @@ def test_vector_store_failure_falls_back_to_lexical_search():
     RagService._cache.clear()
     RagService._vector_disabled_until = 0
     service = object.__new__(RagService)
+    service._generation = lambda: (0, 0)
+    service._current_vector_results = lambda hits: hits
     service.embedding_service = StubEmbeddingService()
     service.vector_store = BrokenVectorStore()
     service._spot_name_boost = lambda *args, **kwargs: []

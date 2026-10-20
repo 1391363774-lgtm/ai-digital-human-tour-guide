@@ -1,0 +1,198 @@
+{
+  "scenario": "two 10x150ms fake model streams, cancel A after first text",
+  "metrics": {
+    "health_latency_ms": 16.53,
+    "second_stream_first_text_ms": 169.28,
+    "cancel_to_upstream_close_ms": 9.86,
+    "cancelled_stream_chunks": 1,
+    "both_upstreams_closed": true
+  },
+  "client_timeline": [
+    {
+      "event": "A_request",
+      "ms": 241.53
+    },
+    {
+      "event": "health_request",
+      "ms": 341.88
+    },
+    {
+      "event": "B_request",
+      "ms": 345.87
+    },
+    {
+      "event": "A_conversation_id",
+      "ms": 349.74
+    },
+    {
+      "event": "health_response",
+      "ms": 358.41
+    },
+    {
+      "event": "B_conversation_id",
+      "ms": 358.8
+    },
+    {
+      "event": "A_text",
+      "ms": 497.66
+    },
+    {
+      "event": "A_cancel_requested",
+      "ms": 497.68
+    },
+    {
+      "event": "A_client_closed",
+      "ms": 514.31
+    },
+    {
+      "event": "B_text",
+      "ms": 515.15
+    },
+    {
+      "event": "B_text",
+      "ms": 679.03
+    },
+    {
+      "event": "B_text",
+      "ms": 837.88
+    },
+    {
+      "event": "B_text",
+      "ms": 997.59
+    },
+    {
+      "event": "B_text",
+      "ms": 1161.15
+    },
+    {
+      "event": "B_text",
+      "ms": 1324.62
+    },
+    {
+      "event": "B_text",
+      "ms": 1479.51
+    },
+    {
+      "event": "B_text",
+      "ms": 1636.85
+    },
+    {
+      "event": "B_text",
+      "ms": 1792.01
+    },
+    {
+      "event": "B_text",
+      "ms": 1947.92
+    },
+    {
+      "event": "B_done",
+      "ms": 1952.44
+    },
+    {
+      "event": "B_client_closed",
+      "ms": 1961.91
+    }
+  ],
+  "server_timeline": [
+    {
+      "event": "health",
+      "label": "",
+      "ms": -2.34
+    },
+    {
+      "event": "prepare",
+      "label": "A",
+      "ms": 334.99
+    },
+    {
+      "event": "upstream_open",
+      "label": "A",
+      "ms": 336.65
+    },
+    {
+      "event": "health",
+      "label": "",
+      "ms": 354.58
+    },
+    {
+      "event": "prepare",
+      "label": "B",
+      "ms": 356.29
+    },
+    {
+      "event": "upstream_open",
+      "label": "B",
+      "ms": 357.5
+    },
+    {
+      "event": "upstream_chunk",
+      "label": "A",
+      "ms": 496.44
+    },
+    {
+      "event": "upstream_close",
+      "label": "A",
+      "ms": 507.54
+    },
+    {
+      "event": "upstream_chunk",
+      "label": "B",
+      "ms": 508.37
+    },
+    {
+      "event": "upstream_chunk",
+      "label": "B",
+      "ms": 668.7
+    },
+    {
+      "event": "upstream_chunk",
+      "label": "B",
+      "ms": 837.25
+    },
+    {
+      "event": "upstream_chunk",
+      "label": "B",
+      "ms": 996.33
+    },
+    {
+      "event": "upstream_chunk",
+      "label": "B",
+      "ms": 1159.83
+    },
+    {
+      "event": "upstream_chunk",
+      "label": "B",
+      "ms": 1323.85
+    },
+    {
+      "event": "upstream_chunk",
+      "label": "B",
+      "ms": 1478.3
+    },
+    {
+      "event": "upstream_chunk",
+      "label": "B",
+      "ms": 1635.39
+    },
+    {
+      "event": "upstream_chunk",
+      "label": "B",
+      "ms": 1791.21
+    },
+    {
+      "event": "upstream_chunk",
+      "label": "B",
+      "ms": 1947.14
+    },
+    {
+      "event": "upstream_close",
+      "label": "B",
+      "ms": 1948.54
+    },
+    {
+      "event": "persist",
+      "label": "B",
+      "ms": 1951.22
+    }
+  ]
+}

@@ -6,12 +6,15 @@ import re
 import time
 from hashlib import sha256
 from dataclasses import dataclass
+from threading import RLock
 from typing import Any
 
 import sqlalchemy
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.core.knowledge_revision import retrieval_generation
+from app.models.knowledge import KnowledgeChunk
 from app.models.scenic import ScenicSpot
 from app.repositories.knowledge_repository import KnowledgeDocumentRepository
 from app.services.embedding_service import EmbeddingService
@@ -29,7 +32,8 @@ class RagHit:
 
 
 class RagService:
-    _cache: dict[str, tuple[float, list[RagHit]]] = {}
+    _cache: dict[tuple, tuple[float, list[RagHit]]] = {}
+    _cache_lock = RLock()
     _cache_ttl_seconds = 30 * 60
     _vector_disabled_until = 0.0
     _vector_retry_seconds = 60
@@ -45,17 +49,18 @@ class RagService:
         if not normalized_query:
             return []
 
-        cache_key = make_cache_key(normalized_query, top_k)
-        cached = self._cache.get(cache_key)
+        cache_key = (*self._generation(), make_cache_key(normalized_query, top_k))
         now = time.time()
-        if cached and now - cached[0] <= self._cache_ttl_seconds:
-            return cached[1]
+        cached = self._cached(cache_key, now)
+        if cached is not None:
+            return cached
 
         vector_hits: list[RagHit] = []
         if now >= type(self)._vector_disabled_until:
             try:
                 query_embedding = self.embedding_service.embed_query(normalized_query)
                 results = self.vector_store.search(query_embedding.vector, top_k=top_k * 2)
+                results = self._current_vector_results(results)
                 if results:
                     vector_hits = [self._hit_from_vector_result(item) for item in results]
             except Exception as exc:
@@ -70,8 +75,7 @@ class RagService:
             spot_name_hits = self._fallback_lexical_search(normalized_query, top_k=top_k)
 
         merged = _merge_and_dedup(vector_hits + spot_name_hits, top_k=top_k)
-        self._cache[cache_key] = (now, merged)
-        self._prune_cache(now)
+        self._store_cached(cache_key, now, merged)
         return merged
 
     def fast_search(self, query: str, top_k: int = 3) -> list[RagHit]:
@@ -79,18 +83,46 @@ class RagService:
         if not normalized_query:
             return []
 
-        cache_key = make_cache_key(f"fast:{normalized_query}", top_k)
-        cached = self._cache.get(cache_key)
+        cache_key = (*self._generation(), make_cache_key(f"fast:{normalized_query}", top_k))
         now = time.time()
-        if cached and now - cached[0] <= self._cache_ttl_seconds:
-            return cached[1]
+        cached = self._cached(cache_key, now)
+        if cached is not None:
+            return cached
 
         hits = self._spot_name_boost(query, [], normalized_query)
         hits.extend(self._fallback_lexical_search(normalized_query, top_k=top_k))
         merged = _merge_and_dedup(hits, top_k=top_k)
-        self._cache[cache_key] = (now, merged)
-        self._prune_cache(now)
+        self._store_cached(cache_key, now, merged)
         return merged
+
+    def _generation(self):
+        return retrieval_generation(self.db)
+
+    def _cached(self, key, now):
+        with self._cache_lock:
+            cached = self._cache.get(key)
+            if cached and now - cached[0] <= self._cache_ttl_seconds:
+                return list(cached[1])
+        return None
+
+    def _store_cached(self, key, now, hits):
+        # An in-flight reader can only populate its old generation, never the
+        # new key. Lock the compound write/prune operation, not model/DB I/O.
+        with self._cache_lock:
+            self._cache[key] = (now, list(hits))
+            self._prune_cache(now)
+
+    def _current_vector_results(self, results):
+        """Deleted/rechunked SQL content must not reappear from Chroma."""
+        if not results:
+            return []
+        ids = [item.id for item in results]
+        chunks = self.db.scalars(
+            select(KnowledgeChunk).where(KnowledgeChunk.vector_id.in_(ids))
+            .execution_options(populate_existing=True)
+        ).all()
+        current = {chunk.vector_id: chunk.content for chunk in chunks}
+        return [item for item in results if current.get(item.id) == item.content]
 
     def build_context(self, query: str, top_k: int = 5, max_chars: int = 2400) -> str:
         hits = self.search(query, top_k=top_k)

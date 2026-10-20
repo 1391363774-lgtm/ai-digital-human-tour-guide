@@ -3,6 +3,7 @@ from __future__ import annotations
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.core.knowledge_revision import bump_knowledge_revision
 from app.models.knowledge import KnowledgeChunk, KnowledgeDocument
 from app.models.scenic import ScenicSpot
 from app.services.document_chunker import KnowledgeChunkDraft
@@ -21,6 +22,7 @@ class KnowledgeDocumentRepository:
             uploaded_by=uploaded_by,
         )
         self.db.add(document)
+        bump_knowledge_revision(self.db)
         self.db.commit()
         self.db.refresh(document)
         return document
@@ -39,6 +41,7 @@ class KnowledgeDocumentRepository:
 
     def delete(self, document: KnowledgeDocument) -> None:
         self.db.delete(document)
+        bump_knowledge_revision(self.db)
         self.db.commit()
 
     def mark_parse_failed(self, document: KnowledgeDocument, message: str) -> KnowledgeDocument:
@@ -71,7 +74,9 @@ class KnowledgeDocumentRepository:
             chunks.append(chunk)
 
         document.status = "chunked"
+        document.version += 1
         document.error_message = None
+        bump_knowledge_revision(self.db)
         self.db.commit()
         for chunk in chunks:
             self.db.refresh(chunk)
@@ -92,6 +97,7 @@ class KnowledgeDocumentRepository:
             if document is not None:
                 document.status = "indexed"
                 document.error_message = None
+        bump_knowledge_revision(self.db)
         self.db.commit()
 
     def lexical_search_chunks(self, query: str, limit: int = 5) -> list[KnowledgeChunk]:

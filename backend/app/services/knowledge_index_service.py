@@ -18,12 +18,14 @@ class KnowledgeIndexService:
     def index_document(self, document_id: int) -> dict[str, int]:
         chunks = self.repository.list_chunks_for_indexing(document_id=document_id)
         if not chunks:
+            self.repository.mark_chunks_indexed([], [])
             return {"indexed_count": 0}
         return self._index_chunks(chunks)
 
     def index_all(self) -> dict[str, int]:
         chunks = self.repository.list_chunks_for_indexing()
         if not chunks:
+            self.repository.mark_chunks_indexed([], [])
             return {"indexed_count": 0}
         return self._index_chunks(chunks)
 

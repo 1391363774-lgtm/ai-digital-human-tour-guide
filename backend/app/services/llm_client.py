@@ -6,9 +6,16 @@ import urllib.request
 import urllib.parse
 import http.client
 import ssl
+import logging
+from contextlib import aclosing, closing
 from dataclasses import dataclass
 
+import httpx
+from starlette.concurrency import run_in_threadpool
+
 from app.core.config import get_settings
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True)
@@ -43,13 +50,52 @@ class BaseLLMClient:
         """
         yield self.chat(messages, temperature=temperature).content
 
+    async def achat_stream(self, messages: list[ChatMessage], temperature: float = 0.1):
+        """Local/non-streaming implementations run outside the event loop."""
+        response = await run_in_threadpool(self.chat, messages, temperature)
+        yield response.content
+
 
 class OpenAICompatibleLLMClient(BaseLLMClient):
-    def __init__(self, provider: str, base_url: str, api_key: str, model: str) -> None:
+    def __init__(self, provider: str, base_url: str, api_key: str, model: str, *,
+                 async_transport: httpx.AsyncBaseTransport | None = None) -> None:
         self.provider = provider
         self.base_url = base_url.rstrip("/")
         self.api_key = api_key
         self.model = model
+        self.async_transport = async_transport
+
+    async def achat_stream(self, messages: list[ChatMessage], temperature: float = 0.1):
+        """Async socket reads allow other requests and disconnect cancellation."""
+        payload = {
+            "model": self.model,
+            "messages": [{"role": item.role, "content": item.content} for item in messages],
+            "temperature": temperature, "max_tokens": 800, "stream": True,
+        }
+        try:
+            async with httpx.AsyncClient(
+                timeout=httpx.Timeout(60, connect=10), transport=self.async_transport,
+            ) as client:
+                async with client.stream(
+                    "POST", f"{self.base_url}/chat/completions", json=payload,
+                    headers={"Authorization": f"Bearer {self.api_key}", "Accept": "text/event-stream"},
+                ) as response:
+                    if response.status_code >= 400:
+                        raise LLMClientError(f"{self.provider} 调用失败：HTTP {response.status_code}")
+                    async for line in response.aiter_lines():
+                        if not line.startswith("data:"):
+                            continue
+                        data = line[5:].strip()
+                        if data == "[DONE]":
+                            return
+                        try:
+                            content = json.loads(data)["choices"][0]["delta"].get("content")
+                        except (json.JSONDecodeError, KeyError, IndexError, TypeError):
+                            continue
+                        if isinstance(content, str) and content:
+                            yield content
+        except httpx.HTTPError as exc:
+            raise LLMClientError(f"{self.provider} 网络不可用：{type(exc).__name__}") from exc
 
     def chat(self, messages: list[ChatMessage], temperature: float = 0.1) -> LLMResponse:
         payload = {
@@ -158,7 +204,7 @@ class LocalFallbackLLMClient(BaseLLMClient):
 class FailoverLLMClient(BaseLLMClient):
     """按配置顺序尝试模型，并始终以本地知识库回答收尾。
 
-    流式调用只有在尚未输出任何 token 时才会切换到下一模型，避免把两个模型的
+    流式调用只有在尚未输出有效文本时才会切换到下一模型，避免把两个模型的
     半段回答拼在一起。这一约束也让故障行为更容易复现和解释。
     """
 
@@ -174,7 +220,10 @@ class FailoverLLMClient(BaseLLMClient):
         errors: list[str] = []
         for client in self.clients:
             try:
-                return client.chat(messages, temperature=temperature)
+                response = client.chat(messages, temperature=temperature)
+                if not isinstance(response.content, str) or not response.content.strip():
+                    raise LLMClientError(f"{client.provider} 未返回有效文本")
+                return response
             except LLMClientError as exc:
                 errors.append(f"{client.provider}: {exc}")
         raise LLMClientError("；".join(errors) or "没有可用的语言模型")
@@ -184,11 +233,37 @@ class FailoverLLMClient(BaseLLMClient):
         for client in self.clients:
             emitted = False
             try:
-                for chunk in client.chat_stream(messages, temperature=temperature):
-                    emitted = True
-                    yield chunk
+                with closing(client.chat_stream(messages, temperature=temperature)) as stream:
+                    for chunk in stream:
+                        if not isinstance(chunk, str) or (not emitted and not chunk.strip()):
+                            continue
+                        emitted = True
+                        yield chunk
+                if not emitted:
+                    raise LLMClientError(f"{client.provider} 未返回有效文本")
                 return
             except LLMClientError as exc:
+                if emitted:
+                    raise
+                errors.append(f"{client.provider}: {exc}")
+        raise LLMClientError("；".join(errors) or "没有可用的语言模型")
+
+    async def achat_stream(self, messages: list[ChatMessage], temperature: float = 0.1):
+        errors: list[str] = []
+        for client in self.clients:
+            emitted = False
+            try:
+                async with aclosing(client.achat_stream(messages, temperature=temperature)) as stream:
+                    async for chunk in stream:
+                        if not isinstance(chunk, str) or (not emitted and not chunk.strip()):
+                            continue
+                        emitted = True
+                        yield chunk
+                if not emitted:
+                    raise LLMClientError(f"{client.provider} 未返回有效文本")
+                return
+            except LLMClientError as exc:
+                logger.warning("model_stream_failed provider=%s emitted=%s", client.provider, emitted)
                 if emitted:
                     raise
                 errors.append(f"{client.provider}: {exc}")

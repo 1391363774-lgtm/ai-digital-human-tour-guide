@@ -8,7 +8,7 @@
 
 - **知识增强问答**：文档上传、解析切分、Chroma 索引、景点名增强检索、低置信度拒答和来源返回。
 - **流式数字人讲解**：SSE 增量回答；首个完整句子就绪后提前启动分段 TTS，后续语音并行合成、顺序播放。
-- **双通道模型容错**：按 `LLM_PROVIDER` 选择 DeepSeek 或 Qwen 为主通道；首个 token 前失败时切换另一通道，两者不可用时回退本地知识库回答。流已经输出后不会切换模型，避免内容拼接。
+- **双通道模型容错**：按 `LLM_PROVIDER` 选择 DeepSeek 或 Qwen 为主通道；首个有效文本前异常或结束时仅有空白则切换另一通道，两者不可用时回退本地知识库回答。有效文本已经输出后不会切换模型，避免内容拼接。
 - **语音与形象**：faster-whisper 后端 ASR、edge-tts 中文语音、浏览器 Web Speech 降级；Live2D 口型随音频振幅驱动，模型加载失败时显示 SVG 后备形象。
 - **游客服务**：景点查询、路线推荐、收藏、历史记录、拍照识景、游客反馈。
 - **景区运营**：知识库/景点/数字人配置、行为数据导入、满意度与情绪统计、数据大屏。
@@ -108,6 +108,23 @@ python scripts\eval_qa_accuracy.py --base-url http://localhost:8000
 既有基线报告中，`LLM + top_k=5` 的关键词回答通过率为 **75%**、检索命中率为 **94%**、边界题拒答率为 **100%**（2026-07-30，100 题）。这些数字是自动关键词/检索代理指标，不等同于人工事实准确率；评测器现已增加数字边界与同义词组规则，修改模型、知识库或评分器后应重新运行。详见 [评测说明](docs/EVALUATION.md)。
 
 另有可移植的 [评测包](评测包/README.txt)，只依赖 Python 标准库，可测试本项目或其他 HTTP 问答接口。
+
+## 离线工程回归
+
+不需要模型 Key、PostgreSQL、Chroma 服务或语音模型：
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements-test.txt
+.\.venv\Scripts\python.exe -m pytest tests/backend -q
+.\.venv\Scripts\python.exe scripts/probe_sse_concurrency.py --assert-responsive --output sse-local.json
+```
+
+Linux 使用 `.venv/bin/python`。测试包括原有回归、空流备用切换、文本 SSE 并发/取消、知识变更缓存版本与 SQLite 迁移。
+GitHub Actions 配置见 `.github/workflows/backend-regression.yml`，本地通过不代表远端 CI 已运行。
+
+升级已有数据库必须在 `backend/` 执行 `alembic upgrade head`，新增的 `knowledge_revision` 表用于跨 worker 的缓存版本判断。
+工程变更、证据与运行边界见 [工程交付说明](docs/RELIABILITY_REVIEW.md)，学习验证任务见 [导师练习](docs/MENTORING.md)。
 
 ## 项目结构
 
