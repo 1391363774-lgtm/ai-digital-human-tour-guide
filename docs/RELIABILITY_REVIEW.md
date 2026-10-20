@@ -88,7 +88,7 @@ git diff --check
 
 Linux 替换为 `.venv/bin/python`。`tests/conftest.py` 显式清空两个 Key、使用 SQLite 并拒绝外部 socket 连接；独立 loopback 服务器只负责慢流测试。数据库 fixture 与 Chroma 替身在测试内创建，无需任何 Docker 服务。
 
-CI：`.github/workflows/backend-regression.yml`，push/PR/手动触发，Windows/Linux × Python3.11/3.13，安装同一 requirements-test，上传 JUnit。本次未推送分支，因此没有 GitHub Actions 运行链接，不能称远端 CI 已绿。[GitHub 官方 Python CI 文档](https://docs.github.com/en/actions/tutorials/build-and-test-code/python)。
+CI：`.github/workflows/backend-regression.yml`，push/PR/手动触发，Windows/Linux × Python3.11/3.13，安装同一 requirements-test，上传 JUnit。首次本地交付时尚未推送；2026-10-20 按用户要求推送后，代码提交 `30f76a2c3bee04c3d5c1fe374e18488f2f72f52c` 的四种环境均已通过 [GitHub Actions](https://github.com/1391363774-lgtm/ai-digital-human-tour-guide/actions/runs/39394009525)。可复核状态记录见 `evidence/reliability/github-sync.json`。[GitHub 官方 Python CI 文档](https://docs.github.com/en/actions/tutorials/build-and-test-code/python)。
 
 本机最终实际输出：`52 passed in 12.82s`（8项原有、44项新增参数化测试实例）。完整依赖一致性检查为 `No broken requirements found`。修复前精选新增场景为22失败/4通过；该数量包含新异步API当时不存在的失败，不能全部等同22个独立产品bug。
 
@@ -119,11 +119,11 @@ python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 - `.github/workflows/backend-regression.yml`、`.gitignore`、README、本文、MENTORING 与 evidence：CI、复现与能力证据。
 - `bench/code_assistant/*`：后续实验的固定任务、独立用例、可信快照自检和工作目录准备工具；不接入生产服务。
 
-所有变更保留在独立分支工作区，未覆盖旧 F 盘作品或 G 盘目录，未推送/合并远端。`git diff` 可看生产逻辑，测试/文档/CI 新文件一起审阅。
+所有变更保留在独立分支工作区，未覆盖旧 F 盘作品或 G 盘目录。2026-10-20 已推送到 `agent/reliability-20261020` 并创建 [PR #1](https://github.com/1391363774-lgtm/ai-digital-human-tour-guide/pull/1)，尚未合并 master。PR 的 Files changed 可同时审阅生产逻辑、测试、文档与 CI。
 
 测试命令、原始摘要、基准 SHA 与最终时序见 `evidence/reliability/execution.json`。原始本机 pytest 日志和 JUnit 留在同目录并被 gitignore 排除，避免公开工作站绝对路径；时间线与摘要不含真实游客数据/模型 Key。
 
-未验收：真实云模型连通性、生产负载、PostgreSQL 下的迁移/并发、物理 Chroma 清理、浏览器/语音端端到端、远端 CI、100 题重新评测。本次没有生成新的问答准确率，也没有宣称通过所有部署方式。
+未验收：真实云模型连通性、生产负载、PostgreSQL 下的迁移/并发、物理 Chroma 清理、浏览器/语音端端到端、100 题重新评测。本次没有生成新的问答准确率，也没有宣称通过所有部署方式。
 
 网络读超时不等于首有效文本的总体截止时间；如果上游不断发送心跳但不结束，仍需要后续加入总时限。本次只修复“正常结束但没有有效文本”与明确异常的备用行为。
 
