@@ -57,7 +57,7 @@ class ChatService:
         history_messages = [
             ChatMessage(role=message.role, content=message.content)
             for message in self.conversation_repository.list_recent_messages(conversation.id, limit=6)
-            if message.role in {"user", "assistant"}
+            if message.role == "user" or (message.role == "assistant" and message.status in {"completed", "refused"})
         ]
         self.conversation_repository.add_message(conversation, role="user", content=question)
 
@@ -84,7 +84,8 @@ class ChatService:
         return conversation, prompt.messages if not prompt.should_refuse else [], hits, refusal, None
 
     def persist_stream_answer(
-        self, conversation, answer: str, sources: list[RagHit], started_at: float
+        self, conversation, answer: str, sources: list[RagHit], started_at: float,
+        *, status: str = "completed", request_id: str | None = None, error_code: str | None = None,
     ) -> None:
         latency_ms = int((time.perf_counter() - started_at) * 1000)
         srcs = [
@@ -92,7 +93,8 @@ class ChatService:
             for hit in sources
         ]
         self.conversation_repository.add_message(
-            conversation, role="assistant", content=answer, sources=srcs, latency_ms=latency_ms
+            conversation, role="assistant", content=answer, sources=srcs, latency_ms=latency_ms,
+            status=status, request_id=request_id, error_code=error_code,
         )
 
     def answer(self, question: str, top_k: int = 5, conversation_id: int | None = None, fast: bool = False) -> ChatAnswer:
@@ -104,7 +106,7 @@ class ChatService:
         history_messages = [
             ChatMessage(role=message.role, content=message.content)
             for message in self.conversation_repository.list_recent_messages(conversation.id, limit=6)
-            if message.role in {"user", "assistant"}
+            if message.role == "user" or (message.role == "assistant" and message.status in {"completed", "refused"})
         ]
         self.conversation_repository.add_message(conversation, role="user", content=question)
         timing["history_ms"] = elapsed_ms(stage_at)
@@ -229,18 +231,20 @@ class ChatService:
             content=answer.answer,
             sources=sources,
             latency_ms=latency_ms,
+            status="refused" if answer.refused else "failed" if answer.provider == "fallback" else "completed",
+            error_code="model_unavailable" if answer.provider == "fallback" else None,
         )
 
     def _log_timing(self, question: str, timing: dict[str, int], started_at: float, provider: str) -> None:
         logger.info(
-            "chat_timing provider=%s total_ms=%s history_ms=%s rag_ms=%s prompt_ms=%s llm_ms=%s question=%s",
+            "chat_timing provider=%s total_ms=%s history_ms=%s rag_ms=%s prompt_ms=%s llm_ms=%s question_chars=%s",
             provider,
             elapsed_ms(started_at),
             timing.get("history_ms", 0),
             timing.get("rag_ms", 0),
             timing.get("prompt_ms", 0),
             timing.get("llm_ms", timing.get("llm_error_ms", 0)),
-            question[:80],
+            len(question),
         )
 
 

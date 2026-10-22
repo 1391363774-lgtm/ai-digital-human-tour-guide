@@ -2,6 +2,7 @@ import json
 import asyncio
 import logging
 import time
+from uuid import uuid4
 from contextlib import aclosing
 
 import anyio
@@ -67,45 +68,59 @@ async def chat_stream(
     db: Session = Depends(get_db),
 ):
     """Incremental text with async model I/O and disconnect cleanup."""
-    service = ChatService(db)
-    conversation, messages, hits, refusal, fast_answer = await run_in_threadpool(
-        service.prepare_stream,
-        payload.message, payload.top_k, payload.conversation_id, payload.fast,
-    )
     started_at = time.perf_counter()
+    request_id = uuid4().hex
+    service = ChatService(db)
+    def prepare():
+        result = service.prepare_stream(payload.message, payload.top_k, payload.conversation_id, payload.fast)
+        # Snapshot the scalar in the worker: an expired ORM object may issue SQL.
+        return result, result[0].id
+    (conversation, messages, hits, refusal, fast_answer), conversation_id = await run_in_threadpool(prepare)
+
+    def event(kind, **fields):
+        return f"data: {json.dumps({'type': kind, 'request_id': request_id, **fields}, ensure_ascii=False)}\n\n"
 
     async def event_stream():
-        if refusal:
-            yield f"data: {json.dumps({'type': 'refused', 'text': refusal})}\n\n"
-            yield f"data: {json.dumps({'type': 'done', 'conversation_id': conversation.id})}\n\n"
-            return
-
-        yield f"data: {json.dumps({'type': 'conversation_id', 'id': conversation.id})}\n\n"
-
-        if fast_answer:
-            yield f"data: {json.dumps({'type': 'text', 'text': fast_answer})}\n\n"
-            await run_in_threadpool(service.persist_stream_answer, conversation, fast_answer, hits, started_at)
-            yield f"data: {json.dumps({'type': 'done', 'conversation_id': conversation.id})}\n\n"
-            return
-
-        llm_client = get_llm_client()
         full_text = ""
+        status = "cancelled"
+        error_code = None
+        first_text_ms = None
         try:
-            async with aclosing(llm_client.achat_stream(messages)) as stream:
-                async for chunk in stream:
-                    full_text += chunk
-                    yield f"data: {json.dumps({'type': 'text', 'text': chunk})}\n\n"
-        except asyncio.CancelledError:
-            logger.info("text_stream_cancelled conversation_id=%s", conversation.id)
+            yield event("conversation_id", id=conversation_id)
+            yield event("source", sources=[{"content": h.content[:500], "score": h.score, "metadata": h.source} for h in hits])
+            if refusal or fast_answer:
+                full_text = refusal or fast_answer
+                first_text_ms = int((time.perf_counter() - started_at) * 1000)
+                yield event("refused" if refusal else "text", text=full_text)
+                status = "refused" if refusal else "completed"
+            else:
+                async with aclosing(get_llm_client().achat_stream(messages)) as stream:
+                    async for chunk in stream:
+                        if chunk.strip() and first_text_ms is None:
+                            first_text_ms = int((time.perf_counter() - started_at) * 1000)
+                        full_text += chunk
+                        yield event("text", text=chunk)
+                if not full_text.strip():
+                    raise LLMClientError("empty stream")
+                status = "completed"
+        except (asyncio.CancelledError, GeneratorExit):
+            status, error_code = "cancelled", "client_disconnected"
             raise
-        except LLMClientError as exc:
-            yield f"data: {json.dumps({'type': 'error', 'text': str(exc)})}\n\n"
-
-        # 保留已生成文本；异常文案不覆盖已输出的部分回答。
-        if full_text:
-            await run_in_threadpool(service.persist_stream_answer, conversation, full_text, hits, started_at)
-
-        yield f"data: {json.dumps({'type': 'done', 'conversation_id': conversation.id})}\n\n"
+        except Exception as exc:
+            status = "partial" if full_text.strip() else "failed"
+            error_code = "model_unavailable" if isinstance(exc, LLMClientError) else "internal_error"
+            logger.warning("chat_stream_failed request_id=%s exception_type=%s", request_id, type(exc).__name__)
+            yield event("error", text="回答未完成，请重试。" if full_text else "服务暂时不可用，请重试。",
+                        code=error_code, partial=bool(full_text.strip()), retryable=True)
+        finally:
+            # A single sequential Session user; cancellation must not interrupt the audit write.
+            with anyio.CancelScope(shield=True):
+                await run_in_threadpool(service.persist_stream_answer, conversation, full_text, hits, started_at,
+                                        status=status, request_id=request_id, error_code=error_code)
+            logger.info("chat_stream_finished request_id=%s status=%s first_text_ms=%s total_ms=%s",
+                        request_id, status, first_text_ms, int((time.perf_counter() - started_at) * 1000))
+        yield event("done", conversation_id=conversation_id, status=status, first_text_ms=first_text_ms,
+                    total_ms=int((time.perf_counter() - started_at) * 1000))
 
     return TextStreamingResponse(
         event_stream(),
@@ -114,5 +129,6 @@ async def chat_stream(
             "Cache-Control": "no-cache",
             "X-Accel-Buffering": "no",
             "Connection": "keep-alive",
+            "X-Request-ID": request_id,
         },
     )

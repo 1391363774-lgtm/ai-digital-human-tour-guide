@@ -125,6 +125,7 @@ GitHub Actions 配置见 `.github/workflows/backend-regression.yml`，本地通�
 
 升级已有数据库必须在 `backend/` 执行 `alembic upgrade head`，新增的 `knowledge_revision` 表用于跨 worker 的缓存版本判断。
 工程变更、证据与运行边界见 [工程交付说明](docs/RELIABILITY_REVIEW.md)，学习验证任务见 [导师练习](docs/MENTORING.md)。
+2026-10-22 起的增量工程证据见 [engineering-evidence](docs/engineering-evidence.md)，完成范围见 [progress](docs/progress.md)，讲解与实践见 [interview-guide](docs/interview-guide.md)。迁移 0004 新增回答终态字段；前端使用 `npm ci --ignore-scripts`、`npm test`、`npm run build` 验证。
 
 ## 项目结构
 

@@ -19,4 +19,5 @@ def test_existing_database_upgrade_seeds_revision(tmp_path):
     migrate("head")
     with sqlite3.connect(path) as connection:
         assert connection.execute("select id, revision from knowledge_revision").fetchall() == [(1, 0)]
-        assert connection.execute("select version_num from alembic_version").fetchone()[0] == "0003_knowledge_revision"
+        assert connection.execute("select version_num from alembic_version").fetchone()[0] == "0004_message_outcome"
+        assert {'status', 'request_id', 'error_code'} <= {row[1] for row in connection.execute('pragma table_info(messages)')}

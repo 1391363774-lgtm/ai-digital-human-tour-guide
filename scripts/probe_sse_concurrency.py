@@ -38,7 +38,7 @@ def serve(port: int, trace: Path) -> None:
             record("prepare", question)
             return SimpleNamespace(id=question), [SimpleNamespace(content=question)], [], None, None
 
-        def persist_stream_answer(self, *args):
+        def persist_stream_answer(self, *args, **kwargs):
             record("persist", args[0].id)
 
     class SlowBody(httpx.AsyncByteStream):

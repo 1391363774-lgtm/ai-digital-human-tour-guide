@@ -8,6 +8,9 @@ class MessageOut(BaseModel):
     role: str
     content: str
     latency_ms: int
+    status: str
+    request_id: str | None
+    error_code: str | None
     created_at: datetime
 
     model_config = {"from_attributes": True}

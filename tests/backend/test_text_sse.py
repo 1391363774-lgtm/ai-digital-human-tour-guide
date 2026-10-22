@@ -25,7 +25,7 @@ def test_sse_protocol_and_database_work_stays_off_event_loop(monkeypatch, mode):
             assert threading.get_ident() != main_thread
             return SimpleNamespace(id=1), [], [], "refused" if mode == "refusal" else None, "fast" if mode == "fast" else None
 
-        def persist_stream_answer(self, conversation, answer, *args):
+        def persist_stream_answer(self, conversation, answer, *args, **kwargs):
             assert threading.get_ident() != main_thread
             saved.append(answer)
 
@@ -47,7 +47,7 @@ def test_sse_protocol_and_database_work_stays_off_event_loop(monkeypatch, mode):
     events = asyncio.run(run())
     assert '"type": "done"' in events[-1]
     assert any('"type": "error"' in event for event in events) == ("error" in mode)
-    assert saved == ([] if mode in ("refusal", "early_error") else ["fast" if mode == "fast" else "first"])
+    assert saved == [{"refusal": "refused", "early_error": "", "fast": "fast"}.get(mode, "first")]
 
 
 def test_real_http_streams_progress_and_cancel(tmp_path):
@@ -69,6 +69,9 @@ def test_asgi24_send_failure_closes_generator_immediately(monkeypatch):
 
         def prepare_stream(self, *args):
             return SimpleNamespace(id=1), [], [], None, None
+
+        def persist_stream_answer(self, *args, **kwargs):
+            assert kwargs['status'] == 'cancelled'
 
     class Client:
         async def achat_stream(self, messages):

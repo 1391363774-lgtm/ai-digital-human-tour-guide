@@ -32,6 +32,9 @@ class ConversationRepository:
         sources: list[dict] | None = None,
         latency_ms: int = 0,
         audio_url: str | None = None,
+        status: str = "completed",
+        request_id: str | None = None,
+        error_code: str | None = None,
     ) -> Message:
         message = Message(
             conversation_id=conversation.id,
@@ -40,6 +43,9 @@ class ConversationRepository:
             audio_url=audio_url,
             sources_json=json.dumps(sources or [], ensure_ascii=False),
             latency_ms=latency_ms,
+            status=status,
+            request_id=request_id,
+            error_code=error_code,
         )
         self.db.add(message)
         conversation.total_latency_ms = (conversation.total_latency_ms or 0) + latency_ms
