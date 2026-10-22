@@ -1,6 +1,7 @@
 import { apiClient, unwrap } from './client'
 import type { ChatResponse } from '../types/chat'
 import { readSseData } from './stream'
+import { visitorHeaders } from './access'
 import type { ChatSource } from '../types/chat'
 
 type Outcome = 'completed' | 'partial' | 'failed' | 'refused' | 'cancelled'
@@ -9,7 +10,7 @@ export type ChatEvent = (
   | { type: 'text' | 'refused'; text: string }
   | { type: 'source'; sources: ChatSource[] }
   | { type: 'error'; text: string; code?: string; partial?: boolean; retryable?: boolean }
-  | { type: 'done'; conversation_id: number; status?: Outcome; first_text_ms?: number | null; total_ms?: number }
+  | { type: 'done'; conversation_id: number; status?: Outcome; first_text_ms?: number | null; total_ms?: number; provider?: string | null; model?: string | null; fallback_from?: string[] }
 ) & { request_id?: string }
 
 function parseEvent(value: unknown): ChatEvent {
@@ -41,7 +42,7 @@ export async function* streamChatMessage(payload: SendChatMessagePayload, signal
   const response = await fetch(`${baseURL}/api/chat/stream`, {
     method: 'POST',
     signal,
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', ...visitorHeaders() },
     body: JSON.stringify({
       message: payload.message,
       conversation_id: payload.conversation_id ?? null,

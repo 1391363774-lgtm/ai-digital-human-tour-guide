@@ -6,6 +6,9 @@ export interface HistoryMessage {
   content: string
   latency_ms: number
   created_at: string
+  status: 'completed' | 'refused' | 'partial' | 'failed' | 'cancelled'
+  request_id?: string | null
+  error_code?: string | null
 }
 
 export interface ConversationSummary {

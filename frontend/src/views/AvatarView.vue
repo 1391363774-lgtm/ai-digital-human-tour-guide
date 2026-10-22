@@ -2,7 +2,10 @@
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 import { streamChatMessage } from '../api/chat'
-import { synthesizeSpeech, streamSynthesizeSpeech, base64ToBlob, transcribeAudio } from '../api/speech'
+import { synthesizeSpeech, transcribeAudio } from '../api/speech'
+import { AudioPlayer } from '../audio/audio-player'
+import { SpeechQueue } from '../audio/speech-queue'
+import { SentenceBuffer } from '../audio/sentence-buffer'
 
 type AvatarStatus = 'idle' | 'thinking' | 'speaking'
 type AvatarExpression = 'smile' | 'focus' | 'surprised'
@@ -15,6 +18,7 @@ interface SpeechRecognition extends EventTarget {
   interimResults: boolean
   continuous: boolean
   start: () => void
+  abort: () => void
   onresult: ((event: SpeechRecognitionEvent) => void) | null
   onerror: (() => void) | null
   onend: (() => void) | null
@@ -184,13 +188,10 @@ const recognizing = ref(false)
 const mediaRecorder = ref<MediaRecorder | null>(null)
 const audioChunks = ref<Blob[]>([])
 
-let audioEl: HTMLAudioElement | null = null
-let currentAudioUrl = ''
 let live2dApp: any = null
 let live2dModel: any = null
 let currentLive2DModelPath = ''
 let live2dMouthParamIds: string[] = ['ParamMouthOpenY', 'PARAM_MOUTH_OPEN_Y', 'ParamMouthOpen']
-let currentTtsAbort: AbortController | null = null
 // Live2D 嘴型覆盖：模型的动作系统每帧会覆盖参数，必须在模型 update 之后强制写入
 let live2dMouthOverride = 0
 let live2dMouthActive = false
@@ -233,7 +234,10 @@ const avatarVars = computed(() => ({
 }))
 
 onMounted(() => {
+  document.addEventListener('visibilitychange', onVisibilityChange)
   void loadAvatarConfig()
+  void fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'}/health`)
+    .then(response => response.json()).then(result => { demoMode.value = result.data?.demo_mode === true }).catch(() => {})
 })
 
 watch(
@@ -446,410 +450,170 @@ function ensureAvatarImage() {
 
 const modeLabel = computed(() => {
   if (avatarConfig.value.renderMode === 'live2d') return live2dReady.value ? 'Live2D 数字人' : 'Live2D 加载中'
-  if (avatarConfig.value.renderMode === 'image3d') return '3D 数字人'
+  if (avatarConfig.value.renderMode === 'image3d') return '2D 图片形象'
   return 'SVG 后备模式'
+})
+
+// Text generation and audio playback have independent lifetimes.
+const evidence = ref<import('../types/chat').ChatSource[]>([])
+const streamState = ref('idle')
+const playbackState = ref('stopped')
+const notice = ref('')
+const diagnostics = ref(false)
+const demoMode = ref(false)
+const modelPath = ref('尚未完成')
+const textOnly = ref(false)
+const requestId = ref('')
+const queued = ref(0)
+const played = ref(0)
+const firstTextMs = ref<number | null>(null)
+const firstAudioMs = ref<number | null>(null)
+const cancelMs = ref<number | null>(null)
+let questionController: AbortController | null = null
+let speechQueue: SpeechQueue | null = null
+let requestStarted = 0
+let recognitionEpoch = 0
+let recognitionController: AbortController | null = null
+let activeRecognition: SpeechRecognition | null = null
+const player = new AudioPlayer({
+  mouth(value) { mouthOpen.value = value; setLive2DMouth(value) },
+  state(state) { playbackState.value = state },
+  started() {
+    if (firstAudioMs.value === null) firstAudioMs.value = Math.round(performance.now() - requestStarted)
+  },
 })
 
 async function askAvatar() {
   const content = question.value.trim()
-  if (!content || status.value !== 'idle') return
+  if (!content) return
+  stopSpeaking()
+  const controller = new AbortController()
+  questionController = controller
+  const isCurrent = () => questionController === controller && !controller.signal.aborted
+  const localId = crypto.randomUUID()
+  requestId.value = localId
+  requestStarted = performance.now()
+  firstTextMs.value = firstAudioMs.value = cancelMs.value = null
+  modelPath.value = '尚未完成'
+  queued.value = played.value = 0
+  streamState.value = 'generating'
   status.value = 'thinking'
   expression.value = 'focus'
-  subtitle.value = '...'
-  try {
-    const stream = streamChatMessage({ message: content, conversation_id: conversationId.value, top_k: 6, fast: true })
-    let fullText = ''
-    let firstTtsText = ''
-    let ttsPromise: Promise<void> | null = null
-
-    /** 从已累积文本中提取第一个完整句子（以。！？\n结尾），用于提前启动 TTS */
-    const extractFirstSentence = (text: string): string => {
-      const match = text.match(/^[^。！？\n]*[。！？\n]/)
-      if (match) return match[0]
-      // 没有完整句子但文本已足够长，截取前 20 字作为首段
-      if (text.length >= 20) return text.slice(0, 20)
-      return ''
+  notice.value = ''
+  evidence.value = []
+  subtitle.value = ''
+  // Initiated in this click's user activation; a blocked player offers a retry button.
+  if (!textOnly.value) void player.unlock().catch(() => {})
+  let fullText = ''
+  let index = 0
+  const sentences = new SentenceBuffer()
+  const queue = new SpeechQueue({
+    requestId: localId, signal: controller.signal, capacity: 4,
+    synthesize: (segment, signal) => synthesizeSpeech(stripMarkdown(segment.text),
+      avatarConfig.value.voice.voiceName, avatarConfig.value.voice.rate, signal,
+      { request_id: requestId.value, segment_id: String(segment.segmentId) }),
+    play: (blob, _segment, signal) => player.play(blob, signal),
+    onState(snapshot) {
+      if (!isCurrent()) return
+      queued.value = snapshot.buffered
+      played.value = snapshot.played
+      if (snapshot.state === 'playing') { status.value = 'speaking'; expression.value = 'smile' }
+      else if (streamState.value === 'generating') status.value = 'thinking'
+    },
+    onError(error) {
+      if (isCurrent()) {
+        notice.value = error instanceof Error ? error.message : '语音失败，已保留文字'
+        voiceMode.value = 'text'
+      }
+    },
+  })
+  speechQueue = queue
+  const enqueue = async (parts: string[]) => {
+    if (textOnly.value) return
+    for (const part of parts) {
+      if (!isCurrent()) return
+      if (stripMarkdown(part)) await queue.enqueue({ requestId: localId, segmentId: index++, text: part })
     }
-
-    for await (const event of stream) {
-      if (event.type === 'conversation_id') { conversationId.value = event.id; continue }
-      if (event.type === 'text') {
+  }
+  try {
+    voiceMode.value = textOnly.value ? 'text' : 'edge'
+    for await (const event of streamChatMessage({
+      message: content, conversation_id: conversationId.value, top_k: 6, fast: false,
+    }, controller.signal)) {
+      if (!isCurrent()) return
+      if (event.request_id) requestId.value = event.request_id
+      if (event.type === 'conversation_id') conversationId.value = event.id
+      else if (event.type === 'source') evidence.value = event.sources
+      else if (event.type === 'text' || event.type === 'refused') {
+        if (firstTextMs.value === null && event.text.trim()) firstTextMs.value = Math.round(performance.now() - requestStarted)
         fullText += event.text
         subtitle.value = fullText
-
-        // 首句就绪时立即启动 TTS（不 await，与 Chat 剩余文本生成并行）
-        if (!ttsPromise && fullText.length >= 8) {
-          const firstSentence = extractFirstSentence(fullText)
-          if (firstSentence && firstSentence.length >= 6) {
-            firstTtsText = firstSentence
-            status.value = 'speaking'
-            expression.value = 'smile'
-            ttsPromise = speak(firstTtsText)
-          }
-        }
-      }
-      if (event.type === 'refused') {
-        fullText = event.text
-        subtitle.value = event.text
-        continue
-      }
-      if (event.type === 'error') {
-        fullText = event.text || '抱歉，服务暂时不可用。我是灵山胜境 AI 导游，可以为您介绍灵山大佛、九龙灌浴、灵山梵宫等景点，也可以推荐游览路线哦！'
-        subtitle.value = fullText
-        continue
-      }
-      if (event.type === 'done') { conversationId.value = event.conversation_id; continue }
-    }
-
-    // Chat 流结束后的处理
-    if (!ttsPromise) {
-      // 没有触发首句 TTS（拒答/短文本/错误），直接播放全部
-      if (fullText) {
-        status.value = 'speaking'
-        expression.value = 'smile'
-        await speak(fullText)
-      } else {
-        status.value = 'idle'
-        expression.value = 'smile'
-      }
-    } else {
-      // 等待首段 TTS 播完，然后播放剩余文本
-      await ttsPromise
-      const remaining = fullText.slice(firstTtsText.length).trim()
-      if (remaining) {
-        status.value = 'speaking'
-        expression.value = 'smile'
-        await speak(remaining)
+        await enqueue(sentences.push(event.text))
+      } else if (event.type === 'error') {
+        notice.value = event.text
+        streamState.value = event.partial ? 'partial' : 'failed'
+        queue.cancel()
+      } else if (event.type === 'done') {
+        conversationId.value = event.conversation_id
+        streamState.value = event.status || 'completed'
+        modelPath.value = [...(event.fallback_from || []), event.provider || '无需模型'].join(' → ')
       }
     }
-  } catch {
-    // 连接失败或异常时显示引导语，绕回景区话题
-    subtitle.value = '这个问题我暂时无法回答，可能是网络波动。我是灵山胜境 AI 导游，可以为您介绍灵山大佛、九龙灌浴、灵山梵宫等景点，也可以推荐游览路线哦！'
-    expression.value = 'focus'
-    status.value = 'idle'
-    mouthOpen.value = 0
-  }
-}
-
-async function speak(text: string) {
-  status.value = 'speaking'
-  const cleanText = stripMarkdown(text)
-  const onEnd = () => {
-    status.value = 'idle'
-    expression.value = 'smile'
-    mouthOpen.value = 0
-    setLive2DMouth(0)
-    stopLipSyncTimer()
-  }
-
-  // 中止上一次的 TTS 流
-  currentTtsAbort?.abort()
-  const abortController = new AbortController()
-  currentTtsAbort = abortController
-
-  // 异步队列：流式到达的音频段按顺序排队播放
-  const segmentQueue: Array<{ text: string; audio_base64: string }> = []
-  let streamDone = false
-  let streamFailed = false
-  let waitingResolve: ((value: boolean) => void) | null = null
-
-  /** 等待下一段音频就绪，返回 false 表示流已结束且队列空 */
-  const waitForNextSegment = (): Promise<boolean> => {
-    if (segmentQueue.length > 0) return Promise.resolve(true)
-    if (streamDone || streamFailed) return Promise.resolve(false)
-    return new Promise((resolve) => { waitingResolve = resolve })
-  }
-
-  const onSegmentReady = (seg: { text: string; audio_base64: string }) => {
-    segmentQueue.push(seg)
-    waitingResolve?.(true)
-    waitingResolve = null
-  }
-
-  /** 流结束或失败时唤醒等待者 */
-  const wakeWaiter = (failed: boolean) => {
-    if (failed) streamFailed = true
-    else streamDone = true
-    waitingResolve?.(false)
-    waitingResolve = null
-  }
-
-  try {
-    voiceMode.value = 'edge'
-
-    // 启动流式请求（后台运行，不阻塞播放循环）
-    const streamPromise = streamSynthesizeSpeech(
-      cleanText,
-      avatarConfig.value.voice.voiceName,
-      avatarConfig.value.voice.rate,
-      onSegmentReady,
-      undefined,
-      abortController.signal,
-    ).then(() => {
-      wakeWaiter(false)
-    }).catch(() => {
-      wakeWaiter(true)
-    })
-
-    // 逐段播放：拿到一段播一段，播完等下一段
-    while (true) {
-      if (status.value !== 'speaking') {
-        stopLipSyncTimer()
-        onEnd()
-        return
-      }
-
-      const hasMore = await waitForNextSegment()
-      if (!hasMore && segmentQueue.length === 0) {
-        // 流失败且没有拿到任何段 → 跳到 catch 走回退逻辑
-        if (streamFailed) throw new Error('stream_failed')
-        break
-      }
-
-      const seg = segmentQueue.shift()!
-      await playOneSegmentWithLipSync(seg)
+    if (isCurrent() && ['completed', 'refused'].includes(streamState.value)) await enqueue(sentences.flush())
+    await queue.finish()
+  } catch (error) {
+    if (isCurrent()) {
+      streamState.value = fullText ? 'partial' : 'failed'
+      notice.value = error instanceof Error ? error.message : '请求失败，已保留收到的文本'
+      queue.cancel()
     }
-
-    stopLipSyncTimer()
-    onEnd()
-    await streamPromise
-  } catch {
-    // 流式接口失败时回退到单段模式
-    try {
-      const audioBlob = await synthesizeSpeech(
-        cleanText,
-        avatarConfig.value.voice.voiceName,
-        avatarConfig.value.voice.rate,
-      )
-      voiceMode.value = 'edge'
-      await playAudioWithSyncedLip(audioBlob, cleanText, onEnd)
-    } catch {
-      speakBrowser(cleanText, onEnd)
+  } finally {
+    if (isCurrent()) {
+      status.value = 'idle'
+      expression.value = 'smile'
+      questionController = null
+      speechQueue = null
     }
   }
 }
 
-// ---- 文本预处理：去除 Markdown ----
 function stripMarkdown(text: string): string {
-  return text
-    .replace(/\*\*(.+?)\*\*/g, '$1')
-    .replace(/\*(.+?)\*/g, '$1')
-    .replace(/`{1,3}[^`]*`{1,3}/g, '')
-    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
-    .replace(/^#{1,6}\s+/gm, '')
-    .replace(/[-*]\s+/g, '')
-    .trim()
+  return text.replace(/\*\*(.+?)\*\*/g, '$1').replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+    .replace(/^[#*\-]+\s*/gm, '').replace(/`/g, '').trim()
 }
 
-// ---- 核心：基于音频真实播放进度的口型同步 ----
-function precomputeMouthFrames(text: string, totalFrames: number): number[] {
-  const frames: number[] = []
-  const chars = text.replace(/\s/g, '').split('')
-  if (chars.length === 0) return new Array(totalFrames).fill(0)
-
-  const charsPerFrame = Math.max(1, chars.length / totalFrames)
-
-  for (let f = 0; f < totalFrames; f++) {
-    const startIdx = Math.floor(f * charsPerFrame)
-    const endIdx = Math.floor((f + 1) * charsPerFrame)
-    let maxOpen = 0.06
-    for (let i = startIdx; i < Math.min(endIdx, chars.length); i++) {
-      const ch = chars[i]
-      // 标点 → 闭嘴
-      if (/[，。！？、；：,.!?；：\n]/.test(ch)) { maxOpen = Math.max(maxOpen, 0.01); continue }
-      // 大口元音 → 张大嘴（夸张）
-      if (/[啊阿哇凹噢哦喔饿哦俄恶诶哎哀爱奥澳傲熬袄嗷坳拗]/.test(ch)) { maxOpen = Math.max(maxOpen, 0.98); continue }
-      // 中口元音（张大）
-      if (/[呀牙鸭雅压崖涯哑亚讶轧娅蚜氩砑伢]/i.test(ch)) { maxOpen = Math.max(maxOpen, 0.85); continue }
-      // 一般开口（大幅提升）
-      if (/[大那拿哪纳钠娜呐捺衲镎塔他她它踏塌榻獭挞蹋遢嗒闼哈蛤铪虾瞎匣侠峡狭暇霞辖下吓夏厦唬懗]/.test(ch)) { maxOpen = Math.max(maxOpen, 0.75); continue }
-      if (/[吧把八拔坝霸罢爸扒叭巴芭疤笆粑捌茇岜灞钯魃]/.test(ch)) { maxOpen = Math.max(maxOpen, 0.70); continue }
-      if (/[吗妈马骂麻码蚂玛嘛蟆杩犸嬷]/.test(ch)) { maxOpen = Math.max(maxOpen, 0.70); continue }
-      if (/[啦拉辣腊蜡喇垃剌藜邋旯砬瘌]/.test(ch)) { maxOpen = Math.max(maxOpen, 0.70); continue }
-      // 闭口辅音 → 适度张开
-      if (/[不布步部补捕卜簿哺怖埠埔卟逋瓿晡钚醭]/.test(ch)) { maxOpen = Math.max(maxOpen, 0.30); continue }
-      if (/[目木母亩幕牧墓慕穆暮牟拇募沐牡睦姆姥幂苜仫坶苜]/.test(ch)) { maxOpen = Math.max(maxOpen, 0.30); continue }
-      // 默认中等偏大开口
-      maxOpen = Math.max(maxOpen, 0.50)
-    }
-    frames.push(Math.min(1, maxOpen + (Math.random() - 0.5) * 0.08))
+function stopSpeaking() {
+  const started = performance.now()
+  questionController?.abort()
+  speechQueue?.cancel()
+  player.stop()
+  questionController = null
+  speechQueue = null
+  recognitionEpoch += 1
+  recognitionController?.abort()
+  recognitionController = null
+  activeRecognition?.abort()
+  activeRecognition = null
+  const recorder = mediaRecorder.value
+  if (recorder) {
+    recorder.onstop = null
+    recorder.ondataavailable = null
+    if (recorder.state !== 'inactive') recorder.stop()
+    recorder.stream.getTracks().forEach(track => track.stop())
   }
-  return frames
-}
-
-let lipSyncTimer: ReturnType<typeof setInterval> | null = null
-
-function stopLipSyncTimer() {
-  if (lipSyncTimer) { clearInterval(lipSyncTimer); lipSyncTimer = null }
-  mouthOpen.value = 0
-  live2dMouthOverride = 0
-  live2dMouthActive = false
-}
-
-async function playAudioWithSyncedLip(audioBlob: Blob, text: string, onEnd: () => void) {
-  stopSpeaking(false)
-  stopLipSyncTimer()
-
-  const url = URL.createObjectURL(audioBlob)
-  const audio = new Audio(url)
-
-  // 使用估算时长，不等 metadata
-  const estimatedDuration = estimateSpeechDuration(text)
-  const fps = 60
-  const totalFrames = Math.max(1, Math.round(estimatedDuration * fps))
-  const mouthFrames = precomputeMouthFrames(text, totalFrames)
-
-  const onAudioEnd = () => {
-    stopLipSyncTimer()
-    URL.revokeObjectURL(url)
-    onEnd()
-  }
-  audio.onended = onAudioEnd
-  audio.onerror = () => {
-    stopLipSyncTimer()
-    URL.revokeObjectURL(url)
-    speakBrowser(text, onEnd)
-  }
-
-  // 立即启动口型同步，优先使用实际时长
-  lipSyncTimer = setInterval(() => {
-    if (!audio || audio.paused || audio.ended) {
-      if (audio?.ended) stopLipSyncTimer()
-      return
-    }
-    const playbackTime = audio.currentTime
-    const dur = (audio.duration && isFinite(audio.duration) && audio.duration > 0)
-      ? audio.duration
-      : estimatedDuration
-    const progress = dur > 0 ? playbackTime / dur : 0
-    const frameIdx = Math.min(totalFrames - 1, Math.floor(progress * totalFrames))
-    const value = mouthFrames[frameIdx] || 0.15
-    mouthOpen.value = value
-    setLive2DMouth(value)
-  }, 1000 / fps)
-
-  audioEl = audio
-  try { await audio.play() } catch { audio.onerror?.(new Event('error')) }
-}
-
-/** 播放单段音频并驱动口型同步 — 优化版：跳过 metadata 等待，立即播放 */
-function playOneSegmentWithLipSync(seg: { text: string; audio_base64: string }): Promise<void> {
-  const segText = seg.text
-  const audioBlob = base64ToBlob(seg.audio_base64, 'audio/mpeg')
-  const url = URL.createObjectURL(audioBlob)
-  const audio = new Audio(url)
-
-  // 预计算口型帧，不等 metadata
-  const estimatedDuration = estimateSpeechDuration(segText)
-  const fps = 60
-  const totalFrames = Math.max(1, Math.round(estimatedDuration * fps))
-  const mouthFrames = precomputeMouthFrames(segText, totalFrames)
-
-  return new Promise<void>((resolve) => {
-    let resolved = false
-    const cleanup = () => {
-      if (resolved) return
-      resolved = true
-      stopLipSyncTimer()
-      URL.revokeObjectURL(url)
-      resolve()
-    }
-
-    audio.onended = cleanup
-    audio.onerror = cleanup
-
-    // 立即启动口型同步定时器，使用估算时长
-    lipSyncTimer = setInterval(() => {
-      if (!audio || audio.paused || audio.ended) {
-        if (audio?.ended) cleanup()
-        return
-      }
-      const playbackTime = audio.currentTime
-      // 优先使用实际时长，未知时回退到估算值
-      const dur = (audio.duration && isFinite(audio.duration) && audio.duration > 0)
-        ? audio.duration
-        : estimatedDuration
-      const progress = dur > 0 ? playbackTime / dur : 0
-      const frameIdx = Math.min(totalFrames - 1, Math.floor(progress * totalFrames))
-      const value = mouthFrames[frameIdx] || 0.15
-      mouthOpen.value = value
-      setLive2DMouth(value)
-    }, 1000 / fps)
-
-    audioEl = audio
-    // 立即播放，不等 metadata — 浏览器会自动缓冲并尽快开始播放
-    audio.play().catch(() => {
-      // 立即播放失败（浏览器尚未准备好），等待 canplay 后再试
-      audio.addEventListener('canplay', () => {
-        audio.play().catch(cleanup)
-      }, { once: true })
-      // 超时保护：2s 后仍未播放则放弃
-      setTimeout(cleanup, 2000)
-    })
-  })
-}
-
-function estimateSpeechDuration(text: string): number {
-  const chars = text.replace(/\s/g, '').length
-  return Math.max(2, chars * 0.22 + 1.5)
-}
-
-function speakBrowser(text: string, cb: () => void, showWarning = true) {
-  stopSpeaking(false)
-  stopLipSyncTimer()
-  if (!window.speechSynthesis) {
-    voiceMode.value = 'text'
-    ElMessage.warning('后端语音不可用，当前浏览器也不支持语音合成，已保留文字展示')
-    cb()
-    return
-  }
-  voiceMode.value = 'browser'
-  if (showWarning) {
-    ElMessage.warning('后端 Edge TTS 不可用，已临时回退浏览器语音')
-  }
-  window.speechSynthesis.cancel()
-  const utterance = new SpeechSynthesisUtterance(text)
-  utterance.lang = 'zh-CN'
-  utterance.rate = 1
-  utterance.pitch = 1.08
-
-  // 用文本预计算口型帧，估算时长
-  const duration = estimateSpeechDuration(text)
-  const totalFrames = Math.max(1, Math.round(duration * 60))
-  const mouthFrames = precomputeMouthFrames(text, totalFrames)
-
-  const startedAt = performance.now()
-  lipSyncTimer = setInterval(() => {
-    if (status.value !== 'speaking') { stopLipSyncTimer(); return }
-    const elapsed = (performance.now() - startedAt) / 1000
-    const progress = Math.min(1, elapsed / duration)
-    const frameIdx = Math.min(totalFrames - 1, Math.floor(progress * totalFrames))
-    const value = mouthFrames[frameIdx] || 0.15
-    mouthOpen.value = value
-    setLive2DMouth(value)
-  }, 1000 / 60) // 60fps
-
-  utterance.onstart = () => { /* 已通过定时器驱动 */ }
-  utterance.onend = () => { stopLipSyncTimer(); cb() }
-  utterance.onerror = () => { stopLipSyncTimer(); cb() }
-  window.speechSynthesis.speak(utterance)
-}
-
-function stopSpeaking(resetStatus = true) {
-  currentTtsAbort?.abort()
-  currentTtsAbort = null
-  window.speechSynthesis?.cancel()
-  stopLipSyncTimer()
-  audioEl?.pause()
-  audioEl = null
-  releaseAudioUrl()
+  recording.value = recognizing.value = false
+  audioChunks.value = []
   mouthOpen.value = 0
   setLive2DMouth(0)
-  if (resetStatus) {
-    status.value = 'idle'
-    expression.value = 'smile'
-  }
+  status.value = 'idle'
+  if (streamState.value === 'generating') streamState.value = 'cancelled'
+  expression.value = 'smile'
+  queued.value = 0
+  cancelMs.value = Math.round((performance.now() - started) * 100) / 100
+  // This is local stop/cleanup elapsed time, not a measured speaker silence latency.
 }
+
+function onVisibilityChange() { if (document.hidden) stopSpeaking() }
 
 async function toggleRecording() {
   if (recording.value) {
@@ -860,12 +624,14 @@ async function toggleRecording() {
 }
 
 async function startRecording() {
+  const epoch = ++recognitionEpoch
   if (!navigator.mediaDevices?.getUserMedia) {
     await recognizeWithBrowserSpeech()
     return
   }
   try {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+    if (epoch !== recognitionEpoch) { stream.getTracks().forEach(track => track.stop()); return }
     const mimeType = pickMimeType()
     const recorder = mimeType ? new MediaRecorder(stream, { mimeType }) : new MediaRecorder(stream)
     audioChunks.value = []
@@ -874,13 +640,13 @@ async function startRecording() {
     }
     recorder.onstop = async () => {
       stream.getTracks().forEach((track) => track.stop())
-      await recognizeRecording()
+      if (epoch === recognitionEpoch) await recognizeRecording()
     }
     mediaRecorder.value = recorder
     recorder.start()
     recording.value = true
   } catch {
-    await recognizeWithBrowserSpeech()
+    if (epoch === recognitionEpoch) await recognizeWithBrowserSpeech()
   }
 }
 
@@ -895,11 +661,15 @@ function stopRecording() {
 
 async function recognizeRecording() {
   if (!audioChunks.value.length) return
+  const epoch = recognitionEpoch
+  const controller = new AbortController()
+  recognitionController = controller
   recognizing.value = true
   try {
     const mimeType = pickMimeType()
     const blob = new Blob(audioChunks.value, mimeType ? { type: mimeType } : undefined)
-    const result = await transcribeAudio(blob)
+    const result = await transcribeAudio(blob, controller.signal)
+    if (epoch !== recognitionEpoch || controller.signal.aborted) return
     if (result.text?.trim()) {
       question.value = result.text.trim()
       await askAvatar()
@@ -907,14 +677,14 @@ async function recognizeRecording() {
       ElMessage.warning('没有识别到有效语音')
     }
   } catch {
-    await recognizeWithBrowserSpeech()
+    if (epoch === recognitionEpoch && !controller.signal.aborted) ElMessage.warning('语音识别失败，请重试或输入文字')
   } finally {
-    recognizing.value = false
-    audioChunks.value = []
+    if (epoch === recognitionEpoch) { recognizing.value = false; audioChunks.value = [] }
   }
 }
 
 async function recognizeWithBrowserSpeech() {
+  const epoch = recognitionEpoch
   const SpeechRecognitionClass = getSpeechRecognition()
   if (!SpeechRecognitionClass) {
     ElMessage.error('当前浏览器不支持语音识别，请使用文本输入')
@@ -923,10 +693,12 @@ async function recognizeWithBrowserSpeech() {
   recognizing.value = true
   await new Promise<void>((resolve) => {
     const recognition = new SpeechRecognitionClass()
+    activeRecognition = recognition
     recognition.lang = 'zh-CN'
     recognition.interimResults = false
     recognition.continuous = false
     recognition.onresult = async (event) => {
+      if (epoch !== recognitionEpoch) { resolve(); return }
       const text = event.results?.[0]?.[0]?.transcript || ''
       if (text.trim()) {
         question.value = text.trim()
@@ -936,7 +708,7 @@ async function recognizeWithBrowserSpeech() {
     }
     recognition.onerror = () => resolve()
     recognition.onend = () => {
-      recognizing.value = false
+      if (epoch === recognitionEpoch) recognizing.value = false
       resolve()
     }
     recognition.start()
@@ -966,22 +738,17 @@ function switchExpression(next: AvatarExpression) {
   live2dModel?.internalModel?.motionManager?.expressionManager?.setExpression?.(expressionName)
 }
 
-function releaseAudioUrl() {
-  if (currentAudioUrl) {
-    URL.revokeObjectURL(currentAudioUrl)
-    currentAudioUrl = ''
-  }
-}
-
 function setLive2DMouth(value: number) {
   // 不直接设置参数 — 模型 update 会覆盖
   // 改为写入覆盖变量，由 internalModel.update 拦截器在模型更新后强制写入
   live2dMouthOverride = value
-  live2dMouthActive = value > 0.001
+  live2dMouthActive = true // A legitimate zero must also override the model's own mouth animation.
 }
 
 onBeforeUnmount(() => {
   stopSpeaking()
+  document.removeEventListener('visibilitychange', onVisibilityChange)
+  void player.dispose()
   destroyLive2D()
 })
 </script>
@@ -1061,16 +828,33 @@ onBeforeUnmount(() => {
 
       <div class="card ctrl">
         <h2>向数字人提问</h2>
-        <div class="bubble">{{ subtitle }}</div>
-        <textarea v-model="question" rows="3" placeholder="比如：灵山大佛有多高？拈花湾适合亲子游吗？" />
+        <p v-if="demoMode" role="note">离线演示：模拟模型 + 固定音调（不是中文语音），仅用于验证流、播放与打断。</p>
+        <div class="bubble" role="log" aria-live="polite">{{ subtitle }}</div>
+        <p v-if="notice" role="status">{{ notice }}</p>
+        <label><input v-model="textOnly" type="checkbox" @change="stopSpeaking" /> 纯文字模式</label>
+        <button v-if="playbackState === 'blocked'" @click="player.resume()">点击启用语音播放</button>
+        <details v-for="(source, i) in evidence" :key="i">
+          <summary>依据 {{ i + 1 }} · {{ source.metadata.document_title || source.metadata.section_title || '知识片段' }}</summary>
+          <p>{{ source.content }}</p>
+          <small>文档 {{ source.metadata.document_id }} / 片段 {{ source.metadata.chunk_id }} / 版本 {{ source.metadata.document_version }} · 更新 {{ source.metadata.updated_at || '未知' }}（支持性待核验）</small>
+        </details>
+        <textarea v-model="question" aria-label="向导游提问，Ctrl+Enter发送" @keydown.ctrl.enter.prevent="askAvatar" rows="3" placeholder="比如：灵山大佛有多高？拈花湾适合亲子游吗？" />
         <div class="btns">
-          <button :disabled="status !== 'idle'" @click="askAvatar">
-            {{ status === 'idle' ? '提问并播报' : status === 'thinking' ? '思考中...' : '回答中...' }}
+          <button @click="askAvatar">
+            {{ status === 'idle' ? '提问并播报' : '打断并重新提问' }}
           </button>
           <button class="voice" :disabled="status !== 'idle' || recognizing" @click="toggleRecording">
             {{ recording ? '停止录音' : recognizing ? '识别中...' : '语音提问' }}
           </button>
-          <button class="ghost" @click="stopSpeaking()">停止</button>
+          <button class="ghost" @click="stopSpeaking()">停止讲解</button>
+        </div>
+        <label><input v-model="diagnostics" type="checkbox" /> 演示诊断</label>
+        <div v-if="diagnostics" class="diagnostics">
+          <p>请求 {{ requestId }} · 文本 {{ streamState }} · 播放 {{ playbackState }}</p>
+          <p>模型路径 {{ modelPath }} · 嘴部开合 {{ mouthOpen.toFixed(2) }}</p>
+          <p>待播 {{ queued }} / 已播 {{ played }}；首文本 {{ firstTextMs ?? '未知' }}ms / 首播放事件 {{ firstAudioMs ?? '未知' }}ms</p>
+          <p>本机停止清理 {{ cancelMs ?? '未测' }}ms（不等于扬声器停止发声时延）</p>
+          <p>音量／语音活动驱动口型，非音素同步。浏览器隐藏时停止播报。</p>
         </div>
       </div>
     </section>
@@ -1596,6 +1380,8 @@ nav a {
 }
 
 .ctrl {
+  min-width: 0;
+  overflow-wrap: anywhere;
   padding: 22px;
   display: flex;
   flex-direction: column;
@@ -1620,6 +1406,7 @@ nav a {
 }
 
 textarea {
+  box-sizing: border-box;
   width: 100%;
   resize: none;
   box-sizing: border-box;
@@ -1633,8 +1420,8 @@ textarea {
 }
 
 .btns {
-  display: grid;
-  grid-template-columns: 1fr 80px;
+  display: flex;
+  flex-wrap: wrap;
   gap: 10px;
 }
 
@@ -1782,7 +1569,7 @@ button:disabled {
 
 @media (max-width: 860px) {
   .stage {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .avatar-card {
