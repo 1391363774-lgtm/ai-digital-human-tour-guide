@@ -21,6 +21,12 @@ class Vectors:
     def search(self, *args, **kwargs):
         return self.hits
 
+    def delete_ids(self, ids, collection_name=None):
+        self.hits = [hit for hit in self.hits if hit.id not in ids]
+
+    def clear_collection(self, collection_name=None):
+        self.hits = []
+
     def upsert_chunks(self, ids, documents, embeddings, metadatas):
         self.hits = [VectorSearchResult(id_, content, metadata, 0)
                      for id_, content, metadata in zip(ids, documents, metadatas)]

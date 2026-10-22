@@ -4,6 +4,7 @@ import json
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session, selectinload
+from fastapi import HTTPException
 
 from app.models.conversation import Conversation, Message
 
@@ -12,13 +13,18 @@ class ConversationRepository:
     def __init__(self, db: Session) -> None:
         self.db = db
 
+    def _owned(self, statement):
+        owner = self.db.info.get("visitor")
+        return statement.where(Conversation.visitor_hash == owner) if owner else statement
+
     def get_or_create(self, conversation_id: int | None, title: str | None = None) -> Conversation:
         if conversation_id is not None:
-            conversation = self.db.get(Conversation, conversation_id)
+            conversation = self.db.scalar(self._owned(select(Conversation).where(Conversation.id == conversation_id)))
             if conversation is not None:
                 return conversation
+            raise HTTPException(404, "会话不存在")
 
-        conversation = Conversation(title=title[:255] if title else None, channel="web")
+        conversation = Conversation(title=title[:255] if title else None, channel="web", visitor_hash=self.db.info.get("visitor"))
         self.db.add(conversation)
         self.db.commit()
         self.db.refresh(conversation)
@@ -61,7 +67,7 @@ class ConversationRepository:
             .limit(limit)
             .offset(offset)
         )
-        return list(self.db.scalars(statement).all())
+        return list(self.db.scalars(self._owned(statement)).all())
 
     def get_with_messages(self, conversation_id: int) -> Conversation | None:
         statement = (
@@ -69,7 +75,7 @@ class ConversationRepository:
             .options(selectinload(Conversation.messages))
             .where(Conversation.id == conversation_id)
         )
-        return self.db.scalar(statement)
+        return self.db.scalar(self._owned(statement))
 
     def list_recent_messages(self, conversation_id: int, limit: int = 6) -> list[Message]:
         statement = (

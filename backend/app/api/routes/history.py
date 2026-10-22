@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from app.core.database import get_db
+from app.core.access import get_visitor_db as get_db
 from app.repositories.conversation_repository import ConversationRepository
 from app.schemas.history import ConversationDetailOut, ConversationOut, MessageOut
 from app.schemas.response import success

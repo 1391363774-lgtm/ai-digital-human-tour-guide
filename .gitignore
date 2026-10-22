@@ -13,6 +13,8 @@ node_modules/
 dist/
 coverage/
 .local-build/
+.local-demo/
+test-results/
 *.tsbuildinfo
 
 # Env

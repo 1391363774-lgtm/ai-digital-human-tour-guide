@@ -36,20 +36,20 @@ class KnowledgeUploadService:
         target_path = upload_dir / target_name
 
         size = 0
-        with target_path.open("wb") as output:
-            while chunk := file.file.read(1024 * 1024):
-                size += len(chunk)
-                if size > MAX_UPLOAD_SIZE:
-                    target_path.unlink(missing_ok=True)
-                    raise KnowledgeUploadError("上传文件超过 30MB 限制")
-                output.write(chunk)
-
-        title = Path(original_name).stem
-        return self.repository.create_upload_record(
-            title=title,
-            file_path=str(target_path),
-            uploaded_by=uploaded_by,
-        )
+        try:
+            with target_path.open("wb") as output:
+                while chunk := file.file.read(1024 * 1024):
+                    size += len(chunk)
+                    if size > MAX_UPLOAD_SIZE:
+                        raise KnowledgeUploadError("上传文件超过 30MB 限制")
+                    output.write(chunk)
+            return self.repository.create_upload_record(
+                title=Path(original_name).stem[:255], file_path=str(target_path), uploaded_by=uploaded_by,
+            )
+        except Exception:
+            # Close before unlink on Windows; also clean up a failed DB insert.
+            target_path.unlink(missing_ok=True)
+            raise
 
     def copy_local_file(self, source: str | Path, uploaded_by: int | None = None) -> KnowledgeDocument:
         source_path = Path(source)

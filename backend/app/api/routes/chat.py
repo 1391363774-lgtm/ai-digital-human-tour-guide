@@ -7,11 +7,11 @@ from contextlib import aclosing
 
 import anyio
 from fastapi import APIRouter, Depends
-from fastapi.responses import StreamingResponse
 from starlette.concurrency import run_in_threadpool
 from sqlalchemy.orm import Session
 
-from app.core.database import get_db
+from app.core.access import get_visitor_db as get_db
+from app.core.streaming import ClosingStreamingResponse as TextStreamingResponse
 from app.schemas.chat import ChatMessageRequest, ChatMessageResponse, ChatSourceOut
 from app.schemas.response import success
 from app.services.chat_service import ChatService
@@ -19,17 +19,6 @@ from app.services.llm_client import LLMClientError, get_llm_client
 
 router = APIRouter(prefix="/api/chat", tags=["chat"])
 logger = logging.getLogger(__name__)
-
-
-class TextStreamingResponse(StreamingResponse):
-    async def __call__(self, scope, receive, send):
-        try:
-            await super().__call__(scope, receive, send)
-        finally:
-            # ASGI 2.4 may fail during send(), while our generator is suspended
-            # at yield. Explicitly close it instead of waiting for Python GC.
-            with anyio.CancelScope(shield=True):
-                await self.body_iterator.aclose()
 
 
 @router.post("/messages")
@@ -85,6 +74,7 @@ async def chat_stream(
         status = "cancelled"
         error_code = None
         first_text_ms = None
+        client = None
         try:
             yield event("conversation_id", id=conversation_id)
             yield event("source", sources=[{"content": h.content[:500], "score": h.score, "metadata": h.source} for h in hits])
@@ -94,7 +84,8 @@ async def chat_stream(
                 yield event("refused" if refusal else "text", text=full_text)
                 status = "refused" if refusal else "completed"
             else:
-                async with aclosing(get_llm_client().achat_stream(messages)) as stream:
+                client = get_llm_client()
+                async with aclosing(client.achat_stream(messages)) as stream:
                     async for chunk in stream:
                         if chunk.strip() and first_text_ms is None:
                             first_text_ms = int((time.perf_counter() - started_at) * 1000)
@@ -120,6 +111,9 @@ async def chat_stream(
             logger.info("chat_stream_finished request_id=%s status=%s first_text_ms=%s total_ms=%s",
                         request_id, status, first_text_ms, int((time.perf_counter() - started_at) * 1000))
         yield event("done", conversation_id=conversation_id, status=status, first_text_ms=first_text_ms,
+                    provider=getattr(client, "selected_provider", None) or getattr(client, "provider", "rule"),
+                    model=getattr(client, "selected_model", None) or getattr(client, "model", "refusal-or-fast"),
+                    fallback_from=getattr(client, "failed_providers", []),
                     total_ms=int((time.perf_counter() - started_at) * 1000))
 
     return TextStreamingResponse(

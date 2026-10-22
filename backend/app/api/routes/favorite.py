@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from app.core.database import get_db
+from app.core.access import get_visitor_db as get_db
 from app.repositories.favorite_repository import FavoriteRepository
 from app.schemas.favorite import FavoriteCreate, FavoriteOut
 from app.schemas.response import success

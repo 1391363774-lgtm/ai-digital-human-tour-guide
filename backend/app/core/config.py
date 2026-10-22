@@ -1,4 +1,5 @@
 from functools import lru_cache
+import os
 
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -11,13 +12,19 @@ class Settings(BaseSettings):
 
     app_name: str = Field(default="景区导览服务AI数字人", alias="APP_NAME")
     app_env: str = Field(default="development", alias="APP_ENV")
-    app_debug: bool = Field(default=True, alias="APP_DEBUG")
+    app_debug: bool = Field(default=False, alias="APP_DEBUG")
+    admin_api_key: str | None = Field(default=None, alias="ADMIN_API_KEY")
+    cors_origins: str = Field(default="http://localhost:5173,http://127.0.0.1:5173", alias="CORS_ORIGINS")
+    tts_prewarm: bool = Field(default=False, alias="TTS_PREWARM")
     database_url: str = Field(
         default="postgresql+psycopg://scenic_user:scenic_password@localhost:5432/scenic_ai_guide",
         alias="DATABASE_URL",
     )
     chroma_persist_dir: str = Field(default="./data/vector_store/chroma", alias="CHROMA_PERSIST_DIR")
     llm_provider: str = Field(default="deepseek", alias="LLM_PROVIDER")
+    llm_read_timeout: float = Field(default=60, gt=0, le=300, alias="LLM_READ_TIMEOUT")
+    llm_connect_timeout: float = Field(default=10, gt=0, le=60, alias="LLM_CONNECT_TIMEOUT")
+    demo_mode: bool = Field(default=False, alias="DEMO_MODE")
     deepseek_api_key: str | None = Field(default=None, alias="DEEPSEEK_API_KEY")
     deepseek_base_url: str = Field(default="https://api.deepseek.com", alias="DEEPSEEK_BASE_URL")
     deepseek_model: str = Field(default="deepseek-chat", alias="DEEPSEEK_MODEL")
@@ -36,4 +43,5 @@ class Settings(BaseSettings):
 
 @lru_cache
 def get_settings() -> Settings:
-    return Settings()
+    # The demo launcher opts out of .env files before importing any app modules.
+    return Settings(_env_file=None) if os.environ.get('SCENIC_NO_ENV_FILE') == '1' else Settings()

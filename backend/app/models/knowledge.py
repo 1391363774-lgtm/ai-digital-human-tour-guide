@@ -14,6 +14,13 @@ class KnowledgeRevision(Base):
     revision: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
 
 
+class PendingVectorCleanup(Base):
+    """Durable, idempotent deletion work after SQL knowledge changes."""
+    __tablename__ = "pending_vector_cleanup"
+    vector_id: Mapped[str] = mapped_column(String(255), primary_key=True)
+    collection_name: Mapped[str] = mapped_column(String(255), nullable=False)
+
+
 @event.listens_for(KnowledgeRevision.__table__, "after_create")
 def seed_knowledge_revision(table, connection, **kwargs):
     # Base.metadata.create_all is also used by the packaged SQLite launcher.
