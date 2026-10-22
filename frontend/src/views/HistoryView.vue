@@ -52,6 +52,7 @@ async function openDetail(id: number) {
           <article v-for="message in detail.messages" :key="message.id" class="message" :class="message.role">
             <strong>{{ message.role === 'user' ? '游客' : '导游' }}</strong>
             <p>{{ message.content }}</p>
+            <small v-if="message.role === 'assistant'">状态：{{ message.status }} · {{ message.request_id || '历史记录无请求ID' }} {{ message.error_code || '' }}</small>
             <span>{{ message.latency_ms }}ms · {{ new Date(message.created_at).toLocaleString() }}</span>
           </article>
         </template>

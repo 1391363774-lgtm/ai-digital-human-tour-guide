@@ -8,7 +8,10 @@ from app.schemas.dashboard import DashboardOverviewOut
 from app.schemas.response import success
 from app.services.dashboard_service import DashboardService
 
-router = APIRouter(prefix="/api/dashboard", tags=["dashboard"])
+from fastapi import Depends
+from app.core.access import require_admin
+
+router = APIRouter(prefix="/api/dashboard", tags=["dashboard"], dependencies=[Depends(require_admin)])
 
 
 @router.get("/overview")

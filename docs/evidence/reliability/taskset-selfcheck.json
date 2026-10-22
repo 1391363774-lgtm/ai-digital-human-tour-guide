@@ -1,0 +1,115 @@
+{
+  "kind": "trusted_fixture_selfcheck_not_agent_performance",
+  "tasks": 20,
+  "development": 12,
+  "acceptance": 8,
+  "independent_cases": 60,
+  "tasks_sha256": "024e4717c68a101c21515b5d80d34e11c0e193d9261bd42c91cc8e249982da76",
+  "acceptance_sha256": "909548ee9ea2f5989d6d37e77e2578416d71f68cbf578a9663c31fc7f64b79c4",
+  "records": [
+    {
+      "id": "D01",
+      "independent_cases": 3,
+      "buggy_fixture_failures": 2
+    },
+    {
+      "id": "D02",
+      "independent_cases": 3,
+      "buggy_fixture_failures": 1
+    },
+    {
+      "id": "D03",
+      "independent_cases": 3,
+      "buggy_fixture_failures": 2
+    },
+    {
+      "id": "D04",
+      "independent_cases": 3,
+      "buggy_fixture_failures": 1
+    },
+    {
+      "id": "D05",
+      "independent_cases": 3,
+      "buggy_fixture_failures": 1
+    },
+    {
+      "id": "D06",
+      "independent_cases": 3,
+      "buggy_fixture_failures": 1
+    },
+    {
+      "id": "D07",
+      "independent_cases": 3,
+      "buggy_fixture_failures": 2
+    },
+    {
+      "id": "D08",
+      "independent_cases": 3,
+      "buggy_fixture_failures": 2
+    },
+    {
+      "id": "D09",
+      "independent_cases": 3,
+      "buggy_fixture_failures": 3
+    },
+    {
+      "id": "D10",
+      "independent_cases": 3,
+      "buggy_fixture_failures": 2
+    },
+    {
+      "id": "D11",
+      "independent_cases": 3,
+      "buggy_fixture_failures": 2
+    },
+    {
+      "id": "D12",
+      "independent_cases": 3,
+      "buggy_fixture_failures": 3
+    },
+    {
+      "id": "A01",
+      "independent_cases": 3,
+      "buggy_fixture_failures": 2
+    },
+    {
+      "id": "A02",
+      "independent_cases": 3,
+      "buggy_fixture_failures": 1
+    },
+    {
+      "id": "A03",
+      "independent_cases": 3,
+      "buggy_fixture_failures": 2
+    },
+    {
+      "id": "A04",
+      "independent_cases": 3,
+      "buggy_fixture_failures": 2
+    },
+    {
+      "id": "A05",
+      "independent_cases": 3,
+      "buggy_fixture_failures": 2
+    },
+    {
+      "id": "A06",
+      "independent_cases": 3,
+      "buggy_fixture_failures": 1
+    },
+    {
+      "id": "A07",
+      "independent_cases": 3,
+      "buggy_fixture_failures": 1
+    },
+    {
+      "id": "A08",
+      "independent_cases": 3,
+      "buggy_fixture_failures": 1
+    }
+  ],
+  "model_comparison": "not_run",
+  "agent_success_rate": null,
+  "model_tokens": null,
+  "model_cost": null
+}

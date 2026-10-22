@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import IntegrityError
 
 from app.models.favorite import Favorite
 from app.models.user import User
@@ -13,12 +14,21 @@ class FavoriteRepository:
         self.db = db
 
     def get_or_create_anonymous_user(self) -> User:
-        user = self.db.scalar(select(User).where(User.username == "anonymous"))
+        owner = self.db.info.get("visitor")
+        username = f"visitor_{owner[:48]}" if owner else "anonymous"
+        user = self.db.scalar(select(User).where(User.username == username))
         if user is not None:
             return user
-        user = User(username="anonymous", role="tourist")
+        user = User(username=username, role="tourist")
         self.db.add(user)
-        self.db.commit()
+        try:
+            self.db.commit()
+        except IntegrityError:
+            self.db.rollback()
+            existing = self.db.scalar(select(User).where(User.username == username))
+            if existing is None:
+                raise
+            return existing
         self.db.refresh(user)
         return user
 

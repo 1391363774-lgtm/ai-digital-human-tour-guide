@@ -13,6 +13,7 @@ class Conversation(Base):
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
     user_id: Mapped[Optional[int]] = mapped_column(ForeignKey("users.id"), nullable=True, index=True)
     channel: Mapped[str] = mapped_column(String(32), default="web", index=True)
+    visitor_hash: Mapped[Optional[str]] = mapped_column(String(64), nullable=True, index=True)
     title: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
     total_latency_ms: Mapped[int] = mapped_column(Integer, default=0)
     started_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
@@ -33,6 +34,9 @@ class Message(Base):
     audio_url: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
     sources_json: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     latency_ms: Mapped[int] = mapped_column(Integer, default=0)
+    status: Mapped[str] = mapped_column(String(24), default="completed", server_default="completed")
+    request_id: Mapped[Optional[str]] = mapped_column(String(32), nullable=True)
+    error_code: Mapped[Optional[str]] = mapped_column(String(64), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     conversation = relationship("Conversation", back_populates="messages")

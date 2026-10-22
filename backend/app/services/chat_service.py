@@ -57,7 +57,7 @@ class ChatService:
         history_messages = [
             ChatMessage(role=message.role, content=message.content)
             for message in self.conversation_repository.list_recent_messages(conversation.id, limit=6)
-            if message.role in {"user", "assistant"}
+            if message.role == "user" or (message.role == "assistant" and message.status in {"completed", "refused"})
         ]
         self.conversation_repository.add_message(conversation, role="user", content=question)
 
@@ -65,15 +65,9 @@ class ChatService:
         if dynamic_refusal:
             return conversation, [], [], dynamic_refusal, None
 
-        if fast:
-            direct_answer = build_direct_fast_answer(question)
-            if direct_answer:
-                return conversation, [], [], None, direct_answer
-
         hits = self.rag_service.fast_search(question, top_k=max(top_k, 6)) if fast else self.rag_service.search(question, top_k=min(top_k, 6))
-        if not fast:
-            hits = self._enrich_with_spot_summaries(question, hits)
         prompt = self.prompt_builder.build(question, hits, history=history_messages)
+        hits = prompt.evidence
 
         refusal = prompt.refusal_answer if prompt.should_refuse else None
 
@@ -84,7 +78,8 @@ class ChatService:
         return conversation, prompt.messages if not prompt.should_refuse else [], hits, refusal, None
 
     def persist_stream_answer(
-        self, conversation, answer: str, sources: list[RagHit], started_at: float
+        self, conversation, answer: str, sources: list[RagHit], started_at: float,
+        *, status: str = "completed", request_id: str | None = None, error_code: str | None = None,
     ) -> None:
         latency_ms = int((time.perf_counter() - started_at) * 1000)
         srcs = [
@@ -92,7 +87,8 @@ class ChatService:
             for hit in sources
         ]
         self.conversation_repository.add_message(
-            conversation, role="assistant", content=answer, sources=srcs, latency_ms=latency_ms
+            conversation, role="assistant", content=answer, sources=srcs, latency_ms=latency_ms,
+            status=status, request_id=request_id, error_code=error_code,
         )
 
     def answer(self, question: str, top_k: int = 5, conversation_id: int | None = None, fast: bool = False) -> ChatAnswer:
@@ -104,7 +100,7 @@ class ChatService:
         history_messages = [
             ChatMessage(role=message.role, content=message.content)
             for message in self.conversation_repository.list_recent_messages(conversation.id, limit=6)
-            if message.role in {"user", "assistant"}
+            if message.role == "user" or (message.role == "assistant" and message.status in {"completed", "refused"})
         ]
         self.conversation_repository.add_message(conversation, role="user", content=question)
         timing["history_ms"] = elapsed_ms(stage_at)
@@ -124,30 +120,13 @@ class ChatService:
             self._log_timing(question, timing, started_at, provider="rule")
             return answer
 
-        if fast:
-            direct_answer = build_direct_fast_answer(question)
-            if direct_answer:
-                answer = ChatAnswer(
-                    answer=direct_answer,
-                    provider="local_fast_memory",
-                    model="scenic-memory-v1",
-                    conversation_id=conversation.id,
-                    sources=[],
-                    refused=False,
-                    extra={"timing": timing, "fast": True},
-                )
-                self._persist_assistant_answer(conversation, answer, started_at)
-                self._log_timing(question, timing, started_at, provider="local_fast_memory")
-                return answer
-
         stage_at = time.perf_counter()
         hits = self.rag_service.fast_search(question, top_k=max(top_k, 6)) if fast else self.rag_service.search(question, top_k=min(top_k, 6))
-        if not fast:
-            hits = self._enrich_with_spot_summaries(question, hits)
         timing["rag_ms"] = elapsed_ms(stage_at)
 
         stage_at = time.perf_counter()
         prompt = self.prompt_builder.build(question, hits, history=history_messages)
+        hits = prompt.evidence
         timing["prompt_ms"] = elapsed_ms(stage_at)
         if prompt.should_refuse:
             answer = ChatAnswer(
@@ -207,7 +186,7 @@ class ChatService:
                 conversation_id=conversation.id,
                 sources=hits,
                 refused=False,
-                extra={"error": str(exc), "timing": timing},
+                extra={"error": "model_unavailable", "timing": timing},
             )
             self._persist_assistant_answer(conversation, answer, started_at)
             self._log_timing(question, timing, started_at, provider="fallback")
@@ -229,18 +208,20 @@ class ChatService:
             content=answer.answer,
             sources=sources,
             latency_ms=latency_ms,
+            status="refused" if answer.refused else "failed" if answer.provider == "fallback" else "completed",
+            error_code="model_unavailable" if answer.provider == "fallback" else None,
         )
 
     def _log_timing(self, question: str, timing: dict[str, int], started_at: float, provider: str) -> None:
         logger.info(
-            "chat_timing provider=%s total_ms=%s history_ms=%s rag_ms=%s prompt_ms=%s llm_ms=%s question=%s",
+            "chat_timing provider=%s total_ms=%s history_ms=%s rag_ms=%s prompt_ms=%s llm_ms=%s question_chars=%s",
             provider,
             elapsed_ms(started_at),
             timing.get("history_ms", 0),
             timing.get("rag_ms", 0),
             timing.get("prompt_ms", 0),
             timing.get("llm_ms", timing.get("llm_error_ms", 0)),
-            question[:80],
+            len(question),
         )
 
 
@@ -251,6 +232,8 @@ def elapsed_ms(started_at: float) -> int:
 def build_dynamic_info_refusal(question: str) -> str | None:
     """对知识库没有可靠实时来源的信息明确拒答，避免给出过时推荐。"""
     normalized = question.strip()
+    if any(word in normalized for word in ("开放时间", "几点", "什么时候表演", "演出时间", "场次", "今日", "明天", "实时", "现在开放")):
+        return "开放时间和演出场次可能变化，当前资料没有可核验的实时状态，请以景区官方公告为准。"
     if any(word in normalized for word in ("门票", "票价", "怎么买票", "购票")):
         return (
             "门票价格和购票规则可能随日期、活动与人群政策变化，"

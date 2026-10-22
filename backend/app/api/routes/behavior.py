@@ -12,7 +12,10 @@ from app.schemas.behavior import (
 from app.schemas.response import success
 from app.services.behavior_import_service import BehaviorImportError, BehaviorImportService
 
-router = APIRouter(prefix="/api/behavior", tags=["behavior"])
+from fastapi import Depends
+from app.core.access import require_admin
+
+router = APIRouter(prefix="/api/behavior", tags=["behavior"], dependencies=[Depends(require_admin)])
 
 
 @router.post("/events")

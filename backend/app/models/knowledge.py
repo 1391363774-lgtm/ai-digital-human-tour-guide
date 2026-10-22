@@ -1,10 +1,30 @@
 from datetime import datetime
 from typing import Optional
 
-from sqlalchemy import DateTime, ForeignKey, Integer, String, Text, func
+from sqlalchemy import DateTime, ForeignKey, Integer, String, Text, event, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
+
+
+class KnowledgeRevision(Base):
+    """Shared generation for retrieval caches in every API worker."""
+    __tablename__ = "knowledge_revision"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    revision: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+
+
+class PendingVectorCleanup(Base):
+    """Durable, idempotent deletion work after SQL knowledge changes."""
+    __tablename__ = "pending_vector_cleanup"
+    vector_id: Mapped[str] = mapped_column(String(255), primary_key=True)
+    collection_name: Mapped[str] = mapped_column(String(255), nullable=False)
+
+
+@event.listens_for(KnowledgeRevision.__table__, "after_create")
+def seed_knowledge_revision(table, connection, **kwargs):
+    # Base.metadata.create_all is also used by the packaged SQLite launcher.
+    connection.execute(table.insert().values(id=1, revision=0))
 
 
 class KnowledgeDocument(Base):

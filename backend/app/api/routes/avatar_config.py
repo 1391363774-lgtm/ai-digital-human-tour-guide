@@ -8,7 +8,10 @@ from fastapi import APIRouter, HTTPException
 
 from app.schemas.response import success
 
-router = APIRouter(prefix="/api/admin/avatar", tags=["avatar-config"])
+from fastapi import Depends
+from app.core.access import require_admin
+
+router = APIRouter(prefix="/api/admin/avatar", tags=["avatar-config"], dependencies=[Depends(require_admin)])
 
 PROJECT_ROOT = Path(__file__).resolve().parents[4]
 AVATAR_CONFIG_PATH = PROJECT_ROOT / "frontend" / "public" / "avatar-config.json"

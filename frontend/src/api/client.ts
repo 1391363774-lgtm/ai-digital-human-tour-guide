@@ -1,8 +1,14 @@
 import axios from 'axios'
+import { accessHeaders } from './access'
 
 export const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000',
   timeout: 30000,
+})
+
+apiClient.interceptors.request.use(config => {
+  for (const [key, value] of Object.entries(accessHeaders(config.url || '', config.method))) config.headers.set(key, value)
+  return config
 })
 
 export interface ApiResponse<T> {

@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass
+import json
+from dataclasses import dataclass, field
 from pathlib import Path
 
 from app.services.llm_client import ChatMessage
@@ -38,6 +39,7 @@ class PromptBuildResult:
     messages: list[ChatMessage]
     should_refuse: bool
     refusal_answer: str | None
+    evidence: list[RagHit] = field(default_factory=list)
 
 
 class ScenicGuidePromptBuilder:
@@ -63,7 +65,7 @@ class ScenicGuidePromptBuilder:
                 ),
             )
 
-        reliable_hits = [hit for hit in hits if hit.score >= self.min_score]
+        reliable_hits = [hit for hit in hits if hit.score >= self.min_score and hit.content.strip() and len(hit.content) <= 4000]
         if not reliable_hits:
             return PromptBuildResult(
                 messages=[],
@@ -76,18 +78,29 @@ class ScenicGuidePromptBuilder:
                 ),
             )
 
-        context = build_context_from_hits(reliable_hits)
-        template = load_prompt_template()
-        system_prompt = template.format(context=context, question=question)
+        selected = []
+        used = 0
+        for hit in reliable_hits:
+            if used + len(hit.content) > 4000:
+                break
+            selected.append(hit)
+            used += len(hit.content)
+        data = json.dumps({'evidence': [
+            {'label': f'资料{i}', 'content': hit.content, 'source': hit.source}
+            for i, hit in enumerate(selected, 1)
+        ]}, ensure_ascii=False)
+        system_prompt = load_prompt_template()
         history_messages = history or []
         return PromptBuildResult(
             messages=[
                 ChatMessage(role="system", content=system_prompt),
                 *history_messages,
+                ChatMessage(role="user", content="REFERENCE_DATA_JSON\n" + data, reference_data=True),
                 ChatMessage(role="user", content=question),
             ],
             should_refuse=False,
             refusal_answer=None,
+            evidence=selected,
         )
 
     @staticmethod

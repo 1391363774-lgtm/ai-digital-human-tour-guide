@@ -1,12 +1,19 @@
 from __future__ import annotations
 
 import asyncio
+import base64
+import hashlib
+import logging
+import math
 import re
 import tempfile
 import uuid
+from contextlib import aclosing
 from dataclasses import dataclass
 from pathlib import Path
+from threading import RLock
 
+import anyio
 from fastapi import UploadFile
 
 from app.core.config import get_settings
@@ -14,6 +21,9 @@ from app.core.config import get_settings
 ALLOWED_AUDIO_SUFFIXES = {".wav", ".mp3", ".m4a", ".webm", ".ogg", ".flac"}
 MAX_AUDIO_SIZE = 20 * 1024 * 1024
 DEFAULT_EDGE_TTS_VOICE = "zh-CN-XiaoxiaoNeural"
+MAX_TTS_TEXT_CHARS = 3000
+MAX_TTS_AUDIO_BYTES = 12 * 1024 * 1024
+logger = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True)
@@ -63,7 +73,8 @@ class FasterWhisperAsrService:
                 if item.text.strip()
             ]
         except Exception as exc:
-            raise SpeechServiceError(f"语音识别失败：{exc}") from exc
+            logger.warning("asr_failed error_type=%s", type(exc).__name__)
+            raise SpeechServiceError("语音识别失败，请重试或使用文字输入") from exc
 
         return AsrResult(
             text="".join(segment.text for segment in segments).strip(),
@@ -90,9 +101,10 @@ class FasterWhisperAsrService:
                 compute_type=self.settings.asr_compute_type,
             )
         except Exception as exc:
+            logger.warning("asr_model_unavailable error_type=%s", type(exc).__name__)
             raise SpeechServiceError(
                 "语音模型正在下载或加载中，首次运行预计需要几分钟；"
-                f"如果长时间失败，请检查网络和模型缓存。原始错误：{exc}"
+                "如果长时间失败，请检查网络和模型缓存。"
             ) from exc
 
         return FasterWhisperAsrService._model
@@ -105,22 +117,30 @@ def save_upload_audio(file: UploadFile) -> Path:
 
     size = 0
     target = Path(tempfile.gettempdir()) / f"scenic_asr_{uuid.uuid4().hex}{suffix}"
-    with target.open("wb") as output:
-        while chunk := file.file.read(1024 * 1024):
-            size += len(chunk)
-            if size > MAX_AUDIO_SIZE:
-                target.unlink(missing_ok=True)
-                raise SpeechServiceError("音频文件超过 20MB 限制")
-            output.write(chunk)
+    try:
+        with target.open("wb") as output:
+            while chunk := file.file.read(1024 * 1024):
+                size += len(chunk)
+                if size > MAX_AUDIO_SIZE:
+                    raise SpeechServiceError("音频文件超过 20MB 限制")
+                output.write(chunk)
+        if not size:
+            raise SpeechServiceError("音频文件为空")
+    except BaseException:
+        # On Windows a live file handle cannot be unlinked. Leave the with block first.
+        target.unlink(missing_ok=True)
+        raise
     return target
 
 
 class TtsService:
-    # 类级别音频缓存：所有实例共享，key = "text|voice|rate"
+    # 每进程共享的 FIFO 缓存（不是 LRU）；不保存到磁盘，不在日志记录文本。
     _audio_cache: dict[str, bytes] = {}
     # 预编码 base64 缓存，避免流式响应时重复编码
     _b64_cache: dict[str, str] = {}
     _cache_max_entries = 300
+    _cache_max_bytes = 32 * 1024 * 1024  # audio + base64 payload, excluding Python object overhead
+    _cache_lock = RLock()
 
     def __init__(self) -> None:
         self.settings = get_settings()
@@ -128,49 +148,61 @@ class TtsService:
     @classmethod
     def _cache_key(cls, text: str, voice: str, rate: float) -> str:
         # 统一 rate 格式，避免 1(int) vs 1.0(float) 导致缓存 key 不匹配
-        return f"{text}|{voice}|{float(rate)}"
+        return hashlib.sha256(f"{text}|{voice}|{float(rate)}".encode("utf-8")).hexdigest()
 
     @classmethod
     def _cache_get(cls, text: str, voice: str, rate: float) -> bytes | None:
         key = cls._cache_key(text, voice, rate)
-        return cls._audio_cache.get(key)
+        with cls._cache_lock:
+            return cls._audio_cache.get(key)
 
     @classmethod
     def _b64_get(cls, text: str, voice: str, rate: float) -> str | None:
         """获取预编码的 base64 字符串，缓存未命中返回 None。"""
         key = cls._cache_key(text, voice, rate)
-        return cls._b64_cache.get(key)
+        with cls._cache_lock:
+            return cls._b64_cache.get(key)
 
     @classmethod
     def _cache_put(cls, text: str, voice: str, rate: float, audio: bytes) -> None:
-        if len(cls._audio_cache) >= cls._cache_max_entries:
-            # 简单 LRU：移除最早的条目
-            oldest_key = next(iter(cls._audio_cache))
-            cls._audio_cache.pop(oldest_key, None)
-            cls._b64_cache.pop(oldest_key, None)
         key = cls._cache_key(text, voice, rate)
-        cls._audio_cache[key] = audio
-        # 预编码 base64，流式响应时直接取用
-        import base64 as _b64mod
-        cls._b64_cache[key] = _b64mod.b64encode(audio).decode("ascii")
+        encoded = base64.b64encode(audio).decode("ascii")
+        item_size = len(audio) + len(encoded)
+        with cls._cache_lock:
+            if item_size > cls._cache_max_bytes:
+                return
+            cls._audio_cache.pop(key, None)
+            cls._b64_cache.pop(key, None)
+            used = sum(len(value) for value in cls._audio_cache.values()) + sum(len(value) for value in cls._b64_cache.values())
+            while cls._audio_cache and (len(cls._audio_cache) >= cls._cache_max_entries or used + item_size > cls._cache_max_bytes):
+                oldest_key = next(iter(cls._audio_cache))
+                used -= len(cls._audio_cache.pop(oldest_key)) + len(cls._b64_cache.pop(oldest_key, ""))
+            cls._audio_cache[key] = audio
+            cls._b64_cache[key] = encoded
+
+    @staticmethod
+    def _validate_text(text: str) -> str:
+        if not text.strip():
+            raise SpeechServiceError("TTS 文本不能为空")
+        if len(text) > MAX_TTS_TEXT_CHARS:
+            raise SpeechServiceError("TTS 文本超过 3000 字符限制，请分段请求")
+        return text.strip()
 
     async def synthesize_mp3(self, text: str, voice: str | None = None, rate: float = 1.0) -> bytes:
-        clean_text = text.strip()
-        if not clean_text:
-            raise SpeechServiceError("TTS 文本不能为空")
-        if len(clean_text) > 3000:
-            clean_text = clean_text[:3000]
+        clean_text = self._validate_text(text)
+        formatted_rate = self._format_edge_rate(rate)
+        if self.settings.demo_mode:
+            from app.services.demo_service import demo_audio
+            return demo_audio(clean_text, rate)
 
         selected_voice = voice or DEFAULT_EDGE_TTS_VOICE
 
         # 缓存命中 → 直接返回，无需网络请求
         cached = self._cache_get(clean_text, selected_voice, rate)
         if cached is not None:
-            import sys
-            print(f"[CACHE HIT] len={len(self._audio_cache)} key={clean_text[:20]}...|{selected_voice}|{rate}({type(rate).__name__})", file=sys.stderr, flush=True)
+            logger.debug("tts_cache_hit chars=%d", len(clean_text))
             return cached
-        import sys
-        print(f"[CACHE MISS] key={clean_text[:20]}...|{selected_voice}|{rate}({type(rate).__name__})", file=sys.stderr, flush=True)
+        logger.debug("tts_cache_miss chars=%d", len(clean_text))
 
         try:
             import edge_tts
@@ -181,7 +213,7 @@ class TtsService:
             communicate = edge_tts.Communicate(
                 text=clean_text,
                 voice=selected_voice,
-                rate=self._format_edge_rate(rate),
+                rate=formatted_rate,
             )
             try:
                 chunks = await asyncio.wait_for(
@@ -193,7 +225,8 @@ class TtsService:
         except SpeechServiceError:
             raise
         except Exception as exc:
-            raise SpeechServiceError(f"edge-tts 语音合成失败：{exc}") from exc
+            logger.warning("tts_provider_failed error_type=%s", type(exc).__name__)
+            raise SpeechServiceError("语音合成失败，请重试或使用文字阅读") from exc
 
         if not audio:
             raise SpeechServiceError("edge-tts 未返回有效音频")
@@ -203,16 +236,26 @@ class TtsService:
 
     @staticmethod
     async def _collect_audio_chunks(communicate) -> list[bytes]:
-        """从 edge_tts.Communicate.stream() 中收集所有音频 chunk。"""
+        """只收集音频；未消费的词边界不代表已实现音素或嘴形同步。"""
         chunks: list[bytes] = []
-        async for chunk in communicate.stream():
-            if chunk["type"] == "audio":
-                chunks.append(chunk["data"])
+        size = 0
+        stream = communicate.stream()
+        try:
+            async for chunk in stream:
+                if chunk["type"] == "audio":
+                    size += len(chunk["data"])
+                    if size > MAX_TTS_AUDIO_BYTES:
+                        raise SpeechServiceError("生成的音频超过大小限制，请缩短文本")
+                    chunks.append(chunk["data"])
+        finally:
+            with anyio.CancelScope(shield=True):
+                await stream.aclose()
         return chunks
 
     def _format_edge_rate(self, rate: float) -> str:
+        if not math.isfinite(rate) or not 0.5 <= rate <= 1.5:
+            raise SpeechServiceError("语速必须为 0.5 到 1.5 之间的有限数值")
         percent = int(round((rate - 1.0) * 100))
-        percent = max(-50, min(50, percent))
         return f"{percent:+d}%"
 
     # ---- 分段流式合成 ----
@@ -226,11 +269,12 @@ class TtsService:
         2. 如果某段仍超过 max_segment_chars，再按逗号/分号切分
         3. 如果仍超长，硬切分
         """
+        if not 1 <= max_segment_chars <= MAX_TTS_TEXT_CHARS:
+            raise SpeechServiceError("分段长度不合法")
         clean = text.strip()
         if not clean:
             return []
-        if len(clean) > 3000:
-            clean = clean[:3000]
+        TtsService._validate_text(text)
 
         # 按句末标点切分
         raw_sentences = re.split(r'(?<=[。！？\n])', clean)
@@ -278,21 +322,10 @@ class TtsService:
         max_concurrency: int = 5,
     ) -> list[bytes]:
         """并行合成多段文本，返回与 segments 对应的 MP3 bytes 列表。"""
-        if not segments:
-            return []
-
-        semaphore = asyncio.Semaphore(max_concurrency)
-
-        async def synth_one(seg: str) -> bytes:
-            async with semaphore:
-                try:
-                    return await self.synthesize_segment(seg, voice=voice, rate=rate)
-                except SpeechServiceError:
-                    raise
-                except Exception as exc:
-                    raise SpeechServiceError(f"分段合成失败：{exc}") from exc
-
-        return await asyncio.gather(*[synth_one(s) for s in segments])
+        async with aclosing(self.synthesize_segments_streaming(
+            segments, voice=voice, rate=rate, first_batch_size=0, max_concurrency=max_concurrency,
+        )) as stream:
+            return [audio async for _, _, audio in stream]
 
     async def synthesize_segments_streaming(
         self,
@@ -302,60 +335,53 @@ class TtsService:
         first_batch_size: int = 1,
         max_concurrency: int = 5,
     ):
-        """流式合成：先合成第一批段并逐个 yield，剩余段并行合成后按顺序 yield。
+        """有界窗口预取，按原序返回；消费者停止时取消并等待所有子任务。
 
-        返回 (index, text, audio_bytes) 元组的异步生成器。
-        前端拿到第一批即可开始播放，同时后端并行合成后续段。
+        最多 max_concurrency 个在途／已完成待消费段，慢消费者不会无限堆积音频。
         """
+        if not 1 <= max_concurrency <= 8 or first_batch_size < 0:
+            raise SpeechServiceError("语音并发参数不合法")
         if not segments:
             return
 
         total = len(segments)
         first_count = min(first_batch_size, total)
-        rest = segments[first_count:]
 
         # 第一批：逐个同步合成，立即 yield（让前端尽快开始播放）
         for i in range(first_count):
             audio = await self.synthesize_segment(segments[i], voice=voice, rate=rate)
             yield i, segments[i], audio
 
-        if not rest:
-            return
-
-        # 剩余段：并行合成，用缓冲区保证按原始顺序 yield
-        semaphore = asyncio.Semaphore(max_concurrency)
-
-        async def synth_one(idx: int, seg: str) -> tuple[int, str, bytes]:
-            async with semaphore:
-                try:
-                    return idx, seg, await self.synthesize_segment(seg, voice=voice, rate=rate)
-                except SpeechServiceError:
-                    raise
-                except Exception as exc:
-                    raise SpeechServiceError(f"分段合成失败：{exc}") from exc
-
-        tasks = [
-            asyncio.create_task(synth_one(first_count + i, seg))
-            for i, seg in enumerate(rest)
-        ]
-
-        buffer: dict[int, tuple[str, bytes]] = {}
-        next_yield = first_count
-
-        for coro in asyncio.as_completed(tasks):
-            idx, seg, audio = await coro
-            buffer[idx] = (seg, audio)
-            while next_yield in buffer:
-                seg, audio = buffer.pop(next_yield)
-                next_yield += 1
-                yield next_yield - 1, seg, audio
+        pending: dict[int, asyncio.Task] = {}
+        next_start = first_count
+        try:
+            for index in range(first_count, total):
+                while next_start < total and len(pending) < max_concurrency:
+                    pending[next_start] = asyncio.create_task(
+                        self.synthesize_segment(segments[next_start], voice=voice, rate=rate),
+                        name=f"tts-segment-{next_start}",
+                    )
+                    next_start += 1
+                audio = await pending[index]
+                del pending[index]
+                yield index, segments[index], audio
+        except SpeechServiceError:
+            raise
+        except Exception as exc:
+            logger.warning("tts_segment_failed error_type=%s", type(exc).__name__)
+            raise SpeechServiceError("分段语音合成失败，请重试") from exc
+        finally:
+            for task in pending.values():
+                task.cancel()
+            with anyio.CancelScope(shield=True):
+                await asyncio.gather(*pending.values(), return_exceptions=True)
 
 
 async def prewarm_tts_cache(texts: list[str], voice: str = DEFAULT_EDGE_TTS_VOICE, rate: float = 1.0) -> int:
     """预合成热点文本的音频并缓存。返回成功预热的条数。
 
     在后端启动后异步执行，不影响启动速度。
-    预热后对应文本的 TTS 请求将直接从缓存返回，延迟 < 50ms。
+    预热后对应文本的 TTS 请求可直接从进程内缓存返回，不保证固定延迟。
     使用并行合成（并发 8）加速预热过程。
     """
     svc = TtsService()
@@ -366,21 +392,14 @@ async def prewarm_tts_cache(texts: list[str], voice: str = DEFAULT_EDGE_TTS_VOIC
         segments = svc.split_text_segments(text, max_segment_chars=25)
         all_segments.extend(segments)
 
-    total = len(all_segments)
-
-    # 并行预合成，限制并发数
-    semaphore = asyncio.Semaphore(8)
-
     async def synth_one(seg: str) -> int:
-        async with semaphore:
-            try:
-                await svc.synthesize_segment(seg, voice=voice, rate=rate)
-                return 1
-            except SpeechServiceError:
-                return 0
-            except Exception:
-                return 0
+        try:
+            await svc.synthesize_segment(seg, voice=voice, rate=rate)
+            return 1
+        except Exception:
+            return 0
 
-    results = await asyncio.gather(*[synth_one(seg) for seg in all_segments])
-    success = sum(results)
+    success = 0
+    for offset in range(0, len(all_segments), 8):
+        success += sum(await asyncio.gather(*[synth_one(seg) for seg in all_segments[offset:offset + 8]]))
     return success

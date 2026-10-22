@@ -15,7 +15,23 @@ from app.services.document_parser import DocumentParser, DocumentParserError
 from app.services.knowledge_index_service import KnowledgeIndexService
 from app.services.knowledge_upload_service import KnowledgeUploadError, KnowledgeUploadService
 
-router = APIRouter(prefix="/api/admin/knowledge", tags=["knowledge"])
+from app.core.access import require_admin
+
+router = APIRouter(prefix="/api/admin/knowledge", tags=["knowledge"], dependencies=[Depends(require_admin)])
+
+
+@router.post("/cleanup-vectors")
+def retry_vector_cleanup(db: Session = Depends(get_db)):
+    """Retry durable deletions; unavailable Chroma keeps them pending."""
+    return success(KnowledgeIndexService(db).cleanup_pending())
+
+
+@router.post("/rebuild-index")
+def rebuild_knowledge_index(db: Session = Depends(get_db)):
+    try:
+        return success(KnowledgeIndexService(db).index_all())
+    except RuntimeError as exc:
+        raise HTTPException(status_code=503, detail="知识索引重建未完成，请重试；SQL知识仍可词法检索") from exc
 
 
 @router.post("/upload")
@@ -117,7 +133,8 @@ def build_knowledge_document_chunks(
         ).model_dump()
         for chunk in chunks
     ]
-    return success({"chunk_count": len(chunks), "chunks": data[:20]})
+    cleanup = KnowledgeIndexService(db).cleanup_pending()
+    return success({"chunk_count": len(chunks), "chunks": data[:20], **cleanup})
 
 
 @router.post("/{document_id}/chunk")
@@ -160,4 +177,4 @@ def delete_knowledge_document(
     if document is None:
         raise HTTPException(status_code=404, detail="知识文档不存在")
     repository.delete(document)
-    return success({"deleted": True})
+    return success({"deleted": True, **KnowledgeIndexService(db).cleanup_pending()})

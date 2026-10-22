@@ -4,14 +4,19 @@ import json
 import logging
 import re
 import time
+from copy import deepcopy
 from hashlib import sha256
 from dataclasses import dataclass
+from threading import RLock
 from typing import Any
 
 import sqlalchemy
 from sqlalchemy import select
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
+from app.core.knowledge_revision import retrieval_generation
+from app.core.config import get_settings
+from app.models.knowledge import KnowledgeChunk
 from app.models.scenic import ScenicSpot
 from app.repositories.knowledge_repository import KnowledgeDocumentRepository
 from app.services.embedding_service import EmbeddingService
@@ -29,7 +34,8 @@ class RagHit:
 
 
 class RagService:
-    _cache: dict[str, tuple[float, list[RagHit]]] = {}
+    _cache: dict[tuple, tuple[float, list[RagHit]]] = {}
+    _cache_lock = RLock()
     _cache_ttl_seconds = 30 * 60
     _vector_disabled_until = 0.0
     _vector_retry_seconds = 60
@@ -41,28 +47,31 @@ class RagService:
         self.vector_store = VectorStoreService()
 
     def search(self, query: str, top_k: int = 5) -> list[RagHit]:
+        if get_settings().demo_mode:
+            return self.fast_search(query, top_k)
         normalized_query = normalize_query(query)
         if not normalized_query:
             return []
 
-        cache_key = make_cache_key(normalized_query, top_k)
-        cached = self._cache.get(cache_key)
+        cache_key = (*self._generation(), make_cache_key(normalized_query, top_k))
         now = time.time()
-        if cached and now - cached[0] <= self._cache_ttl_seconds:
-            return cached[1]
+        cached = self._cached(cache_key, now)
+        if cached is not None:
+            return cached
 
         vector_hits: list[RagHit] = []
         if now >= type(self)._vector_disabled_until:
             try:
                 query_embedding = self.embedding_service.embed_query(normalized_query)
                 results = self.vector_store.search(query_embedding.vector, top_k=top_k * 2)
+                results = self._current_vector_results(results)
                 if results:
                     vector_hits = [self._hit_from_vector_result(item) for item in results]
             except Exception as exc:
                 # 向量库是增强能力而不是单点依赖。Chroma 在索引损坏、版本迁移或
                 # 文件锁异常时可能抛出 RuntimeError 以外的异常，此时继续词法检索。
                 type(self)._vector_disabled_until = now + self._vector_retry_seconds
-                logger.warning("向量检索不可用，60 秒内使用词法检索：%s", exc)
+                logger.warning("向量检索不可用，60 秒内使用词法检索：%s", type(exc).__name__)
 
         spot_name_hits = self._spot_name_boost(query, vector_hits, normalized_query)
 
@@ -70,8 +79,7 @@ class RagService:
             spot_name_hits = self._fallback_lexical_search(normalized_query, top_k=top_k)
 
         merged = _merge_and_dedup(vector_hits + spot_name_hits, top_k=top_k)
-        self._cache[cache_key] = (now, merged)
-        self._prune_cache(now)
+        self._store_cached(cache_key, now, merged)
         return merged
 
     def fast_search(self, query: str, top_k: int = 3) -> list[RagHit]:
@@ -79,18 +87,52 @@ class RagService:
         if not normalized_query:
             return []
 
-        cache_key = make_cache_key(f"fast:{normalized_query}", top_k)
-        cached = self._cache.get(cache_key)
+        cache_key = (*self._generation(), make_cache_key(f"fast:{normalized_query}", top_k))
         now = time.time()
-        if cached and now - cached[0] <= self._cache_ttl_seconds:
-            return cached[1]
+        cached = self._cached(cache_key, now)
+        if cached is not None:
+            return cached
 
         hits = self._spot_name_boost(query, [], normalized_query)
         hits.extend(self._fallback_lexical_search(normalized_query, top_k=top_k))
         merged = _merge_and_dedup(hits, top_k=top_k)
-        self._cache[cache_key] = (now, merged)
-        self._prune_cache(now)
+        self._store_cached(cache_key, now, merged)
         return merged
+
+    def _generation(self):
+        return retrieval_generation(self.db)
+
+    def _cached(self, key, now):
+        with self._cache_lock:
+            cached = self._cache.get(key)
+            if cached and now - cached[0] <= self._cache_ttl_seconds:
+                return deepcopy(cached[1])
+        return None
+
+    def _store_cached(self, key, now, hits):
+        # An in-flight reader can only populate its old generation, never the
+        # new key. Lock the compound write/prune operation, not model/DB I/O.
+        with self._cache_lock:
+            self._cache[key] = (now, deepcopy(hits))
+            self._prune_cache(now)
+
+    def _current_vector_results(self, results):
+        """Deleted/rechunked SQL content must not reappear from Chroma."""
+        if not results:
+            return []
+        ids = [item.id for item in results]
+        chunks = self.db.scalars(
+            select(KnowledgeChunk).options(joinedload(KnowledgeChunk.document))
+            .where(KnowledgeChunk.vector_id.in_(ids))
+            .execution_options(populate_existing=True)
+        ).all()
+        current = {chunk.vector_id: chunk for chunk in chunks}
+        validated = []
+        for item in results:
+            chunk = current.get(item.id)
+            if chunk is not None and chunk.content == item.content:
+                validated.append(VectorSearchResult(item.id, chunk.content, source_for_chunk(chunk, "vector"), item.distance))
+        return validated
 
     def build_context(self, query: str, top_k: int = 5, max_chars: int = 2400) -> str:
         hits = self.search(query, top_k=top_k)
@@ -122,13 +164,7 @@ class RagService:
         for chunk in extra_chunks:
             if chunk.content[:60] in existing_content_set:
                 continue
-            source = load_metadata(chunk.metadata_json)
-            source.update({
-                "chunk_id": chunk.id,
-                "document_id": chunk.document_id,
-                "spot_id": chunk.spot_id,
-                "retrieval": "spot_name_boost",
-            })
+            source = source_for_chunk(chunk, "spot_name_boost")
             boosted.append(RagHit(
                 content=chunk.content,
                 score=keyword_score(extra_keywords, chunk.content) + 0.2,
@@ -145,13 +181,7 @@ class RagService:
         chunks = self.repository.lexical_search_chunks(to_keyword_query(query), limit=top_k)
         hits: list[RagHit] = []
         for chunk in chunks:
-            source = load_metadata(chunk.metadata_json)
-            source.update({
-                "chunk_id": chunk.id,
-                "document_id": chunk.document_id,
-                "spot_id": chunk.spot_id,
-                "retrieval": "lexical_fallback",
-            })
+            source = source_for_chunk(chunk, "lexical_fallback")
             hits.append(RagHit(content=chunk.content, score=keyword_score(query, chunk.content), source=source))
         return hits
 
@@ -168,6 +198,25 @@ class RagService:
         while len(self._cache) > 256:
             oldest_key = min(self._cache, key=lambda key: self._cache[key][0])
             self._cache.pop(oldest_key, None)
+
+
+def source_for_chunk(chunk: KnowledgeChunk, retrieval: str) -> dict[str, Any]:
+    """Public evidence is constructed from SQL, never trusted vector metadata.
+
+    Uploaded documents are ordinary data, not verified official sources. Local
+    file paths and arbitrary uploaded URLs must never reach the visitor UI.
+    """
+    section_title = load_metadata(chunk.metadata_json).get("section_title", "")
+    document = chunk.document
+    return {
+        "chunk_id": chunk.id, "document_id": document.id,
+        "document_title": document.title, "document_version": document.version,
+        "section_title": section_title[:255] if isinstance(section_title, str) else "",
+        "spot_id": chunk.spot_id, "retrieval": retrieval,
+        "updated_at": document.updated_at.isoformat() if document.updated_at else None,
+        "excerpt": chunk.content[:400], "source_type": document.source_type,
+        "source_verified": False, "evidence_url": f"/api/rag/sources/{chunk.id}",
+    }
 
 
 def _merge_and_dedup(hits: list[RagHit], top_k: int) -> list[RagHit]:

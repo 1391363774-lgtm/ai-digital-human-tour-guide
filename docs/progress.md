@@ -1,0 +1,35 @@
+# 进度（2026-10-23）
+
+基线 master `f387e0deadcb97b89dca0f4994d6eda88d883991`；独立 checkout/分支复用 PR #1。未修改旧项目或求职材料。
+
+## 已完成的本地基础闭环
+
+- 保留异步 SSE/空流 fallback/SQL 知识版本；追加协议、取消与回答终态持久化。
+- 管理员默认拒绝，游客会话/收藏隔离；旧无归属历史保留但不公开认领。
+- 知识变更/删除/重建、部分写入与可重试清理；SQL 权威引用，fast 不绕过知识。
+- 有界分句队列、手动打断、旧请求隔离、静音闭嘴和文字降级；不是音素同步。
+- 无 Key 样例启动；真实新 SQLite HTTP 冒烟；实际浏览器检查回答/引用/播放/停止。
+- S1 `9c37c31` 及本批 `232456ca54f906915c5b5f827c0c57b408233f5a` 已推送，Linux/Windows × Python3.11/3.13 和前端 CI 全部通过。
+- 远端证据：[PR 检查](https://github.com/1391363774-lgtm/ai-digital-human-tour-guide/actions/runs/39825877752)、[push 检查](https://github.com/1391363774-lgtm/ai-digital-human-tour-guide/actions/runs/39825873879)。每个后端作业 106 passed；前端 17 passed + build。最终合并状态见 [PR #1](https://github.com/1391363774-lgtm/ai-digital-human-tour-guide/pull/1)，不把推送等同部署。
+
+## 本轮检查
+
+- 最终后端 106 passed / 19.35s（补充 fast 路径诊断断言后），pip check 通过。
+- 最终前端 17 passed；最后一次正式类型/构建通过 / Vite 7.47s。
+- 已分批本地提交：451845c 访问/索引一致性，294218d 依据/语音/离线演示，4a0d715 播放队列/音量口型；整体最终快照经上述测试验证。
+- Windows 覆盖旧 dist 时 Node 原生崩溃仍待调查；保留旧产物后同一命令成功，未跳过类型检查或压缩。
+- 没有付费模型调用、私人录音上传、公开部署或网站发布。
+
+## 未完成 / 未验证
+
+- 真实模型、Edge TTS、ASR、硬件听感/停声、录屏和自动播放受限设备。
+- 真实 Chroma/PostgreSQL、多 worker Chroma、Docker 和重新打包 exe。
+- 100 题来源/片段/参考答案复核、独立验收集、新的事实/引用评测。
+- 12 场景 JSON/CSV 汇总诊断器。已有回归不伪称盲验收。
+- 完整账号、生产限流、压缩文档资源限制；暂不建议公网部署。
+
+## 下一项与贡献边界
+
+本批代码和远端 CI 已核验；后续文档记录提交不改变实现，PR 合并仍需其最终检查通过。下一项是补齐真实资料评测，而非增加模型/Agent 名词。语义 embedding、viseme、自动打断/AEC 暂缓，收益没有对比数据。`bench/code_assistant` 已有 20 任务实验设计，但未运行模型 A/B，不代表开发了 Coding Agent。
+
+本人贡献仍为未核验。只有用户自己的提交、演示或讲解完成后才能另行认定个人掌握；公开材料不记录个人学习弱点。

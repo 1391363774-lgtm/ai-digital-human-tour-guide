@@ -1,4 +1,5 @@
 import { apiClient, unwrap } from './client'
+import { readLines } from './stream'
 
 export interface AsrResponse {
   text: string
@@ -7,13 +8,14 @@ export interface AsrResponse {
   segments: Array<{ start: number; end: number; text: string }>
 }
 
-export function transcribeAudio(file: Blob) {
+export function transcribeAudio(file: Blob, signal?: AbortSignal) {
   const formData = new FormData()
   formData.append('file', file, `recording.${audioExtension(file.type)}`)
   return unwrap<AsrResponse>(
     apiClient.post('/api/speech/asr', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
       timeout: 120000,
+      signal,
     }),
   )
 }
@@ -30,21 +32,28 @@ export interface TtsPayload {
   text: string
   voice?: string
   rate?: number
+  request_id?: string
+  segment_id?: string
 }
 
-export async function synthesizeSpeech(text: string, voice = 'zh-CN-XiaoxiaoNeural', rate = 1) {
+export async function synthesizeSpeech(
+  text: string, voice = 'zh-CN-XiaoxiaoNeural', rate = 1,
+  signal?: AbortSignal, ids?: { request_id: string; segment_id: string },
+) {
   const response = await apiClient.post<Blob>(
     '/api/speech/tts',
-    { text, voice, rate } satisfies TtsPayload,
+    { text, voice, rate, ...ids } satisfies TtsPayload,
     {
       responseType: 'blob',
-      timeout: 120000,
+      timeout: 30000,
+      signal,
     },
   )
   const contentType = String(response.headers['content-type'] || '')
   if (!contentType.includes('audio/')) {
     throw new Error('后端未返回有效音频')
   }
+  if (!response.data.size || response.data.size > 4 * 1024 * 1024) throw new Error('音频为空或超出单段限制')
   return response.data
 }
 
@@ -102,45 +111,28 @@ export async function streamSynthesizeSpeech(
     throw new Error(`流式 TTS 请求失败: ${response.status}`)
   }
 
-  const reader = response.body?.getReader()
-  if (!reader) {
-    throw new Error('无法读取响应流')
-  }
-
-  const decoder = new TextDecoder()
-  let buffer = ''
-
-  while (true) {
-    const { done, value } = await reader.read()
-    if (done) break
-
-    buffer += decoder.decode(value, { stream: true })
-    const lines = buffer.split('\n')
-    buffer = lines.pop() || ''
-
-    for (const line of lines) {
-      const trimmed = line.trim()
-      if (!trimmed) continue
-      try {
-        const msg = JSON.parse(trimmed)
-        if (msg.type === 'meta') {
-          onMeta?.(msg.total_segments)
-        } else if (msg.type === 'segment') {
-          onSegment(
-            { text: msg.text, audio_base64: msg.audio_base64, size: msg.size },
-            msg.index,
-          )
-        } else if (msg.type === 'error') {
-          throw new Error(msg.message || '语音合成失败')
-        }
-      } catch (e) {
-        // SyntaxError = JSON 解析失败，跳过即可；其他错误必须抛出
-        if (!(e instanceof SyntaxError)) {
-          throw e
-        }
+  let total: number | null = null
+  let next = 0
+  for await (const line of readLines(response, signal)) {
+    if (!line.trim()) continue
+    const msg = JSON.parse(line)
+    if (msg.type === 'meta') {
+      if (total !== null || !Number.isInteger(msg.total_segments) || msg.total_segments < 1 || msg.total_segments > 3000) throw new Error('无效语音段总数')
+      total = msg.total_segments
+      onMeta?.(total!)
+    } else if (msg.type === 'segment') {
+      if (total === null || msg.index !== next || next >= total || typeof msg.text !== 'string' ||
+        !msg.text.trim() || typeof msg.audio_base64 !== 'string' || !msg.audio_base64 || msg.audio_base64.length > 5_600_000) {
+        throw new Error('语音段重复、乱序或格式错误')
       }
-    }
+      onSegment({ text: msg.text, audio_base64: msg.audio_base64, size: msg.size }, next++)
+    } else if (msg.type === 'error') throw new Error('语音合成未完成，已保留文字')
+    else if (msg.type === 'done') {
+      if (total === null || next !== total || msg.total_segments !== total) throw new Error('语音段缺失')
+      return
+    } else throw new Error('未知语音流事件')
   }
+  throw new Error('语音连接提前关闭：缺少 done')
 }
 
 /** base64 转 Blob */

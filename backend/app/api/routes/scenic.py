@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
+from app.core.access import require_admin
 from app.repositories.scenic_repository import ScenicSpotRepository
 from app.schemas.response import success
 from app.schemas.scenic import ScenicSpotCreate, ScenicSpotOut, ScenicSpotUpdate
@@ -20,13 +21,13 @@ def list_public_spots(
     return success([ScenicSpotOut.model_validate(item).model_dump() for item in spots])
 
 
-@router.post("/admin/spots")
+@router.post("/admin/spots", dependencies=[Depends(require_admin)])
 def create_spot(payload: ScenicSpotCreate, db: Session = Depends(get_db)):
     spot = ScenicSpotRepository(db).create(payload)
     return success(ScenicSpotOut.model_validate(spot).model_dump())
 
 
-@router.put("/admin/spots/{spot_id}")
+@router.put("/admin/spots/{spot_id}", dependencies=[Depends(require_admin)])
 def update_spot(spot_id: int, payload: ScenicSpotUpdate, db: Session = Depends(get_db)):
     repository = ScenicSpotRepository(db)
     spot = repository.get(spot_id)
@@ -36,7 +37,7 @@ def update_spot(spot_id: int, payload: ScenicSpotUpdate, db: Session = Depends(g
     return success(ScenicSpotOut.model_validate(updated).model_dump())
 
 
-@router.delete("/admin/spots/{spot_id}")
+@router.delete("/admin/spots/{spot_id}", dependencies=[Depends(require_admin)])
 def delete_spot(spot_id: int, db: Session = Depends(get_db)):
     repository = ScenicSpotRepository(db)
     spot = repository.get(spot_id)
