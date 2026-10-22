@@ -111,8 +111,8 @@ async def chat_stream(
             logger.info("chat_stream_finished request_id=%s status=%s first_text_ms=%s total_ms=%s",
                         request_id, status, first_text_ms, int((time.perf_counter() - started_at) * 1000))
         yield event("done", conversation_id=conversation_id, status=status, first_text_ms=first_text_ms,
-                    provider=getattr(client, "selected_provider", None) or getattr(client, "provider", "rule"),
-                    model=getattr(client, "selected_model", None) or getattr(client, "model", "refusal-or-fast"),
+                    provider=getattr(client, "selected_provider", None) or getattr(client, "provider", "local_fast_rag" if fast_answer else "rule"),
+                    model=getattr(client, "selected_model", None) or getattr(client, "model", "extractive-guide-v1" if fast_answer else "refusal"),
                     fallback_from=getattr(client, "failed_providers", []),
                     total_ms=int((time.perf_counter() - started_at) * 1000))
 

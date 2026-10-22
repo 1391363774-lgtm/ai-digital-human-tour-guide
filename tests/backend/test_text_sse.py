@@ -46,6 +46,9 @@ def test_sse_protocol_and_database_work_stays_off_event_loop(monkeypatch, mode):
 
     events = asyncio.run(run())
     assert '"type": "done"' in events[-1]
+    if mode in ("fast", "refusal"):
+        expected = "local_fast_rag" if mode == "fast" else "rule"
+        assert f'"provider": "{expected}"' in events[-1]
     assert any('"type": "error"' in event for event in events) == ("error" in mode)
     assert saved == [{"refusal": "refused", "early_error": "", "fast": "fast"}.get(mode, "first")]
 
