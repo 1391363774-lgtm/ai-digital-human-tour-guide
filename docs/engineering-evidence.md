@@ -82,6 +82,8 @@ npm run build
 
 ## S4：无 Key 启动与验收边界
 
+发布证据：代码快照 [`232456c`](https://github.com/1391363774-lgtm/ai-digital-human-tour-guide/commit/232456ca54f906915c5b5f827c0c57b408233f5a) 已在远端；[PR CI](https://github.com/1391363774-lgtm/ai-digital-human-tour-guide/actions/runs/39825877752) 与 [push CI](https://github.com/1391363774-lgtm/ai-digital-human-tour-guide/actions/runs/39825873879) 全绿。日志确认四个后端环境各 106 passed、前端 17 passed + 正式构建。最终 PR 合并状态以 [PR #1](https://github.com/1391363774-lgtm/ai-digital-human-tour-guide/pull/1) 为准；没有公开部署。
+
 `scripts/run_demo.py` 在独立目录建 SQLite/迁移至 0006/导入公开小样例，监听 127.0.0.1；不读取 .env，清空模型 Key，强制模拟模型和固定音调、关闭 ASR/VLM/在线预热。demo 走 SQL 词法，不依赖 Chroma；默认不加载 Live2D CDN。故障开关只有 demo + 管理密钥可用，限定单 worker。
 
 `test_demo_smoke.py` 从新目录启动真实子进程，通过 localhost HTTP 验证引用、拒答、空流备用、WAV 静音、游客隔离及禁用 ASR。不是只 mock 函数；也不证明完整景区问答质量。新增配置/HTTP 头、迁移与兼容性见 README。

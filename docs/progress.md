@@ -9,7 +9,8 @@
 - 知识变更/删除/重建、部分写入与可重试清理；SQL 权威引用，fast 不绕过知识。
 - 有界分句队列、手动打断、旧请求隔离、静音闭嘴和文字降级；不是音素同步。
 - 无 Key 样例启动；真实新 SQLite HTTP 冒烟；实际浏览器检查回答/引用/播放/停止。
-- S1 `9c37c31` 已推送，Linux/Windows × Python3.11/3.13 和前端 CI 全部通过；本批最终 SHA/CI 在发布确认后补记。
+- S1 `9c37c31` 及本批 `232456ca54f906915c5b5f827c0c57b408233f5a` 已推送，Linux/Windows × Python3.11/3.13 和前端 CI 全部通过。
+- 远端证据：[PR 检查](https://github.com/1391363774-lgtm/ai-digital-human-tour-guide/actions/runs/39825877752)、[push 检查](https://github.com/1391363774-lgtm/ai-digital-human-tour-guide/actions/runs/39825873879)。每个后端作业 106 passed；前端 17 passed + build。最终合并状态见 [PR #1](https://github.com/1391363774-lgtm/ai-digital-human-tour-guide/pull/1)，不把推送等同部署。
 
 ## 本轮检查
 
@@ -29,6 +30,6 @@
 
 ## 下一项与贡献边界
 
-先完成本批提交推送、PR CI 和合并核验；之后补齐真实资料评测，而非增加模型/Agent 名词。语义 embedding、viseme、自动打断/AEC 暂缓，收益没有对比数据。`bench/code_assistant` 已有 20 任务实验设计，但未运行模型 A/B，不代表开发了 Coding Agent。
+本批代码和远端 CI 已核验；后续文档记录提交不改变实现，PR 合并仍需其最终检查通过。下一项是补齐真实资料评测，而非增加模型/Agent 名词。语义 embedding、viseme、自动打断/AEC 暂缓，收益没有对比数据。`bench/code_assistant` 已有 20 任务实验设计，但未运行模型 A/B，不代表开发了 Coding Agent。
 
 本人贡献仍为未核验。只有用户自己的提交、演示或讲解完成后才能另行认定个人掌握；公开材料不记录个人学习弱点。
