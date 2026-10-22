@@ -27,6 +27,7 @@
 from __future__ import annotations
 
 import argparse
+import secrets
 import json
 import re
 import sys
@@ -40,6 +41,7 @@ from typing import Any
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_DATASET = PROJECT_ROOT / "data" / "eval" / "qa_testset.json"
 REPORT_PATH = PROJECT_ROOT / "data" / "eval" / "eval_report_optimized.json"
+VISITOR_KEY = secrets.token_hex(32)
 
 # 关键词匹配通过阈值
 PASS_THRESHOLD = 0.6
@@ -64,7 +66,7 @@ def _post_json(base_url: str, path: str, payload: dict, timeout: int = 60) -> di
         base_url.rstrip("/") + path,
         data=data,
         method="POST",
-        headers={"Content-Type": "application/json"},
+        headers={"Content-Type": "application/json", "X-Visitor-Key": VISITOR_KEY},
     )
     with urllib.request.urlopen(req, timeout=timeout) as resp:
         return json.loads(resp.read().decode("utf-8"))

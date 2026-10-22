@@ -51,6 +51,7 @@ def serve(port: int, trace: Path) -> None:
                 await asyncio.sleep(0.15)
                 record("upstream_chunk", self.label)
                 yield f'data: {{"choices":[{{"delta":{{"content":"{index}"}}}}]}}\n\n'.encode()
+            yield b'data: [DONE]\n\n'
 
         async def aclose(self):
             record("upstream_close", self.label)

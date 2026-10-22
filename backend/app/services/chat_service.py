@@ -65,15 +65,9 @@ class ChatService:
         if dynamic_refusal:
             return conversation, [], [], dynamic_refusal, None
 
-        if fast:
-            direct_answer = build_direct_fast_answer(question)
-            if direct_answer:
-                return conversation, [], [], None, direct_answer
-
         hits = self.rag_service.fast_search(question, top_k=max(top_k, 6)) if fast else self.rag_service.search(question, top_k=min(top_k, 6))
-        if not fast:
-            hits = self._enrich_with_spot_summaries(question, hits)
         prompt = self.prompt_builder.build(question, hits, history=history_messages)
+        hits = prompt.evidence
 
         refusal = prompt.refusal_answer if prompt.should_refuse else None
 
@@ -126,30 +120,13 @@ class ChatService:
             self._log_timing(question, timing, started_at, provider="rule")
             return answer
 
-        if fast:
-            direct_answer = build_direct_fast_answer(question)
-            if direct_answer:
-                answer = ChatAnswer(
-                    answer=direct_answer,
-                    provider="local_fast_memory",
-                    model="scenic-memory-v1",
-                    conversation_id=conversation.id,
-                    sources=[],
-                    refused=False,
-                    extra={"timing": timing, "fast": True},
-                )
-                self._persist_assistant_answer(conversation, answer, started_at)
-                self._log_timing(question, timing, started_at, provider="local_fast_memory")
-                return answer
-
         stage_at = time.perf_counter()
         hits = self.rag_service.fast_search(question, top_k=max(top_k, 6)) if fast else self.rag_service.search(question, top_k=min(top_k, 6))
-        if not fast:
-            hits = self._enrich_with_spot_summaries(question, hits)
         timing["rag_ms"] = elapsed_ms(stage_at)
 
         stage_at = time.perf_counter()
         prompt = self.prompt_builder.build(question, hits, history=history_messages)
+        hits = prompt.evidence
         timing["prompt_ms"] = elapsed_ms(stage_at)
         if prompt.should_refuse:
             answer = ChatAnswer(
@@ -209,7 +186,7 @@ class ChatService:
                 conversation_id=conversation.id,
                 sources=hits,
                 refused=False,
-                extra={"error": str(exc), "timing": timing},
+                extra={"error": "model_unavailable", "timing": timing},
             )
             self._persist_assistant_answer(conversation, answer, started_at)
             self._log_timing(question, timing, started_at, provider="fallback")
@@ -255,6 +232,8 @@ def elapsed_ms(started_at: float) -> int:
 def build_dynamic_info_refusal(question: str) -> str | None:
     """对知识库没有可靠实时来源的信息明确拒答，避免给出过时推荐。"""
     normalized = question.strip()
+    if any(word in normalized for word in ("开放时间", "几点", "什么时候表演", "演出时间", "场次", "今日", "明天", "实时", "现在开放")):
+        return "开放时间和演出场次可能变化，当前资料没有可核验的实时状态，请以景区官方公告为准。"
     if any(word in normalized for word in ("门票", "票价", "怎么买票", "购票")):
         return (
             "门票价格和购票规则可能随日期、活动与人群政策变化，"

@@ -14,6 +14,7 @@ from app.api.routes.rag import router as rag_router
 from app.api.routes.route import router as route_router
 from app.api.routes.scenic import router as scenic_router
 from app.api.routes.speech import router as speech_router
+from app.api.routes.demo import router as demo_router
 from app.core.config import get_settings
 from app.core.logging import configure_logging
 from app.schemas.response import success
@@ -26,8 +27,8 @@ app = FastAPI(title=settings.app_name, debug=settings.app_debug)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
+    allow_origins=[origin.strip() for origin in settings.cors_origins.split(",") if origin.strip()],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -35,7 +36,9 @@ app.add_middleware(
 
 @app.on_event("startup")
 async def _prewarm_tts():
-    """后台预合成热点景点介绍音频，预热后 TTS 延迟从 ~8s 降至 <50ms。"""
+    """可选网络预热；默认关闭，实际耗时记录在日志中。"""
+    if not settings.tts_prewarm:
+        return
     import asyncio
     import logging
 
@@ -103,10 +106,11 @@ async def _do_prewarm(texts: list[str], logger):
 
 @app.get("/health")
 def health_check():
-    return success({"status": "ok", "env": settings.app_env})
+    return success({"status": "ok", "env": settings.app_env, "demo_mode": settings.demo_mode})
 
 
 app.include_router(knowledge_router)
+app.include_router(demo_router)
 app.include_router(multimodal_router)
 app.include_router(rag_router)
 app.include_router(chat_router)

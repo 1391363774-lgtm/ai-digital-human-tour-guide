@@ -22,6 +22,8 @@ logger = logging.getLogger(__name__)
 class ChatMessage:
     role: str
     content: str
+    # Internal provenance, never derived from the visitor's text or sent to providers.
+    reference_data: bool = False
 
 
 @dataclass(frozen=True)
@@ -73,8 +75,10 @@ class OpenAICompatibleLLMClient(BaseLLMClient):
             "temperature": temperature, "max_tokens": 800, "stream": True,
         }
         try:
+            settings = get_settings()
+            finished = False
             async with httpx.AsyncClient(
-                timeout=httpx.Timeout(60, connect=10), transport=self.async_transport,
+                timeout=httpx.Timeout(settings.llm_read_timeout, connect=settings.llm_connect_timeout), transport=self.async_transport,
             ) as client:
                 async with client.stream(
                     "POST", f"{self.base_url}/chat/completions", json=payload,
@@ -86,14 +90,26 @@ class OpenAICompatibleLLMClient(BaseLLMClient):
                         if not line.startswith("data:"):
                             continue
                         data = line[5:].strip()
+                        if not data:
+                            continue
                         if data == "[DONE]":
                             return
                         try:
-                            content = json.loads(data)["choices"][0]["delta"].get("content")
-                        except (json.JSONDecodeError, KeyError, IndexError, TypeError):
-                            continue
+                            parsed = json.loads(data)
+                            if not parsed.get("choices") and "usage" in parsed:
+                                continue
+                            choice = parsed["choices"][0]
+                            content = choice["delta"].get("content")
+                            reason = choice.get("finish_reason")
+                            if reason and reason != "stop":
+                                raise LLMClientError("模型输出未完整结束")
+                            finished = finished or reason == "stop"
+                        except (json.JSONDecodeError, KeyError, IndexError, TypeError, AttributeError) as exc:
+                            raise LLMClientError("模型流协议无效") from exc
                         if isinstance(content, str) and content:
                             yield content
+                    if not finished:
+                        raise LLMClientError("模型连接提前关闭，缺少结束标记")
         except httpx.HTTPError as exc:
             raise LLMClientError(f"{self.provider} 网络不可用：{type(exc).__name__}") from exc
 
@@ -196,7 +212,14 @@ class LocalFallbackLLMClient(BaseLLMClient):
 
     def chat(self, messages: list[ChatMessage], temperature: float = 0.1) -> LLMResponse:
         user_message = next((item.content for item in reversed(messages) if item.role == "user"), "")
-        context = next((item.content for item in messages if item.role == "system"), "")
+        context = ""
+        for item in messages:
+            if item.reference_data and item.content.startswith("REFERENCE_DATA_JSON\n"):
+                try:
+                    evidence = json.loads(item.content.split("\n", 1)[1])["evidence"]
+                    context = "\n\n".join(f"[{record['label']}] {record['content']}" for record in evidence)
+                except (ValueError, KeyError, TypeError):
+                    context = ""
         content = build_local_answer(user_message, context)
         return LLMResponse(content=content, provider=self.provider, model=self.model)
 
@@ -215,6 +238,9 @@ class FailoverLLMClient(BaseLLMClient):
             raise ValueError("failover 至少需要一个客户端")
         self.clients = clients
         self.model = " -> ".join(client.model for client in clients)
+        self.selected_provider = None
+        self.selected_model = None
+        self.failed_providers: list[str] = []
 
     def chat(self, messages: list[ChatMessage], temperature: float = 0.1) -> LLMResponse:
         errors: list[str] = []
@@ -258,12 +284,15 @@ class FailoverLLMClient(BaseLLMClient):
                         if not isinstance(chunk, str) or (not emitted and not chunk.strip()):
                             continue
                         emitted = True
+                        self.selected_provider = client.provider
+                        self.selected_model = client.model
                         yield chunk
                 if not emitted:
                     raise LLMClientError(f"{client.provider} 未返回有效文本")
                 return
             except LLMClientError as exc:
                 logger.warning("model_stream_failed provider=%s emitted=%s", client.provider, emitted)
+                self.failed_providers.append(client.provider)
                 if emitted:
                     raise
                 errors.append(f"{client.provider}: {exc}")
@@ -272,6 +301,9 @@ class FailoverLLMClient(BaseLLMClient):
 
 def get_llm_client() -> BaseLLMClient:
     settings = get_settings()
+    if settings.demo_mode:
+        from app.services.demo_service import DemoLLMClient
+        return FailoverLLMClient([DemoLLMClient(), LocalFallbackLLMClient()])
     provider = settings.llm_provider.lower()
 
     deepseek_client = None
@@ -309,11 +341,7 @@ def build_local_answer(user_message: str, context: str) -> str:
     trimmed_context = context.strip()
     if trimmed_context:
         first_block = trimmed_context.split("\n\n", 1)[0]
-        return (
-            "根据当前知识库资料，"
-            + first_block.replace("[资料1]", "").strip()[:500]
-            + "\n\n如果你愿意，我还可以继续为你推荐相关游览路线。"
-        )
+        return "当前为本地资料摘录（未使用云模型）：\n" + first_block.strip()[:700]
     return (
         f"你问的是“{user_message}”。当前还没有可用的知识库上下文，"
         "我不能编造景区事实，请先完成知识库入库和索引。"
