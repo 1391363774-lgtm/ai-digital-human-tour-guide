@@ -167,7 +167,7 @@
 
   // ================= 问答链路(复用SSE管线) =================
   var tid = localStorage.getItem('lingshan_tid') || 'guest';
-  var client = new GuideRuntime.ChatClient(), asking = false, miniMedia = null, miniRAF = 0, miniEpoch = 0, miniSendTimer = null;
+  var client = new GuideRuntime.ChatClient(), asking = false, miniMedia = null, miniRAF = 0, miniClock = null, miniEpoch = 0, miniSendTimer = null;
 
   function addMsg(text, who) {
     var body = document.getElementById('lxx-body'), div = document.createElement('div');
@@ -177,7 +177,7 @@
   function stopMini() {
     client.cancel(); asking = false; miniEpoch++; clearTimeout(miniSendTimer);
     if (rec) { rec._active = false; try { rec.abort(); } catch (_) {} }
-    dh.stopAudio(); cancelAnimationFrame(miniRAF);
+    dh.stopAudio(); cancelAnimationFrame(miniRAF); clearInterval(miniClock);
     if (miniMedia) { miniMedia.pause(); miniMedia.removeAttribute('src'); miniMedia.load(); miniMedia = null; }
     if (window.dh && window.dh.setMouthOpen) window.dh.setMouthOpen(0);
   }
@@ -189,8 +189,8 @@
       var settled = false, timer = null, audio = null;
       function finish(error) {
         if (settled) return; settled = true;
-        clearTimeout(timer); cancelAnimationFrame(miniRAF); signal.removeEventListener('abort', abort);
-        if (audio) { audio.onended = audio.onerror = null; audio.pause(); audio.removeAttribute('src'); audio.load(); }
+        clearTimeout(timer); cancelAnimationFrame(miniRAF); clearInterval(miniClock); signal.removeEventListener('abort', abort);
+        if (audio) { audio.onended = audio.onerror = audio.onplaying = audio.onpause = audio.onwaiting = audio.onstalled = audio.onseeking = null; audio.pause(); audio.removeAttribute('src'); audio.load(); }
         if (miniMedia === audio) miniMedia = null;
         if (window.dh && window.dh.setMouthOpen) window.dh.setMouthOpen(0);
         if (error) reject(error); else resolve();
@@ -204,14 +204,16 @@
       audio = new Audio(url.href); miniMedia = audio;
       audio.onended = function () { finish(); }; audio.onerror = function () { finish(new Error('语音不可用')); };
       audio.onplaying = function () { if (!settled && !signal.aborted && onStarted) onStarted(); };
+      audio.onpause = audio.onwaiting = audio.onstalled = audio.onseeking = function () { if (!settled && window.dh && window.dh.setMouthOpen) window.dh.setMouthOpen(0); };
       audio.play().then(function () {
-        function mouth() {
+        function updateMouth() {
           if (settled || signal.aborted) return;
           var ms = audio.currentTime * 1000, value = 0;
           if (!audio.paused && !audio.ended && !audio.seeking && audio.readyState >= 3) (item.visemes || []).forEach(function (v) { if (v.t <= ms && ms < v.t + v.d) value = v.v === 'sil' ? 0 : 0.5; });
           if (window.dh && window.dh.setMouthOpen) window.dh.setMouthOpen(value);
-          miniRAF = requestAnimationFrame(mouth);
         }
+        function mouth() { if (settled || signal.aborted) return; updateMouth(); miniRAF = requestAnimationFrame(mouth); }
+        miniClock = setInterval(updateMouth, 30);
         mouth();
       }).catch(function () { finish(new Error('浏览器阻止播放')); });
     });

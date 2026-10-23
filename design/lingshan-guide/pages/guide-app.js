@@ -98,8 +98,9 @@ function checkOnline() {
         })
         .catch(function () {
             online = false;
+            backendMode = '浏览器静态离线 · 非后端 RAG';
             document.getElementById('offline-badge').style.display = 'block';
-            setStatus('离线模式 · 本地知识库服务中', false);
+            setStatus(backendMode, false);
             return false;
         });
 }

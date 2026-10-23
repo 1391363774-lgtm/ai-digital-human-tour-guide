@@ -116,6 +116,7 @@
       self._settle = function () { finish(); };
       audio.onpause = audio.onwaiting = audio.onstalled = audio.onseeking = function () {
         if (settled) return; self.speaking = false; self.setViseme('sil');
+        if (callbacks && callbacks.onState) callbacks.onState('paused_or_buffering');
       };
       audio.onplaying = function () {
         if (settled) return; self.speaking = true;
