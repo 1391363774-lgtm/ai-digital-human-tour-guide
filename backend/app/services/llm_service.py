@@ -2,6 +2,7 @@
 import json
 import logging
 import re
+from contextlib import aclosing
 from dataclasses import dataclass, replace
 from typing import Any, AsyncGenerator, Callable, Dict, List, Optional
 
@@ -55,7 +56,8 @@ class ProviderConfig:
 
     @property
     def chat_url(self) -> str:
-        return f"{self.base_url.rstrip('/')}/v1/chat/completions"
+        base = self.base_url.rstrip('/')
+        return f"{base if base.endswith('/v1') else base + '/v1'}/chat/completions"
 
 
 class ProviderCallError(RuntimeError):
@@ -153,6 +155,7 @@ class LlmService:
 
     async def _stream_provider(self, provider: ProviderConfig, payload: Dict) -> AsyncGenerator[str, None]:
         emitted = False
+        finished = False
         try:
             self._raise_injected_fault(provider.name)
             logger.info("llm_request_start provider=%s model=%s mode=stream", provider.name, provider.model)
@@ -166,14 +169,27 @@ class LlmService:
                             continue
                         data = line[5:].strip()
                         if data == "[DONE]":
+                            finished = True
                             break
                         try:
-                            token = json.loads(data)["choices"][0].get("delta", {}).get("content")
-                        except (json.JSONDecodeError, KeyError, IndexError, TypeError):
-                            continue
-                        if token:
+                            parsed = json.loads(data)
+                            if not parsed.get('choices') and 'usage' in parsed:
+                                continue
+                            choice = parsed['choices'][0]
+                            token = choice['delta'].get('content')
+                            reason = choice.get('finish_reason')
+                            if reason and reason != 'stop':
+                                raise ProviderCallError(provider.name, 'incomplete_finish', emitted)
+                            finished = finished or reason == 'stop'
+                            if token is not None and not isinstance(token, str):
+                                raise TypeError('content must be a string')
+                        except (json.JSONDecodeError, KeyError, IndexError, TypeError, AttributeError):
+                            raise ProviderCallError(provider.name, 'invalid_stream_protocol', emitted)
+                        if token and (emitted or token.strip()):
                             emitted = True
                             yield token
+            if not finished:
+                raise ProviderCallError(provider.name, 'truncated_stream', emitted)
             if not emitted:
                 raise ProviderCallError(provider.name, "empty_stream")
             logger.info("llm_request_success provider=%s mode=stream", provider.name)
@@ -203,15 +219,16 @@ class LlmService:
         providers = self._configured_providers()
         for index, provider in enumerate(providers):
             try:
-                async for token in self._stream_provider(provider, dict(payload, model=provider.model)):
-                    yield token
+                async with aclosing(self._stream_provider(provider, dict(payload, model=provider.model))) as stream:
+                    async for token in stream:
+                        yield token
                 return
             except ProviderCallError as exc:
                 logger.warning("llm_request_failed provider=%s reason=%s emitted=%s", exc.provider, exc.reason, exc.emitted)
                 # 已输出 token 后改投另一家会重复或矛盾，因此保留已输出内容并结束。
                 if exc.emitted:
                     logger.error("llm_failover_skipped reason=primary_stream_already_started")
-                    return
+                    raise
                 if index + 1 < len(providers):
                     logger.info("llm_failover_activated from=%s to=%s", provider.name, providers[index + 1].name)
         logger.warning("llm_local_fallback_activated reason=no_remote_provider_succeeded")
