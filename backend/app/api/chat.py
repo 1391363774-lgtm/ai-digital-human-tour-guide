@@ -66,7 +66,7 @@ async def chat_stream(req: ChatRequest, owner: str = Depends(visitor_owner)):
 async def chat_send(req: ChatRequest, owner: str = Depends(visitor_owner)):
     """非流式兼容接口:聚合全部事件后一次性返回"""
     full_text, emotion, sources, intent = "", "calm", [], "general"
-    sentences, latency, status = [], 0, 'failed'
+    sentences, latency, status, request_id = [], 0, 'failed', None
     async for evt in chat_service.stream_pipeline(
         query=req.message, tourist_id=owner,
         interest=req.interest, time_budget=req.time_budget, companions=req.companions,
@@ -81,8 +81,9 @@ async def chat_send(req: ChatRequest, owner: str = Depends(visitor_owner)):
         elif evt["type"] == "done":
             full_text, latency = evt["full_text"], evt["latency_ms"]
             status=evt['status']
+            request_id=evt['request_id']
     return {"answer": full_text, "emotion": emotion, "intent": intent,
-            "sources": sources, "sentences": sentences, "latency_ms": latency,'status':status}
+            "sources": sources, "sentences": sentences, "latency_ms": latency,'status':status,'request_id':request_id}
 
 
 @router.get("/history/{tourist_id}")
