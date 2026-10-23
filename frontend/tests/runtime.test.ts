@@ -33,3 +33,17 @@ it('new question cancels old stream and prevents old text/audio from changing DO
   const second=client.start({message:'new'},handlers);await second;await first
   expect(cancel).toHaveBeenCalledOnce();expect(rendered).toEqual(['old','new']);expect(played).toEqual([0]);expect(handlers.onError).not.toHaveBeenCalled()
 })
+
+it('counts first real content playback, excludes prelude and ignores late cancelled callbacks',async()=>{
+  const samples:any[]=[];const starts:Array<()=>void>=[]
+  vi.stubGlobal('fetch',vi.fn(async()=>response(evt('delta',{text:'notice',notice:true})+evt('delta',{text:'正文'})+evt('sentence',{index:-1,text:'承接语',prelude:true})+evt('sentence',{index:0,text:'正文',prelude:false})+evt('done',{full_text:'正文',status:'completed'}))))
+  const client=new ChatClient()
+  await client.start({message:'test'},{onEvent:vi.fn(),onError:vi.fn(),onMetrics:m=>samples.push(m),play:async(item,_signal,start)=>{
+    starts.push(start!);start?.()
+    if(item.prelude)expect(samples.at(-1).first_actual_audio_ms).toBe(null)
+  }})
+  expect(samples.at(-1).first_valid_text_ms).not.toBe(null)
+  expect(samples.at(-1).first_actual_audio_ms).not.toBe(null)
+  expect(samples.at(-1).total_ms).not.toBe(null)
+  const count=samples.length;client.cancel();starts[1]();expect(samples).toHaveLength(count)
+})

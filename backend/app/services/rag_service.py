@@ -190,7 +190,9 @@ class RagService:
         chunks = await run_in_threadpool(read_files)
         async with async_session() as db:
             rows=(await db.execute(select(KnowledgeItem).where(KnowledgeItem.status=='published').order_by(KnowledgeItem.id))).scalars().all()
-            chunks += [{'title':r.title,'content':f'{r.title}\n{r.content}','source':f'ADMIN-{r.id}'} for r in rows]
+            chunks += [{'title':r.title,'content':f'{r.title}\n{r.content}','source':f'ADMIN-{r.id}',
+                        'updated_at':r.updated_at.isoformat() if r.updated_at else None,
+                        'updated_at_kind':'record_update_not_fact_verification'} for r in rows]
         return chunks
 
     @staticmethod
@@ -206,7 +208,8 @@ class RagService:
                 end=min(start+size,len(text))
                 content=text[start:end].strip()
                 if content:
-                    chunk=dict(item,content=content)
+                    chunk=dict(item,content=content,updated_at=item.get('updated_at'),
+                               updated_at_kind=item.get('updated_at_kind','unknown'))
                     chunk['chunk_id']=hashlib.sha256(f'{item["source"]}|{item["title"]}|{start}|{content}'.encode()).hexdigest()[:24]
                     records.append(chunk)
                 if end==len(text): break

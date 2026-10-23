@@ -3,7 +3,7 @@ import {readFileSync} from 'node:fs'
 import path from 'node:path'
 import {afterEach,expect,it,vi} from 'vitest'
 
-afterEach(()=>vi.unstubAllGlobals())
+afterEach(()=>{vi.clearAllTimers();vi.useRealTimers();vi.unstubAllGlobals()})
 
 function timelineHuman(){
   let now=0;let frame:(()=>void)|undefined
@@ -42,6 +42,28 @@ it('pausing or buffering closes mouth and stale playing callbacks cannot resume 
   const stale=a.onplaying;human.stopAudio();await first;stale?.();step(20)
   expect(mouth).toHaveBeenLastCalledWith(0);expect(human.speaking).toBe(false)
   human.destroy()
+})
+
+it('audio loading failure closes mouth and clears the playing callback',async()=>{
+  const {human,mouth}=timelineHuman();let player:any
+  class BrokenAudio {play=async()=>{};pause=()=>{};load=()=>{};removeAttribute=()=>{};constructor(){player=this}}
+  vi.stubGlobal('Audio',BrokenAudio)
+  const promise=human.playAudio('/missing',[{t:0,v:'AA',d:1000}])
+  const assertion=expect(promise).rejects.toThrow('音频加载失败')
+  player.onerror();await assertion
+  expect(player.onplaying).toBe(null);expect(mouth).toHaveBeenLastCalledWith(0);human.destroy()
+})
+
+it('uses the audio clock to close gaps even when animation frames are throttled',async()=>{
+  vi.useFakeTimers({toFake:['setInterval','clearInterval']})
+  const {human,mouth}=timelineHuman();let player:any
+  class AudioStub {currentTime=0;paused=false;readyState=4;play=async()=>{};pause=()=>{};load=()=>{};removeAttribute=()=>{};constructor(){player=this}}
+  vi.stubGlobal('Audio',AudioStub)
+  const done=human.playAudio('/fixture',[{t:0,v:'AA',d:100},{t:800,v:'OO',d:100}])
+  player.onplaying();expect(mouth).toHaveBeenLastCalledWith(1)
+  player.currentTime=.5;vi.advanceTimersByTime(31)
+  expect(mouth).toHaveBeenLastCalledWith(0)
+  human.stopAudio();await done;expect(vi.getTimerCount()).toBe(0);human.destroy()
 })
 it('stop resolves the active player and clears callbacks, source, animation and mouth',async()=>{
   const players:any[]=[]

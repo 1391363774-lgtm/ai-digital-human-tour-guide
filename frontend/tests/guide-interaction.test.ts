@@ -24,6 +24,7 @@ it('real page bindings accept a second question, cancel the first reader and ret
     const message=JSON.parse(init.body).message
     return new Response(new ReadableStream({start(c){
       const id=message==='first'?'one':'two'
+      c.enqueue(new TextEncoder().encode(wire(id,'meta',{sources:[{title:'<img src=x onerror=alert(1)>',source:'<script>alert(1)</script>',chunk_id:'trusted-id',revision:2,updated_at:null,content:'untrusted text'}]})))
       c.enqueue(new TextEncoder().encode(wire(id,'delta',{text:message==='first'?'旧片段':'新回答'})))
       if(message!=='first'){c.enqueue(new TextEncoder().encode(wire(id,'done',{full_text:'新回答',status:'completed'})));c.close()}
     },cancel}),{headers:{'Content-Type':'text/event-stream'}})
@@ -39,5 +40,9 @@ it('real page bindings accept a second question, cancel the first reader and ret
   expect(cancel).toHaveBeenCalledOnce()
   expect(document.querySelectorAll('.msg-row.bot')[1].getAttribute('data-outcome')).toBe('cancelled')
   expect(document.querySelectorAll('.msg-row.bot')[2].getAttribute('data-outcome')).toBe('completed')
+  expect(document.querySelector('img[src="x"]')).toBe(null)
+  expect(document.body.textContent).toContain('是否支持答案尚未核实')
+  expect(document.body.textContent).toContain('trusted-id')
+  expect(document.body.textContent).toContain('资料更新时间：未知')
   ;(document.getElementById('stopBtn') as HTMLButtonElement).click()
 })

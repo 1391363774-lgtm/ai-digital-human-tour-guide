@@ -146,15 +146,23 @@
   GuideHuman.prototype._drive = function () {
     var self = this;
     cancelAnimationFrame(this.raf);
-    function tick() {
+    clearInterval(this._mouthWatchdog);
+    function update() {
       if (!self.speaking) { self._mouth(0); return; }
       var ms = self.audio
         ? self.audio.currentTime * 1000
         : (performance.now() - self.playStart);
       var audible = !self.audio || (!self.audio.paused && !self.audio.ended && !self.audio.seeking && self.audio.readyState >= 3);
       self._mouth(audible ? currentViseme(self.visemes, ms) : 0);
+    }
+    function tick() {
+      update();
+      if (!self.speaking) return;
       self.raf = requestAnimationFrame(tick);
     }
+    // Embedded/background views may stop RAF while audible media time advances.
+    // Use the media clock for a bounded 30ms watchdog as well; clear it on every exit.
+    this._mouthWatchdog = setInterval(update, 30);
     tick();
   };
 
@@ -170,14 +178,14 @@
         if (settled) return; settled = true;
         a.onended = a.onerror = a.onplaying = a.onpause = a.onwaiting = a.onstalled = a.onseeking = a.onloadstart = null;
         try { a.pause(); a.removeAttribute('src'); a.load(); } catch (_) {}
-        if (self.audio === a) { self.audio = null; self.speaking = false; self._mouth(0); cancelAnimationFrame(self.raf); }
+        if (self.audio === a) { self.audio = null; self.speaking = false; self._mouth(0); cancelAnimationFrame(self.raf); clearInterval(self._mouthWatchdog); }
         self._settle = null;
         if (error) reject(error); else resolve();
       }
       self._settle = function () { finish(); };
       function suspend() {
         if (epoch !== self._playEpoch || settled) return;
-        self.speaking = false; cancelAnimationFrame(self.raf); self._mouth(0);
+        self.speaking = false; cancelAnimationFrame(self.raf); clearInterval(self._mouthWatchdog); self._mouth(0);
         if (callbacks && callbacks.onState) callbacks.onState('paused_or_buffering');
       }
       a.onpause = a.onwaiting = a.onstalled = a.onseeking = a.onloadstart = suspend;
@@ -200,6 +208,7 @@
     this._playEpoch = (this._playEpoch || 0) + 1;
     clearTimeout(this._timelineTimer); this._timelineTimer = null;
     cancelAnimationFrame(this.raf); this.speaking = false;
+    clearInterval(this._mouthWatchdog);
     if (this._settle) this._settle();
     if (this.audio) {
       this.audio.onended = this.audio.onerror = this.audio.onplaying = this.audio.onpause = this.audio.onwaiting = this.audio.onstalled = this.audio.onseeking = this.audio.onloadstart = null;
@@ -222,7 +231,7 @@
     clearTimeout(this._timelineTimer);
     var epoch = this._playEpoch;
     this._timelineTimer = setTimeout(function () {
-      if (epoch === self._playEpoch && self.speaking) { self.speaking = false; self._mouth(0); }
+      if (epoch === self._playEpoch && self.speaking) { self.speaking = false; clearInterval(self._mouthWatchdog); cancelAnimationFrame(self.raf); self._mouth(0); }
     }, durationMs || 3000);
   };
 

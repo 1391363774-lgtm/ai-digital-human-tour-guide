@@ -4,6 +4,7 @@
 """
 from contextlib import asynccontextmanager
 from pathlib import Path
+import uuid
 
 from fastapi import FastAPI,HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -40,6 +41,7 @@ app.add_middleware(
 
 @app.middleware('http')
 async def access_boundary(request,call_next):
+    request.state.request_id=uuid.uuid4().hex
     path=request.url.path.rstrip('/')
     try:
         if request.method != 'OPTIONS':
@@ -47,9 +49,11 @@ async def access_boundary(request,call_next):
                 require_admin(request.headers.get('X-Admin-Key'))
             elif path.startswith(('/api/chat/history','/api/chat/send','/api/chat/stream','/api/chat/vision')) or path.startswith('/api/tts') and not path.startswith('/api/tts/audio/') or path in ('/api/analytics/rate','/api/analytics/checkin','/api/analytics/my-visits'):
                 visitor_owner(request.headers.get('X-Visitor-Key'))
-        return await call_next(request)
+        response=await call_next(request)
+        response.headers['X-Request-ID']=request.state.request_id
+        return response
     except HTTPException as exc:
-        return JSONResponse({'detail':exc.detail},status_code=exc.status_code)
+        return JSONResponse({'detail':exc.detail,'request_id':request.state.request_id},status_code=exc.status_code,headers={'X-Request-ID':request.state.request_id})
 
 app.include_router(chat.router, prefix="/api/chat", tags=["对话"])
 app.include_router(tts.router, prefix="/api/tts", tags=["语音合成"])

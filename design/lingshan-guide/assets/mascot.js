@@ -181,7 +181,7 @@
     if (miniMedia) { miniMedia.pause(); miniMedia.removeAttribute('src'); miniMedia.load(); miniMedia = null; }
     if (window.dh && window.dh.setMouthOpen) window.dh.setMouthOpen(0);
   }
-  function playMini(item, signal) {
+  function playMini(item, signal, onStarted) {
     if (!item.audio_url) return Promise.resolve();
     var url = new URL(item.audio_url, location.href);
     if (url.origin !== location.origin || url.pathname.indexOf('/api/tts/audio/') !== 0) return Promise.reject(new Error('invalid audio URL'));
@@ -199,10 +199,11 @@
       if (signal.aborted) { abort(); return; }
       signal.addEventListener('abort', abort, { once: true });
       timer = setTimeout(function () { dh.stopAudio(); finish(new Error('播放超时')); }, 60000);
-      if (!document.getElementById('home-dh')) { dh.playAudio(url.href, item.visemes).then(function () { finish(); }, finish); return; }
+      if (!document.getElementById('home-dh')) { dh.playAudio(url.href, item.visemes, {onPlaying:function () { if (!settled && !signal.aborted && onStarted) onStarted(); }}).then(function () { finish(); }, finish); return; }
       // Home keeps its original static floating portrait; drive the existing main Live2D canvas.
       audio = new Audio(url.href); miniMedia = audio;
       audio.onended = function () { finish(); }; audio.onerror = function () { finish(new Error('语音不可用')); };
+      audio.onplaying = function () { if (!settled && !signal.aborted && onStarted) onStarted(); };
       audio.play().then(function () {
         function mouth() {
           if (settled || signal.aborted) return;
