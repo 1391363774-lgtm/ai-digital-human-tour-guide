@@ -59,6 +59,8 @@ def call_backend_api(url,question):
     if not isinstance(response.get('request_id'),str) or not response['request_id']: raise ProtocolError('missing request_id')
     if response.get('status') not in ('completed','refused','partial','failed','cancelled'): raise ProtocolError('invalid terminal')
     if not isinstance(response.get('sources'),list) or not isinstance(response.get('answer'),str): raise ProtocolError('missing fields')
+    if any(not isinstance(s,dict) or not isinstance(s.get('chunk_id'),str) or not s['chunk_id'] or not isinstance(s.get('source'),str) or not isinstance(s.get('revision'),int) for s in response['sources']):
+        raise ProtocolError('invalid source fields')
     return response
 
 def contains_keyword(answer,keyword):

@@ -74,3 +74,11 @@ def test_no_keywords_and_numeric_boundaries():
     assert evaluation.score_answer('anything',[])==(None,[])
     assert not evaluation.contains_keyword('1997','9')
     assert evaluation.run_eval([],arguments())['request_success_rate'] is None
+
+
+def test_malformed_source_entries_are_protocol_failures_not_report_crashes(monkeypatch):
+    monkeypatch.setattr(evaluation,'_post_json',lambda *a,**k:{'answer':'88','sources':['invalid-source'],'request_id':'r','status':'completed'})
+    report=evaluation.run_eval([{'id':'r','question':'height','expected_keywords':['88']}],
+                              argparse.Namespace(mode='backend',api_url='http://localhost/test'))
+    assert report['results'][0]['failure_kind']=='protocol'
+    assert report['request_success_rate']==0
