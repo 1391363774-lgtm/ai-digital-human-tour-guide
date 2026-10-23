@@ -143,160 +143,195 @@ class _TfidfEngine:
 # RAG 服务主体
 # ============================================================
 class RagService:
+    """Publish complete immutable-by-convention generations; validate SQL revision on every read."""
     def __init__(self):
-        self.chunks: List[Dict] = []
-        self.vectors: Optional[np.ndarray] = None   # (n, dim) 语义向量
-        self.tfidf = _TfidfEngine()
-        self.engine_mode: str = "init"              # embedding / tfidf
-        self.ready: bool = False
-        self.build_time: float = 0.0
-        self._query_cache: Dict[str, np.ndarray] = {}  # 查询向量缓存(评委高频重复提问秒回)
-
-    # ---------- 构建 ----------
-    async def build(self):
-        t0 = time.time()
-        md_path = settings.KNOWLEDGE_MD
-        json_path = str(Path(settings.FRONTEND_DIR) / "assets" / "knowledge.json")
-        self.chunks = _parse_markdown_chunks(md_path) + _parse_json_chunks(json_path)
-
-        # 合并管理后台维护的知识条目(已发布状态)——知识库管理功能真实生效
-        try:
-            from sqlalchemy import select
-            from app.core.database import async_session
-            from app.models.models import KnowledgeItem
-            async with async_session() as db:
-                rows = (await db.execute(
-                    select(KnowledgeItem).where(KnowledgeItem.status == "published")
-                )).scalars().all()
-            for r in rows:
-                self.chunks.append({
-                    "title": r.title,
-                    "content": f"{r.title}\n{r.content}",
-                    "source": f"ADMIN-{r.id}",
-                })
-            if rows:
-                print(f"[RAG] 合并后台知识条目 {len(rows)} 条")
-        except Exception as e:
-            print(f"[RAG] 后台知识条目加载跳过: {e}")
-
-        if not self.chunks:
-            raise RuntimeError("知识库为空,请检查知识库文件路径")
-
-        docs = [f"{c['title']}\n{c['content']}" for c in self.chunks]
-        # TF-IDF始终构建(兜底+混合加权)
-        self.tfidf.fit(docs)
-
-        # 尝试加载/构建语义向量
-        self.vectors = await self._load_or_embed(docs)
-        self.engine_mode = "embedding" if self.vectors is not None else "tfidf"
-        self.build_time = time.time() - t0
-        self.ready = True
-        print(f"[RAG] 知识库构建完成: {len(self.chunks)}块 | 引擎:{self.engine_mode} | 耗时:{self.build_time:.1f}s")
-
-    def _source_hash(self, docs: List[str]) -> str:
-        h = hashlib.md5()
-        for d in docs:
-            h.update(d.encode("utf-8"))
-        return h.hexdigest()
-
-    async def _embed_batch(self, texts: List[str]) -> Optional[List[List[float]]]:
-        """调用DashScope embedding,失败返回None"""
-        if not settings.LLM_API_KEY:
-            return None
-        url = f"{settings.LLM_BASE_URL}/v1/embeddings"
-        headers = {"Authorization": f"Bearer {settings.LLM_API_KEY}"}
-        out = []
-        try:
-            async with httpx.AsyncClient(timeout=60.0) as client:
-                B = 10  # DashScope单批上限
-                for i in range(0, len(texts), B):
-                    payload = {"model": settings.EMBEDDING_MODEL,
-                               "input": texts[i:i + B],
-                               "dimensions": settings.EMBEDDING_DIM}
-                    r = await client.post(url, headers=headers, json=payload)
-                    if r.status_code != 200:
-                        print(f"[RAG] Embedding失败({r.status_code}),降级TF-IDF")
-                        return None
-                    data = r.json()["data"]
-                    data.sort(key=lambda x: x["index"])
-                    out.extend([d["embedding"] for d in data])
-            return out
-        except Exception as e:
-            print(f"[RAG] Embedding异常:{e},降级TF-IDF")
-            return None
-
-    async def _load_or_embed(self, docs: List[str]) -> Optional[np.ndarray]:
-        cache = Path(settings.VECTOR_CACHE)
-        src_hash = self._source_hash(docs)
-        if cache.exists():
-            try:
-                z = np.load(cache, allow_pickle=False)
-                if z["hash"].tobytes().decode() == src_hash:
-                    return z["vectors"].astype(np.float32)
-            except Exception:
-                pass
-        vecs = await self._embed_batch(docs)
-        if vecs is None:
-            return None
-        arr = np.asarray(vecs, dtype=np.float32)
-        arr = arr / np.maximum(np.linalg.norm(arr, axis=1, keepdims=True), 1e-9)
-        np.savez(cache, vectors=arr, hash=np.frombuffer(src_hash.encode(), dtype=np.uint8))
-        return arr
-
-    # ---------- 检索 ----------
-    async def retrieve(self, query: str, top_k: Optional[int] = None) -> List[Dict]:
-        if not self.ready:
-            return []
-        top_k = top_k or settings.RAG_TOP_K
-        docs = [f"{c['title']}\n{c['content']}" for c in self.chunks]
-
-        # TF-IDF分数(始终可得)
-        tfidf_scores = self.tfidf.query(query, top_k)
-
-        # 语义分数
-        emb_scores = np.zeros(len(self.chunks), dtype=np.float32)
-        if self.vectors is not None and settings.LLM_API_KEY:
-            q = self._query_cache.get(query)
-            if q is None:
-                qv = await self._embed_batch([query])
-                if qv is not None:
-                    q = np.asarray(qv[0], dtype=np.float32)
-                    q = q / max(np.linalg.norm(q), 1e-9)
-                    if len(self._query_cache) < 500:
-                        self._query_cache[query] = q
-            if q is not None:
-                emb_scores = self.vectors @ q
-
-        # 关键词命中加权(景点名/别名精确命中强信号)
-        kw_boost = np.zeros(len(self.chunks), dtype=np.float32)
-        q_clean = re.sub(r"[？?!！。,，、\s]", "", query)
-        for i, c in enumerate(self.chunks):
-            title_clean = re.sub(r"[（(].*?[)）]", "", c["title"])
-            if len(title_clean) >= 2 and title_clean in q_clean:
-                kw_boost[i] = 1.0
-
-        # 混合:语义0.6 + TFIDF0.25 + 关键词0.15
-        final = 0.6 * emb_scores + 0.25 * tfidf_scores + 0.15 * kw_boost
-        if self.vectors is None:  # 纯TF-IDF模式
-            final = 0.75 * tfidf_scores + 0.25 * kw_boost
-
-        idx = np.argsort(-final)[:top_k]
-        results = []
-        for i in idx:
-            if final[i] < settings.RAG_SCORE_THRESHOLD and kw_boost[i] == 0:
-                continue
-            results.append({
-                "title": self.chunks[i]["title"],
-                "content": self.chunks[i]["content"],
-                "score": round(float(final[i]), 4),
-                "source": self.chunks[i]["source"],
-            })
-        return results
+        import asyncio
+        self._snapshot = None
+        self._query_cache = {}
+        self._build_lock = asyncio.Lock()
+        self.build_time = 0.0
 
     @property
-    def status(self) -> Dict:
-        return {"ready": self.ready, "chunks": len(self.chunks),
-                "engine": self.engine_mode, "build_time_s": round(self.build_time, 2)}
+    def chunks(self):
+        return [dict(c) for c in self._snapshot['chunks']] if self._snapshot else []
+
+    @property
+    def vectors(self):
+        return self._snapshot['vectors'] if self._snapshot else None
+
+    @property
+    def ready(self):
+        return self._snapshot is not None
+
+    @property
+    def engine_mode(self):
+        return self._snapshot['engine'] if self._snapshot else 'init'
+
+    def _identity(self):
+        return f'{settings.LLM_BASE_URL.rstrip("/")}|{settings.EMBEDDING_MODEL}|{settings.EMBEDDING_DIM}'
+
+    def _source_hash(self, docs):
+        return hashlib.sha256(json.dumps([self._identity(), docs],ensure_ascii=False,separators=(',',':')).encode()).hexdigest()
+
+    async def _state(self):
+        from app.core.database import async_session
+        from app.models.models import KnowledgeRevision
+        async with async_session() as db:
+            row = await db.get(KnowledgeRevision,1)
+            return (row.value,row.chunk_size,row.overlap) if row else (0,800,80)
+
+    async def _collect(self):
+        from starlette.concurrency import run_in_threadpool
+        from sqlalchemy import select
+        from app.core.database import async_session
+        from app.models.models import KnowledgeItem
+        def read_files():
+            return _parse_markdown_chunks(settings.KNOWLEDGE_MD) + _parse_json_chunks(str(Path(settings.FRONTEND_DIR)/'assets/knowledge.json'))
+        chunks = await run_in_threadpool(read_files)
+        async with async_session() as db:
+            rows=(await db.execute(select(KnowledgeItem).where(KnowledgeItem.status=='published').order_by(KnowledgeItem.id))).scalars().all()
+            chunks += [{'title':r.title,'content':f'{r.title}\n{r.content}','source':f'ADMIN-{r.id}'} for r in rows]
+        return chunks
+
+    @staticmethod
+    def _prepare(chunks,state):
+        _,size,overlap=state
+        if not 0<=overlap<size:
+            raise ValueError('invalid chunk settings')
+        records=[]
+        for item in chunks:
+            text=item['content']
+            start=0
+            while start < len(text):
+                end=min(start+size,len(text))
+                content=text[start:end].strip()
+                if content:
+                    chunk=dict(item,content=content)
+                    chunk['chunk_id']=hashlib.sha256(f'{item["source"]}|{item["title"]}|{start}|{content}'.encode()).hexdigest()[:24]
+                    records.append(chunk)
+                if end==len(text): break
+                start=end-overlap
+        docs=[f'{c["title"]}\n{c["content"]}' for c in records]
+        tfidf=_TfidfEngine()
+        tfidf.fit(docs)
+        return records,docs,tfidf
+
+    async def build(self):
+        from starlette.concurrency import run_in_threadpool
+        async with self._build_lock:
+            t0=time.monotonic()
+            for _ in range(3):
+                state=await self._state()
+                identity=self._identity()
+                chunks,docs,tfidf=await run_in_threadpool(self._prepare,await self._collect(),state)
+                vectors=await self._load_or_embed(docs)
+                if state!=await self._state() or identity!=self._identity():
+                    continue
+                if vectors is not None: vectors.setflags(write=False)
+                self._snapshot={'state':state,'identity':identity,'chunks':tuple(chunks),'tfidf':tfidf,'vectors':vectors,'engine':'embedding' if vectors is not None else 'tfidf'}
+                self._query_cache.clear()
+                self.build_time=time.monotonic()-t0
+                return
+            raise RuntimeError('knowledge changed repeatedly during rebuild; retry')
+
+    async def _embed_batch(self,texts):
+        if not settings.LLM_API_KEY or settings.DEMO_MODE or not texts:
+            return None
+        base=settings.LLM_BASE_URL.rstrip('/')
+        url=(base if base.endswith('/v1') else base+'/v1')+'/embeddings'
+        out=[]
+        try:
+            async with httpx.AsyncClient(timeout=30.0) as client:
+                for start in range(0,len(texts),10):
+                    batch=texts[start:start+10]
+                    r=await client.post(url,headers={'Authorization':f'Bearer {settings.LLM_API_KEY}'},json={'model':settings.EMBEDDING_MODEL,'input':batch,'dimensions':settings.EMBEDDING_DIM})
+                    r.raise_for_status()
+                    data=sorted(r.json()['data'],key=lambda x:x['index'])
+                    if [d['index'] for d in data]!=list(range(len(batch))): return None
+                    out.extend(d['embedding'] for d in data)
+            arr=np.asarray(out,dtype=np.float32)
+            if arr.shape!=(len(texts),settings.EMBEDDING_DIM) or not np.isfinite(arr).all(): return None
+            return out
+        except (httpx.HTTPError,ValueError,KeyError,TypeError):
+            return None
+
+    async def _load_or_embed(self,docs):
+        from starlette.concurrency import run_in_threadpool
+        import os,uuid
+        cache=Path(settings.VECTOR_CACHE)
+        digest=self._source_hash(docs)
+        def load():
+            if not cache.exists(): return None
+            try:
+                with np.load(cache,allow_pickle=False) as z:
+                    arr=z['vectors'].astype(np.float32)
+                    if z['hash'].tobytes().decode()==digest and arr.shape==(len(docs),settings.EMBEDDING_DIM) and np.isfinite(arr).all():
+                        return arr
+            except (OSError,ValueError,KeyError,UnicodeError): pass
+            cache.unlink(missing_ok=True)
+            return None
+        cached=await run_in_threadpool(load)
+        if cached is not None: return cached
+        values=await self._embed_batch(docs)
+        if values is None: return None
+        arr=np.asarray(values,dtype=np.float32)
+        if arr.shape!=(len(docs),settings.EMBEDDING_DIM) or not np.isfinite(arr).all(): return None
+        arr=arr/np.maximum(np.linalg.norm(arr,axis=1,keepdims=True),1e-9)
+        def save():
+            cache.parent.mkdir(parents=True,exist_ok=True)
+            temp=cache.with_name(cache.name+'.'+uuid.uuid4().hex+'.npz')
+            try:
+                np.savez(temp,vectors=arr,hash=np.frombuffer(digest.encode(),dtype=np.uint8))
+                os.replace(temp,cache)
+            finally: temp.unlink(missing_ok=True)
+        await run_in_threadpool(save)
+        return arr
+
+    @staticmethod
+    def _rank(snapshot,query,qvec,top_k):
+        chunks=snapshot['chunks']
+        if not chunks: return []
+        lexical=snapshot['tfidf'].query(query,top_k)
+        semantic=np.zeros(len(chunks),dtype=np.float32)
+        if qvec is not None: semantic=snapshot['vectors']@qvec
+        boost=np.zeros(len(chunks),dtype=np.float32)
+        clean=re.sub(r'[？?!！。,，、\s]','',query)
+        for i,c in enumerate(chunks):
+            title=re.sub(r'[（(].*?[)）]','',c['title'])
+            if len(title)>=2 and title in clean: boost[i]=1
+        scores=0.6*semantic+0.25*lexical+0.15*boost if qvec is not None else 0.75*lexical+0.25*boost
+        return [dict(chunks[i],score=round(float(scores[i]),4),revision=snapshot['state'][0]) for i in np.argsort(-scores)[:top_k] if scores[i]>=settings.RAG_SCORE_THRESHOLD or boost[i]>0]
+
+    async def retrieve(self,query,top_k=None):
+        from starlette.concurrency import run_in_threadpool
+        for _ in range(3):
+            state=await self._state()
+            snapshot=self._snapshot
+            if snapshot is None or snapshot['state']!=state or snapshot['identity']!=self._identity():
+                await self.build()
+                snapshot=self._snapshot
+            qvec=None
+            if snapshot['vectors'] is not None and settings.LLM_API_KEY and not settings.DEMO_MODE:
+                key=(snapshot['identity'],snapshot['state'],query)
+                qvec=self._query_cache.get(key)
+                if qvec is None:
+                    values=await self._embed_batch([query])
+                    if values is not None:
+                        qvec=np.asarray(values[0],dtype=np.float32)
+                        if qvec.shape!=(settings.EMBEDDING_DIM,) or not np.isfinite(qvec).all(): qvec=None
+                        else:
+                            qvec=qvec/max(np.linalg.norm(qvec),1e-9)
+                            if self._snapshot is snapshot:
+                                if len(self._query_cache)>=500: self._query_cache.pop(next(iter(self._query_cache)))
+                                self._query_cache[key]=qvec
+            results=await run_in_threadpool(self._rank,snapshot,query,qvec,top_k or settings.RAG_TOP_K)
+            if await self._state()==snapshot['state'] and snapshot['identity']==self._identity():
+                return results
+        raise RuntimeError('knowledge changed repeatedly during retrieval; retry')
+
+    @property
+    def status(self):
+        return {'ready':self.ready,'chunks':len(self._snapshot['chunks']) if self.ready else 0,'engine':self.engine_mode,'revision':self._snapshot['state'][0] if self.ready else None,'embedding_model':settings.EMBEDDING_MODEL if self.vectors is not None else None,'build_time_s':round(self.build_time,2)}
 
 
-rag_service = RagService()
+rag_service=RagService()

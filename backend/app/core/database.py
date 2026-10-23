@@ -26,3 +26,12 @@ async def init_db():
     from app.models import models  # noqa: F401 - 确保模型已注册
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+    from app.models.models import KnowledgeRevision
+    from sqlalchemy.exc import IntegrityError
+    async with async_session() as db:
+        if await db.get(KnowledgeRevision, 1) is None:
+            db.add(KnowledgeRevision(id=1,value=0,chunk_size=800,overlap=80))
+            try:
+                await db.commit()
+            except IntegrityError:
+                await db.rollback()  # another worker seeded the same singleton

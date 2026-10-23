@@ -70,3 +70,11 @@ class SpotVisit(Base):
     spot_name = Column(String(100))
     method = Column(String(20), default="qrcode")  # qrcode / bluetooth / manual
     created_at = Column(DateTime, server_default=func.now())
+
+
+class KnowledgeRevision(Base):
+    __tablename__ = 'knowledge_revision'
+    id = Column(Integer, primary_key=True)
+    value = Column(Integer, nullable=False, default=0)
+    chunk_size = Column(Integer, nullable=False, default=800)
+    overlap = Column(Integer, nullable=False, default=80)

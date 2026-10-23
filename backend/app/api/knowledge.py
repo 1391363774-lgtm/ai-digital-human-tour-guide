@@ -1,13 +1,15 @@
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, delete
-from pydantic import BaseModel
+from pydantic import BaseModel,Field,model_validator
 from typing import Optional, List
 from datetime import datetime
 
 from app.core.database import get_db
 from app.models.models import KnowledgeItem
 from app.services.rag_service import rag_service
+from app.core.knowledge_revision import bump_revision
+from typing import Literal
 
 router = APIRouter()
 
@@ -15,16 +17,22 @@ router = APIRouter()
 class KnowledgeCreate(BaseModel):
     category: str
     title: str
-    content: str
+    content: str = Field(min_length=1,max_length=100000)
     source: str = "manual"
-    status: str = "draft"
+    status: Literal['draft','published'] = "draft"
 
 
 class KnowledgeUpdate(BaseModel):
     category: Optional[str] = None
     title: Optional[str] = None
     content: Optional[str] = None
-    status: Optional[str] = None
+    status: Optional[Literal['draft','published']] = None
+
+    @model_validator(mode='after')
+    def no_explicit_null(self):
+        if any(getattr(self,key) is None for key in self.model_fields_set):
+            raise ValueError('provided fields cannot be null')
+        return self
 
 
 @router.get("/items")
@@ -62,8 +70,9 @@ async def get_knowledge(
 
 @router.post("/items")
 async def create_knowledge(data: KnowledgeCreate, db: AsyncSession = Depends(get_db)):
-    item = KnowledgeItem(**data.dict())
+    item = KnowledgeItem(**data.model_dump())
     db.add(item)
+    await bump_revision(db)
     await db.commit()
     return {"id": item.id, "message": "创建成功"}
 
@@ -75,9 +84,10 @@ async def update_knowledge(item_id: int, data: KnowledgeUpdate, db: AsyncSession
     item = result.scalar_one_or_none()
     if not item:
         raise HTTPException(404, "知识条目不存在")
-    for key, value in data.dict(exclude_unset=True).items():
+    for key, value in data.model_dump(exclude_unset=True).items():
         setattr(item, key, value)
     item.updated_at = datetime.now()
+    await bump_revision(db)
     await db.commit()
     return {"message": "更新成功"}
 
@@ -86,6 +96,7 @@ async def update_knowledge(item_id: int, data: KnowledgeUpdate, db: AsyncSession
 async def delete_knowledge(item_id: int, db: AsyncSession = Depends(get_db)):
     query = delete(KnowledgeItem).where(KnowledgeItem.id == item_id)
     await db.execute(query)
+    await bump_revision(db)
     await db.commit()
     return {"message": "删除成功"}
 
@@ -112,7 +123,24 @@ async def get_stats(db: AsyncSession = Depends(get_db)):
 
 
 @router.post("/rebuild")
-async def rebuild_rag():
+async def rebuild_rag(db: AsyncSession = Depends(get_db)):
     """知识库变更后重建检索索引(管理后台一键同步)"""
+    await bump_revision(db)
+    await db.commit()
     await rag_service.build()
     return {"ok": True, "rag": rag_service.status}
+
+
+class RechunkRequest(BaseModel):
+    size: int = Field(800,ge=100,le=2000)
+    overlap: int = Field(80,ge=0,le=500)
+
+
+@router.post('/rechunk')
+async def rechunk(req: RechunkRequest, db: AsyncSession = Depends(get_db)):
+    if req.overlap >= req.size:
+        raise HTTPException(422,'overlap must be less than size')
+    await bump_revision(db,chunk_size=req.size,overlap=req.overlap)
+    await db.commit()
+    await rag_service.build()
+    return {'ok':True,'rag':rag_service.status}
