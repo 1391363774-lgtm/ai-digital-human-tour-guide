@@ -99,7 +99,7 @@
     this.openTarget = (v in VISEMES) ? VISEMES[v] : 0;
   };
 
-  PhotoHuman.prototype.playAudio = function (url, visemes) {
+  PhotoHuman.prototype.playAudio = function (url, visemes, callbacks) {
     this.stopAudio();
     var self = this, audio = new Audio(url);
     this.visemes = visemes || []; this.audio = audio;
@@ -107,16 +107,23 @@
       var settled = false;
       function finish(error) {
         if (settled) return; settled = true;
-        audio.onended = audio.onerror = null;
+        audio.onended = audio.onerror = audio.onplaying = audio.onpause = audio.onwaiting = audio.onstalled = audio.onseeking = null;
         try { audio.pause(); audio.removeAttribute('src'); audio.load(); } catch (_) {}
         if (self.audio === audio) { self.audio = null; self.speaking = false; self.setViseme('sil'); }
         self._settle = null;
         if (error) reject(error); else resolve();
       }
       self._settle = function () { finish(); };
+      audio.onpause = audio.onwaiting = audio.onstalled = audio.onseeking = function () {
+        if (settled) return; self.speaking = false; self.setViseme('sil');
+      };
+      audio.onplaying = function () {
+        if (settled) return; self.speaking = true;
+        if (callbacks && callbacks.onPlaying) callbacks.onPlaying();
+      };
       audio.onended = function () { finish(); };
       audio.onerror = function () { finish(new Error('音频加载失败')); };
-      audio.play().then(function () { if (!settled) self.speaking = true; }).catch(function () { finish(new Error('浏览器阻止播放')); });
+      audio.play().catch(function () { finish(new Error('浏览器阻止播放')); });
     });
   };
 
@@ -153,7 +160,7 @@
     // ---- 视素追踪 ----
     if (this.speaking) {
       var playedMs = -1;
-      if (this.audio) playedMs = this.audio.currentTime * 1000;
+      if (this.audio && !this.audio.paused && !this.audio.ended && !this.audio.seeking && this.audio.readyState >= 3) playedMs = this.audio.currentTime * 1000;
       else if (this.timelineStart) {
         playedMs = now - this.timelineStart;
         if (this.timelineDuration && playedMs > this.timelineDuration + 400) this.stopSpeaking();
@@ -165,14 +172,15 @@
           if (this.visemes[mid].t <= playedMs) { cur = this.visemes[mid]; lo = mid + 1; }
           else hi = mid - 1;
         }
-        if (cur) { this.setViseme(cur.v); if (this.onViseme) this.onViseme(cur.v); }
+        var active = cur && cur.d > 0 && playedMs < cur.t + cur.d;
+        this.setViseme(active ? cur.v : 'sil'); if (this.onViseme) this.onViseme(active ? cur.v : 'sil');
       } else if (this.analyser) {
         this.analyser.getByteFrequencyData(this.freqBuf);
         var sum = 0;
         for (var i = 2; i < 40; i++) sum += this.freqBuf[i];
         var rms = sum / 38 / 255;
         this.openTarget = Math.min(0.03 + rms * 2.6, 1);
-      }
+      } else this.setViseme('sil');
     }
 
     // ---- 开口度弹簧插值(0.85压缩,贴合她的小嘴,避免"张太大") ----

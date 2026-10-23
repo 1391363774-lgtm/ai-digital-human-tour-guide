@@ -198,7 +198,7 @@ function playSegment(item, signal) {
         function finish(error) {
             if (settled) return; settled = true;
             clearTimeout(timer); signal.removeEventListener('abort', abort);
-            if (utterance) { utterance.onend = utterance.onerror = utterance.onstart = null; }
+            if (utterance) { utterance.onend = utterance.onerror = utterance.onstart = utterance.onpause = utterance.onresume = null; }
             if (error) reject(error); else resolve();
         }
         function abort() {
@@ -217,7 +217,9 @@ function playSegment(item, signal) {
         } else if (window.speechSynthesis && ttsEnabled) {
             utterance = new SpeechSynthesisUtterance(item.text.replace(/\[MAP:.*?\]/g, ''));
             utterance.lang = 'zh-CN';
-            utterance.onstart = function () { if (!signal.aborted) dh.startTimeline(item.visemes || estimateVisemes(item.text), item.duration_ms || item.text.length * 195); };
+            // Browser voices expose no usable PCM/word timing here: keep mouth closed.
+            utterance.onstart = utterance.onresume = function () { if (!signal.aborted) { dh.stopSpeaking(); setStatus('浏览器语音 · 无对齐数据，口型关闭', false); } };
+            utterance.onpause = function () { if (!signal.aborted) dh.stopSpeaking(); };
             utterance.onend = function () { dh.stopSpeaking(); finish(); };
             utterance.onerror = function () { dh.stopSpeaking(); finish(new Error('浏览器语音不可用，已保留文字')); };
             speechSynthesis.speak(utterance);

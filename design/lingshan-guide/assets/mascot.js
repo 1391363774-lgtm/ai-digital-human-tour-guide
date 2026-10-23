@@ -207,7 +207,7 @@
         function mouth() {
           if (settled || signal.aborted) return;
           var ms = audio.currentTime * 1000, value = 0;
-          (item.visemes || []).forEach(function (v) { if (v.t <= ms && ms < v.t + v.d) value = v.v === 'sil' ? 0 : 0.5; });
+          if (!audio.paused && !audio.ended && !audio.seeking && audio.readyState >= 3) (item.visemes || []).forEach(function (v) { if (v.t <= ms && ms < v.t + v.d) value = v.v === 'sil' ? 0 : 0.5; });
           if (window.dh && window.dh.setMouthOpen) window.dh.setMouthOpen(value);
           miniRAF = requestAnimationFrame(mouth);
         }

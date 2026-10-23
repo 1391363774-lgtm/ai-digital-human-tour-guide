@@ -4,6 +4,45 @@ import path from 'node:path'
 import {afterEach,expect,it,vi} from 'vitest'
 
 afterEach(()=>vi.unstubAllGlobals())
+
+function timelineHuman(){
+  let now=0;let frame:(()=>void)|undefined
+  vi.stubGlobal('requestAnimationFrame',(cb:()=>void)=>{frame=cb;return 1})
+  vi.stubGlobal('cancelAnimationFrame',()=>{frame=undefined})
+  vi.stubGlobal('performance',{now:()=>now})
+  const mouth=vi.fn();document.body.innerHTML='<div id="avatar"></div>'
+  ;(window as any).Live2DHuman=function(){this.setExpression=vi.fn();this.setMouthOpen=mouth;this.destroy=vi.fn()}
+  window.eval(readFileSync(path.resolve(process.cwd(),'../design/lingshan-guide/assets/live2d-guide.js'),'utf8'))
+  const human=new (window as any).GuideHuman('avatar')
+  return {human,mouth,step:(ms:number)=>{now=ms;frame?.()}}
+}
+
+it('closes mouth between timed events and after event duration',()=>{
+  const {human,mouth,step}=timelineHuman()
+  human.startTimeline([{t:0,v:'AA',d:100},{t:400,v:'OO',d:100}],600)
+  expect(mouth).toHaveBeenLastCalledWith(1)
+  step(200);expect(mouth).toHaveBeenLastCalledWith(0)
+  step(450);expect(mouth).toHaveBeenLastCalledWith(.7)
+  step(550);expect(mouth).toHaveBeenLastCalledWith(0)
+  human.destroy()
+})
+
+it('pausing or buffering closes mouth and stale playing callbacks cannot resume old audio',async()=>{
+  const {human,mouth,step}=timelineHuman();const players:any[]=[]
+  class AudioStub {
+    currentTime=0;paused=false;readyState=4;ended=false;seeking=false
+    play=async()=>{};pause=()=>{this.paused=true};load=()=>{};removeAttribute=()=>{}
+    constructor(){players.push(this)}
+  }
+  vi.stubGlobal('Audio',AudioStub)
+  const first=human.playAudio('/fixture',[{t:0,v:'AA',d:1000}]);await Promise.resolve()
+  const a=players[0];a.onplaying?.();step(0);expect(mouth).toHaveBeenLastCalledWith(1)
+  a.onwaiting?.();step(10);expect(mouth).toHaveBeenLastCalledWith(0)
+  a.onplaying?.();a.paused=true;a.onpause?.();expect(mouth).toHaveBeenLastCalledWith(0)
+  const stale=a.onplaying;human.stopAudio();await first;stale?.();step(20)
+  expect(mouth).toHaveBeenLastCalledWith(0);expect(human.speaking).toBe(false)
+  human.destroy()
+})
 it('stop resolves the active player and clears callbacks, source, animation and mouth',async()=>{
   const players:any[]=[]
   class AudioStub {

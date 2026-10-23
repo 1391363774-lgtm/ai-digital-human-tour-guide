@@ -131,13 +131,13 @@
       if (visemes[mid].t <= ms) { cur = visemes[mid]; lo = mid + 1; }
       else hi = mid - 1;
     }
-    if (!cur) return 0;
+    if (!cur || !Number.isFinite(cur.d) || cur.d <= 0 || ms >= cur.t + cur.d) return 0;
     var v = cur.v;
     return (v in VISEMES) ? VISEMES[v] : 0.4;
   }
 
   GuideHuman.prototype._mouth = function (v) {
-    if (this._fallback) { this._fallback.setViseme && this._fallback.setViseme('_open'); }
+    if (this._fallback) { this._fallback.setViseme && this._fallback.setViseme(v > 0 ? 'AA' : 'sil'); }
     // Live2D 嘴型(Live2DHuman 内部缓存模型)
     if (!this._l2d) return;
     this._l2d.setMouthOpen(Math.max(0, Math.min(1, v)));
@@ -151,15 +151,16 @@
       var ms = self.audio
         ? self.audio.currentTime * 1000
         : (performance.now() - self.playStart);
-      self._mouth(currentViseme(self.visemes, ms));
+      var audible = !self.audio || (!self.audio.paused && !self.audio.ended && !self.audio.seeking && self.audio.readyState >= 3);
+      self._mouth(audible ? currentViseme(self.visemes, ms) : 0);
       self.raf = requestAnimationFrame(tick);
     }
     tick();
   };
 
   // ---------- 在线音频 + 视素口型 ----------
-  GuideHuman.prototype.playAudio = function (url, visemes) {
-    if (this._fallback) return this._fallback.playAudio(url, visemes);
+  GuideHuman.prototype.playAudio = function (url, visemes, callbacks) {
+    if (this._fallback) return this._fallback.playAudio(url, visemes, callbacks);
     this.stopAudio();
     var self = this, a = new Audio(), epoch = this._playEpoch;
     this.audio = a; this.visemes = visemes || [];
@@ -167,19 +168,30 @@
       var settled = false;
       function finish(error) {
         if (settled) return; settled = true;
-        a.onended = a.onerror = null;
+        a.onended = a.onerror = a.onplaying = a.onpause = a.onwaiting = a.onstalled = a.onseeking = a.onloadstart = null;
         try { a.pause(); a.removeAttribute('src'); a.load(); } catch (_) {}
         if (self.audio === a) { self.audio = null; self.speaking = false; self._mouth(0); cancelAnimationFrame(self.raf); }
         self._settle = null;
         if (error) reject(error); else resolve();
       }
       self._settle = function () { finish(); };
+      function suspend() {
+        if (epoch !== self._playEpoch || settled) return;
+        self.speaking = false; cancelAnimationFrame(self.raf); self._mouth(0);
+        if (callbacks && callbacks.onState) callbacks.onState('paused_or_buffering');
+      }
+      a.onpause = a.onwaiting = a.onstalled = a.onseeking = a.onloadstart = suspend;
+      a.onplaying = function () {
+        if (epoch !== self._playEpoch || settled) return;
+        self.speaking = true; self._drive();
+        if (callbacks && callbacks.onPlaying) callbacks.onPlaying();
+      };
       a.onended = function () { if (epoch === self._playEpoch) finish(); };
       a.onerror = function () { if (epoch === self._playEpoch) finish(new Error('音频加载失败')); };
       a.src = url;
       a.play().then(function () {
         if (epoch !== self._playEpoch || settled) return;
-        self.speaking = true; self._drive();
+        // The playing event, not the play() promise, marks actual playback.
       }).catch(function () { if (epoch === self._playEpoch) finish(new Error('浏览器阻止播放，请先点击页面')); });
     });
   };
@@ -190,7 +202,7 @@
     cancelAnimationFrame(this.raf); this.speaking = false;
     if (this._settle) this._settle();
     if (this.audio) {
-      this.audio.onended = this.audio.onerror = null;
+      this.audio.onended = this.audio.onerror = this.audio.onplaying = this.audio.onpause = this.audio.onwaiting = this.audio.onstalled = this.audio.onseeking = this.audio.onloadstart = null;
       try { this.audio.pause(); this.audio.removeAttribute('src'); this.audio.load(); } catch (_) {}
       this.audio = null;
     }
@@ -201,6 +213,7 @@
   // ---------- 浏览器 TTS 兜底口型(离线模式) ----------
   GuideHuman.prototype.startTimeline = function (visemes, durationMs) {
     if (this._fallback) return this._fallback.startTimeline(visemes, durationMs);
+    this.stopAudio();
     var self = this;
     this.visemes = visemes || [];
     this.playStart = performance.now();
