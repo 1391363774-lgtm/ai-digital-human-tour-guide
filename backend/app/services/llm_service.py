@@ -305,7 +305,7 @@ class LlmService:
             body = re.sub(r"\n{2,}", "\n", chunk["content"])[:220]
             return (
                 f"[emotion:calm]阿弥陀佛,关于「{chunk['title']}」,为您讲解如下:\n{body}\n"
-                "(当前为本地知识库直答模式,配置大模型 Key 后回答会更生动自然)"
+                "(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)"
             )
         return (
             "[emotion:sorry]抱歉,这个问题超出了我本地知识库的范围。"

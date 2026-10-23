@@ -62,3 +62,13 @@ def test_audio_requires_unexpired_unguessable_grant(client,tmp_path,monkeypatch)
     token=meta['audio_url'].split('access=')[1]
     tts_service._grants[token]=(key,0)
     assert client.get(meta['audio_url']).status_code==404
+
+
+def test_model_generated_advisory_priority_cannot_become_html_class(client,monkeypatch):
+    import json
+    from app.services.llm_service import llm_service
+    async def fake(*args,**kwargs):
+        return json.dumps([{'priority':'invalid-class-value','content':'公开测试建议'}])
+    monkeypatch.setattr(llm_service,'chat_once',fake)
+    result=client.post('/api/analytics/suggestions',headers={'X-Admin-Key':'test-admin'}).json()
+    assert result['suggestions'][0]=={'priority':'medium','content':'公开测试建议'}

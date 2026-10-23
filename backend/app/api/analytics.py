@@ -218,7 +218,7 @@ async def gen_suggestions(db: AsyncSession = Depends(get_db)):
                 for it in arr[:5]:
                     if it.get("content"):
                         suggestions.append({
-                            "priority": it.get("priority", "medium"),
+                            "priority": it.get("priority") if it.get('priority') in ('high','medium','low') else 'medium',
                             "content": it["content"]})
             except Exception:
                 pass

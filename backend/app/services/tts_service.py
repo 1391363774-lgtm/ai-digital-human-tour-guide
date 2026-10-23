@@ -4,10 +4,10 @@ TTS 语音合成 + 中文视素(Viseme)口型时间轴服务
 核心原理:
   edge-tts 合成神经语音的同时产出"词边界(WordBoundary)"事件,
   精确到每个词在音频中的起止时间;再将每个汉字转拼音,
-  声母/韵母映射为中文视素口型,生成与音频毫秒级对齐的口型时间轴。
+  声母/韵母映射为规则口型；汉字时长均分词边界，不是实测音素对齐。
 
   音频 ──┐
-         ├─► 前端数字人按时间轴驱动口型 → 口型与发音严格同步
+         ├─► 前端按估算时间轴驱动嘴张度；具体嘴形能力取决于渲染器
   时间轴 ─┘
 """
 import hashlib
@@ -118,7 +118,7 @@ def build_viseme_timeline(word_boundaries: List[Dict], total_ms: int) -> List[Di
 def estimate_timeline_offline(text: str, chars_per_sec: float = 5.2) -> Tuple[List[Dict], int]:
     """
     无TTS词边界时的降级方案:按语速估算时间轴
-    (浏览器speechSynthesis兜底播放时使用,口型依然逐字同步)
+    (浏览器speechSynthesis兜底使用，不保证逐字或音素对齐)
     """
     events: List[Dict] = []
     t = 0.0
