@@ -140,6 +140,7 @@ def main():
     parser.add_argument('--api-key-env',default='EVAL_API_KEY'); parser.add_argument('--model',default='')
     parser.add_argument('--question-field',default='question'); parser.add_argument('--answer-field',default='answer'); parser.add_argument('--extra-fields',default='')
     parser.add_argument('--dataset',type=Path,default=SCRIPT_DIR/'qa_testset.json'); parser.add_argument('--output',type=Path,default=Path('eval-report.json')); parser.add_argument('--limit',type=int,default=0)
+    parser.add_argument('--fail-on-request-error',action='store_true',help='CI guard only; keyword/refusal failures do not change exit status')
     args=parser.parse_args(); url=urllib.parse.urlsplit(args.api_url)
     if url.username or url.password or url.query or url.fragment: parser.error('use credential-free URL without query or fragment')
     args.api_key=os.environ.get(args.api_key_env,''); raw=args.dataset.read_bytes(); dataset=json.loads(raw)
@@ -163,5 +164,6 @@ def main():
         'knowledge_revisions':sorted({s.get('revision') for r in summary['results'] for s in (r.get('sources') or []) if s.get('revision') is not None}),'summary':summary}
     write_reports(report,args.output)
     print(json.dumps({k:v for k,v in summary.items() if k!='results'},ensure_ascii=False))
+    if args.fail_on_request_error and summary['request_success']!=summary['total']: raise SystemExit(1)
 
 if __name__=='__main__': main()

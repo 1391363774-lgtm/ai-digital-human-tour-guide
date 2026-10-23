@@ -69,3 +69,10 @@ def test_request_local_traces_record_fallback_reason_without_mixing():
         assert fallback[1]['switch_reason']=='empty_stream'
         assert len(fallback[1]['attempts'])==2
     asyncio.run(run())
+
+
+def test_runtime_fingerprint_hashes_actual_backend_files(client):
+    import hashlib
+    status=client.get('/api/status').json()
+    assert status['runtime']['backend_sha256']!=hashlib.sha256(b'').hexdigest()
+    assert status['rag']['snapshot_id']

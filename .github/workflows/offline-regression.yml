@@ -50,9 +50,16 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
-      - run: docker build -t lingshan-ci .
+      - run: docker build --build-arg GUIDE_BUILD_SHA=${{ github.sha }} -t lingshan-ci .
       - run: docker run -d --rm --name lingshan-ci -p 127.0.0.1:8080:8080 lingshan-ci
       - run: python scripts/smoke_demo.py
+      - name: Evaluate all questions against local demo without speech or model calls
+        run: python 评测包/eval.py --mode backend --api-url http://127.0.0.1:8080/api/chat/send --dataset data/eval/qa_testset.json --output test-results/eval.json --fail-on-request-error
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: demo-evaluation
+          path: test-results/
       - if: always()
         run: docker logs lingshan-ci
       - if: always()

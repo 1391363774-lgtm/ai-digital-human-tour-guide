@@ -22,7 +22,7 @@ from app.services.rag_service import rag_service
 
 
 def runtime_identity():
-    root=Path(__file__).resolve().parents[3]
+    root=Path(__file__).resolve().parents[2]
     digest=hashlib.sha256()
     for path in sorted((root/'backend/app').rglob('*.py')):
         digest.update(path.relative_to(root).as_posix().encode()); digest.update(path.read_bytes())
