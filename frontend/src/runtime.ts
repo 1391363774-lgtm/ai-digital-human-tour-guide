@@ -1,7 +1,15 @@
 import { readSseData } from './stream'
 
 export type Event = {type:string; request_id:string; [key:string]:unknown}
-export type Segment = {index:number; text:string; audio_url?:string|null; visemes?:unknown[]; duration_ms?:number; engine?:string}
+export type Segment = {index:number; text:string; audio_url?:string|null; visemes?:unknown[]; duration_ms?:number; engine?:string; prelude?:boolean}
+export type Metrics = {request_id?:string;first_valid_text_ms:number|null;first_actual_audio_ms:number|null;total_ms:number|null;audio_complete_ms:number|null}
+
+// Return plain text for textContent. Keep real IDs in the per-reply source panel.
+export function formatCitationText(text:string,sources:Array<{chunk_id?:unknown}>=[]):string {
+  const numbers=new Map<string,number>()
+  sources.forEach((source,index)=>{if(typeof source.chunk_id==='string'&&!numbers.has(source.chunk_id))numbers.set(source.chunk_id,index+1)})
+  return text.replace(/\[cite:([^\]]*)\]/gi,(_marker,id:string)=>numbers.has(id)?`[${numbers.get(id)}]`:'[引用编号无效]')
+}
 
 export async function* readEvents(response:Response,signal?:AbortSignal):AsyncGenerator<Event> {
   if (!response.ok) { await response.body?.cancel(); throw new Error(`HTTP ${response.status}`) }
@@ -97,7 +105,7 @@ export class SpeechScheduler {
   }
 }
 
-export type ChatHandlers={onEvent:(event:Event)=>void; play:(segment:Segment,signal:AbortSignal)=>Promise<void>; onError:(error:unknown)=>void; onCancel?:()=>void; onFinish?:()=>void; onAudioError?:(error:unknown)=>void; onQueue?:(buffered:number)=>void}
+export type ChatHandlers={onEvent:(event:Event)=>void; play:(segment:Segment,signal:AbortSignal,onStarted?:()=>void)=>Promise<void>; onError:(error:unknown)=>void; onCancel?:()=>void; onFinish?:()=>void; onAudioError?:(error:unknown)=>void; onQueue?:(buffered:number)=>void; onMetrics?:(metrics:Metrics)=>void}
 export class ChatClient {
   private requests=new RequestEpoch()
   private speaker?:SpeechScheduler
@@ -113,7 +121,14 @@ export class ChatClient {
     this.audioMuted=false
     this.handlers=handlers
     let audioFailed=false
-    const speaker=new SpeechScheduler({signal:scope.signal,capacity:4,play:handlers.play,
+    const started=performance.now()
+    const metrics:Metrics={first_valid_text_ms:null,first_actual_audio_ms:null,total_ms:null,audio_complete_ms:null}
+    const publish=()=>{if(scope.current())handlers.onMetrics?.({...metrics})}
+    const speaker=new SpeechScheduler({signal:scope.signal,capacity:4,
+      play:(item,signal)=>handlers.play(item,signal,()=>{
+        if (!scope.current() || signal.aborted || item.prelude || metrics.first_actual_audio_ms!==null) return
+        metrics.first_actual_audio_ms=Math.round(performance.now()-started);publish()
+      }),
       onState:n=>{ if(scope.current()) handlers.onQueue?.(n) },
       onError:e=>{audioFailed=true;if(scope.current()) handlers.onAudioError?.(e)} })
     this.speaker=speaker
@@ -121,6 +136,9 @@ export class ChatClient {
       const response=await fetch('/api/chat/stream',{method:'POST',signal:scope.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
       for await (const event of readEvents(response,scope.signal)) {
         if (!scope.current()) return
+        metrics.request_id=event.request_id
+        if (event.type==='delta' && !event.notice && String(event.text).trim() && metrics.first_valid_text_ms===null) {metrics.first_valid_text_ms=Math.round(performance.now()-started);publish()}
+        if (event.type==='done') {metrics.total_ms=Math.round(performance.now()-started);publish()}
         handlers.onEvent(event)
         if (event.type==='error' || event.type==='done' && !['completed','refused'].includes(String(event.status))) { audioFailed=true; speaker.cancel() }
         if (event.type==='sentence' && payload.tts_enabled!==false && !audioFailed && !this.audioMuted) {
@@ -130,9 +148,10 @@ export class ChatClient {
         }
       }
       await speaker.finish()
+      metrics.audio_complete_ms=Math.round(performance.now()-started);publish()
       if (scope.current()) handlers.onFinish?.()
     } catch (error) {
-      if (scope.current()) { speaker.cancel(); handlers.onError(error) }
+      if (scope.current()) { speaker.cancel();metrics.total_ms=Math.round(performance.now()-started);publish(); handlers.onError(error) }
     } finally {
       if (scope.current()) { this.handlers=undefined; this.speaker=undefined }
     }

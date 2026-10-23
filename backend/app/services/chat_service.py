@@ -21,6 +21,7 @@ from app.services.llm_service import llm_service, parse_emotion, strip_emotion
 from app.services.rag_service import rag_service
 from app.services.sentiment import analyze_sentiment
 from app.services.tts_service import tts_service
+from app.core.evidence import model_trace, CitationFilter
 
 SENTENCE_END = re.compile(r"([。！？!?；;])")
 CLAUSE_END = re.compile(r"([。！？!?；;，,、])")
@@ -103,10 +104,10 @@ class ChatService:
         return "general"
 
     async def stream_pipeline(self, query: str, tourist_id: str = 'guest', interest=None,
-                              time_budget=None, companions=None, tts_enabled=True):
+                              time_budget=None, companions=None, tts_enabled=True, request_id=None):
         """Bounded speech work; explicit partial/refused/cancelled outcomes; close upstream on exit."""
         started=time.monotonic()
-        request_id=uuid.uuid4().hex
+        request_id=request_id or uuid.uuid4().hex
         session_id=await self._ensure_session(tourist_id)
         history=await self.get_history(tourist_id,model_context=True)
         await self._save_message(session_id,'user',query,outcome='generating',request_id=request_id)
@@ -118,16 +119,25 @@ class ChatService:
         feedback_id=None
         persisted=False
         sources=[]
+        generation=None
+        first_text_ms=None
+        first_audio_ready_ms=None
+        trace={'path':'not_started','model':None,'attempts':[],'switch_reason':None,'rejected_citations':0}
+        trace_token=model_trace.set(trace)
+        citation_filter=None
 
         async def synth(idx,text,prelude):
+            nonlocal first_audio_ready_ms
             try:
                 meta=await asyncio.wait_for(tts_service.synthesize(text),timeout=12)
                 meta=tts_service.grant_audio(meta)
             except Exception:
                 meta={'ok':False,'engine':'none','reason':'语音合成暂不可用'}
+            if not prelude and meta.get('audio_url') and first_audio_ready_ms is None:
+                first_audio_ready_ms=round((time.monotonic()-started)*1000,2)
             return {'type':'sentence','index':idx,'text':text,'prelude':prelude,'audio_url':meta.get('audio_url'),
                     'tts_ok':meta.get('ok',False),'visemes':meta.get('visemes',[]),'duration_ms':meta.get('duration_ms',0),
-                    'engine':meta.get('engine','none'),'request_id':request_id}
+                    'engine':meta.get('engine','none'),'mouth_alignment':meta.get('mouth_alignment','unavailable'),'request_id':request_id}
 
         async def enqueue(text,prelude=False):
             nonlocal index
@@ -141,16 +151,23 @@ class ChatService:
 
         try:
             chunks=await rag_service.retrieve(query)
-            sources=[{k:c[k] for k in ('title','source','score','content','chunk_id','revision') if k in c} for c in chunks]
+            sources=[{**{k:c[k] for k in ('title','source','score','content','chunk_id','revision','updated_at_kind') if k in c},
+                      'updated_at':c.get('updated_at'),'citation_status':'retrieved_unverified','supports_answer':None} for c in chunks]
+            citation_filter=CitationFilter(chunks)
             generation=rag_service.status.get('revision')
-            yield {'type':'meta','intent':self.detect_intent(query),'engine':rag_service.engine_mode,'sources':sources,'request_id':request_id}
+            yield {'type':'meta','intent':self.detect_intent(query),'engine':rag_service.engine_mode,'sources':sources,'knowledge_revision':generation,'request_id':request_id}
             if not chunks:
                 answer='抱歉，本地景区知识库没有找到可靠依据，请换个问法或咨询景区工作人员。'
                 status='refused'
+                trace.update(path='no_evidence_refusal',switch_reason='no_retrieved_evidence')
+                first_text_ms=round((time.monotonic()-started)*1000,2)
                 yield {'type':'delta','text':answer,'request_id':request_id}
                 async for evt in enqueue(answer): yield evt
             else:
                 async for evt in enqueue(PRELUDE_PHRASES[hash(tourist_id+query)%len(PRELUDE_PHRASES)],True): yield evt
+                if self.detect_intent(query) in ('ticket','time') or re.search('今天|实时|现在|最新',query):
+                    answer='【时效提醒】资料更新时间未核实，以下内容不代表实时票价、开放或演出安排，请以景区官方公告为准。\n'
+                    yield {'type':'delta','text':answer,'request_id':request_id,'notice':True}
                 head=''
                 resolved=False
                 sentence=''
@@ -166,10 +183,14 @@ class ChatService:
                             else: token=head
                             resolved=True
                             yield {'type':'emotion','emotion':emotion,'request_id':request_id}
-                        if not token: continue
+                        token=citation_filter.feed(token)
+                        if not token or first_text_ms is None and not token.strip(): continue
+                        if first_text_ms is None: first_text_ms=round((time.monotonic()-started)*1000,2)
                         answer+=token
                         if len(answer)>6000: raise RuntimeError('answer limit')
-                        sentence+=token
+                        # CitationFilter emits only complete validated markers;
+                        # retain them in the transcript, never read IDs aloud.
+                        sentence+=re.sub(r'\[cite:[^\]\r\n]*\]', '', token, flags=re.I)
                         yield {'type':'delta','text':token,'request_id':request_id}
                         parts=SENTENCE_END.split(sentence)
                         while len(parts)>=2:
@@ -181,15 +202,17 @@ class ChatService:
                             sentence=sentence[160:]
                         while pending and pending[next(iter(pending))].done():
                             yield await pending.pop(next(iter(pending)))
-                if not resolved and head:
-                    answer=head
-                    sentence=head
-                    yield {'type':'delta','text':head,'request_id':request_id}
-                if not answer.strip(): raise RuntimeError('empty final answer')
+                tail=citation_filter.feed(strip_emotion(head) if not resolved else '',final=True)
+                if tail:
+                    if first_text_ms is None and tail.strip(): first_text_ms=round((time.monotonic()-started)*1000,2)
+                    answer+=tail
+                    sentence+=re.sub(r'\[cite:[^\]\r\n]*\]', '', tail, flags=re.I)
+                    yield {'type':'delta','text':tail,'request_id':request_id}
+                if first_text_ms is None: raise RuntimeError('empty final answer')
                 async for evt in enqueue(sentence.strip()): yield evt
                 if generation is not None and (await rag_service._state())[0]!=generation:
                     raise RuntimeError('knowledge changed during answer')
-                status='completed'
+                status='refused' if trace.get('local_refusal') else 'completed'
             while pending:
                 yield await pending.pop(next(iter(pending)))
         except (asyncio.CancelledError,GeneratorExit):
@@ -200,6 +223,12 @@ class ChatService:
             logging.getLogger(__name__).warning('chat_failed kind=%s partial=%s',type(exc).__name__,status=='partial')
             yield {'type':'error','message':'回答中断，已保留收到的文字，请重试。','code':'answer_interrupted','partial':status=='partial','request_id':request_id}
         finally:
+            if citation_filter is not None: trace['rejected_citations']=citation_filter.rejected
+            logging.getLogger(__name__).info('chat_evidence request_id=%s status=%s path=%s evidence=%s',
+                request_id,status,trace['path'],{'provenance':trace,'knowledge_revision':generation,
+                    'first_valid_text_ms':first_text_ms,'first_content_audio_ready_ms':first_audio_ready_ms,
+                    'total_ms':round((time.monotonic()-started)*1000,2)})
+            model_trace.reset(trace_token)
             tasks=list(pending.values())
             for task in tasks: task.cancel()
             with anyio.CancelScope(shield=True):
@@ -216,7 +245,10 @@ class ChatService:
                     logging.getLogger(__name__).warning('chat_persistence_failed kind=%s',type(exc).__name__)
         yield {'type':'done','full_text':answer,'emotion':emotion,'status':status,'request_id':request_id,
                'latency_ms':round((time.monotonic()-started)*1000),'feedback_id':feedback_id,'persisted':persisted,
-               'mode':'demo' if settings.DEMO_MODE else 'local_extractive' if not llm_service.available else 'configured_model_chain'}
+               'knowledge_revision':generation,'provenance':trace,
+               'timings':{'first_valid_text_ms':first_text_ms,'first_content_audio_ready_ms':first_audio_ready_ms,
+                          'first_actual_audio_ms':None,'total_ms':round((time.monotonic()-started)*1000,2)},
+               'mode':'demo' if settings.DEMO_MODE else trace['path']}
 
 
 chat_service=ChatService()

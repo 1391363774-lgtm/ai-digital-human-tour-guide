@@ -1,0 +1,14 @@
+{
+  "date": "2026-10-23",
+  "mode": "fixed_synthetic_wav_not_natural_tts",
+  "test_page": "tests/browser/mouth-check.html",
+  "audio_generator": "scripts/mouth_fixture_server.py",
+  "real_buffering_network_tested": false,
+  "attempts": [
+    {"stage":"duration_fix_before_audio_clock_watchdog","silence_samples":31,"voice_samples":16,"gap_closed":false,"voice_open":true,"ended_closed":true,"pause_closed":true,"buffer_event_closed":true,"cancel_and_stale_closed":true,"natori_loaded":true,"pass":false},
+    {"stage":"foreground_repeat_before_watchdog","silence_samples":32,"voice_samples":15,"gap_closed":false,"voice_open":true,"ended_closed":true,"pause_closed":true,"buffer_event_closed":true,"cancel_and_stale_closed":true,"natori_loaded":true,"pass":false},
+    {"stage":"after_audio_clock_watchdog","silence_samples":32,"voice_samples":15,"gap_closed":true,"voice_open":true,"ended_closed":true,"gap_failures":[],"pause_closed":true,"buffer_event_closed":true,"cancel_and_stale_closed":true,"natori_loaded":true,"pass":true}
+  ],
+  "measured_value": "GuideHuman mouth drive command, with real Natori loaded; not image-based phoneme scoring",
+  "application_checks": {"backend_demo_question":"灵山大佛有多高?","terminal":"completed","actual_path":"local_extractive","reason":"no_provider_configured","content_first_text_ms_sample":67,"content_first_playback_ms_sample":553,"response_total_ms_sample":1511,"performance_improvement_claimed":false,"sources_show_chunk_id_revision_unknown_update":true,"continuous_questions_and_stop_observed":true,"browser_static_offline_question":"开放时间","static_offline_speech_disabled":true,"static_offline_warning_observed":true,"static_path_not_in_100_question_backend_report":true}
+}

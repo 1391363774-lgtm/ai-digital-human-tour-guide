@@ -7,6 +7,8 @@ COPY design/ /app/design/
 RUN npm run build
 
 FROM python:3.13-slim
+ARG GUIDE_BUILD_SHA=unknown
+ENV GUIDE_BUILD_SHA=$GUIDE_BUILD_SHA
 WORKDIR /app
 COPY backend/requirements-lock.txt /app/backend/requirements-lock.txt
 RUN pip install --no-cache-dir -r /app/backend/requirements-lock.txt

@@ -87,7 +87,8 @@ def build_viseme_timeline(word_boundaries: List[Dict], total_ms: int) -> List[Di
         if not chars:
             continue
         offset = wb["offset_ms"]
-        dur = max(wb["duration_ms"], 60)
+        dur = max(0, min(wb["duration_ms"], total_ms - offset))
+        if dur <= 0: continue
         per_char = dur / len(chars)
         for i, ch in enumerate(chars):
             ch_start = offset + i * per_char
@@ -105,7 +106,7 @@ def build_viseme_timeline(word_boundaries: List[Dict], total_ms: int) -> List[Di
     merged: List[Dict] = []
     for e in events:
         if merged and merged[-1]["v"] == e["v"] and \
-                abs(merged[-1]["t"] + merged[-1]["d"] - e["t"]) < 40:
+                abs(merged[-1]["t"] + merged[-1]["d"] - e["t"]) < 0.11:
             merged[-1]["d"] = round(e["t"] + e["d"] - merged[-1]["t"], 1)
         else:
             merged.append(dict(e))
@@ -145,7 +146,7 @@ def estimate_timeline_offline(text: str, chars_per_sec: float = 5.2) -> Tuple[Li
     # 合并
     merged: List[Dict] = []
     for e in events:
-        if merged and merged[-1]["v"] == e["v"]:
+        if merged and merged[-1]["v"] == e["v"] and abs(merged[-1]['t'] + merged[-1]['d'] - e['t']) < 0.11:
             merged[-1]["d"] = round(merged[-1]["d"] + e["d"], 1)
         else:
             merged.append(dict(e))
@@ -163,7 +164,7 @@ class TtsService:
         self._slots = asyncio.Semaphore(3)
 
     def _cache_key(self, text: str, voice: str) -> str:
-        return hashlib.md5(f"word-pinyin-estimate-v2|{settings.DEMO_MODE}|{voice}|{settings.TTS_RATE}|{settings.TTS_PITCH}|{text}".encode("utf-8")).hexdigest()
+        return hashlib.md5(f"word-pinyin-estimate-v3|{settings.DEMO_MODE}|{voice}|{settings.TTS_RATE}|{settings.TTS_PITCH}|{text}".encode("utf-8")).hexdigest()
 
     async def synthesize(self, text: str, voice: Optional[str] = None) -> Dict:
         text=text.strip()[:800]
