@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>景点列表 - 灵山胜境智慧导览</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold:#C5A55A; --gold-d:#A88B3E; --navy:#1B2A4A; --bg:#F2F4F8; --card:#FFF;
+  --line:#E4E8F0; --text:#1B2A4A; --text2:#677EA8;
+  --serif:'Noto Serif SC',serif; --sans:'Noto Sans SC','Microsoft YaHei',sans-serif;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:var(--sans); background:var(--bg); color:var(--text); }
+.wrap { max-width:1500px; margin:0 auto; padding:22px 26px 40px; }
+
+.page-head { display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; }
+.page-head h1 { font-family:var(--serif); font-size:26px; color:var(--navy); letter-spacing:2px; }
+.page-head .cnt { font-size:13px; color:var(--text2); }
+
+.filter-bar { display:flex; gap:10px; margin:18px 0 20px; flex-wrap:wrap; align-items:center; }
+.f-tab { padding:8px 18px; border-radius:999px; font-size:13px; cursor:pointer;
+  background:#FFF; border:1px solid var(--line); color:var(--text2); transition:all .2s; }
+.f-tab:hover { border-color:var(--gold); color:var(--gold-d); }
+.f-tab.on { background:linear-gradient(135deg,var(--gold),var(--gold-d)); color:#FFF;
+  border-color:transparent; box-shadow:0 4px 14px rgba(197,165,90,.35); }
+.search-box { margin-left:auto; display:flex; align-items:center; gap:8px; background:#FFF;
+  border:1px solid var(--line); border-radius:999px; padding:8px 16px; min-width:230px; }
+.search-box input { border:none; outline:none; font-size:13px; flex:1; color:var(--text); background:transparent; }
+.search-box .ic { color:var(--gold); }
+
+.grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:18px; }
+.spot { background:var(--card); border-radius:16px; overflow:hidden; cursor:pointer;
+  box-shadow:0 4px 16px rgba(27,42,74,.07); transition:all .25s; display:flex; flex-direction:column; }
+.spot:hover { transform:translateY(-5px); box-shadow:0 12px 30px rgba(27,42,74,.15); }
+.spot .ph { position:relative; height:158px; overflow:hidden; }
+.spot .ph img { width:100%; height:100%; object-fit:cover; transition:transform .5s; }
+.spot:hover .ph img { transform:scale(1.07); }
+.spot .ph .tile { width:100%; height:100%; display:flex; align-items:center; justify-content:center;
+  font-family:var(--serif); font-size:56px; font-weight:900; color:rgba(255,255,255,.92);
+  text-shadow:0 4px 18px rgba(0,0,0,.25); }
+.spot .rate { position:absolute; top:10px; left:10px; background:rgba(10,18,38,.62);
+  color:#FFD98D; font-size:12px; font-weight:700; padding:3px 10px; border-radius:999px;
+  backdrop-filter:blur(4px); }
+.spot .cat { position:absolute; top:10px; right:10px; background:rgba(255,255,255,.88);
+  color:var(--gold-d); font-size:10px; font-weight:600; padding:3px 10px; border-radius:999px; }
+.spot .info { padding:12px 14px 14px; flex:1; display:flex; flex-direction:column; }
+.spot .info b { font-size:15px; color:var(--navy); font-family:var(--serif); }
+.spot .info p { font-size:12px; color:var(--text2); margin-top:5px; line-height:1.65;
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; flex:1; }
+.spot .info .go { font-size:11px; color:var(--gold-d); margin-top:10px; font-weight:600; }
+.empty { grid-column:1/-1; text-align:center; color:var(--text2); padding:60px 0; font-size:14px; }
+
+@media (max-width:640px) {
+  .wrap { padding:14px; }
+  .grid { grid-template-columns:repeat(2,1fr); gap:10px; }
+  .spot .ph { height:110px; }
+  .spot .ph .tile { font-size:38px; }
+  .search-box { min-width:0; flex:1; }
+}
+</style>
+</head>
+<body data-page="spots">
+
+<div class="wrap">
+  <div class="page-head">
+    <h1>景点列表</h1>
+    <span class="cnt" id="spotCount">22处胜景 · 点击卡片听灵小仙讲解</span>
+  </div>
+  <div class="filter-bar" id="filterBar">
+    <span class="f-tab on" data-cat="all">全部</span>
+    <span class="f-tab" data-cat="佛教建筑">佛教建筑</span>
+    <span class="f-tab" data-cat="雕塑圣景">雕塑圣景</span>
+    <span class="f-tab" data-cat="文化场馆">文化场馆</span>
+    <span class="f-tab" data-cat="拈花湾">拈花湾</span>
+    <div class="search-box">
+      <span class="ic">⌕</span>
+      <input id="searchInput" type="text" placeholder="搜索景点...">
+    </div>
+  </div>
+  <div class="grid" id="spotGrid"></div>
+</div>
+
+<script src="../assets/shell.js"></script>
+<script src="../assets/vendor/pixi.min.js"></script>
+<script src="../assets/vendor/live2dcubismcore.min.js"></script>
+<script src="../assets/vendor/cubism4.min.js"></script>
+<script src="../assets/live2d-human.js?v=l2d7"></script>
+<script src="../assets/live2d-guide.js?v=l2d7"></script>
+<script src="../assets/digital-human-v2.js"></script>
+<script src="../assets/mascot.js?v=l2d7"></script>
+<script>
+// 景点图片:8处实景实拍 + 14处设计感图卡(渐变+景点名+类别),无首字占位
+var PHOTOS = {
+  'LS-011': '../assets/hero-buddha.jpg',
+  'LS-006': '../assets/jiulong-guanyu-hd.jpg',
+  'LS-013': '../assets/hero-fangong.jpg',
+  'LS-010': '../assets/xiangfu-temple-hd.jpg',
+  'LS-009': '../assets/baizi-milefo-hd.jpg',
+  'LS-012': '../assets/fojiao-museum-hd.jpg',
+  'LS-014': '../assets/hero-night.jpg',
+  'LS-015': '../assets/hero-manfeilong.jpg',
+  'LS-001': '../assets/spot-imgs/LS-001.jpg',
+  'LS-002': '../assets/spot-imgs/LS-002.jpg',
+  'LS-003': '../assets/spot-imgs/LS-003.jpg',
+  'LS-004': '../assets/spot-imgs/LS-004.jpg',
+  'LS-005': '../assets/spot-imgs/LS-005.jpg',
+  'LS-007': '../assets/spot-imgs/LS-007.jpg',
+  'LS-008': '../assets/spot-imgs/LS-008.jpg',
+  'LS-016': '../assets/spot-imgs/LS-016.jpg',
+  'NH-001': '../assets/spot-imgs/NH-001.jpg',
+  'NH-002': '../assets/spot-imgs/NH-002.jpg',
+  'NH-003': '../assets/spot-imgs/NH-003.jpg',
+  'NH-004': '../assets/spot-imgs/NH-004.jpg',
+  'NH-005': '../assets/spot-imgs/NH-005.jpg',
+  'NH-006': '../assets/spot-imgs/NH-006.jpg'
+};
+// 分类与评分(展示数据)
+var CATS = {
+  'LS-001':'佛教建筑','LS-002':'佛教建筑','LS-003':'雕塑圣景','LS-004':'佛教建筑',
+  'LS-005':'雕塑圣景','LS-006':'雕塑圣景','LS-007':'雕塑圣景','LS-008':'雕塑圣景',
+  'LS-009':'雕塑圣景','LS-010':'佛教建筑','LS-011':'雕塑圣景','LS-012':'文化场馆',
+  'LS-013':'佛教建筑','LS-014':'佛教建筑','LS-015':'佛教建筑','LS-016':'文化场馆',
+  'NH-001':'拈花湾','NH-002':'拈花湾','NH-003':'拈花湾','NH-004':'拈花湾','NH-005':'拈花湾','NH-006':'拈花湾'
+};
+var RATES = {
+  'LS-011':4.9,'LS-006':4.8,'LS-013':4.7,'LS-009':4.6,'LS-014':4.6,'LS-010':4.5,
+  'LS-015':4.5,'LS-012':4.4,'LS-008':4.4,'LS-005':4.3,'LS-001':4.3,'LS-016':4.3,
+  'NH-005':4.7,'NH-002':4.6,'NH-003':4.5,'NH-001':4.4,'NH-004':4.4,'NH-006':4.3
+};
+var TILE_COLORS = [
+  ['#C5A55A','#8A7130'], ['#677EA8','#3D5678'], ['#8E7BC0','#5C4E80'],
+  ['#5FA98F','#3A7A62'], ['#D4845C','#A35A38'], ['#4A7FC1','#2E5A8C']
+];
+
+var allSpots = [];
+fetch('../assets/knowledge.json').then(function(r){ return r.json(); }).then(function(d){
+  allSpots = Object.keys(d.spots).map(function(id){
+    var s = d.spots[id];
+    return { id:id, name:s.name, intro:s.intro, cat:CATS[id]||'佛教建筑',
+             rate:RATES[id]||(4.2 + Math.random()*0.3).toFixed(1) };
+  });
+  document.getElementById('spotCount').textContent = allSpots.length + '处胜景 · 点击卡片听灵小仙讲解';
+  render();
+});
+
+var curCat = 'all', curKw = '';
+function render() {
+  var grid = document.getElementById('spotGrid');
+  grid.innerHTML = '';
+  var list = allSpots.filter(function(s){
+    if (curCat !== 'all' && s.cat !== curCat) return false;
+    if (curKw && s.name.indexOf(curKw) === -1 && (s.intro||'').indexOf(curKw) === -1) return false;
+    return true;
+  });
+  if (!list.length) { grid.innerHTML = '<div class="empty">没有找到相关景点,换个关键词试试</div>'; return; }
+  list.forEach(function(s, i) {
+    var card = document.createElement('div');
+    card.className = 'spot';
+    var ph = PHOTOS[s.id]
+      ? '<img src="' + PHOTOS[s.id] + '" alt="' + s.name + '" loading="lazy">'
+      : (function(){
+          var c = TILE_COLORS[i % TILE_COLORS.length];
+          var initial = s.name.replace(/[（(].*/,'').charAt(0);
+          return '<div class="tile" style="background:linear-gradient(135deg,' + c[0] + ',' + c[1] + ')">' + initial + '</div>';
+        })();
+    card.innerHTML =
+      '<div class="ph">' + ph +
+        '<span class="rate">★ ' + s.rate + '</span>' +
+        '<span class="cat">' + s.cat + '</span></div>' +
+      '<div class="info"><b>' + s.name + '</b><p>' + (s.intro || '') + '</p>' +
+      '<span class="go">听灵小仙讲解 →</span></div>';
+    card.onclick = function(){
+      location.href = 'guide.html#q=' + encodeURIComponent('请介绍' + s.name);
+    };
+    grid.appendChild(card);
+  });
+}
+
+document.getElementById('filterBar').addEventListener('click', function(e){
+  var t = e.target.closest('.f-tab');
+  if (!t) return;
+  document.querySelectorAll('.f-tab').forEach(function(x){ x.classList.remove('on'); });
+  t.classList.add('on');
+  curCat = t.dataset.cat;
+  render();
+});
+document.getElementById('searchInput').addEventListener('input', function(){
+  curKw = this.value.trim();
+  render();
+});
+</script>
+</body>
+</html>

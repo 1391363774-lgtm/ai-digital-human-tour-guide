@@ -1,47 +1,88 @@
-from functools import lru_cache
-import os
+"""
+灵山胜境AI数字人导览系统 - 全局配置
+所有配置均可通过 backend/.env 覆盖,开箱即用、无Key自动降级。
+"""
+import sys
+from pathlib import Path
+from pydantic_settings import BaseSettings
 
-from pydantic import Field
-from pydantic_settings import BaseSettings, SettingsConfigDict
+# 项目根目录(灵山胜境AI数字人/)
+if getattr(sys, "frozen", False):
+    # PyInstaller打包:exe位于项目根目录
+    BASE_DIR = Path(sys.executable).resolve().parent
+else:
+    # 源码运行:config.py → core → app → backend → 项目根,共向上4级
+    BASE_DIR = Path(__file__).resolve().parents[3]
+BACKEND_DIR = BASE_DIR / "backend"
 
 
 class Settings(BaseSettings):
-    """应用配置。"""
+    APP_NAME: str = "灵山胜境AI数字人导览系统"
 
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
+    # ---- LLM(兼容OpenAI接口:DashScope/DeepSeek/智谱/Kimi均可) ----
+    # 现有 LLM_* 作为 primary，保留原变量名以兼容已有 .env。
+    # 当 primary 在首个有效 token 前失败时，才会尝试 LLM_FALLBACK_*。
+    LLM_API_KEY: str = ""
+    LLM_BASE_URL: str = "https://dashscope.aliyuncs.com/compatible-mode"
+    LLM_MODEL: str = "qwen-plus"          # 对话生成(快)
+    LLM_TIMEOUT: float = 30.0
+    LLM_FALLBACK_API_KEY: str = ""
+    LLM_FALLBACK_BASE_URL: str = ""
+    LLM_FALLBACK_MODEL: str = ""
+    LLM_FALLBACK_TIMEOUT: float = 30.0
+    # 仅用于本地验证，不要在生产环境设置。可选: primary_timeout / primary_error
+    # fallback_timeout / fallback_error
+    LLM_FAULT_INJECT: str = ""
+    VLM_MODEL: str = "qwen-vl-max"        # primary 多模态图像理解模型
+    VLM_FALLBACK_MODEL: str = ""          # fallback 多模态模型；留空则视觉接口不切换
 
-    app_name: str = Field(default="景区导览服务AI数字人", alias="APP_NAME")
-    app_env: str = Field(default="development", alias="APP_ENV")
-    app_debug: bool = Field(default=False, alias="APP_DEBUG")
-    admin_api_key: str | None = Field(default=None, alias="ADMIN_API_KEY")
-    cors_origins: str = Field(default="http://localhost:5173,http://127.0.0.1:5173", alias="CORS_ORIGINS")
-    tts_prewarm: bool = Field(default=False, alias="TTS_PREWARM")
-    database_url: str = Field(
-        default="postgresql+psycopg://scenic_user:scenic_password@localhost:5432/scenic_ai_guide",
-        alias="DATABASE_URL",
-    )
-    chroma_persist_dir: str = Field(default="./data/vector_store/chroma", alias="CHROMA_PERSIST_DIR")
-    llm_provider: str = Field(default="deepseek", alias="LLM_PROVIDER")
-    llm_read_timeout: float = Field(default=60, gt=0, le=300, alias="LLM_READ_TIMEOUT")
-    llm_connect_timeout: float = Field(default=10, gt=0, le=60, alias="LLM_CONNECT_TIMEOUT")
-    demo_mode: bool = Field(default=False, alias="DEMO_MODE")
-    deepseek_api_key: str | None = Field(default=None, alias="DEEPSEEK_API_KEY")
-    deepseek_base_url: str = Field(default="https://api.deepseek.com", alias="DEEPSEEK_BASE_URL")
-    deepseek_model: str = Field(default="deepseek-chat", alias="DEEPSEEK_MODEL")
-    qwen_api_key: str | None = Field(default=None, alias="QWEN_API_KEY")
-    qwen_base_url: str | None = Field(default="https://dashscope.aliyuncs.com/compatible-mode/v1", alias="QWEN_BASE_URL")
-    qwen_model: str = Field(default="qwen-plus", alias="QWEN_MODEL")
-    multimodal_provider: str = Field(default="qwen-vl", alias="MULTIMODAL_PROVIDER")
-    multimodal_model: str = Field(default="qwen-vl-plus", alias="MULTIMODAL_MODEL")
-    asr_model_size: str = Field(default="small", alias="ASR_MODEL_SIZE")
-    asr_device: str = Field(default="cpu", alias="ASR_DEVICE")
-    asr_compute_type: str = Field(default="int8", alias="ASR_COMPUTE_TYPE")
-    tts_provider: str = Field(default="browser", alias="TTS_PROVIDER")
-    azure_speech_key: str | None = Field(default=None, alias="AZURE_SPEECH_KEY")
-    azure_speech_region: str | None = Field(default=None, alias="AZURE_SPEECH_REGION")
+    # ---- Embedding(知识库向量化;无Key时自动降级TF-IDF) ----
+    EMBEDDING_MODEL: str = "text-embedding-v3"
+    EMBEDDING_DIM: int = 1024
+
+    # ---- ASR语音识别 ----
+    ASR_MODEL: str = "paraformer-zh"
+
+    # ---- TTS语音合成(edge-tts 神经网络音色) ----
+    TTS_MODEL: str = "cosyvoice-v1"           # 文档兼容保留
+    TTS_VOICE: str = "zh-CN-XiaoxiaoNeural"   # 晓晓·温柔女声
+    TTS_VOICE_ALT: str = "zh-CN-XiaoyiNeural"  # 备选音色
+    TTS_RATE: str = "+0%"
+    TTS_PITCH: str = "+0Hz"
+
+    # ---- 数据库(默认SQLite,exe双击即跑;MySQL可选) ----
+    DATABASE_URL: str = f"sqlite+aiosqlite:///{BACKEND_DIR / 'data' / 'lingshan.db'}"
+    MYSQL_HOST: str = "localhost"
+    MYSQL_PORT: int = 3306
+    MYSQL_USER: str = "root"
+    MYSQL_PASSWORD: str = ""
+    MYSQL_DATABASE: str = "lingshan_guide"
+
+    # ---- 缓存/向量库(可选扩展,默认本地numpy向量文件) ----
+    REDIS_HOST: str = "localhost"
+    REDIS_PORT: int = 6379
+    MILVUS_HOST: str = "localhost"
+    MILVUS_PORT: int = 19530
+    MILVUS_COLLECTION: str = "lingshan_knowledge"
+
+    # ---- 路径 ----
+    KNOWLEDGE_MD: str = str(BASE_DIR / "知识库" / "灵山胜境完整知识库.md")
+    FRONTEND_DIR: str = str(BASE_DIR / "design" / "lingshan-guide")
+    ADMIN_DIR: str = str(BASE_DIR / "design" / "lingshan-admin")
+    VECTOR_CACHE: str = str(BACKEND_DIR / "data" / "knowledge_vectors.npz")
+    TTS_CACHE_DIR: str = str(BACKEND_DIR / "data" / "tts_cache")
+
+    # ---- 检索参数 ----
+    RAG_TOP_K: int = 4
+    RAG_SCORE_THRESHOLD: float = 0.15
+
+    class Config:
+        env_file = str(BACKEND_DIR / ".env")
+        extra = "ignore"
 
 
-@lru_cache
-def get_settings() -> Settings:
-    # The demo launcher opts out of .env files before importing any app modules.
-    return Settings(_env_file=None) if os.environ.get('SCENIC_NO_ENV_FILE') == '1' else Settings()
+settings = Settings()
+
+# 确保数据目录存在
+(BACKEND_DIR / "data").mkdir(parents=True, exist_ok=True)
+Path(settings.TTS_CACHE_DIR).mkdir(parents=True, exist_ok=True)

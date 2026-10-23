@@ -1,54 +1,49 @@
+version: '3.8'
+# ============================================================
+# 灵山胜境AI数字人导览系统 - 生产环境可选编排
+# 说明:默认交付形态为单exe/单进程一体化(无需Docker)。
+# 本文件用于可选的生产部署:FastAPI多worker + MySQL + Nginx。
+# 向量检索默认内置numpy引擎(无需Milvus);如需Milvus可自行扩展。
+# ============================================================
 services:
-  postgres:
-    image: postgres:16-alpine
-    container_name: scenic-ai-postgres
-    restart: unless-stopped
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB:-scenic_ai_guide}
-      POSTGRES_USER: ${POSTGRES_USER:-scenic_user}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-scenic_password}
+  app:
+    build: ./backend
     ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-scenic_user} -d ${POSTGRES_DB:-scenic_ai_guide}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    container_name: scenic-ai-backend
-    restart: unless-stopped
+      - "8080:8080"
     env_file:
-      - .env
+      - ./backend/.env
     environment:
-      POSTGRES_HOST: postgres
-      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-scenic_user}:${POSTGRES_PASSWORD:-scenic_password}@postgres:5432/${POSTGRES_DB:-scenic_ai_guide}
-      CHROMA_PERSIST_DIR: /app/data/vector_store/chroma
-    ports:
-      - "8000:8000"
+      # 生产环境使用MySQL(与下方mysql服务联动);注释掉则回退SQLite
+      - DATABASE_URL=mysql+aiomysql://root:REDACTED_SET_LOCALLY@mysql:3306/lingshan_guide
     volumes:
-      - ./data:/app/data
+      - ./backend:/app
+      - ./design:/app/../design
+      - ./知识库:/app/../知识库
     depends_on:
-      postgres:
-        condition: service_healthy
+      - mysql
+    restart: always
+    command: >
+      sh -c "pip install aiomysql &&
+             uvicorn app.main:app --host 0.0.0.0 --port 8080 --workers 2"
 
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    container_name: scenic-ai-frontend
-    restart: unless-stopped
+  mysql:
+    image: mysql:8.0
     environment:
-      VITE_API_BASE_URL: http://localhost:8000
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?set a unique local secret}
+      MYSQL_DATABASE: lingshan_guide
     ports:
-      - "5173:5173"
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: always
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:8080"
     depends_on:
-      - backend
+      - app
+    restart: always
 
 volumes:
-  postgres_data:
+  mysql_data:

@@ -1,264 +1,302 @@
-from __future__ import annotations
+"""
+RAG 检索增强生成服务
+--------------------
+双引擎设计:
+  1. 语义向量引擎:DashScope text-embedding-v3 + numpy余弦相似度(主)
+  2. 关键词TF-IDF引擎:jieba分词(无网络/无Key时自动降级,保证系统永不瘫痪)
 
+知识来源:
+  - 知识库/灵山胜境完整知识库.md (按标题层级切块)
+  - design/lingshan-guide/assets/knowledge.json (22景点+3路线结构化数据)
+"""
+import hashlib
 import json
-import logging
 import re
 import time
-from copy import deepcopy
-from hashlib import sha256
-from dataclasses import dataclass
-from threading import RLock
-from typing import Any
+from pathlib import Path
+from typing import List, Dict, Optional
 
-import sqlalchemy
-from sqlalchemy import select
-from sqlalchemy.orm import Session, joinedload
+import numpy as np
+import httpx
 
-from app.core.knowledge_revision import retrieval_generation
-from app.core.config import get_settings
-from app.models.knowledge import KnowledgeChunk
-from app.models.scenic import ScenicSpot
-from app.repositories.knowledge_repository import KnowledgeDocumentRepository
-from app.services.embedding_service import EmbeddingService
-from app.services.vector_store_service import VectorSearchResult, VectorStoreService
+from app.core.config import settings
 
 
-logger = logging.getLogger(__name__)
+# ============================================================
+# 知识切块
+# ============================================================
+def _parse_markdown_chunks(md_path: str) -> List[Dict]:
+    """按Markdown标题层级将知识库切成语义块"""
+    text = Path(md_path).read_text(encoding="utf-8")
+    chunks = []
+    # 以 ###/#### 标题作为切块边界,保留标题上下文
+    pattern = re.compile(r"^(#{2,4})\s+(.+)$", re.MULTILINE)
+    matches = list(pattern.finditer(text))
+    for i, m in enumerate(matches):
+        title = m.group(2).strip()
+        start = m.end()
+        end = matches[i + 1].start() if i + 1 < len(matches) else len(text)
+        content = text[start:end].strip()
+        # 去掉Markdown表格修饰,压缩为纯文本(利于embedding与prompt)
+        content = re.sub(r"\|[-\s|]+\|", "", content)
+        content = re.sub(r"\s*\n\s*", "\n", content).strip()
+        if len(content) < 20:
+            continue
+        if len(content) > 1200:  # 超长块二次切分(按段落)
+            paras = [p.strip() for p in content.split("\n\n") if p.strip()]
+            buf = ""
+            part = 1
+            for p in paras:
+                if len(buf) + len(p) > 1000 and buf:
+                    chunks.append({"title": f"{title}({part})", "content": buf.strip(),
+                                   "source": "知识库.md"})
+                    part += 1
+                    buf = p
+                else:
+                    buf += "\n\n" + p
+            if buf.strip():
+                chunks.append({"title": f"{title}({part})", "content": buf.strip(),
+                               "source": "知识库.md"})
+        else:
+            chunks.append({"title": title, "content": content, "source": "知识库.md"})
+    return chunks
 
 
-@dataclass(frozen=True)
-class RagHit:
-    content: str
-    score: float
-    source: dict[str, Any]
+def _parse_json_chunks(json_path: str) -> List[Dict]:
+    """结构化景点/路线数据转为知识块"""
+    p = Path(json_path)
+    if not p.exists():
+        return []
+    data = json.loads(p.read_text(encoding="utf-8"))
+    chunks = []
+    for sid, s in (data.get("spots") or {}).items():
+        content = (f"景点:{s.get('name','')}\n介绍:{s.get('intro','')}\n"
+                   f"文化内涵:{s.get('culture','')}\n亮点:{'、'.join(s.get('highlights') or [])}\n"
+                   f"游览提示:{s.get('tips','')}")
+        chunks.append({"title": s.get("name", sid), "content": content, "source": sid})
+    for i, r in enumerate(data.get("routes") or []):
+        content = (f"游览路线{i+1}:{r.get('name','')}\n时长:{r.get('duration','')} | "
+                   f"适合人群:{r.get('target','')}\n路线:{' → '.join(r.get('route') or [])}\n"
+                   f"讲解重点:{'；'.join(r.get('focus') or [])}\n特色体验:{'、'.join(r.get('experiences') or [])}")
+        chunks.append({"title": f"路线:{r.get('name','')}", "content": content, "source": f"ROUTE-{i+1}"})
+    bi = data.get("baseInfo") or {}
+    for key, label in [("ticket", "门票信息"), ("freeTicket", "免票政策"), ("openTime", "开放时间"),
+                       ("transport", "交通指南"), ("dining", "餐饮信息"), ("accommodation", "住宿推荐"),
+                       ("fiveBuddhas", "五方五佛"), ("zenStory", "拈花微笑典故"),
+                       ("threeTraditions", "佛教三大语系"), ("capacity", "景区承载量")]:
+        if bi.get(key):
+            chunks.append({"title": label, "content": f"{label}:{bi[key]}", "source": f"BASE-{key}"})
+    return chunks
 
 
+# ============================================================
+# TF-IDF 离线引擎
+# ============================================================
+class _TfidfEngine:
+    def __init__(self):
+        self.vocab: Dict[str, int] = {}
+        self.idf: Optional[np.ndarray] = None
+        self.matrix: Optional[np.ndarray] = None  # (n_chunks, n_vocab)
+
+    @staticmethod
+    def _tokenize(text: str) -> List[str]:
+        import jieba
+        return [w for w in jieba.lcut(text.lower()) if len(w.strip()) >= 1 and not w.isspace()]
+
+    def fit(self, docs: List[str]):
+        tokenized = [self._tokenize(d) for d in docs]
+        vocab = {}
+        for toks in tokenized:
+            for t in set(toks):
+                vocab.setdefault(t, len(vocab))
+        self.vocab = vocab
+        n, v = len(tokenized), len(vocab)
+        tf = np.zeros((n, v), dtype=np.float32)
+        df = np.zeros(v, dtype=np.float32)
+        for i, toks in enumerate(tokenized):
+            for t in toks:
+                tf[i, vocab[t]] += 1
+            for t in set(toks):
+                df[vocab[t]] += 1
+        tf = tf / np.maximum(tf.sum(axis=1, keepdims=True), 1e-9)
+        self.idf = np.log((n + 1) / (df + 1)) + 1
+        self.matrix = tf * self.idf
+        # L2归一化
+        self.matrix = self.matrix / np.maximum(
+            np.linalg.norm(self.matrix, axis=1, keepdims=True), 1e-9)
+
+    def query(self, text: str, top_k: int) -> np.ndarray:
+        toks = self._tokenize(text)
+        v = len(self.vocab)
+        qv = np.zeros(v, dtype=np.float32)
+        for t in toks:
+            if t in self.vocab:
+                qv[self.vocab[t]] += 1
+        if qv.sum() == 0:
+            return np.zeros(self.matrix.shape[0], dtype=np.float32)
+        qv = qv / qv.sum() * self.idf
+        qv = qv / max(np.linalg.norm(qv), 1e-9)
+        return self.matrix @ qv
+
+
+# ============================================================
+# RAG 服务主体
+# ============================================================
 class RagService:
-    _cache: dict[tuple, tuple[float, list[RagHit]]] = {}
-    _cache_lock = RLock()
-    _cache_ttl_seconds = 30 * 60
-    _vector_disabled_until = 0.0
-    _vector_retry_seconds = 60
+    def __init__(self):
+        self.chunks: List[Dict] = []
+        self.vectors: Optional[np.ndarray] = None   # (n, dim) 语义向量
+        self.tfidf = _TfidfEngine()
+        self.engine_mode: str = "init"              # embedding / tfidf
+        self.ready: bool = False
+        self.build_time: float = 0.0
+        self._query_cache: Dict[str, np.ndarray] = {}  # 查询向量缓存(评委高频重复提问秒回)
 
-    def __init__(self, db: Session) -> None:
-        self.db = db
-        self.repository = KnowledgeDocumentRepository(db)
-        self.embedding_service = EmbeddingService()
-        self.vector_store = VectorStoreService()
+    # ---------- 构建 ----------
+    async def build(self):
+        t0 = time.time()
+        md_path = settings.KNOWLEDGE_MD
+        json_path = str(Path(settings.FRONTEND_DIR) / "assets" / "knowledge.json")
+        self.chunks = _parse_markdown_chunks(md_path) + _parse_json_chunks(json_path)
 
-    def search(self, query: str, top_k: int = 5) -> list[RagHit]:
-        if get_settings().demo_mode:
-            return self.fast_search(query, top_k)
-        normalized_query = normalize_query(query)
-        if not normalized_query:
-            return []
+        # 合并管理后台维护的知识条目(已发布状态)——知识库管理功能真实生效
+        try:
+            from sqlalchemy import select
+            from app.core.database import async_session
+            from app.models.models import KnowledgeItem
+            async with async_session() as db:
+                rows = (await db.execute(
+                    select(KnowledgeItem).where(KnowledgeItem.status == "published")
+                )).scalars().all()
+            for r in rows:
+                self.chunks.append({
+                    "title": r.title,
+                    "content": f"{r.title}\n{r.content}",
+                    "source": f"ADMIN-{r.id}",
+                })
+            if rows:
+                print(f"[RAG] 合并后台知识条目 {len(rows)} 条")
+        except Exception as e:
+            print(f"[RAG] 后台知识条目加载跳过: {e}")
 
-        cache_key = (*self._generation(), make_cache_key(normalized_query, top_k))
-        now = time.time()
-        cached = self._cached(cache_key, now)
-        if cached is not None:
-            return cached
+        if not self.chunks:
+            raise RuntimeError("知识库为空,请检查知识库文件路径")
 
-        vector_hits: list[RagHit] = []
-        if now >= type(self)._vector_disabled_until:
+        docs = [f"{c['title']}\n{c['content']}" for c in self.chunks]
+        # TF-IDF始终构建(兜底+混合加权)
+        self.tfidf.fit(docs)
+
+        # 尝试加载/构建语义向量
+        self.vectors = await self._load_or_embed(docs)
+        self.engine_mode = "embedding" if self.vectors is not None else "tfidf"
+        self.build_time = time.time() - t0
+        self.ready = True
+        print(f"[RAG] 知识库构建完成: {len(self.chunks)}块 | 引擎:{self.engine_mode} | 耗时:{self.build_time:.1f}s")
+
+    def _source_hash(self, docs: List[str]) -> str:
+        h = hashlib.md5()
+        for d in docs:
+            h.update(d.encode("utf-8"))
+        return h.hexdigest()
+
+    async def _embed_batch(self, texts: List[str]) -> Optional[List[List[float]]]:
+        """调用DashScope embedding,失败返回None"""
+        if not settings.LLM_API_KEY:
+            return None
+        url = f"{settings.LLM_BASE_URL}/v1/embeddings"
+        headers = {"Authorization": f"Bearer {settings.LLM_API_KEY}"}
+        out = []
+        try:
+            async with httpx.AsyncClient(timeout=60.0) as client:
+                B = 10  # DashScope单批上限
+                for i in range(0, len(texts), B):
+                    payload = {"model": settings.EMBEDDING_MODEL,
+                               "input": texts[i:i + B],
+                               "dimensions": settings.EMBEDDING_DIM}
+                    r = await client.post(url, headers=headers, json=payload)
+                    if r.status_code != 200:
+                        print(f"[RAG] Embedding失败({r.status_code}),降级TF-IDF")
+                        return None
+                    data = r.json()["data"]
+                    data.sort(key=lambda x: x["index"])
+                    out.extend([d["embedding"] for d in data])
+            return out
+        except Exception as e:
+            print(f"[RAG] Embedding异常:{e},降级TF-IDF")
+            return None
+
+    async def _load_or_embed(self, docs: List[str]) -> Optional[np.ndarray]:
+        cache = Path(settings.VECTOR_CACHE)
+        src_hash = self._source_hash(docs)
+        if cache.exists():
             try:
-                query_embedding = self.embedding_service.embed_query(normalized_query)
-                results = self.vector_store.search(query_embedding.vector, top_k=top_k * 2)
-                results = self._current_vector_results(results)
-                if results:
-                    vector_hits = [self._hit_from_vector_result(item) for item in results]
-            except Exception as exc:
-                # 向量库是增强能力而不是单点依赖。Chroma 在索引损坏、版本迁移或
-                # 文件锁异常时可能抛出 RuntimeError 以外的异常，此时继续词法检索。
-                type(self)._vector_disabled_until = now + self._vector_retry_seconds
-                logger.warning("向量检索不可用，60 秒内使用词法检索：%s", type(exc).__name__)
+                z = np.load(cache, allow_pickle=False)
+                if z["hash"].tobytes().decode() == src_hash:
+                    return z["vectors"].astype(np.float32)
+            except Exception:
+                pass
+        vecs = await self._embed_batch(docs)
+        if vecs is None:
+            return None
+        arr = np.asarray(vecs, dtype=np.float32)
+        arr = arr / np.maximum(np.linalg.norm(arr, axis=1, keepdims=True), 1e-9)
+        np.savez(cache, vectors=arr, hash=np.frombuffer(src_hash.encode(), dtype=np.uint8))
+        return arr
 
-        spot_name_hits = self._spot_name_boost(query, vector_hits, normalized_query)
-
-        if not spot_name_hits:
-            spot_name_hits = self._fallback_lexical_search(normalized_query, top_k=top_k)
-
-        merged = _merge_and_dedup(vector_hits + spot_name_hits, top_k=top_k)
-        self._store_cached(cache_key, now, merged)
-        return merged
-
-    def fast_search(self, query: str, top_k: int = 3) -> list[RagHit]:
-        normalized_query = normalize_query(query)
-        if not normalized_query:
+    # ---------- 检索 ----------
+    async def retrieve(self, query: str, top_k: Optional[int] = None) -> List[Dict]:
+        if not self.ready:
             return []
+        top_k = top_k or settings.RAG_TOP_K
+        docs = [f"{c['title']}\n{c['content']}" for c in self.chunks]
 
-        cache_key = (*self._generation(), make_cache_key(f"fast:{normalized_query}", top_k))
-        now = time.time()
-        cached = self._cached(cache_key, now)
-        if cached is not None:
-            return cached
+        # TF-IDF分数(始终可得)
+        tfidf_scores = self.tfidf.query(query, top_k)
 
-        hits = self._spot_name_boost(query, [], normalized_query)
-        hits.extend(self._fallback_lexical_search(normalized_query, top_k=top_k))
-        merged = _merge_and_dedup(hits, top_k=top_k)
-        self._store_cached(cache_key, now, merged)
-        return merged
+        # 语义分数
+        emb_scores = np.zeros(len(self.chunks), dtype=np.float32)
+        if self.vectors is not None and settings.LLM_API_KEY:
+            q = self._query_cache.get(query)
+            if q is None:
+                qv = await self._embed_batch([query])
+                if qv is not None:
+                    q = np.asarray(qv[0], dtype=np.float32)
+                    q = q / max(np.linalg.norm(q), 1e-9)
+                    if len(self._query_cache) < 500:
+                        self._query_cache[query] = q
+            if q is not None:
+                emb_scores = self.vectors @ q
 
-    def _generation(self):
-        return retrieval_generation(self.db)
+        # 关键词命中加权(景点名/别名精确命中强信号)
+        kw_boost = np.zeros(len(self.chunks), dtype=np.float32)
+        q_clean = re.sub(r"[？?!！。,，、\s]", "", query)
+        for i, c in enumerate(self.chunks):
+            title_clean = re.sub(r"[（(].*?[)）]", "", c["title"])
+            if len(title_clean) >= 2 and title_clean in q_clean:
+                kw_boost[i] = 1.0
 
-    def _cached(self, key, now):
-        with self._cache_lock:
-            cached = self._cache.get(key)
-            if cached and now - cached[0] <= self._cache_ttl_seconds:
-                return deepcopy(cached[1])
-        return None
+        # 混合:语义0.6 + TFIDF0.25 + 关键词0.15
+        final = 0.6 * emb_scores + 0.25 * tfidf_scores + 0.15 * kw_boost
+        if self.vectors is None:  # 纯TF-IDF模式
+            final = 0.75 * tfidf_scores + 0.25 * kw_boost
 
-    def _store_cached(self, key, now, hits):
-        # An in-flight reader can only populate its old generation, never the
-        # new key. Lock the compound write/prune operation, not model/DB I/O.
-        with self._cache_lock:
-            self._cache[key] = (now, deepcopy(hits))
-            self._prune_cache(now)
-
-    def _current_vector_results(self, results):
-        """Deleted/rechunked SQL content must not reappear from Chroma."""
-        if not results:
-            return []
-        ids = [item.id for item in results]
-        chunks = self.db.scalars(
-            select(KnowledgeChunk).options(joinedload(KnowledgeChunk.document))
-            .where(KnowledgeChunk.vector_id.in_(ids))
-            .execution_options(populate_existing=True)
-        ).all()
-        current = {chunk.vector_id: chunk for chunk in chunks}
-        validated = []
-        for item in results:
-            chunk = current.get(item.id)
-            if chunk is not None and chunk.content == item.content:
-                validated.append(VectorSearchResult(item.id, chunk.content, source_for_chunk(chunk, "vector"), item.distance))
-        return validated
-
-    def build_context(self, query: str, top_k: int = 5, max_chars: int = 2400) -> str:
-        hits = self.search(query, top_k=top_k)
-        parts: list[str] = []
-        current_length = 0
-        for index, hit in enumerate(hits, start=1):
-            source_title = hit.source.get("section_title") or hit.source.get("document_title") or "知识片段"
-            block = f"[资料{index}] {source_title}\n{hit.content}"
-            if current_length + len(block) > max_chars:
-                break
-            parts.append(block)
-            current_length += len(block)
-        return "\n\n".join(parts)
-
-    def _spot_name_boost(
-        self, query: str, existing_hits: list[RagHit], normalized_query: str
-    ) -> list[RagHit]:
-        spots = list(self.db.scalars(
-            select(ScenicSpot)
-        ).all())
-        matched_names = [s.name for s in spots if s.name and s.name in query]
-        if not matched_names:
-            return []
-
-        existing_content_set = {h.content[:60] for h in existing_hits}
-        extra_keywords = " ".join(matched_names[:3])
-        extra_chunks = self.repository.lexical_search_chunks(extra_keywords, limit=5)
-        boosted: list[RagHit] = []
-        for chunk in extra_chunks:
-            if chunk.content[:60] in existing_content_set:
+        idx = np.argsort(-final)[:top_k]
+        results = []
+        for i in idx:
+            if final[i] < settings.RAG_SCORE_THRESHOLD and kw_boost[i] == 0:
                 continue
-            source = source_for_chunk(chunk, "spot_name_boost")
-            boosted.append(RagHit(
-                content=chunk.content,
-                score=keyword_score(extra_keywords, chunk.content) + 0.2,
-                source=source,
-            ))
-        return boosted
+            results.append({
+                "title": self.chunks[i]["title"],
+                "content": self.chunks[i]["content"],
+                "score": round(float(final[i]), 4),
+                "source": self.chunks[i]["source"],
+            })
+        return results
 
-    def _hit_from_vector_result(self, result: VectorSearchResult) -> RagHit:
-        distance = result.distance if result.distance is not None else 1.0
-        score = max(0.0, 1.0 - float(distance))
-        return RagHit(content=result.content, score=score, source=result.metadata)
-
-    def _fallback_lexical_search(self, query: str, top_k: int) -> list[RagHit]:
-        chunks = self.repository.lexical_search_chunks(to_keyword_query(query), limit=top_k)
-        hits: list[RagHit] = []
-        for chunk in chunks:
-            source = source_for_chunk(chunk, "lexical_fallback")
-            hits.append(RagHit(content=chunk.content, score=keyword_score(query, chunk.content), source=source))
-        return hits
-
-    def _prune_cache(self, now: float) -> None:
-        if len(self._cache) <= 256:
-            return
-        expired = [
-            key
-            for key, (created_at, _) in self._cache.items()
-            if now - created_at > self._cache_ttl_seconds
-        ]
-        for key in expired:
-            self._cache.pop(key, None)
-        while len(self._cache) > 256:
-            oldest_key = min(self._cache, key=lambda key: self._cache[key][0])
-            self._cache.pop(oldest_key, None)
+    @property
+    def status(self) -> Dict:
+        return {"ready": self.ready, "chunks": len(self.chunks),
+                "engine": self.engine_mode, "build_time_s": round(self.build_time, 2)}
 
 
-def source_for_chunk(chunk: KnowledgeChunk, retrieval: str) -> dict[str, Any]:
-    """Public evidence is constructed from SQL, never trusted vector metadata.
-
-    Uploaded documents are ordinary data, not verified official sources. Local
-    file paths and arbitrary uploaded URLs must never reach the visitor UI.
-    """
-    section_title = load_metadata(chunk.metadata_json).get("section_title", "")
-    document = chunk.document
-    return {
-        "chunk_id": chunk.id, "document_id": document.id,
-        "document_title": document.title, "document_version": document.version,
-        "section_title": section_title[:255] if isinstance(section_title, str) else "",
-        "spot_id": chunk.spot_id, "retrieval": retrieval,
-        "updated_at": document.updated_at.isoformat() if document.updated_at else None,
-        "excerpt": chunk.content[:400], "source_type": document.source_type,
-        "source_verified": False, "evidence_url": f"/api/rag/sources/{chunk.id}",
-    }
-
-
-def _merge_and_dedup(hits: list[RagHit], top_k: int) -> list[RagHit]:
-    seen: set[str] = set()
-    merged: list[RagHit] = []
-    for hit in sorted(hits, key=lambda h: h.score, reverse=True):
-        key = hit.content[:60]
-        if key not in seen:
-            seen.add(key)
-            merged.append(hit)
-            if len(merged) >= top_k:
-                break
-    return merged
-
-
-def normalize_query(query: str) -> str:
-    return re.sub(r"\s+", " ", query or "").strip()
-
-
-def make_cache_key(query: str, top_k: int) -> str:
-    digest = sha256(query.lower().encode("utf-8")).hexdigest()
-    return f"{top_k}:{digest}"
-
-
-def to_keyword_query(query: str) -> str:
-    terms = re.findall(r"[\u4e00-\u9fff]{2,}|[A-Za-z0-9_]+", query)
-    return " ".join(terms[:5]) or query
-
-
-def keyword_score(query: str, content: str) -> float:
-    terms = set(re.findall(r"[\u4e00-\u9fff]{2,}|[A-Za-z0-9_]+", query.lower()))
-    if not terms:
-        return 0.1
-    hit_count = sum(1 for term in terms if term in content.lower())
-    return hit_count / len(terms)
-
-
-def load_metadata(value: str | None) -> dict[str, Any]:
-    if not value:
-        return {}
-    try:
-        data = json.loads(value)
-        return data if isinstance(data, dict) else {}
-    except json.JSONDecodeError:
-        return {}
+rag_service = RagService()

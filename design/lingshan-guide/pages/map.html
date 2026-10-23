@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>导览图 - 灵山胜境智慧导览</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+:root {
+  --gold:#C5A55A; --gold-d:#A88B3E; --navy:#1B2A4A; --bg:#F2F4F8; --card:#FFF;
+  --line:#E4E8F0; --text:#1B2A4A; --text2:#677EA8;
+  --serif:'Noto Serif SC',serif; --sans:'Noto Sans SC','Microsoft YaHei',sans-serif;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:var(--sans); background:var(--bg); color:var(--text); }
+.wrap { max-width:1500px; margin:0 auto; padding:20px 24px 30px; }
+
+.page-head { display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; margin-bottom:14px; }
+.page-head h1 { font-family:var(--serif); font-size:26px; color:var(--navy); letter-spacing:2px; }
+.page-head p { font-size:13px; color:var(--text2); }
+
+.mode-bar { display:flex; gap:10px; margin-bottom:16px; align-items:center; flex-wrap:wrap; }
+.mode-tab { padding:7px 18px; border-radius:999px; font-size:13px; font-weight:600; cursor:pointer;
+  border:1px solid var(--line); background:#FFF; color:var(--text2); transition:all .2s; }
+.mode-tab.on { background:linear-gradient(135deg,var(--gold),var(--gold-d)); color:#FFF;
+  border-color:transparent; box-shadow:0 4px 12px rgba(197,165,90,.35); }
+.mode-tip { font-size:12px; color:var(--text2); }
+.mode-tip b { color:var(--gold-d); }
+
+.map-grid { display:grid; grid-template-columns:300px minmax(0,1fr); gap:18px; }
+@media (max-width:900px) { .map-grid { grid-template-columns:1fr; } }
+
+/* 左:景点面板 */
+.spot-panel { background:var(--card); border-radius:16px; box-shadow:0 4px 16px rgba(27,42,74,.07);
+  display:flex; flex-direction:column; max-height:640px; }
+.spot-panel .ph-head { padding:14px 16px 10px; border-bottom:1px solid var(--line); }
+.spot-panel .search { display:flex; gap:8px; }
+.spot-panel .search input { flex:1; min-width:0; border:1px solid var(--line); border-radius:10px;
+  padding:9px 12px; font-size:13px; outline:none; }
+.spot-panel .search input:focus { border-color:var(--gold); }
+.spot-panel .search button { border:none; border-radius:10px; padding:0 16px; cursor:pointer;
+  background:linear-gradient(135deg,var(--gold),var(--gold-d)); color:#FFF; font-size:13px; }
+.spot-list { flex:1; overflow-y:auto; padding:10px; }
+.spot-list::-webkit-scrollbar { width:4px; }
+.spot-list::-webkit-scrollbar-thumb { background:var(--line); border-radius:2px; }
+.spot-item { padding:12px 14px; border-radius:12px; cursor:pointer; margin-bottom:8px;
+  border:1px solid transparent; transition:all .2s; }
+.spot-item:hover { background:#F9F6ED; border-color:#E4D9BC; }
+.spot-item.on { background:#F6F3EA; border-color:var(--gold); box-shadow:0 3px 10px rgba(197,165,90,.2); }
+.spot-item b { font-size:14px; color:var(--navy); }
+.spot-item .meta { font-size:11px; color:var(--text2); margin-top:3px; }
+.spot-item .meta i { color:var(--gold); font-style:normal; }
+
+/* 右:地图 */
+.map-box { position:relative; background:var(--card); border-radius:16px; overflow:hidden;
+  box-shadow:0 4px 16px rgba(27,42,74,.07); height:640px; }
+#liveMap { width:100%; height:100%; }
+#staticMap { width:100%; height:100%; display:none; position:relative; overflow:hidden; }
+#staticMap img { width:100%; height:100%; object-fit:cover; }
+.map-fallback-tip { position:absolute; left:12px; bottom:12px; z-index:500; background:rgba(255,255,255,.94);
+  border:1px solid var(--line); border-radius:12px; padding:10px 14px; font-size:12px;
+  color:var(--text2); box-shadow:0 4px 14px rgba(27,42,74,.12); max-width:420px; line-height:1.7; }
+.map-actions { position:absolute; right:12px; top:12px; z-index:500; display:flex; flex-direction:column; gap:8px; }
+.map-actions button { border:1px solid var(--line); background:#FFF; border-radius:10px;
+  padding:8px 14px; font-size:12px; color:var(--text); cursor:pointer;
+  box-shadow:0 3px 10px rgba(27,42,74,.12); }
+.map-actions button:hover { border-color:var(--gold); color:var(--gold-d); }
+/* 景点标记 */
+.spot-pin { display:flex; flex-direction:column; align-items:center; transform:translateY(-100%); }
+.spot-pin .dot { width:14px; height:14px; border-radius:50% 50% 50% 0; transform:rotate(-45deg);
+  background:linear-gradient(135deg,#C5A55A,#A88B3E); border:2px solid #FFF;
+  box-shadow:0 2px 8px rgba(0,0,0,.3); }
+.spot-pin .lbl { margin-top:4px; background:rgba(16,26,51,.85); color:#F5EDD6; font-size:11px;
+  padding:2px 8px; border-radius:8px; white-space:nowrap; }
+.my-pos { width:16px; height:16px; border-radius:50%; background:#4A7FC1;
+  border:3px solid #FFF; box-shadow:0 0 0 6px rgba(74,127,193,.25); }
+@media (max-width:640px) { .map-box { height:60vh; } .spot-panel { max-height:none; } }
+</style>
+</head>
+<body data-page="map">
+
+<div class="wrap">
+  <div class="page-head">
+    <h1>灵山胜境导览图</h1>
+    <p>实时电子地图与定位导航;GPS弱或室内定位不准时,切换2D导览图人工校准</p>
+  </div>
+  <div class="mode-bar">
+    <span class="mode-tab on" data-mode="live">实时地图</span>
+    <span class="mode-tab" data-mode="static">2D 导览图</span>
+    <span class="mode-tip">提示:点击左侧景点可<b>飞行定位</b>;点击地图标记可<b>听AI讲解</b></span>
+  </div>
+  <div class="map-grid">
+    <!-- 左:景点面板 -->
+    <aside class="spot-panel">
+      <div class="ph-head">
+        <div class="search">
+          <input id="mapSearch" type="text" placeholder="搜索景点、分类或位置">
+          <button id="mapSearchBtn">搜索</button>
+        </div>
+      </div>
+      <div class="spot-list" id="spotList"></div>
+    </aside>
+    <!-- 右:地图 -->
+    <section class="map-box">
+      <div id="liveMap"></div>
+      <div id="staticMap">
+        <img src="../assets/lingshan-map.jpg" alt="灵山胜境2D导览图">
+      </div>
+      <div class="map-actions">
+        <button id="btnMyPos">📍 获取我的位置</button>
+        <button id="btnAskAI">✦ 问灵小仙:我在哪?</button>
+      </div>
+      <div class="map-fallback-tip" id="fallbackTip" style="display:none">
+        <b>GPS弱信号兜底方案:</b>已为您切换2D导览图。您还可以到导览页点📍<b>扫码定位</b>,
+        扫描景点二维码即可精准定位并听讲解。
+      </div>
+    </section>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../assets/shell.js"></script>
+<script src="../assets/vendor/pixi.min.js"></script>
+<script src="../assets/vendor/live2dcubismcore.min.js"></script>
+<script src="../assets/vendor/cubism4.min.js"></script>
+<script src="../assets/live2d-human.js?v=l2d7"></script>
+<script src="../assets/live2d-guide.js?v=l2d7"></script>
+<script src="../assets/digital-human-v2.js"></script>
+<script src="../assets/mascot.js?v=l2d7"></script>
+<script>
+// 景点坐标(景区测绘近似值,演示校准)
+var SPOTS = [
+  { id:'LS-011', name:'灵山大佛',   lat:31.5567, lng:120.0878, mins:'约40分钟', cat:'雕塑圣景' },
+  { id:'LS-013', name:'灵山梵宫',   lat:31.5555, lng:120.0893, mins:'约35分钟', cat:'佛教建筑' },
+  { id:'LS-006', name:'九龙灌浴',   lat:31.5539, lng:120.0891, mins:'约20分钟', cat:'雕塑圣景' },
+  { id:'LS-010', name:'祥符禅寺',   lat:31.5549, lng:120.0882, mins:'约25分钟', cat:'佛教建筑' },
+  { id:'LS-014', name:'五印坛城',   lat:31.5561, lng:120.0890, mins:'约20分钟', cat:'佛教建筑' },
+  { id:'LS-015', name:'曼飞龙塔',   lat:31.5542, lng:120.0870, mins:'约15分钟', cat:'佛教建筑' },
+  { id:'LS-009', name:'百子戏弥勒', lat:31.5546, lng:120.0886, mins:'约15分钟', cat:'雕塑圣景' },
+  { id:'LS-001', name:'灵山大照壁', lat:31.5526, lng:120.0898, mins:'约10分钟', cat:'佛教建筑' },
+  { id:'LS-005', name:'菩提大道',   lat:31.5533, lng:120.0892, mins:'约20分钟', cat:'佛教建筑' },
+  { id:'LS-012', name:'万佛殿',     lat:31.5564, lng:120.0885, mins:'约25分钟', cat:'文化场馆' }
+];
+var CENTER = [31.5547, 120.0886];
+
+// ---------- 左侧列表 ----------
+var listEl = document.getElementById('spotList');
+var markers = {};
+function renderList(kw) {
+  listEl.innerHTML = '';
+  SPOTS.filter(function(s){
+    return !kw || s.name.indexOf(kw) !== -1 || s.cat.indexOf(kw) !== -1;
+  }).forEach(function(s){
+    var div = document.createElement('div');
+    div.className = 'spot-item';
+    div.innerHTML = '<b>' + s.name + '</b><div class="meta"><i>' + s.cat + '</i> · ' + s.mins + '</div>';
+    div.onclick = function(){
+      document.querySelectorAll('.spot-item').forEach(function(x){ x.classList.remove('on'); });
+      div.classList.add('on');
+      flyTo(s);
+    };
+    listEl.appendChild(div);
+  });
+}
+renderList('');
+document.getElementById('mapSearchBtn').onclick = function(){
+  renderList(document.getElementById('mapSearch').value.trim());
+};
+document.getElementById('mapSearch').addEventListener('keydown', function(e){
+  if (e.key === 'Enter') renderList(this.value.trim());
+});
+
+// ---------- Leaflet 实时地图 ----------
+var map = null, liveOk = false;
+function initLive() {
+  if (typeof L === 'undefined') { switchMode('static', true); return; }
+  map = L.map('liveMap', { zoomControl: false, attributionControl: false }).setView(CENTER, 16);
+  L.control.zoom({ position: 'topright' }).addTo(map);
+  var tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19, errorTileUrl: ''
+  });
+  tiles.on('tileerror', function(){
+    if (!liveOk) switchMode('static', true);
+  });
+  tiles.on('load', function(){ liveOk = true; });
+  tiles.addTo(map);
+  L.control.attribution({ prefix: false }).addAttribution('© OpenStreetMap 贡献者').addTo(map);
+
+  SPOTS.forEach(function(s){
+    var icon = L.divIcon({
+      className: '',
+      html: '<div class="spot-pin"><div class="dot"></div><div class="lbl">' + s.name + '</div></div>',
+      iconSize: [60, 40], iconAnchor: [30, 8]
+    });
+    var m = L.marker([s.lat, s.lng], { icon: icon }).addTo(map);
+    m.bindTooltip('点击听「' + s.name + '」AI讲解', { direction: 'top' });
+    m.on('click', function(){
+      location.href = 'guide.html#q=' + encodeURIComponent('请介绍' + s.name);
+    });
+    markers[s.id] = m;
+  });
+}
+
+function flyTo(s) {
+  var live = document.querySelector('.mode-tab.on').dataset.mode === 'live';
+  if (live && map) {
+    map.flyTo([s.lat, s.lng], 17, { duration: 1.2 });
+    setTimeout(function(){ markers[s.id] && markers[s.id].openTooltip(); }, 1300);
+  } else {
+    location.href = 'guide.html#q=' + encodeURIComponent('请介绍' + s.name);
+  }
+}
+
+// ---------- 定位 ----------
+document.getElementById('btnMyPos').onclick = function(){
+  if (!navigator.geolocation || !map) {
+    switchMode('static', true);
+    return;
+  }
+  this.textContent = '定位中...';
+  var btn = this;
+  navigator.geolocation.getCurrentPosition(function(pos){
+    btn.textContent = '📍 获取我的位置';
+    var lat = pos.coords.latitude, lng = pos.coords.longitude;
+    L.marker([lat, lng], {
+      icon: L.divIcon({ className:'', html:'<div class="my-pos"></div>', iconSize:[16,16], iconAnchor:[8,8] })
+    }).addTo(map).bindTooltip('您在这里');
+    map.flyTo([lat, lng], 16, { duration: 1.2 });
+  }, function(){
+    btn.textContent = '📍 获取我的位置';
+    switchMode('static', true);
+  }, { timeout: 5000 });
+};
+
+document.getElementById('btnAskAI').onclick = function(){
+  location.href = 'guide.html#q=' + encodeURIComponent('我在灵山胜境,推荐一下游览顺序');
+};
+
+// ---------- 模式切换 ----------
+function switchMode(mode, force) {
+  document.querySelectorAll('.mode-tab').forEach(function(t){
+    t.classList.toggle('on', t.dataset.mode === mode);
+  });
+  document.getElementById('liveMap').style.display = mode === 'live' ? 'block' : 'none';
+  document.getElementById('staticMap').style.display = mode === 'static' ? 'block' : 'none';
+  document.getElementById('fallbackTip').style.display = (mode === 'static' && force) ? 'block' : 'none';
+  if (mode === 'live' && map) setTimeout(function(){ map.invalidateSize(); }, 100);
+}
+document.querySelectorAll('.mode-tab').forEach(function(t){
+  t.onclick = function(){ switchMode(t.dataset.mode, false); };
+});
+
+initLive();
+</script>
+</body>
+</html>

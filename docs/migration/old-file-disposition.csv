@@ -1,0 +1,330 @@
+﻿old_path,action,replacement_or_recovery
+.env.example,retired,backup/pre-new-source-20261023
+.github/workflows/backend-regression.yml,retired,backup/pre-new-source-20261023
+.gitignore,retired,backup/pre-new-source-20261023
+AI_DESIGN.md,retained reference,docs/legacy/AI_DESIGN.md
+API.md,retained reference,docs/legacy/API.md
+ARCHITECTURE.md,retained reference,docs/legacy/ARCHITECTURE.md
+CHANGELOG.md,retained reference,docs/legacy/CHANGELOG.md
+DATABASE.md,retained reference,docs/legacy/DATABASE.md
+DEPLOYMENT.md,retained reference,docs/legacy/DEPLOYMENT.md
+PROJECT_STATUS.md,retained reference,docs/legacy/PROJECT_STATUS.md
+README.md,replaced,README.md
+TODO.md,retained reference,docs/legacy/TODO.md
+ai/llm/.gitkeep,retired,backup/pre-new-source-20261023
+ai/memory/.gitkeep,retired,backup/pre-new-source-20261023
+ai/prompts/.gitkeep,retired,backup/pre-new-source-20261023
+ai/prompts/scenic_guide_qa.md,retired,backup/pre-new-source-20261023
+ai/rag/.gitkeep,retired,backup/pre-new-source-20261023
+ai/tools/.gitkeep,retired,backup/pre-new-source-20261023
+backend/Dockerfile,replaced,backend/Dockerfile
+backend/alembic.ini,retired,backend/app (new runtime; targeted regressions follow)
+backend/alembic/env.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/alembic/script.py.mako,retired,backend/app (new runtime; targeted regressions follow)
+backend/alembic/versions/.gitkeep,retired,backend/app (new runtime; targeted regressions follow)
+backend/alembic/versions/0001_create_core_tables.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/alembic/versions/0002_create_visitor_events.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/alembic/versions/0003_knowledge_revision.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/alembic/versions/0004_message_outcome.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/alembic/versions/0005_visitor_scope.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/alembic/versions/0006_vector_cleanup.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/__init__.py,replaced,backend/app/__init__.py
+backend/app/api/__init__.py,replaced,backend/app/api/__init__.py
+backend/app/api/routes/.gitkeep,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/api/routes/__init__.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/api/routes/avatar_config.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/api/routes/behavior.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/api/routes/chat.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/api/routes/dashboard.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/api/routes/demo.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/api/routes/favorite.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/api/routes/feedback.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/api/routes/history.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/api/routes/knowledge.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/api/routes/multimodal.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/api/routes/rag.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/api/routes/route.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/api/routes/scenic.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/api/routes/speech.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/core/.gitkeep,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/core/__init__.py,replaced,backend/app/core/__init__.py
+backend/app/core/access.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/core/config.py,replaced,backend/app/core/config.py
+backend/app/core/database.py,replaced,backend/app/core/database.py
+backend/app/core/knowledge_revision.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/core/logging.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/core/streaming.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/main.py,replaced,backend/app/main.py
+backend/app/models/.gitkeep,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/models/__init__.py,replaced,backend/app/models/__init__.py
+backend/app/models/avatar.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/models/conversation.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/models/favorite.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/models/feedback.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/models/knowledge.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/models/recommendation.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/models/scenic.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/models/system_log.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/models/user.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/models/visitor_event.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/repositories/.gitkeep,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/repositories/__init__.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/repositories/behavior_repository.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/repositories/conversation_repository.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/repositories/favorite_repository.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/repositories/feedback_repository.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/repositories/knowledge_repository.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/repositories/scenic_repository.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/schemas/.gitkeep,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/schemas/__init__.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/schemas/behavior.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/schemas/chat.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/schemas/dashboard.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/schemas/favorite.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/schemas/feedback.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/schemas/history.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/schemas/knowledge.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/schemas/rag.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/schemas/response.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/schemas/route.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/schemas/scenic.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/schemas/speech.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/services/.gitkeep,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/services/__init__.py,replaced,backend/app/services/__init__.py
+backend/app/services/behavior_import_service.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/services/chat_service.py,replaced,backend/app/services/chat_service.py
+backend/app/services/dashboard_service.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/services/demo_service.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/services/document_chunker.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/services/document_parser.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/services/embedding_service.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/services/feedback_analysis_service.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/services/knowledge_index_service.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/services/knowledge_upload_service.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/services/llm_client.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/services/multimodal_service.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/services/prompt_service.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/services/rag_service.py,replaced,backend/app/services/rag_service.py
+backend/app/services/route_service.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/services/speech_service.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/services/vector_store_service.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/workers/.gitkeep,retired,backend/app (new runtime; targeted regressions follow)
+backend/app/workers/__init__.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/data/vector_store/chroma/chroma.sqlite3,retired,backend/app (new runtime; targeted regressions follow)
+backend/launch.py,retired,backend/app (new runtime; targeted regressions follow)
+backend/pyproject.toml,retired,backend/app (new runtime; targeted regressions follow)
+backend/requirements.txt,replaced,backend/requirements.txt
+bench/code_assistant/README.md,retired,backup/pre-new-source-20261023
+bench/code_assistant/acceptance.json,retired,backup/pre-new-source-20261023
+bench/code_assistant/check_manifest.py,retired,backup/pre-new-source-20261023
+bench/code_assistant/prepare.py,retired,backup/pre-new-source-20261023
+bench/code_assistant/tasks.json,retired,backup/pre-new-source-20261023
+build_exe.spec,retired,backup/pre-new-source-20261023
+data/demo/guide.md,retired,backup/pre-new-source-20261023
+data/eval/.gitkeep,retained reference,data/eval/.gitkeep
+data/eval/README.md,retained reference,data/eval/README.md
+data/eval/qa_testset.json,retained reference,data/eval/qa_testset.json
+data/processed/.gitkeep,retired,backup/pre-new-source-20261023
+data/raw/.gitkeep,retired,backup/pre-new-source-20261023
+data/raw/baike_lingshan.html,retired,backup/pre-new-source-20261023
+data/raw/sample_visitor_events.csv,retired,backup/pre-new-source-20261023
+data/vector_store/.gitkeep,retired,backup/pre-new-source-20261023
+docker-compose.yml,replaced,docker-compose.yml
+docs/.gitkeep,retained reference,docs/legacy/.gitkeep
+docs/EVALUATION.md,retained reference,docs/legacy/EVALUATION.md
+docs/MENTORING.md,retained reference,docs/legacy/MENTORING.md
+docs/RELIABILITY_REVIEW.md,retained reference,docs/legacy/RELIABILITY_REVIEW.md
+docs/demo-script.md,retained reference,docs/legacy/demo-script.md
+docs/engineering-evidence.md,retained reference,docs/legacy/engineering-evidence.md
+docs/evidence/browser-refusal.png,retired,backup/pre-new-source-20261023
+docs/evidence/browser-stop.png,retired,backup/pre-new-source-20261023
+docs/evidence/reliability/execution.json,retired,backup/pre-new-source-20261023
+docs/evidence/reliability/github-sync.json,retired,backup/pre-new-source-20261023
+docs/evidence/reliability/sse-after.json,retired,backup/pre-new-source-20261023
+docs/evidence/reliability/sse-before.json,retired,backup/pre-new-source-20261023
+docs/evidence/reliability/taskset-selfcheck.json,retired,backup/pre-new-source-20261023
+docs/interview-guide.md,retained reference,docs/legacy/interview-guide.md
+docs/ppt-outline.md,retained reference,docs/legacy/ppt-outline.md
+docs/progress.md,retained reference,docs/legacy/progress.md
+docs/requirements.md,retained reference,docs/legacy/requirements.md
+docs/test-report.md,retained reference,docs/legacy/test-report.md
+docs/演示脚本与演讲稿.md,retained reference,docs/legacy/演示脚本与演讲稿.md
+frontend/Dockerfile,retired,design/lingshan-guide (new UI)
+frontend/env.d.ts,retired,design/lingshan-guide (new UI)
+frontend/index.html,retired,design/lingshan-guide (new UI)
+frontend/package-lock.json,retired,design/lingshan-guide (new UI)
+frontend/package.json,retired,design/lingshan-guide (new UI)
+frontend/public/assets/avatars/lishan_ai_guide_3d.jpg,retired,design/lingshan-guide (new UI)
+frontend/public/assets/avatars/lishan_ai_guide_3d_chibi.jpg,retired,design/lingshan-guide (new UI)
+frontend/public/assets/avatars/lishan_ai_guide_3d_stage.jpg,retired,design/lingshan-guide (new UI)
+frontend/public/assets/maps/lingshan-guide.png,retired,design/lingshan-guide (new UI)
+frontend/public/avatar-config.json,retired,design/lingshan-guide (new UI)
+frontend/public/calibrate-map.html,retired,design/lingshan-guide (new UI)
+frontend/public/models/haru/Haru.2048/texture_00.png,retired,design/lingshan-guide (new UI)
+frontend/public/models/haru/Haru.2048/texture_01.png,retired,design/lingshan-guide (new UI)
+frontend/public/models/haru/Haru.cdi3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/haru/Haru.moc3,retired,design/lingshan-guide (new UI)
+frontend/public/models/haru/Haru.model3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/haru/Haru.physics3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/haru/Haru.pose3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/haru/Haru.userdata3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/haru/expressions/F01.exp3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/haru/expressions/F02.exp3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/haru/expressions/F03.exp3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/haru/expressions/F04.exp3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/haru/expressions/F05.exp3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/haru/expressions/F06.exp3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/haru/expressions/F07.exp3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/haru/expressions/F08.exp3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/haru/motions/haru_g_idle.motion3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/haru/motions/haru_g_m06.motion3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/haru/motions/haru_g_m09.motion3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/haru/motions/haru_g_m15.motion3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/haru/motions/haru_g_m20.motion3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/haru/motions/haru_g_m26.motion3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/haru/sounds/haru_Info_04.wav,retired,design/lingshan-guide (new UI)
+frontend/public/models/haru/sounds/haru_Info_14.wav,retired,design/lingshan-guide (new UI)
+frontend/public/models/haru/sounds/haru_normal_6.wav,retired,design/lingshan-guide (new UI)
+frontend/public/models/haru/sounds/haru_talk_13.wav,retired,design/lingshan-guide (new UI)
+frontend/public/models/hiyori/Hiyori.2048/texture_00.png,retired,design/lingshan-guide (new UI)
+frontend/public/models/hiyori/Hiyori.2048/texture_01.png,retired,design/lingshan-guide (new UI)
+frontend/public/models/hiyori/Hiyori.cdi3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/hiyori/Hiyori.moc3,retired,design/lingshan-guide (new UI)
+frontend/public/models/hiyori/Hiyori.model3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/hiyori/Hiyori.physics3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/hiyori/Hiyori.pose3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/hiyori/Hiyori.userdata3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/hiyori/motions/Hiyori_m01.motion3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/hiyori/motions/Hiyori_m02.motion3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/hiyori/motions/Hiyori_m03.motion3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/hiyori/motions/Hiyori_m04.motion3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/hiyori/motions/Hiyori_m05.motion3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/hiyori/motions/Hiyori_m06.motion3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/hiyori/motions/Hiyori_m07.motion3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/hiyori/motions/Hiyori_m08.motion3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/hiyori/motions/Hiyori_m09.motion3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/hiyori/motions/Hiyori_m10.motion3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/natori/Natori.2048/texture_00.png,retired,design/lingshan-guide (new UI)
+frontend/public/models/natori/Natori.cdi3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/natori/Natori.moc3,retired,design/lingshan-guide (new UI)
+frontend/public/models/natori/Natori.model3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/natori/Natori.physics3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/natori/Natori.pose3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/natori/exp/Angry.exp3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/natori/exp/Blushing.exp3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/natori/exp/Normal.exp3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/natori/exp/Sad.exp3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/natori/exp/Smile.exp3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/natori/exp/Surprised.exp3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/natori/exp/exp_01.exp3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/natori/exp/exp_02.exp3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/natori/exp/exp_03.exp3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/natori/exp/exp_04.exp3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/natori/exp/exp_05.exp3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/natori/motions/mtn_00.motion3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/natori/motions/mtn_01.motion3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/natori/motions/mtn_02.motion3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/natori/motions/mtn_03.motion3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/natori/motions/mtn_04.motion3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/natori/motions/mtn_05.motion3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/natori/motions/mtn_06.motion3.json,retired,design/lingshan-guide (new UI)
+frontend/public/models/natori/motions/mtn_07.motion3.json,retired,design/lingshan-guide (new UI)
+frontend/public/preview-models.html,retired,design/lingshan-guide (new UI)
+frontend/public/test-live2d.html,retired,design/lingshan-guide (new UI)
+frontend/src/App.vue,retired,design/lingshan-guide (new UI)
+frontend/src/api/.gitkeep,retired,design/lingshan-guide (new UI)
+frontend/src/api/access.ts,retired,design/lingshan-guide (new UI)
+frontend/src/api/avatarConfig.ts,retired,design/lingshan-guide (new UI)
+frontend/src/api/behavior.ts,retired,design/lingshan-guide (new UI)
+frontend/src/api/chat.ts,retired,design/lingshan-guide (new UI)
+frontend/src/api/client.ts,retired,design/lingshan-guide (new UI)
+frontend/src/api/dashboard.ts,retired,design/lingshan-guide (new UI)
+frontend/src/api/favorite.ts,retired,design/lingshan-guide (new UI)
+frontend/src/api/feedback.ts,retired,design/lingshan-guide (new UI)
+frontend/src/api/history.ts,retired,design/lingshan-guide (new UI)
+frontend/src/api/knowledge.ts,retired,design/lingshan-guide (new UI)
+frontend/src/api/multimodal.ts,retired,design/lingshan-guide (new UI)
+frontend/src/api/route.ts,retired,design/lingshan-guide (new UI)
+frontend/src/api/speech.ts,retired,design/lingshan-guide (new UI)
+frontend/src/api/spot.ts,retired,design/lingshan-guide (new UI)
+frontend/src/api/stream.ts,retired,design/lingshan-guide (new UI)
+frontend/src/audio/audio-player.ts,retired,design/lingshan-guide (new UI)
+frontend/src/audio/energy-mouth.ts,retired,design/lingshan-guide (new UI)
+frontend/src/audio/sentence-buffer.ts,retired,design/lingshan-guide (new UI)
+frontend/src/audio/speech-queue.ts,retired,design/lingshan-guide (new UI)
+frontend/src/components/.gitkeep,retired,design/lingshan-guide (new UI)
+frontend/src/hooks/.gitkeep,retired,design/lingshan-guide (new UI)
+frontend/src/layouts/.gitkeep,retired,design/lingshan-guide (new UI)
+frontend/src/main.ts,retired,design/lingshan-guide (new UI)
+frontend/src/router/.gitkeep,retired,design/lingshan-guide (new UI)
+frontend/src/router/index.ts,retired,design/lingshan-guide (new UI)
+frontend/src/stores/.gitkeep,retired,design/lingshan-guide (new UI)
+frontend/src/types/.gitkeep,retired,design/lingshan-guide (new UI)
+frontend/src/types/chat.ts,retired,design/lingshan-guide (new UI)
+frontend/src/types/knowledge.ts,retired,design/lingshan-guide (new UI)
+frontend/src/types/route.ts,retired,design/lingshan-guide (new UI)
+frontend/src/types/spot.ts,retired,design/lingshan-guide (new UI)
+frontend/src/utils/.gitkeep,retired,design/lingshan-guide (new UI)
+frontend/src/views/Admin/.gitkeep,retired,design/lingshan-guide (new UI)
+frontend/src/views/Admin/AvatarConfigView.vue,retired,design/lingshan-guide (new UI)
+frontend/src/views/Admin/BehaviorView.vue,retired,design/lingshan-guide (new UI)
+frontend/src/views/Admin/KnowledgeView.vue,retired,design/lingshan-guide (new UI)
+frontend/src/views/Admin/SpotView.vue,retired,design/lingshan-guide (new UI)
+frontend/src/views/AvatarView.vue,retired,design/lingshan-guide (new UI)
+frontend/src/views/ChatView.vue,retired,design/lingshan-guide (new UI)
+frontend/src/views/DashboardView.vue,retired,design/lingshan-guide (new UI)
+frontend/src/views/FavoriteView.vue,retired,design/lingshan-guide (new UI)
+frontend/src/views/FeedbackView.vue,retired,design/lingshan-guide (new UI)
+frontend/src/views/HistoryView.vue,retired,design/lingshan-guide (new UI)
+frontend/src/views/HomeView.vue,retired,design/lingshan-guide (new UI)
+frontend/src/views/MapView.vue,retired,design/lingshan-guide (new UI)
+frontend/src/views/RouteView.vue,retired,design/lingshan-guide (new UI)
+frontend/src/views/VisionGuideView.vue,retired,design/lingshan-guide (new UI)
+frontend/tests/audio-state.test.ts,retired,design/lingshan-guide (new UI)
+frontend/tests/chat-stream.test.ts,retired,design/lingshan-guide (new UI)
+frontend/tests/speech-stream.test.ts,retired,design/lingshan-guide (new UI)
+frontend/tsconfig.json,retired,design/lingshan-guide (new UI)
+frontend/tsconfig.node.json,retired,design/lingshan-guide (new UI)
+frontend/tsconfig.node.tsbuildinfo,retired,design/lingshan-guide (new UI)
+frontend/vite.config.ts,retired,design/lingshan-guide (new UI)
+launch.py,retired,backup/pre-new-source-20261023
+live2d-models-guide.md,retained reference,docs/legacy/live2d-models-guide.md
+requirements-test.txt,retired,backup/pre-new-source-20261023
+scripts/.gitkeep,retired,backup/pre-new-source-20261023
+scripts/benchmark_latency.py,retired,backup/pre-new-source-20261023
+scripts/build_index.py,retired,backup/pre-new-source-20261023
+scripts/eval_qa_accuracy.py,retired,backup/pre-new-source-20261023
+scripts/generate_eval_dataset.py,retired,backup/pre-new-source-20261023
+scripts/import_official_data.py,retired,backup/pre-new-source-20261023
+scripts/probe_sse_concurrency.py,retired,backup/pre-new-source-20261023
+scripts/run_demo.py,retired,backup/pre-new-source-20261023
+scripts/smoke_test.py,retired,backup/pre-new-source-20261023
+scripts/test_model_speed.py,retired,backup/pre-new-source-20261023
+tests/ai/.gitkeep,retired,backup/pre-new-source-20261023
+tests/backend/.gitkeep,retired,backup/pre-new-source-20261023
+tests/backend/test_access_boundaries.py,retired,backup/pre-new-source-20261023
+tests/backend/test_async_stream_http.py,retired,backup/pre-new-source-20261023
+tests/backend/test_cache_freshness.py,retired,backup/pre-new-source-20261023
+tests/backend/test_demo_smoke.py,retired,backup/pre-new-source-20261023
+tests/backend/test_eval_scoring.py,retired,backup/pre-new-source-20261023
+tests/backend/test_grounding_contract.py,retired,backup/pre-new-source-20261023
+tests/backend/test_index_consistency.py,retired,backup/pre-new-source-20261023
+tests/backend/test_knowledge_http.py,retired,backup/pre-new-source-20261023
+tests/backend/test_knowledge_migration.py,retired,backup/pre-new-source-20261023
+tests/backend/test_llm_failover.py,retired,backup/pre-new-source-20261023
+tests/backend/test_message_outcome.py,retired,backup/pre-new-source-20261023
+tests/backend/test_model_protocol.py,retired,backup/pre-new-source-20261023
+tests/backend/test_rag_fallback.py,retired,backup/pre-new-source-20261023
+tests/backend/test_speech_routes.py,retired,backup/pre-new-source-20261023
+tests/backend/test_speech_service.py,retired,backup/pre-new-source-20261023
+tests/backend/test_stream_contract.py,retired,backup/pre-new-source-20261023
+tests/backend/test_text_sse.py,retired,backup/pre-new-source-20261023
+tests/backend/test_upload_cleanup.py,retired,backup/pre-new-source-20261023
+tests/conftest.py,retired,backup/pre-new-source-20261023
+tests/e2e/.gitkeep,retired,backup/pre-new-source-20261023
+景区资料包/示范景区公开资料包/景点景区旅游数据行为分析数据.xlsx,retired,backup/pre-new-source-20261023
+景区资料包/示范景区公开资料包/灵山胜境 景点结构化数据集.docx,retained reference,景区资料包/示范景区公开资料包/灵山胜境 景点结构化数据集.docx
+景区资料包/示范景区公开资料包/灵山胜境：历史、文化、景点特色与个性化游览指南.docx,retained reference,景区资料包/示范景区公开资料包/灵山胜境：历史、文化、景点特色与个性化游览指南.docx
+评测包/README.txt,retained reference,评测包/README.txt
+评测包/eval.py,retained reference,评测包/eval.py
+评测包/qa_testset.json,retained reference,评测包/qa_testset.json

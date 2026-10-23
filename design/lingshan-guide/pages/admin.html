@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>管理后台 - 灵山胜境AI数字人导览系统</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<style>
+:root {
+  --gold-100:#F5EDD6; --gold-200:#EBDCB0; --gold-300:#DFC98A; --gold-400:#D4B96E;
+  --gold-500:#C5A55A; --gold-600:#A88B3E; --gold-700:#8A7130;
+  --blue-200:#96A6C4; --blue-300:#677EA8; --blue-400:#3D5678; --blue-500:#1B2A4A;
+  --blue-600:#152240; --blue-700:#101A33; --blue-800:#0A1226; --blue-900:#050A19;
+  --red-500:#C25450; --green-400:#4ade80;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'PingFang SC','Microsoft YaHei','Noto Sans SC',sans-serif;
+       background:var(--blue-900); color:#E5E5DD; display:flex; height:100vh; overflow:hidden; }
+
+/* ---------- 侧边栏 ---------- */
+.sidebar { width:220px; background:var(--blue-800); border-right:1px solid rgba(197,165,90,.12);
+           display:flex; flex-direction:column; flex-shrink:0; }
+.logo { padding:22px 20px; border-bottom:1px solid rgba(197,165,90,.12); }
+.logo h1 { font-family:'Noto Serif SC',serif; font-size:18px; color:var(--gold-300); letter-spacing:2px; }
+.logo p { font-size:11px; color:var(--blue-200); margin-top:4px; }
+.nav-item { padding:14px 20px; cursor:pointer; font-size:14px; color:var(--blue-200);
+            border-left:3px solid transparent; transition:all .2s; display:flex; gap:10px; align-items:center; }
+.nav-item:hover { color:var(--gold-300); background:rgba(197,165,90,.05); }
+.nav-item.active { color:var(--gold-300); border-left-color:var(--gold-500);
+                   background:rgba(197,165,90,.1); }
+.sidebar .foot { margin-top:auto; padding:16px 20px; font-size:11px; color:var(--blue-300);
+                 border-top:1px solid rgba(197,165,90,.12); }
+.status-dot { width:8px; height:8px; border-radius:50%; display:inline-block; margin-right:6px; }
+.dot-ok { background:var(--green-400); } .dot-warn { background:#f59e0b; } .dot-err { background:var(--red-500); }
+
+/* ---------- 主区域 ---------- */
+.main { flex:1; overflow-y:auto; padding:24px 28px; }
+.page { display:none; } .page.active { display:block; }
+.page-title { font-family:'Noto Serif SC',serif; font-size:22px; color:var(--gold-300); margin-bottom:4px; }
+.page-sub { font-size:12px; color:var(--blue-200); margin-bottom:20px; }
+
+/* 卡片 */
+.card { background:var(--blue-800); border:1px solid rgba(197,165,90,.12); border-radius:14px;
+        padding:20px; margin-bottom:18px; }
+.stat-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:16px; margin-bottom:18px; }
+.stat-card { background:linear-gradient(135deg,var(--blue-800),var(--blue-700));
+             border:1px solid rgba(197,165,90,.15); border-radius:14px; padding:18px 20px; }
+.stat-card .label { font-size:12px; color:var(--blue-200); }
+.stat-card .value { font-size:30px; font-weight:700; color:var(--gold-300); margin-top:6px;
+                    font-family:'Noto Serif SC',serif; }
+.stat-card .unit { font-size:12px; color:var(--blue-200); margin-left:4px; }
+.chart-row { display:grid; grid-template-columns:2fr 1fr; gap:16px; margin-bottom:18px; }
+.chart-row.equal { grid-template-columns:1fr 1fr; }
+.chart { height:280px; }
+.card h3 { font-size:15px; color:var(--gold-200); margin-bottom:12px; font-weight:600; }
+
+/* 表格 */
+table { width:100%; border-collapse:collapse; font-size:13px; }
+th { text-align:left; padding:10px 12px; color:var(--gold-300); border-bottom:1px solid rgba(197,165,90,.2);
+     font-weight:600; white-space:nowrap; }
+td { padding:10px 12px; border-bottom:1px solid rgba(255,255,255,.05); vertical-align:top; }
+tr:hover td { background:rgba(197,165,90,.04); }
+.tag { display:inline-block; padding:2px 10px; border-radius:999px; font-size:11px; }
+.tag-positive { background:rgba(74,222,128,.15); color:var(--green-400); }
+.tag-neutral { background:rgba(150,166,196,.15); color:var(--blue-200); }
+.tag-negative { background:rgba(194,82,80,.15); color:#f0938e; }
+.tag-published { background:rgba(74,222,128,.15); color:var(--green-400); }
+.tag-draft { background:rgba(245,158,11,.15); color:#f59e0b; }
+
+/* 按钮 */
+.btn { background:linear-gradient(135deg,var(--gold-500),var(--gold-600)); color:#fff; border:none;
+       padding:8px 18px; border-radius:8px; cursor:pointer; font-size:13px; transition:opacity .2s; }
+.btn:hover { opacity:.85; }
+.btn-ghost { background:transparent; border:1px solid rgba(197,165,90,.3); color:var(--gold-300); }
+.btn-sm { padding:4px 12px; font-size:12px; }
+.btn-danger { background:linear-gradient(135deg,var(--red-500),#A34340); }
+
+/* 弹窗 */
+.modal-mask { position:fixed; inset:0; background:rgba(5,10,25,.7); display:none;
+              align-items:center; justify-content:center; z-index:500; }
+.modal { background:var(--blue-800); border:1px solid rgba(197,165,90,.25); border-radius:14px;
+         padding:24px; width:520px; max-width:92vw; }
+.modal h3 { color:var(--gold-300); margin-bottom:16px; }
+.form-row { margin-bottom:14px; }
+.form-row label { display:block; font-size:12px; color:var(--blue-200); margin-bottom:6px; }
+.form-row input, .form-row textarea, .form-row select {
+  width:100%; background:var(--blue-700); border:1px solid rgba(197,165,90,.2); border-radius:8px;
+  color:#E5E5DD; padding:9px 12px; font-size:13px; outline:none; font-family:inherit; }
+.form-row textarea { min-height:110px; resize:vertical; }
+
+/* 数字人卡片 */
+.avatar-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px; }
+.avatar-card { background:var(--blue-800); border:1px solid rgba(197,165,90,.15); border-radius:14px;
+               padding:20px; text-align:center; position:relative; transition:all .25s; }
+.avatar-card.active { border-color:var(--gold-400); box-shadow:0 0 24px rgba(197,165,90,.2); }
+.avatar-card .style-badge { position:absolute; top:12px; right:12px; font-size:10px; padding:2px 10px;
+               border-radius:999px; background:rgba(197,165,90,.15); color:var(--gold-300); }
+.avatar-card .live-badge { position:absolute; top:12px; left:12px; font-size:10px; padding:2px 10px;
+               border-radius:999px; background:rgba(74,222,128,.18); color:var(--green-400); }
+.avatar-face { width:90px; height:90px; margin:8px auto 12px; border-radius:50%;
+               display:flex; align-items:center; justify-content:center; font-size:40px;
+               background:radial-gradient(circle,rgba(197,165,90,.25),transparent 70%); }
+.avatar-card h4 { color:var(--gold-200); font-size:15px; margin-bottom:6px; }
+.avatar-card p { font-size:12px; color:var(--blue-200); line-height:1.7; margin-bottom:12px; }
+
+/* Live2D 备选形象 */
+.l2d-stage-wrap { min-height:320px; display:flex; align-items:center; justify-content:center;
+                  background:var(--blue-800); border:1px solid rgba(197,165,90,.15); border-radius:14px;
+                  margin-top:14px; overflow:hidden; }
+.l2d-row { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:14px; }
+.l2d-panel { background:var(--blue-800); border:1px solid rgba(197,165,90,.15); border-radius:14px;
+             padding:14px; text-align:center; position:relative; transition:all .25s; }
+.l2d-panel.active { border-color:var(--gold-400); box-shadow:0 0 24px rgba(197,165,90,.2); }
+.l2d-panel h4 { color:var(--gold-200); font-size:14px; }
+.l2d-tag { font-size:10px; color:var(--blue-200); font-weight:400; margin-left:6px; display:block; margin-top:2px; }
+.l2d-btns { margin-top:12px; display:flex; gap:6px; justify-content:center; flex-wrap:wrap; }
+.l2d-btns .btn { padding:3px 9px; font-size:11px; }
+.l2d-expr-title { font-size:10px; color:var(--blue-300); margin-top:10px; margin-bottom:4px; letter-spacing:1px; }
+@media (max-width:1100px) { .l2d-row { grid-template-columns:1fr; } }
+
+/* 词云 */
+.cloud-box { display:flex; flex-wrap:wrap; gap:10px 16px; align-items:center; padding:10px 4px; }
+.cloud-word { color:var(--gold-200); }
+.suggest-item { padding:12px 14px; border-left:3px solid var(--gold-500); background:rgba(197,165,90,.06);
+                border-radius:0 8px 8px 0; margin-bottom:10px; font-size:13px; line-height:1.7; }
+.suggest-item .pri { font-size:11px; color:var(--red-500); margin-right:8px; }
+.suggest-item .pri.medium { color:#f59e0b; } .suggest-item .pri.low { color:var(--blue-200); }
+
+.refresh-hint { font-size:11px; color:var(--blue-300); float:right; }
+.empty { text-align:center; color:var(--blue-300); padding:30px; font-size:13px; }
+</style>
+</head>
+<body>
+
+<!-- ============ 侧边栏 ============ -->
+<aside class="sidebar">
+  <div class="logo">
+    <h1>灵山胜境 · 智管台</h1>
+    <p>AI数字人导览系统管理后台</p>
+  </div>
+  <div class="nav-item active" data-page="dashboard">📊 数据大屏</div>
+  <div class="nav-item" data-page="knowledge">📚 知识库管理</div>
+  <div class="nav-item" data-page="avatar">🧝 数字人形象</div>
+  <div class="nav-item" data-page="sentiment">💗 游客感受度</div>
+  <div class="nav-item" data-page="feedback">💬 实时反馈</div>
+  <div class="foot">
+    <div><span class="status-dot dot-ok" id="st-llm"></span>大模型 <span id="st-llm-t">检测中</span></div>
+    <div style="margin-top:6px"><span class="status-dot dot-ok" id="st-rag"></span>知识引擎 <span id="st-rag-t">检测中</span></div>
+  </div>
+</aside>
+
+<!-- ============ 主区域 ============ -->
+<main class="main">
+
+  <!-- ======== 数据大屏 ======== -->
+  <section class="page active" id="page-dashboard">
+    <h2 class="page-title">数据大屏 <span class="refresh-hint">每15秒自动刷新</span></h2>
+    <p class="page-sub">景区AI导览服务核心运营指标(全部来自真实交互数据)</p>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="label">今日服务游客</div><div class="value" id="d-today">0<span class="unit">人</span></div></div>
+      <div class="stat-card"><div class="label">今日问答轮次</div><div class="value" id="d-qa">0<span class="unit">次</span></div></div>
+      <div class="stat-card"><div class="label">本周累计问答</div><div class="value" id="d-week">0<span class="unit">次</span></div></div>
+      <div class="stat-card"><div class="label">游客满意度</div><div class="value" id="d-sat">--<span class="unit">分</span></div></div>
+      <div class="stat-card"><div class="label">正面情感占比</div><div class="value" id="d-pos">0<span class="unit">%</span></div></div>
+    </div>
+    <div class="chart-row">
+      <div class="card"><h3>近7日服务量趋势</h3><div class="chart" id="ch-trend"></div></div>
+      <div class="card"><h3>游客情感分布</h3><div class="chart" id="ch-sentiment"></div></div>
+    </div>
+    <div class="chart-row equal">
+      <div class="card"><h3>热门咨询问题 TOP8</h3><div class="chart" id="ch-hot"></div></div>
+      <div class="card"><h3>景点签到热度</h3><div class="chart" id="ch-spot"></div></div>
+    </div>
+  </section>
+
+  <!-- ======== 知识库管理 ======== -->
+  <section class="page" id="page-knowledge">
+    <h2 class="page-title">知识库管理</h2>
+    <p class="page-sub">讲解词、文史资料、FAQ的维护 · 修改后一键重建检索索引即刻生效</p>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+        <div>
+          <button class="btn" onclick="openKnowledgeModal()">+ 新增知识</button>
+          <button class="btn btn-ghost" onclick="rebuildIndex()" style="margin-left:8px">🔄 重建检索索引</button>
+        </div>
+        <div style="font-size:12px;color:var(--blue-200)" id="rag-info">--</div>
+      </div>
+      <table>
+        <thead><tr><th>分类</th><th>标题</th><th>内容摘要</th><th>状态</th><th>操作</th></tr></thead>
+        <tbody id="kb-tbody"></tbody>
+      </table>
+      <div class="empty" id="kb-empty" style="display:none">暂无手动录入的知识条目,系统当前使用内置《灵山胜境完整知识库》(78个知识块)。新增条目保存后即入库。</div>
+    </div>
+  </section>
+
+  <!-- ======== 数字人形象 ======== -->
+  <section class="page" id="page-avatar">
+    <h2 class="page-title">数字人形象管理</h2>
+    <p class="page-sub">Live2D 形象切换 · 声音音色配置,贴合景区文化特色 · 启用后刷新游客端即生效</p>
+    <div class="card" style="margin-top:18px">
+      <h3>Live2D 形象(实时渲染 · 可交互预览 · 点击启用)</h3>
+      <div style="font-size:12px;color:var(--blue-200);margin-bottom:10px">当前生效形象:<b style="color:var(--gold-300)" id="l2d-current">Natori(默认)</b> · 首页/导览/桌宠统一使用该形象</div>
+      <div class="l2d-stage-wrap" id="l2d-stage"></div>
+      <div class="l2d-row">
+        <div class="l2d-panel" id="l2d-panel-natori">
+          <span class="live-badge">● 使用中</span>
+          <h4>Natori<span class="l2d-tag">女学生 · 温柔 · 11表情(默认)</span></h4>
+          <div class="l2d-expr-title">表情测试</div>
+          <div class="l2d-btns">
+            <button class="btn btn-sm" onclick="l2dSt&&l2dSt.expression('natori','Smile')">微笑</button>
+            <button class="btn btn-sm" onclick="l2dSt&&l2dSt.expression('natori','Normal')">常态</button>
+            <button class="btn btn-sm" onclick="l2dSt&&l2dSt.expression('natori','Surprised')">惊讶</button>
+            <button class="btn btn-sm" onclick="l2dSt&&l2dSt.expression('natori','Sad')">伤心</button>
+            <button class="btn btn-sm" onclick="l2dSt&&l2dSt.expression('natori','Angry')">生气</button>
+            <button class="btn btn-sm" onclick="l2dSt&&l2dSt.expression('natori','Blushing')">害羞</button>
+            <button class="btn btn-sm btn-ghost" onclick="l2dSt&&l2dSt.expression('natori','exp_01')">自定义1</button>
+            <button class="btn btn-sm btn-ghost" onclick="l2dSt&&l2dSt.expression('natori','exp_02')">自定义2</button>
+            <button class="btn btn-sm btn-ghost" onclick="l2dSt&&l2dSt.expression('natori','exp_03')">自定义3</button>
+            <button class="btn btn-sm btn-ghost" onclick="l2dSt&&l2dSt.expression('natori','exp_04')">自定义4</button>
+            <button class="btn btn-sm btn-ghost" onclick="l2dSt&&l2dSt.expression('natori','exp_05')">自定义5</button>
+            <button class="btn btn-sm btn-ghost" onclick="l2dSt&&l2dSt.motion('natori','TapBody')">互动动作</button>
+          </div>
+          <button class="btn btn-sm l2d-activate" style="margin-top:12px" onclick="activateL2D('natori')">启用此形象</button>
+        </div>
+        <div class="l2d-panel" id="l2d-panel-haru">
+          <span class="live-badge" style="display:none">● 使用中</span>
+          <h4>Haru<span class="l2d-tag">御姐 · 成熟女性 · 8表情</span></h4>
+          <div class="l2d-expr-title">表情测试</div>
+          <div class="l2d-btns">
+            <button class="btn btn-sm" onclick="l2dSt&&l2dSt.expression('haru','F01')">微笑F01</button>
+            <button class="btn btn-sm" onclick="l2dSt&&l2dSt.expression('haru','F02')">F02</button>
+            <button class="btn btn-sm" onclick="l2dSt&&l2dSt.expression('haru','F03')">专注F03</button>
+            <button class="btn btn-sm" onclick="l2dSt&&l2dSt.expression('haru','F04')">F04</button>
+            <button class="btn btn-sm" onclick="l2dSt&&l2dSt.expression('haru','F05')">F05</button>
+            <button class="btn btn-sm" onclick="l2dSt&&l2dSt.expression('haru','F06')">惊讶F06</button>
+            <button class="btn btn-sm" onclick="l2dSt&&l2dSt.expression('haru','F07')">F07</button>
+            <button class="btn btn-sm" onclick="l2dSt&&l2dSt.expression('haru','F08')">F08</button>
+            <button class="btn btn-sm btn-ghost" onclick="l2dSt&&l2dSt.motion('haru','TapBody')">互动动作</button>
+          </div>
+          <button class="btn btn-sm l2d-activate" style="margin-top:12px" onclick="activateL2D('haru')">启用此形象</button>
+        </div>
+        <div class="l2d-panel" id="l2d-panel-hiyori">
+          <span class="live-badge" style="display:none">● 使用中</span>
+          <h4>Hiyori<span class="l2d-tag">少女 · 活泼 · 10动作(无表情)</span></h4>
+          <div class="l2d-expr-title">动作测试</div>
+          <div class="l2d-btns">
+            <button class="btn btn-sm" onclick="l2dSt&&l2dSt.motion('hiyori','Idle',0)">动作1</button>
+            <button class="btn btn-sm" onclick="l2dSt&&l2dSt.motion('hiyori','Idle',2)">动作2</button>
+            <button class="btn btn-sm" onclick="l2dSt&&l2dSt.motion('hiyori','Idle',4)">动作3</button>
+            <button class="btn btn-sm" onclick="l2dSt&&l2dSt.motion('hiyori','Idle',6)">动作4</button>
+            <button class="btn btn-sm" onclick="l2dSt&&l2dSt.motion('hiyori','Idle',8)">动作5</button>
+            <button class="btn btn-sm btn-ghost" onclick="l2dSt&&l2dSt.motion('hiyori','TapBody')">互动动作</button>
+          </div>
+          <button class="btn btn-sm l2d-activate" style="margin-top:12px" onclick="activateL2D('hiyori')">启用此形象</button>
+        </div>
+      </div>
+      <p style="font-size:11px;color:var(--blue-300);margin-top:12px">Live2D Cubism4 官方示例模型(Free Material License) · 默认 Natori · 点击表情/动作按钮实时测试 · 启用某形象后刷新游客端(首页/导览/桌宠)即切换 · 加载失败自动降级占位图</p>
+    </div>
+    <div class="card" style="margin-top:18px">
+      <h3>声音设置(当前生效形象)</h3>
+      <div class="form-row" style="max-width:360px">
+        <label>音色选择</label>
+        <select id="voice-select"></select>
+      </div>
+      <button class="btn" onclick="saveVoice()">保存音色</button>
+      <button class="btn btn-ghost" onclick="previewVoice()" style="margin-left:8px">▶ 试听</button>
+      <span style="font-size:12px;color:var(--blue-200);margin-left:12px" id="voice-msg"></span>
+    </div>
+  </section>
+
+  <!-- ======== 游客感受度 ======== -->
+  <section class="page" id="page-sentiment">
+    <h2 class="page-title">游客感受度报告</h2>
+    <p class="page-sub">基于全部交互记录的情感分析 · 关注点洞察 · 服务改进建议</p>
+    <div class="chart-row">
+      <div class="card"><h3>近7日情感趋势</h3><div class="chart" id="ch-daily"></div></div>
+      <div class="card"><h3>游客关注点</h3><div class="cloud-box" id="cloud-box"></div></div>
+    </div>
+    <div class="chart-row equal">
+      <div class="card"><h3>负面反馈样本(需重点关注)</h3><div id="neg-list"></div></div>
+      <div class="card"><h3>🤖 AI运营建议(大模型生成)</h3>
+        <div id="suggest-list"><div class="empty">点击按钮,由大模型基于真实交互数据生成运营建议</div></div>
+        <button class="btn" onclick="genSuggestions()" id="btn-suggest">生成运营建议</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======== 实时反馈 ======== -->
+  <section class="page" id="page-feedback">
+    <h2 class="page-title">实时交互反馈</h2>
+    <p class="page-sub">游客提问实时流 · 自动情感标注</p>
+    <div class="card">
+      <table>
+        <thead><tr><th>时间</th><th>游客</th><th>提问内容</th><th>情感</th><th>满意度</th></tr></thead>
+        <tbody id="fb-tbody"></tbody>
+      </table>
+      <div style="margin-top:14px;text-align:center">
+        <button class="btn btn-ghost btn-sm" onclick="loadFeedback(fbPage+1)">加载更多</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ======== 知识编辑弹窗 ======== -->
+<div class="modal-mask" id="kb-modal">
+  <div class="modal">
+    <h3 id="kb-modal-title">新增知识</h3>
+    <input type="hidden" id="kb-id">
+    <div class="form-row"><label>分类</label>
+      <select id="kb-category">
+        <option value="景点讲解">景点讲解</option><option value="历史文化">历史文化</option>
+        <option value="实用信息">实用信息</option><option value="FAQ">FAQ</option>
+        <option value="活动公告">活动公告</option>
+      </select></div>
+    <div class="form-row"><label>标题</label><input id="kb-title" placeholder="如:九龙灌浴表演时间调整公告"></div>
+    <div class="form-row"><label>内容</label><textarea id="kb-content" placeholder="录入讲解词 / 文史资料 / FAQ内容..."></textarea></div>
+    <div class="form-row"><label>状态</label>
+      <select id="kb-status"><option value="published">发布</option><option value="draft">草稿</option></select></div>
+    <div style="text-align:right">
+      <button class="btn btn-ghost" onclick="closeKnowledgeModal()">取消</button>
+      <button class="btn" onclick="saveKnowledge()" style="margin-left:8px">保存</button>
+    </div>
+  </div>
+</div>
+
+<script src="../assets/vendor/pixi.min.js"></script>
+<script src="../assets/vendor/live2dcubismcore.min.js"></script>
+<script src="../assets/vendor/cubism4.min.js"></script>
+<script src="../assets/live2d-human.js?v=l2d7"></script>
+<script>
+/* ============================================================
+ * 管理后台 - 全部真实API数据
+ * ============================================================ */
+var GOLD = '#C5A55A';
+var charts = {};
+var l2dSt = null, l2dInited = false;
+
+function initL2D() {
+  if (l2dInited || typeof Live2DStage === 'undefined') return;
+  l2dInited = true;
+  l2dSt = new Live2DStage('l2d-stage', { width: 720, height: 320 });
+  l2dSt.add('natori', '../assets/live2d/natori/Natori.model3.json', 0.17, 0.92, 'Smile');
+  l2dSt.add('haru',   '../assets/live2d/haru/Haru.model3.json',     0.50, 0.92, 'F01');
+  l2dSt.add('hiyori', '../assets/live2d/hiyori/Hiyori.model3.json', 0.83, 0.92);
+  refreshL2DActive();
+}
+
+// Live2D 形象启用/切换(写入 localStorage,游客端读取后切换模型)
+function refreshL2DActive() {
+  var cur = localStorage.getItem('lingshan_l2d') || 'natori';
+  ['natori', 'haru', 'hiyori'].forEach(function (k) {
+    var p = document.getElementById('l2d-panel-' + k);
+    if (!p) return;
+    var on = (cur === k);
+    p.classList.toggle('active', on);
+    var badge = p.querySelector('.live-badge'); if (badge) badge.style.display = on ? '' : 'none';
+    var act = p.querySelector('.l2d-activate'); if (act) act.style.display = on ? 'none' : '';
+  });
+  var curEl = document.getElementById('l2d-current');
+  if (curEl) curEl.textContent = cur === 'natori' ? 'Natori(默认)' : (cur.charAt(0).toUpperCase() + cur.slice(1));
+}
+function activateL2D(k) {
+  localStorage.setItem('lingshan_l2d', k);
+  refreshL2DActive();
+  alert('已启用 ' + k + ' 形象。\n请刷新游客端(首页/导览/桌宠)查看新形象。');
+}
+
+// ---------- 导航 ----------
+document.querySelectorAll('.nav-item').forEach(function (n) {
+  n.onclick = function () {
+    document.querySelectorAll('.nav-item').forEach(function (x) { x.classList.remove('active'); });
+    document.querySelectorAll('.page').forEach(function (x) { x.classList.remove('active'); });
+    n.classList.add('active');
+    document.getElementById('page-' + n.dataset.page).classList.add('active');
+    loadPage(n.dataset.page);
+    setTimeout(function () { for (var k in charts) charts[k].resize(); }, 50);
+  };
+});
+
+function mkChart(id) {
+  if (!charts[id]) charts[id] = echarts.init(document.getElementById(id), null, { renderer: 'canvas' });
+  return charts[id];
+}
+var baseText = { color: '#96A6C4', fontSize: 11 };
+function esc(s) { var d = document.createElement('div'); d.textContent = s == null ? '' : String(s); return d.innerHTML; }
+
+// ---------- 系统状态 ----------
+function loadStatus() {
+  fetch('/api/status').then(function (r) { return r.json(); }).then(function (d) {
+    document.getElementById('st-llm').className = 'status-dot ' + (d.llm_available ? 'dot-ok' : 'dot-warn');
+    document.getElementById('st-llm-t').textContent = d.llm_available ? d.llm_model : '未配置';
+    document.getElementById('st-rag').className = 'status-dot ' + (d.rag.ready ? 'dot-ok' : 'dot-err');
+    document.getElementById('st-rag-t').textContent = d.rag.ready ? d.rag.engine + '(' + d.rag.chunks + '块)' : '未就绪';
+    document.getElementById('rag-info').textContent =
+      '检索引擎: ' + d.rag.engine + ' | 知识块: ' + d.rag.chunks + ' | 构建: ' + d.rag.build_time_s + 's';
+  }).catch(function () {
+    document.getElementById('st-llm').className = 'status-dot dot-err';
+    document.getElementById('st-llm-t').textContent = '后端离线';
+  });
+}
+
+// ---------- 数据大屏 ----------
+function loadDashboard() {
+  fetch('/api/analytics/dashboard').then(function (r) { return r.json(); }).then(function (d) {
+    document.getElementById('d-today').innerHTML = d.today_visitors + '<span class="unit">人</span>';
+    document.getElementById('d-qa').innerHTML = d.today_qa + '<span class="unit">次</span>';
+    document.getElementById('d-week').innerHTML = d.week_qa + '<span class="unit">次</span>';
+    document.getElementById('d-sat').innerHTML = (d.avg_satisfaction || '--') + '<span class="unit">分</span>';
+    document.getElementById('d-pos').innerHTML = Math.round((d.sentiment.positive || 0) * 100) + '<span class="unit">%</span>';
+
+    mkChart('ch-trend').setOption({
+      grid: { left: 40, right: 16, top: 20, bottom: 26 },
+      xAxis: { type: 'category', data: d.trend_7days.map(function (x) { return x.date; }), axisLabel: baseText, axisLine: { lineStyle: { color: '#3D5678' } } },
+      yAxis: { type: 'value', axisLabel: baseText, splitLine: { lineStyle: { color: 'rgba(150,166,196,.1)' } } },
+      series: [{ type: 'line', smooth: true, data: d.trend_7days.map(function (x) { return x.count; }),
+        lineStyle: { color: GOLD, width: 3 }, itemStyle: { color: GOLD },
+        areaStyle: { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1,
+          colorStops: [{ offset: 0, color: 'rgba(197,165,90,.35)' }, { offset: 1, color: 'rgba(197,165,90,0)' }] } } }]
+    });
+
+    var sentiTotal = (d.sentiment.positive || 0) + (d.sentiment.neutral || 0) + (d.sentiment.negative || 0);
+    if (sentiTotal > 0) {
+      mkChart('ch-sentiment').setOption({
+        tooltip: { trigger: 'item' },
+        legend: { bottom: 0, textStyle: baseText },
+        series: [{ type: 'pie', radius: ['42%', '68%'], center: ['50%', '44%'],
+          data: [
+            { name: '正面', value: d.sentiment.positive, itemStyle: { color: '#4ade80' } },
+            { name: '中性', value: d.sentiment.neutral, itemStyle: { color: '#96A6C4' } },
+            { name: '负面', value: d.sentiment.negative, itemStyle: { color: '#C25450' } }
+          ],
+          label: { color: '#E5E5DD', fontSize: 11, formatter: '{b} {d}%' } }]
+      }, true);
+    } else {
+      mkChart('ch-sentiment').setOption({
+        title: { text: '暂无情感数据\n游客交互后自动生成', left: 'center', top: 'center',
+                 textStyle: { color: '#677EA8', fontSize: 13, fontWeight: 'normal' } },
+        series: []
+      }, true);
+    }
+
+    mkChart('ch-hot').setOption({
+      grid: { left: 10, right: 30, top: 10, bottom: 10, containLabel: true },
+      xAxis: { type: 'value', axisLabel: baseText, splitLine: { lineStyle: { color: 'rgba(150,166,196,.1)' } } },
+      yAxis: { type: 'category', inverse: true, data: d.hot_questions.map(function (x) { return x.question.length > 12 ? x.question.slice(0, 12) + '…' : x.question; }), axisLabel: baseText, axisLine: { lineStyle: { color: '#3D5678' } } },
+      series: [{ type: 'bar', data: d.hot_questions.map(function (x) { return x.count; }), barWidth: 14,
+        itemStyle: { borderRadius: [0, 7, 7, 0], color: { type: 'linear', x: 0, y: 0, x2: 1, y2: 0, colorStops: [{ offset: 0, color: '#8A7130' }, { offset: 1, color: GOLD }] } } }]
+    });
+
+    var spotData = d.spot_heat.length ? d.spot_heat : [{ name: '暂无签到数据', heat: 0 }];
+    mkChart('ch-spot').setOption({
+      grid: { left: 10, right: 10, top: 20, bottom: 40, containLabel: true },
+      xAxis: { type: 'category', data: spotData.map(function (x) { return x.name; }), axisLabel: Object.assign({}, baseText, { rotate: 28 }), axisLine: { lineStyle: { color: '#3D5678' } } },
+      yAxis: { type: 'value', axisLabel: baseText, splitLine: { lineStyle: { color: 'rgba(150,166,196,.1)' } } },
+      series: [{ type: 'bar', data: spotData.map(function (x) { return x.heat; }), barWidth: 20,
+        itemStyle: { borderRadius: [7, 7, 0, 0], color: '#677EA8' } }]
+    });
+  }).catch(function () {});
+}
+
+// ---------- 知识库 ----------
+function loadKnowledge() {
+  fetch('/api/knowledge/items?page_size=50').then(function (r) { return r.json(); }).then(function (d) {
+    var tb = document.getElementById('kb-tbody');
+    tb.innerHTML = '';
+    document.getElementById('kb-empty').style.display = d.items.length ? 'none' : 'block';
+    d.items.forEach(function (it) {
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td>' + esc(it.category) + '</td><td>' + esc(it.title) + '</td>' +
+        '<td style="max-width:340px">' + esc(it.content) + '…</td>' +
+        '<td><span class="tag tag-' + it.status + '">' + (it.status === 'published' ? '已发布' : '草稿') + '</span></td>' +
+        '<td><button class="btn btn-ghost btn-sm" data-item=\'' + JSON.stringify(it).replace(/'/g, '&#39;') + '\' onclick="editKnowledge(this)">编辑</button> ' +
+        '<button class="btn btn-danger btn-sm" onclick="delKnowledge(' + it.id + ')">删除</button></td>';
+      tb.appendChild(tr);
+    });
+  }).catch(function () {});
+}
+
+function openKnowledgeModal(item) {
+  document.getElementById('kb-modal-title').textContent = item ? '编辑知识' : '新增知识';
+  document.getElementById('kb-id').value = item ? item.id : '';
+  document.getElementById('kb-category').value = item ? item.category : '景点讲解';
+  document.getElementById('kb-title').value = item ? item.title : '';
+  document.getElementById('kb-content').value = item ? item.content : '';
+  document.getElementById('kb-status').value = item ? item.status : 'published';
+  document.getElementById('kb-modal').style.display = 'flex';
+}
+function editKnowledge(btn) {
+  var item = JSON.parse(btn.getAttribute('data-item'));
+  openKnowledgeModal(item);
+}
+function closeKnowledgeModal() { document.getElementById('kb-modal').style.display = 'none'; }
+function saveKnowledge() {
+  var id = document.getElementById('kb-id').value;
+  var body = {
+    category: document.getElementById('kb-category').value,
+    title: document.getElementById('kb-title').value,
+    content: document.getElementById('kb-content').value,
+    status: document.getElementById('kb-status').value,
+    source: 'admin'
+  };
+  if (!body.title || !body.content) { alert('请填写标题和内容'); return; }
+  var req = id
+    ? fetch('/api/knowledge/items/' + id, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+    : fetch('/api/knowledge/items', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  req.then(function () { closeKnowledgeModal(); loadKnowledge(); }).catch(function () { alert('保存失败'); });
+}
+function delKnowledge(id) {
+  if (!confirm('确认删除该知识条目?')) return;
+  fetch('/api/knowledge/items/' + id, { method: 'DELETE' }).then(loadKnowledge);
+}
+function rebuildIndex() {
+  fetch('/api/knowledge/rebuild', { method: 'POST' }).then(function (r) { return r.json(); }).then(function (d) {
+    alert('索引已重建: ' + d.rag.chunks + '个知识块 (' + d.rag.engine + '引擎)');
+    loadStatus();
+  });
+}
+
+// ---------- 数字人形象 ----------
+var avatarsCache = [];
+function loadAvatar() {
+  fetch('/api/avatar/list').then(function (r) { return r.json(); }).then(function (d) {
+    avatarsCache = d.avatars;
+    var grid = document.getElementById('avatar-grid');   // 已移除旧卡片,兼容守卫
+    if (grid) { grid.innerHTML = ''; }
+    return fetch('/api/tts/voices');
+  }).then(function (r) { return r.json(); }).then(function (d) {
+    var sel = document.getElementById('voice-select');
+    sel.innerHTML = '';
+    d.voices.forEach(function (v) {
+      var o = document.createElement('option');
+      o.value = v.id; o.textContent = v.name;
+      sel.appendChild(o);
+    });
+    var active = avatarsCache.find(function (a) { return a.is_active; });
+    if (active) sel.value = active.voice;
+  }).catch(function () {});
+}
+function activateAvatar(id) {
+  fetch('/api/avatar/activate/' + id, { method: 'POST' }).then(function () { loadAvatar(); });
+}
+function saveVoice() {
+  var active = avatarsCache.find(function (a) { return a.is_active; });
+  if (!active) return;
+  fetch('/api/avatar/config/' + active.id, {
+    method: 'PUT', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ voice: document.getElementById('voice-select').value })
+  }).then(function () {
+    document.getElementById('voice-msg').textContent = '已保存,游客端即时生效';
+    loadAvatar();
+  });
+}
+function previewVoice() {
+  fetch('/api/tts', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text: '阿弥陀佛,欢迎来到灵山胜境,我是您的AI导游灵小仙。', voice: document.getElementById('voice-select').value })
+  }).then(function (r) { return r.json(); }).then(function (d) {
+    if (d.ok) new Audio(d.audio_url).play();
+  });
+}
+
+// ---------- 游客感受度 ----------
+function loadSentiment() {
+  fetch('/api/analytics/tourist-analysis').then(function (r) { return r.json(); }).then(function (d) {
+    mkChart('ch-daily').setOption({
+      tooltip: { trigger: 'axis' },
+      legend: { bottom: 0, textStyle: baseText },
+      grid: { left: 40, right: 16, top: 20, bottom: 44 },
+      xAxis: { type: 'category', data: d.daily_sentiment.map(function (x) { return x.date; }), axisLabel: baseText, axisLine: { lineStyle: { color: '#3D5678' } } },
+      yAxis: { type: 'value', axisLabel: baseText, splitLine: { lineStyle: { color: 'rgba(150,166,196,.1)' } } },
+      series: [
+        { name: '正面', type: 'bar', stack: 'a', data: d.daily_sentiment.map(function (x) { return x.positive; }), itemStyle: { color: '#4ade80' }, barWidth: 18 },
+        { name: '中性', type: 'bar', stack: 'a', data: d.daily_sentiment.map(function (x) { return x.neutral; }), itemStyle: { color: '#96A6C4' } },
+        { name: '负面', type: 'bar', stack: 'a', data: d.daily_sentiment.map(function (x) { return x.negative; }), itemStyle: { color: '#C25450' } }
+      ]
+    });
+
+    var cloud = document.getElementById('cloud-box');
+    cloud.innerHTML = '';
+    if (!d.attention_cloud.length) cloud.innerHTML = '<div class="empty">暂无数据,游客交互后自动生成</div>';
+    var max = Math.max.apply(null, d.attention_cloud.map(function (x) { return x.count; }).concat([1]));
+    d.attention_cloud.forEach(function (w) {
+      var s = document.createElement('span');
+      s.className = 'cloud-word';
+      s.style.fontSize = (13 + (w.count / max) * 20) + 'px';
+      s.style.opacity = 0.6 + (w.count / max) * 0.4;
+      s.textContent = w.word + ' ';
+      cloud.appendChild(s);
+    });
+
+    var neg = document.getElementById('neg-list');
+    neg.innerHTML = d.negative_samples.length ? '' : '<div class="empty">暂无负面反馈 🎉</div>';
+    d.negative_samples.forEach(function (x) {
+      var div = document.createElement('div');
+      div.className = 'suggest-item';
+      div.style.borderLeftColor = '#C25450';
+      div.innerHTML = '<span style="color:#f0938e">「' + esc(x.question) + '」</span><span style="float:right;font-size:11px;color:var(--blue-300)">' + esc(x.time) + '</span>';
+      neg.appendChild(div);
+    });
+  }).catch(function () {});
+}
+
+function genSuggestions() {
+  var btn = document.getElementById('btn-suggest');
+  btn.textContent = '大模型分析中...'; btn.disabled = true;
+  fetch('/api/analytics/suggestions', { method: 'POST' }).then(function (r) { return r.json(); }).then(function (d) {
+    var list = document.getElementById('suggest-list');
+    list.innerHTML = '';
+    (d.suggestions || []).forEach(function (s) {
+      var div = document.createElement('div');
+      div.className = 'suggest-item';
+      div.innerHTML = '<span class="pri ' + s.priority + '">[' + ({ high: '高优先级', medium: '中优先级', low: '低优先级' })[s.priority] + ']</span>' + esc(s.content);
+      list.appendChild(div);
+    });
+    btn.textContent = '重新生成'; btn.disabled = false;
+  }).catch(function () { btn.textContent = '生成运营建议'; btn.disabled = false; });
+}
+
+// ---------- 实时反馈 ----------
+var fbPage = 0;
+function loadFeedback(page) {
+  page = page || 1;
+  fetch('/api/analytics/feedback?page=' + page + '&page_size=20').then(function (r) { return r.json(); }).then(function (d) {
+    fbPage = page;
+    var tb = document.getElementById('fb-tbody');
+    if (page === 1) tb.innerHTML = '';
+    d.items.forEach(function (it) {
+      var tr = document.createElement('tr');
+      var sentiTag = { positive: '正面', neutral: '中性', negative: '负面' }[it.sentiment] || '中性';
+      tr.innerHTML = '<td style="white-space:nowrap">' + esc(it.time) + '</td><td>' + esc(it.tourist) + '</td>' +
+        '<td>' + esc(it.content) + '</td>' +
+        '<td><span class="tag tag-' + it.sentiment + '">' + sentiTag + '</span></td>' +
+        '<td>' + (it.satisfaction ? '⭐'.repeat(it.satisfaction) : '未评价') + '</td>';
+      tb.appendChild(tr);
+    });
+  }).catch(function () {});
+}
+
+// ---------- 页面加载分发 ----------
+function loadPage(p) {
+  if (p === 'dashboard') loadDashboard();
+  else if (p === 'knowledge') loadKnowledge();
+  else if (p === 'avatar') { loadAvatar(); initL2D(); }
+  else if (p === 'sentiment') loadSentiment();
+  else if (p === 'feedback') loadFeedback(1);
+}
+
+loadStatus();
+loadDashboard();
+setInterval(function () {
+  if (document.getElementById('page-dashboard').classList.contains('active')) loadDashboard();
+}, 15000);
+</script>
+</body>
+</html>

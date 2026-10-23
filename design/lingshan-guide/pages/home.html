@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>首页 - 灵山胜境智慧导览</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold:#C5A55A; --gold-d:#A88B3E; --navy:#1B2A4A; --blue2:#677EA8;
+  --bg:#F2F4F8; --card:#FFF; --line:#E4E8F0; --text:#1B2A4A; --text2:#677EA8;
+  --serif:'Noto Serif SC',serif; --sans:'Noto Sans SC','Microsoft YaHei',sans-serif;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:var(--sans); color:var(--text); background:var(--bg); }
+
+.home-wrap { padding:22px 26px 30px; display:grid;
+  grid-template-columns:minmax(0,1fr) 320px; gap:22px; max-width:1500px; margin:0 auto; }
+
+/* ---------- Hero 轮播 ---------- */
+.hero { position:relative; border-radius:20px; overflow:hidden; height:430px;
+  box-shadow:0 10px 34px rgba(27,42,74,.16); background:#0A1226; }
+.hero .slide { position:absolute; inset:0; opacity:0; transition:opacity .9s ease; }
+.hero .slide.on { opacity:1; }
+.hero .slide img { width:100%; height:100%; object-fit:cover; }
+.hero .slide::after { content:''; position:absolute; inset:0;
+  background:linear-gradient(180deg,rgba(10,18,38,.08) 30%,rgba(10,18,38,.62)); }
+.hero-title { position:absolute; left:34px; bottom:34px; z-index:3; color:#FFF; }
+.hero-title .calli { font-family:var(--serif); font-size:52px; font-weight:900;
+  letter-spacing:8px; color:#F5EDD6; text-shadow:0 4px 24px rgba(0,0,0,.55), 0 0 42px rgba(197,165,90,.35); }
+.hero-title .sub { margin-top:8px; font-size:15px; letter-spacing:3px; color:#EBDCB0;
+  text-shadow:0 2px 10px rgba(0,0,0,.6); }
+.hero-title .badges { margin-top:12px; display:flex; gap:8px; }
+.hero-title .bd { font-size:11px; padding:4px 12px; border-radius:999px; letter-spacing:1px;
+  background:rgba(197,165,90,.22); border:1px solid rgba(223,201,138,.5); color:#F5EDD6;
+  backdrop-filter:blur(4px); }
+.hero-btn { position:absolute; right:28px; bottom:32px; z-index:3; padding:11px 24px;
+  border:none; border-radius:999px; cursor:pointer; font-size:14px; font-weight:700;
+  color:#FFF; background:linear-gradient(135deg,var(--gold),var(--gold-d));
+  box-shadow:0 6px 20px rgba(197,165,90,.45); transition:transform .2s; }
+.hero-btn:hover { transform:translateY(-2px); }
+.hero-arrow { position:absolute; top:50%; transform:translateY(-50%); z-index:4;
+  width:44px; height:44px; border-radius:50%; border:1px solid rgba(255,255,255,.35);
+  background:rgba(10,18,38,.35); color:#FFF; font-size:19px; cursor:pointer;
+  backdrop-filter:blur(4px); transition:background .2s; }
+.hero-arrow:hover { background:rgba(197,165,90,.55); }
+.hero-arrow.l { left:16px; } .hero-arrow.r { right:16px; }
+.hero-dots { position:absolute; left:50%; bottom:14px; transform:translateX(-50%);
+  z-index:4; display:flex; gap:7px; }
+.hero-dots i { width:22px; height:4px; border-radius:2px; background:rgba(255,255,255,.35);
+  cursor:pointer; transition:all .3s; }
+.hero-dots i.on { background:var(--gold); width:34px; }
+
+/* ---------- AI导游卡 ---------- */
+.ai-card { background:var(--card); border-radius:20px; padding:24px 20px;
+  box-shadow:0 6px 24px rgba(27,42,74,.08); display:flex; flex-direction:column;
+  align-items:center; position:relative; overflow:hidden; }
+.ai-card::before { content:''; position:absolute; top:-70px; left:50%; transform:translateX(-50%);
+  width:260px; height:260px; border-radius:50%;
+  background:radial-gradient(circle,rgba(197,165,90,.20),transparent 70%); }
+.ai-card .tag { position:relative; font-size:12px; color:var(--text2); letter-spacing:2px; }
+.ai-card .name { position:relative; font-family:var(--serif); font-size:22px; font-weight:700;
+  color:var(--navy); margin-top:4px; letter-spacing:3px; }
+#home-dh { position:relative; margin:6px 0 2px; }
+.ai-status { position:relative; display:inline-flex; align-items:center; gap:6px;
+  font-size:12px; color:#3A8A5C; background:#EAF7EF; border:1px solid #BEE6CC;
+  padding:4px 14px; border-radius:999px; }
+.ai-status i { width:7px; height:7px; border-radius:50%; background:#3FB96B;
+  animation:breath 1.8s infinite; }
+@keyframes breath { 0%,100%{opacity:1} 50%{opacity:.35} }
+.ai-desc { position:relative; margin-top:12px; font-size:12px; color:var(--text2);
+  text-align:center; line-height:1.8; }
+.ai-cta { position:relative; margin-top:16px; width:100%; padding:14px; border:none;
+  border-radius:14px; cursor:pointer; font-size:16px; font-weight:700; color:#FFF;
+  background:linear-gradient(135deg,var(--gold),var(--gold-d));
+  box-shadow:0 8px 22px rgba(197,165,90,.4); transition:transform .2s; }
+.ai-cta:hover { transform:translateY(-2px); }
+.ai-cta small { display:block; font-size:11px; font-weight:400; opacity:.85; margin-top:2px; }
+.ai-feats { position:relative; margin-top:14px; display:grid; grid-template-columns:1fr 1fr;
+  gap:8px; width:100%; }
+.ai-feats span { font-size:11px; color:var(--text2); background:#F6F8FB;
+  border:1px solid var(--line); border-radius:8px; padding:7px 4px; text-align:center; }
+
+/* ---------- 热门景点 ---------- */
+.spots-sec { grid-column:1 / -1; }
+.sec-head { display:flex; align-items:baseline; gap:12px; margin:6px 0 16px; }
+.sec-head h2 { font-family:var(--serif); font-size:22px; color:var(--navy); letter-spacing:2px; }
+.sec-head h2::before { content:''; display:inline-block; width:5px; height:20px;
+  background:linear-gradient(180deg,var(--gold),var(--gold-d)); border-radius:3px;
+  margin-right:10px; vertical-align:-3px; }
+.sec-head a { margin-left:auto; font-size:13px; color:var(--gold-d); text-decoration:none; }
+.spots { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+.spot { background:var(--card); border-radius:16px; overflow:hidden; cursor:pointer;
+  box-shadow:0 4px 16px rgba(27,42,74,.07); transition:all .25s; }
+.spot:hover { transform:translateY(-5px); box-shadow:0 12px 30px rgba(27,42,74,.14); }
+.spot .ph { position:relative; height:170px; overflow:hidden; }
+.spot .ph img { width:100%; height:100%; object-fit:cover; transition:transform .5s; }
+.spot:hover .ph img { transform:scale(1.07); }
+.spot .rate { position:absolute; top:10px; left:10px; background:rgba(10,18,38,.62);
+  color:#FFD98D; font-size:12px; font-weight:700; padding:4px 10px; border-radius:999px;
+  backdrop-filter:blur(4px); }
+.spot .info { padding:12px 14px 14px; }
+.spot .info b { font-size:15px; color:var(--navy); }
+.spot .info p { font-size:12px; color:var(--text2); margin-top:4px;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.spot .info .go { font-size:11px; color:var(--gold-d); margin-top:8px; display:block; }
+
+/* ---------- 移动端 ---------- */
+@media (max-width:1100px) {
+  .home-wrap { grid-template-columns:1fr; }
+  .spots { grid-template-columns:repeat(2,1fr); }
+  .hero { height:340px; }
+}
+@media (max-width:640px) {
+  .home-wrap { padding:14px; }
+  .hero { height:300px; border-radius:16px; }
+  .hero-title { left:22px; bottom:22px; }
+  .hero-title .calli { font-size:34px; letter-spacing:5px; }
+  .hero-title .sub { font-size:12px; letter-spacing:2px; }
+  .hero-arrow { display:none; }   /* 移动端用圆点导航,避免遮挡标题 */
+  .hero-btn { right:16px; bottom:16px; padding:9px 18px; font-size:13px; }
+  .hero-dots { left:auto; right:16px; transform:none; bottom:auto; top:14px; }
+  .spots { grid-template-columns:1fr 1fr; gap:10px; }
+  .spot .ph { height:120px; }
+}
+</style>
+</head>
+<body data-page="home">
+
+<div class="home-wrap">
+  <!-- Hero 轮播 -->
+  <section class="hero" id="hero">
+    <div class="slide on"><img src="../assets/hero-night.jpg" alt="五印坛城·水上藏式圣境"></div>
+    <div class="slide"><img src="../assets/hero-fangong.jpg" alt="灵山梵宫全景"></div>
+    <div class="slide"><img src="../assets/hero-buddha.jpg" alt="天下第一掌·灵山大佛"></div>
+    <div class="slide"><img src="../assets/hero-manfeilong.jpg" alt="曼飞龙塔·灵山大佛"></div>
+    <div class="hero-title">
+      <div class="calli">灵山胜境</div>
+      <div class="sub">国家5A级景区 · 佛光圣地 · 世界佛教论坛永久会址</div>
+      <div class="badges">
+        <span class="bd">东方佛国</span><span class="bd">太湖明珠</span><span class="bd">禅意之旅</span>
+      </div>
+    </div>
+    <button class="hero-btn" onclick="location.href='route.html'">全景导览 ›</button>
+    <button class="hero-arrow l" id="heroPrev">‹</button>
+    <button class="hero-arrow r" id="heroNext">›</button>
+    <div class="hero-dots" id="heroDots"></div>
+  </section>
+
+  <!-- AI导游卡 -->
+  <aside class="ai-card">
+    <span class="tag">AI数字人导游</span>
+    <span class="name">灵小仙</span>
+    <div id="home-dh"></div>
+    <span class="ai-status"><i></i>已就绪 · 大模型在线</span>
+    <p class="ai-desc">会听 · 会说 · 会看 · 有表情<br>口型同步讲解,一问她就答</p>
+    <button class="ai-cta" onclick="location.href='guide.html'">
+      开始导览<small>与灵小仙对话</small>
+    </button>
+    <div class="ai-feats">
+      <span>🎙 语音问答</span><span>👄 口型同步</span>
+      <span>📷 拍照识景</span><span>📍 扫码定位</span>
+    </div>
+  </aside>
+
+  <!-- 热门景点 -->
+  <section class="spots-sec">
+    <div class="sec-head">
+      <h2>热门景点</h2>
+      <a href="exhibit-detail.html">查看全部 →</a>
+    </div>
+    <div class="spots">
+      <div class="spot" data-go="exhibit-detail.html">
+        <div class="ph"><img src="../assets/hero-buddha.jpg" alt="灵山大佛"><span class="rate">★ 4.9</span></div>
+        <div class="info"><b>灵山大佛</b><p>世界最高露天青铜释迦牟尼立像,通高88米</p><span class="go">查看讲解 →</span></div>
+      </div>
+      <div class="spot" data-go="guide.html#q=请介绍九龙灌浴,表演几点开始?">
+        <div class="ph"><img src="../assets/jiulong-guanyu-hd.jpg" alt="九龙灌浴"><span class="rate">★ 4.8</span></div>
+        <div class="info"><b>九龙灌浴</b><p>花开见佛,九龙沐太子,每日四场圣景</p><span class="go">问灵小仙 →</span></div>
+      </div>
+      <div class="spot" data-go="guide.html#q=梵宫有什么特别之处?">
+        <div class="ph"><img src="../assets/hero-fangong.jpg" alt="灵山梵宫"><span class="rate">★ 4.7</span></div>
+        <div class="info"><b>灵山梵宫</b><p>东方卢浮宫,28米星空穹顶,鲁班奖殿堂</p><span class="go">问灵小仙 →</span></div>
+      </div>
+      <div class="spot" data-go="guide.html#q=介绍百子戏弥勒">
+        <div class="ph"><img src="../assets/baizi-milefo-hd.jpg" alt="百子戏弥勒"><span class="rate">★ 4.6</span></div>
+        <div class="info"><b>百子戏弥勒</b><p>百子嬉闹大肚弥勒,灵山最欢乐的一景</p><span class="go">问灵小仙 →</span></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script src="../assets/vendor/pixi.min.js"></script>
+<script src="../assets/vendor/live2dcubismcore.min.js"></script>
+<script src="../assets/vendor/cubism4.min.js"></script>
+<script src="../assets/live2d-human.js?v=l2d7"></script>
+<script src="../assets/live2d-guide.js?v=l2d7"></script>
+<script src="../assets/digital-human-v2.js"></script>
+<script src="../assets/shell.js"></script>
+<script src="../assets/mascot.js?v=l2d7"></script>
+<script>
+// 数字人(Live2D,形象由后台"启用此形象"控制,默认Natori,失败自动降级SVG)
+var dh = new Live2DHuman('home-dh', {
+  model: (window.getLive2DModel && getLive2DModel()) || '../assets/live2d/natori/Natori.model3.json',
+  width: 230, height: 260, fit: 0.92,
+  expression: 'Smile'
+});
+
+// Hero 轮播
+(function () {
+  var slides = document.querySelectorAll('.hero .slide');
+  var dotsBox = document.getElementById('heroDots');
+  var cur = 0, timer = null;
+  slides.forEach(function (_, i) {
+    var d = document.createElement('i');
+    if (i === 0) d.className = 'on';
+    d.onclick = function () { go(i); restart(); };
+    dotsBox.appendChild(d);
+  });
+  var dots = dotsBox.children;
+  function go(i) {
+    slides[cur].classList.remove('on'); dots[cur].classList.remove('on');
+    cur = (i + slides.length) % slides.length;
+    slides[cur].classList.add('on'); dots[cur].classList.add('on');
+  }
+  function restart() { clearInterval(timer); timer = setInterval(function () { go(cur + 1); }, 5000); }
+  document.getElementById('heroPrev').onclick = function () { go(cur - 1); restart(); };
+  document.getElementById('heroNext').onclick = function () { go(cur + 1); restart(); };
+  restart();
+})();
+
+// 景点卡跳转
+document.querySelectorAll('.spot').forEach(function (s) {
+  s.addEventListener('click', function () { location.href = s.dataset.go; });
+});
+</script>
+</body>
+</html>
