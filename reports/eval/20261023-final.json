@@ -1,7 +1,7 @@
 {
-  "timestamp": "2026-10-23T13:54:08.656696+00:00",
-  "git_sha": "57ef7bb436e2a2a6df168a4f97c462bd0ccd39c8",
-  "working_tree_dirty": true,
+  "timestamp": "2026-10-23T14:07:22.241151+00:00",
+  "git_sha": "c8c96426ae65708abea9bb4ac0214c5099930109",
+  "working_tree_dirty": false,
   "dataset_sha256": "c4344d97e5ea7d72910cf958dc33e1c187467228cec13e645642d3b93580f7f7",
   "dataset_size": 100,
   "scope": "backend_rag_http",
@@ -120,7 +120,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "41d12ce1c24846138409b06690af173d",
+        "request_id": "6dbf13db3868483e9510fab4c014ae28",
         "status": "completed",
         "sources": [
           {
@@ -145,13 +145,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 29.54,
+          "first_valid_text_ms": 34.12,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 49.93
+          "total_ms": 57.64
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 75.94
+        "elapsed_ms": 79.02
       },
       {
         "id": "F-002",
@@ -181,7 +181,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "fcb6900f0f404b32aa10d187d7cb393c",
+        "request_id": "45f0954363d042799ff0ce7129862b67",
         "status": "completed",
         "sources": [
           {
@@ -218,13 +218,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 28.59,
+          "first_valid_text_ms": 29.74,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 48.76
+          "total_ms": 51.47
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 52.83
+        "elapsed_ms": 55.3
       },
       {
         "id": "F-003",
@@ -254,7 +254,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "0c314787a5f7475db3086e10ed33f0fa",
+        "request_id": "749b5b1dbc014eef89b2c25f36a923b3",
         "status": "completed",
         "sources": [
           {
@@ -291,13 +291,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 28.04,
+          "first_valid_text_ms": 28.92,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 47.34
+          "total_ms": 47.96
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 50.74
+        "elapsed_ms": 51.39
       },
       {
         "id": "F-004",
@@ -327,7 +327,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "37d80b91d66e4457bc00ff35677c55b9",
+        "request_id": "5e08a130964b418cae77428aeb0504b8",
         "status": "completed",
         "sources": [
           {
@@ -352,13 +352,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 24.56,
+          "first_valid_text_ms": 25.21,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 42.33
+          "total_ms": 42.85
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 45.61
+        "elapsed_ms": 62.75
       },
       {
         "id": "F-005",
@@ -386,7 +386,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "f73fccc6ba4342468724f143af178ffa",
+        "request_id": "fd614a14012842608db03f1896d9ce3d",
         "status": "completed",
         "sources": [
           {
@@ -411,13 +411,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 24.76,
+          "first_valid_text_ms": 24.53,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 42.32
+          "total_ms": 41.39
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 45.56
+        "elapsed_ms": 44.55
       },
       {
         "id": "F-006",
@@ -447,7 +447,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "170103f41b6f4f9491ab9910aa007d07",
+        "request_id": "7905dc37a32848ccab19724a93f087e1",
         "status": "completed",
         "sources": [
           {
@@ -472,13 +472,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 23.77,
+          "first_valid_text_ms": 27.49,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 40.2
+          "total_ms": 46.37
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 43.31
+        "elapsed_ms": 68.01
       },
       {
         "id": "F-007",
@@ -508,7 +508,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "eeb572f6e58b4c4a8918ee193c0b471e",
+        "request_id": "2233f795e3e6498ca75677b87794b315",
         "status": "completed",
         "sources": [
           {
@@ -545,13 +545,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 26.13,
+          "first_valid_text_ms": 27.84,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 44.55
+          "total_ms": 48.1
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 48.16
+        "elapsed_ms": 52.08
       },
       {
         "id": "F-008",
@@ -581,7 +581,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "f94f32027be24f15a4e651cc4391dfbb",
+        "request_id": "c5e9db8db999493bbd680cf9f738b134",
         "status": "completed",
         "sources": [
           {
@@ -606,13 +606,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 31.52,
+          "first_valid_text_ms": 28.44,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 51.14
+          "total_ms": 48.4
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 65.71
+        "elapsed_ms": 51.96
       },
       {
         "id": "F-009",
@@ -640,7 +640,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "146fdf03dda14f0686e6d395742e8117",
+        "request_id": "f7573fd4022d425fabcaf1b76cde63b5",
         "status": "completed",
         "sources": [
           {
@@ -665,13 +665,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 28.75,
+          "first_valid_text_ms": 27.09,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 49.02
+          "total_ms": 45.28
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 52.82
+        "elapsed_ms": 65.52
       },
       {
         "id": "F-010",
@@ -701,7 +701,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "a0a652ec24494d9a88ae0c34199f0354",
+        "request_id": "4fc1cdf0e44b435795352148087a6efa",
         "status": "completed",
         "sources": [
           {
@@ -750,13 +750,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 28.19,
+          "first_valid_text_ms": 25.55,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 45.29
+          "total_ms": 44.06
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 62.57
+        "elapsed_ms": 47.71
       },
       {
         "id": "F-011",
@@ -784,7 +784,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "b3038f06d7164390bdde14fa061c8692",
+        "request_id": "c3142fa1787c4453862fd1e3384023c0",
         "status": "completed",
         "sources": [
           {
@@ -821,13 +821,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 24.7,
+          "first_valid_text_ms": 28.12,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 42.46
+          "total_ms": 47.23
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 45.94
+        "elapsed_ms": 51.13
       },
       {
         "id": "F-012",
@@ -864,7 +864,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "1a5e1f72da534384bacf7da93e518def",
+        "request_id": "ffb98c9064d141f092cc0cabe6f7aa08",
         "status": "completed",
         "sources": [
           {
@@ -889,13 +889,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 25.49,
+          "first_valid_text_ms": 27.8,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 44.96
+          "total_ms": 47.16
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 48.45
+        "elapsed_ms": 50.67
       },
       {
         "id": "F-013",
@@ -923,7 +923,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "58b093b635fd4e4f9b696a14c31ffcd5",
+        "request_id": "a22e10775e2949dba40ad521057a4c86",
         "status": "completed",
         "sources": [
           {
@@ -960,13 +960,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 27.19,
+          "first_valid_text_ms": 27.69,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
           "total_ms": 45.09
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 48.85
+        "elapsed_ms": 48.64
       },
       {
         "id": "F-014",
@@ -1003,7 +1003,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "bd5fee02345c496692b9cc96bbfc4ebb",
+        "request_id": "56dc24b2fb714e69b5d9d5d355b0296a",
         "status": "completed",
         "sources": [
           {
@@ -1028,13 +1028,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 27.43,
+          "first_valid_text_ms": 25.11,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 46.88
+          "total_ms": 42.65
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 50.23
+        "elapsed_ms": 45.9
       },
       {
         "id": "F-015",
@@ -1071,7 +1071,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "db79095c7c96467f84047b26f90f8912",
+        "request_id": "b018dfa3f262401f95e333f5bda26477",
         "status": "completed",
         "sources": [
           {
@@ -1108,13 +1108,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 28.37,
+          "first_valid_text_ms": 24.23,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 48.56
+          "total_ms": 42.45
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 70.16
+        "elapsed_ms": 45.53
       },
       {
         "id": "F-016",
@@ -1142,7 +1142,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "70051f6284b9497fb9f6abde132147f1",
+        "request_id": "6155f6eba5ab4da99397fae75d8eaadf",
         "status": "completed",
         "sources": [
           {
@@ -1167,13 +1167,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 30.05,
+          "first_valid_text_ms": 27.16,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 49.19
+          "total_ms": 46.45
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 77.47
+        "elapsed_ms": 49.64
       },
       {
         "id": "F-017",
@@ -1201,7 +1201,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "8e3bd4db3d7848b3a280fc78e3b584f7",
+        "request_id": "0c94881c3a3947a4b84ac0704294ceb8",
         "status": "completed",
         "sources": [
           {
@@ -1226,13 +1226,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 25.32,
+          "first_valid_text_ms": 26.32,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 43.22
+          "total_ms": 46.63
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 46.19
+        "elapsed_ms": 50.35
       },
       {
         "id": "F-018",
@@ -1260,7 +1260,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "6f7683202f9841898b76f32d57efb0ed",
+        "request_id": "bcc325ce0ae04055a275fb2b6de5ca7a",
         "status": "completed",
         "sources": [
           {
@@ -1285,13 +1285,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 25.61,
+          "first_valid_text_ms": 29.8,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 43.68
+          "total_ms": 49.43
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 47.21
+        "elapsed_ms": 77.18
       },
       {
         "id": "F-019",
@@ -1319,7 +1319,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "4674d7b42ad54a62908584f64fba6695",
+        "request_id": "7e69ebf933264e008c20eedfe2eb3a68",
         "status": "completed",
         "sources": [
           {
@@ -1344,13 +1344,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 24.87,
+          "first_valid_text_ms": 28.52,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 43.48
+          "total_ms": 52.51
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 46.77
+        "elapsed_ms": 56.88
       },
       {
         "id": "F-020",
@@ -1379,7 +1379,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "6cc67ef225cf470296608ab477b0db1c",
+        "request_id": "f5acc1058f234e4cafc6b63d51245aef",
         "status": "completed",
         "sources": [
           {
@@ -1428,13 +1428,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 27.84,
+          "first_valid_text_ms": 30.89,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 48.73
+          "total_ms": 51.03
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 52.32
+        "elapsed_ms": 55.22
       },
       {
         "id": "F-021",
@@ -1469,7 +1469,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "c2a4b1159045417f9f9859131525639f",
+        "request_id": "b9daca9d78944ac29b2d3843c95817f0",
         "status": "completed",
         "sources": [
           {
@@ -1506,13 +1506,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 29.48,
+          "first_valid_text_ms": 28.16,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 50.1
+          "total_ms": 47.02
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 53.75
+        "elapsed_ms": 50.45
       },
       {
         "id": "F-022",
@@ -1543,7 +1543,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "da14c113670d41589fa7cd14e3baf914",
+        "request_id": "9cf1a949a8104ee5911b9c633ac0d8ba",
         "status": "completed",
         "sources": [
           {
@@ -1580,13 +1580,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 29.06,
+          "first_valid_text_ms": 26.4,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 48.59
+          "total_ms": 44.8
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 74.02
+        "elapsed_ms": 47.99
       },
       {
         "id": "F-023",
@@ -1623,7 +1623,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "5ae39eb5fdd046018fcf16c1f45fa4bb",
+        "request_id": "6df5d79f7d15454f912cd932d68af247",
         "status": "completed",
         "sources": [
           {
@@ -1672,13 +1672,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 29.19,
+          "first_valid_text_ms": 25.87,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 48.94
+          "total_ms": 44.27
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 52.68
+        "elapsed_ms": 48.12
       },
       {
         "id": "F-024",
@@ -1706,7 +1706,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "76edc53273a34771b8e010b7611a8c35",
+        "request_id": "946564cc2f7f43989b10716273d116bf",
         "status": "completed",
         "sources": [
           {
@@ -1743,13 +1743,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 28.74,
+          "first_valid_text_ms": 26.11,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 47.88
+          "total_ms": 43.86
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 51.44
+        "elapsed_ms": 47.64
       },
       {
         "id": "F-025",
@@ -1779,7 +1779,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "a34a69223e124ff78124834290112bb3",
+        "request_id": "5332a627a6334357a5b78c617e40351e",
         "status": "completed",
         "sources": [
           {
@@ -1828,13 +1828,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 27.88,
+          "first_valid_text_ms": 25.76,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 47.44
+          "total_ms": 45.88
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 50.91
+        "elapsed_ms": 49.68
       },
       {
         "id": "F-026",
@@ -1863,7 +1863,7 @@
         "is_refusal": true,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "7838f3b9048e41738f45c32831301346",
+        "request_id": "f68dcdccac83480a862e0e5a5aedf2c3",
         "status": "refused",
         "sources": [],
         "mode": "demo",
@@ -1875,13 +1875,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 33.1,
+          "first_valid_text_ms": 27.44,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 50.34
+          "total_ms": 43.93
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 54.38
+        "elapsed_ms": 47.12
       },
       {
         "id": "F-027",
@@ -1917,7 +1917,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "2612f8c8d0d4402fa19d76a380db7730",
+        "request_id": "ae86010899c84e0bbeafe7fa2e1b1ad6",
         "status": "completed",
         "sources": [
           {
@@ -1954,13 +1954,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 30.35,
+          "first_valid_text_ms": 27.64,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 50.81
+          "total_ms": 46.98
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 54.87
+        "elapsed_ms": 50.4
       },
       {
         "id": "F-028",
@@ -1991,7 +1991,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "84c81a14c19b489fb020bf73d551b1ee",
+        "request_id": "85b1e38aa3454848ade0959a9567bc76",
         "status": "completed",
         "sources": [
           {
@@ -2052,13 +2052,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 29.62,
+          "first_valid_text_ms": 27.19,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 49.4
+          "total_ms": 44.3
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 53.34
+        "elapsed_ms": 48.0
       },
       {
         "id": "F-029",
@@ -2095,7 +2095,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "467ce80eab7043b1b533e90b1c86e3ec",
+        "request_id": "c855462434004600a2d55dbee6db9456",
         "status": "completed",
         "sources": [
           {
@@ -2120,13 +2120,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 28.63,
+          "first_valid_text_ms": 25.33,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 48.29
+          "total_ms": 43.44
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 52.05
+        "elapsed_ms": 46.35
       },
       {
         "id": "F-030",
@@ -2154,7 +2154,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "1ac6d2da6fa347dcb411c1cad404141b",
+        "request_id": "7e4453b654a444018385030a45e95712",
         "status": "completed",
         "sources": [
           {
@@ -2179,13 +2179,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 28.97,
+          "first_valid_text_ms": 25.98,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 49.24
+          "total_ms": 45.04
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 52.61
+        "elapsed_ms": 48.63
       },
       {
         "id": "F-031",
@@ -2215,7 +2215,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "5615290ef8724fca96f98199bb71715e",
+        "request_id": "28352da01e4945149a77b01e528ba6a9",
         "status": "completed",
         "sources": [
           {
@@ -2252,13 +2252,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 27.94,
+          "first_valid_text_ms": 26.99,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 49.03
+          "total_ms": 45.77
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 53.25
+        "elapsed_ms": 49.49
       },
       {
         "id": "F-032",
@@ -2293,7 +2293,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "144df6ed3e014384be5c4282af9b66d1",
+        "request_id": "e91bef59d58b4af4933b73a944c55dde",
         "status": "completed",
         "sources": [
           {
@@ -2318,13 +2318,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 30.2,
+          "first_valid_text_ms": 29.72,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 50.64
+          "total_ms": 48.4
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 78.47
+        "elapsed_ms": 51.78
       },
       {
         "id": "F-033",
@@ -2352,7 +2352,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "8fe28099a63c4a1f936aaefba8620ee7",
+        "request_id": "2d9b7c8e0ae147d58ad9396f183292a9",
         "status": "completed",
         "sources": [
           {
@@ -2389,13 +2389,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 29.46,
+          "first_valid_text_ms": 26.68,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 50.34
+          "total_ms": 43.8
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 76.26
+        "elapsed_ms": 47.29
       },
       {
         "id": "F-034",
@@ -2425,7 +2425,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "af2e7c5fb2c74aa2bd1db99faccb40e4",
+        "request_id": "e2a1f466639d4c769f7e9213e26c1871",
         "status": "completed",
         "sources": [
           {
@@ -2462,13 +2462,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 29.81,
+          "first_valid_text_ms": 24.42,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 50.52
+          "total_ms": 41.44
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 53.86
+        "elapsed_ms": 44.53
       },
       {
         "id": "F-035",
@@ -2499,7 +2499,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "e019e6104aa64bffabec07e4715169d5",
+        "request_id": "a9122c5485774578a301f410e76ad333",
         "status": "completed",
         "sources": [
           {
@@ -2536,13 +2536,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 30.09,
+          "first_valid_text_ms": 23.57,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 51.16
+          "total_ms": 42.75
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 54.88
+        "elapsed_ms": 45.69
       },
       {
         "id": "I-001",
@@ -2576,7 +2576,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "c4fc5f2d4e034fc1a97a67b5423454f8",
+        "request_id": "3b1a1edcdeca4c8f9cfd05e02b854ba7",
         "status": "completed",
         "sources": [
           {
@@ -2601,13 +2601,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 29.77,
+          "first_valid_text_ms": 27.14,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 49.95
+          "total_ms": 46.02
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 53.34
+        "elapsed_ms": 49.19
       },
       {
         "id": "I-002",
@@ -2641,7 +2641,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "a8522c51e377438ea7035ebf2cd3ecbf",
+        "request_id": "4fd24ab08c3b4a158ecf11dbb26f2e85",
         "status": "completed",
         "sources": [
           {
@@ -2690,13 +2690,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 28.55,
+          "first_valid_text_ms": 26.4,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 48.98
+          "total_ms": 44.96
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 53.17
+        "elapsed_ms": 48.06
       },
       {
         "id": "I-003",
@@ -2730,7 +2730,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "b0ac3cb81f604a05baf7a6c231ab2983",
+        "request_id": "c9211592d90c4b1985dc8548f9bcb4be",
         "status": "completed",
         "sources": [
           {
@@ -2791,13 +2791,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 30.03,
+          "first_valid_text_ms": 26.44,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 51.83
+          "total_ms": 45.06
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 55.53
+        "elapsed_ms": 48.48
       },
       {
         "id": "I-004",
@@ -2830,7 +2830,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "d5e828f42664403dbe5395d35c0c5da8",
+        "request_id": "fc42b0837385434b82e35596153afaa1",
         "status": "completed",
         "sources": [
           {
@@ -2855,13 +2855,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 29.77,
+          "first_valid_text_ms": 23.87,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 49.56
+          "total_ms": 41.63
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 53.12
+        "elapsed_ms": 45.16
       },
       {
         "id": "I-005",
@@ -2893,7 +2893,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "254c1c08dc7248788fce43bdc9ce085c",
+        "request_id": "55331a02abd44023b053656b67e01c2f",
         "status": "completed",
         "sources": [
           {
@@ -2930,13 +2930,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 25.87,
+          "first_valid_text_ms": 26.88,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 42.8
+          "total_ms": 45.67
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 66.16
+        "elapsed_ms": 49.1
       },
       {
         "id": "I-006",
@@ -2968,7 +2968,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "956e8200ba7f49cfa40720d28b96d1d2",
+        "request_id": "2e3cfb1c0b29407a836e55b59f37cfe4",
         "status": "completed",
         "sources": [
           {
@@ -3017,13 +3017,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 23.6,
+          "first_valid_text_ms": 27.02,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 40.52
+          "total_ms": 46.61
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 44.12
+        "elapsed_ms": 50.09
       },
       {
         "id": "I-007",
@@ -3055,7 +3055,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "96a359ecc2f04a12a2f57cc979814d29",
+        "request_id": "7010a67198b7407a91faa7d3f63b308f",
         "status": "completed",
         "sources": [
           {
@@ -3104,13 +3104,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 24.63,
+          "first_valid_text_ms": 26.96,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 42.83
+          "total_ms": 45.88
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 47.21
+        "elapsed_ms": 49.9
       },
       {
         "id": "I-008",
@@ -3144,7 +3144,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "4f0ec971a157467ea586a00889ab59c8",
+        "request_id": "a1766e5176ac4d458927dd30aaf32577",
         "status": "completed",
         "sources": [
           {
@@ -3181,13 +3181,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 24.4,
+          "first_valid_text_ms": 27.39,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 40.91
+          "total_ms": 47.1
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 45.27
+        "elapsed_ms": 51.09
       },
       {
         "id": "I-009",
@@ -3219,7 +3219,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "c719e60736b041fe85cc20cb6cbd8977",
+        "request_id": "490ac92bd58941acb605ea604415af6b",
         "status": "completed",
         "sources": [
           {
@@ -3256,13 +3256,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 24.9,
+          "first_valid_text_ms": 25.82,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 45.66
+          "total_ms": 43.48
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 49.16
+        "elapsed_ms": 70.23
       },
       {
         "id": "I-010",
@@ -3295,7 +3295,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "224b533ceb5a435ea1573fd3baaed4e7",
+        "request_id": "9546cbef277642fd87f22338ae63b95b",
         "status": "completed",
         "sources": [
           {
@@ -3344,13 +3344,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 25.92,
+          "first_valid_text_ms": 26.0,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 43.71
+          "total_ms": 44.63
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 58.3
+        "elapsed_ms": 48.37
       },
       {
         "id": "I-011",
@@ -3383,7 +3383,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "72ec0ec26ad94c61a17f0fdf457645fc",
+        "request_id": "a1018ae7efc14d4eafd587d6aec2e408",
         "status": "completed",
         "sources": [
           {
@@ -3420,13 +3420,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 24.74,
+          "first_valid_text_ms": 26.56,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 42.37
+          "total_ms": 45.62
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 46.15
+        "elapsed_ms": 49.31
       },
       {
         "id": "I-012",
@@ -3456,7 +3456,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "a30e5de703b046e4bb167c8d5a108f33",
+        "request_id": "f8c1a4558b3347538567e8ca415e2754",
         "status": "completed",
         "sources": [
           {
@@ -3481,13 +3481,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 24.46,
+          "first_valid_text_ms": 27.63,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 41.99
+          "total_ms": 47.65
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 59.38
+        "elapsed_ms": 51.69
       },
       {
         "id": "I-013",
@@ -3517,7 +3517,7 @@
         "is_refusal": true,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "2d7d8b0625b04a91afa531e63c1909e6",
+        "request_id": "b8afdcba5b644dd6b36f1335ccd61f05",
         "status": "refused",
         "sources": [],
         "mode": "demo",
@@ -3529,13 +3529,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 24.71,
+          "first_valid_text_ms": 27.4,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 40.42
+          "total_ms": 43.77
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 43.96
+        "elapsed_ms": 71.97
       },
       {
         "id": "I-014",
@@ -3565,7 +3565,7 @@
         "is_refusal": true,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "bbb487714e444202b8b2480de06a4cea",
+        "request_id": "bd11be103c894da28c4ca799f1beacbb",
         "status": "refused",
         "sources": [],
         "mode": "demo",
@@ -3577,13 +3577,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 25.5,
+          "first_valid_text_ms": 25.54,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 40.95
+          "total_ms": 41.86
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 44.27
+        "elapsed_ms": 45.63
       },
       {
         "id": "I-015",
@@ -3613,7 +3613,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "4de669ef0b9d4d33922383280b4e1fcf",
+        "request_id": "2b12905a12b645bca32f90abfe419f19",
         "status": "completed",
         "sources": [
           {
@@ -3638,13 +3638,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 27.26,
+          "first_valid_text_ms": 27.52,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 46.53
+          "total_ms": 45.72
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 70.12
+        "elapsed_ms": 49.74
       },
       {
         "id": "C-001",
@@ -3677,7 +3677,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "fe986764e4734ff9aa387f815301862f",
+        "request_id": "4c12c8b978ba4c21893510dc04861630",
         "status": "completed",
         "sources": [
           {
@@ -3714,13 +3714,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 25.51,
+          "first_valid_text_ms": 27.13,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 43.27
+          "total_ms": 47.19
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 46.92
+        "elapsed_ms": 51.01
       },
       {
         "id": "C-002",
@@ -3754,7 +3754,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "41572e65ca744e4d8f23a1e8fce2deed",
+        "request_id": "a709c5a634124c54ab1b13b08472fd60",
         "status": "completed",
         "sources": [
           {
@@ -3791,13 +3791,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 26.31,
+          "first_valid_text_ms": 27.09,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 45.54
+          "total_ms": 46.16
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 49.23
+        "elapsed_ms": 50.07
       },
       {
         "id": "C-003",
@@ -3828,7 +3828,7 @@
         "is_refusal": true,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "216ed4ea6c95419f996a904db7589e79",
+        "request_id": "6f0580455006452aa632108c3d67c42a",
         "status": "refused",
         "sources": [],
         "mode": "demo",
@@ -3840,13 +3840,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 26.05,
+          "first_valid_text_ms": 27.15,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 41.64
+          "total_ms": 43.22
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 45.27
+        "elapsed_ms": 46.94
       },
       {
         "id": "C-004",
@@ -3879,7 +3879,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "9081b9bb7f3041ac8c2fc23efa6ea60d",
+        "request_id": "66ed08c64c0a4ad3b18280d8ee80efd5",
         "status": "completed",
         "sources": [
           {
@@ -3904,13 +3904,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 26.61,
+          "first_valid_text_ms": 26.46,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 45.08
+          "total_ms": 44.59
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 48.78
+        "elapsed_ms": 48.12
       },
       {
         "id": "C-005",
@@ -3942,7 +3942,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "3f614ca211f1481f9e554e1cdcc22317",
+        "request_id": "3b35f7dd12fb4d6fbdb3304b7ef0dafc",
         "status": "completed",
         "sources": [
           {
@@ -3979,13 +3979,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 26.82,
+          "first_valid_text_ms": 31.22,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 44.92
+          "total_ms": 50.79
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 68.29
+        "elapsed_ms": 54.76
       },
       {
         "id": "C-006",
@@ -4017,7 +4017,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "847cd0cb2edf4334b2d71d41bb4bdea6",
+        "request_id": "f0d973d3d59240338786d2b339ed6117",
         "status": "completed",
         "sources": [
           {
@@ -4042,13 +4042,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 24.61,
+          "first_valid_text_ms": 27.22,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 42.17
+          "total_ms": 45.73
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 45.96
+        "elapsed_ms": 71.31
       },
       {
         "id": "C-007",
@@ -4078,7 +4078,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "4944249c92cd43ee939cde9cc7a7654c",
+        "request_id": "1044f6efe77b41408bed5d448d8638e8",
         "status": "completed",
         "sources": [
           {
@@ -4103,13 +4103,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 24.23,
+          "first_valid_text_ms": 26.55,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 41.57
+          "total_ms": 45.8
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 45.53
+        "elapsed_ms": 49.6
       },
       {
         "id": "C-008",
@@ -4143,7 +4143,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "76f4dcfcb1994114baa5c34c6893c8ae",
+        "request_id": "825fe11b55ea4f04b4214d97f52bd2ae",
         "status": "completed",
         "sources": [
           {
@@ -4168,13 +4168,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 23.85,
+          "first_valid_text_ms": 25.17,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 40.77
+          "total_ms": 43.26
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 57.98
+        "elapsed_ms": 46.97
       },
       {
         "id": "C-009",
@@ -4207,7 +4207,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "25d29c7f829a439f9e731e5ccfcc87df",
+        "request_id": "8146751a68234367ade253919e1a2b2b",
         "status": "completed",
         "sources": [
           {
@@ -4232,13 +4232,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 22.78,
+          "first_valid_text_ms": 27.26,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 38.93
+          "total_ms": 46.19
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 60.57
+        "elapsed_ms": 74.16
       },
       {
         "id": "C-010",
@@ -4269,7 +4269,7 @@
         "is_refusal": true,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "91958e57f8604e16923193f363acc842",
+        "request_id": "4d55c27aa2bb463294e27a0d3a7d826f",
         "status": "refused",
         "sources": [],
         "mode": "demo",
@@ -4281,13 +4281,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 23.61,
+          "first_valid_text_ms": 26.39,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 38.74
+          "total_ms": 42.57
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 62.13
+        "elapsed_ms": 46.13
       },
       {
         "id": "P-001",
@@ -4322,7 +4322,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "ea1c6f560d6c450dbbcb997f378c8fa6",
+        "request_id": "fd93c0133f2e49d99799da0851ec2e81",
         "status": "completed",
         "sources": [
           {
@@ -4359,13 +4359,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 24.83,
+          "first_valid_text_ms": 27.42,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 42.98
+          "total_ms": 46.05
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 46.43
+        "elapsed_ms": 50.18
       },
       {
         "id": "P-002",
@@ -4400,7 +4400,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "2998444409c64fbdb604fc1fca5010fd",
+        "request_id": "87f122b396cc4d77a958a89884ac2e18",
         "status": "completed",
         "sources": [
           {
@@ -4437,13 +4437,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 27.01,
+          "first_valid_text_ms": 26.38,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 45.83
+          "total_ms": 44.95
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 67.16
+        "elapsed_ms": 48.76
       },
       {
         "id": "P-003",
@@ -4478,7 +4478,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "99606c6d0c3849708c7cc4518157a42b",
+        "request_id": "4f59f045c22441e4a7d8b031c0e1a994",
         "status": "completed",
         "sources": [
           {
@@ -4503,13 +4503,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 29.91,
+          "first_valid_text_ms": 27.02,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 48.13
+          "total_ms": 45.97
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 51.65
+        "elapsed_ms": 71.84
       },
       {
         "id": "P-004",
@@ -4543,7 +4543,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "0b806b4038b34c7f9ee49ee163680d7c",
+        "request_id": "d50b546f9cfb45c088e4098227f6cc31",
         "status": "completed",
         "sources": [
           {
@@ -4604,13 +4604,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 24.45,
+          "first_valid_text_ms": 26.94,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 42.08
+          "total_ms": 46.46
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 45.65
+        "elapsed_ms": 50.43
       },
       {
         "id": "P-005",
@@ -4643,7 +4643,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "ead9259264d04b54bcd6aa6a252482d2",
+        "request_id": "fb2e0661b1dc4cbaacff0873ec35d7ff",
         "status": "completed",
         "sources": [
           {
@@ -4668,13 +4668,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 22.57,
+          "first_valid_text_ms": 27.64,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 38.54
+          "total_ms": 46.69
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 42.17
+        "elapsed_ms": 73.73
       },
       {
         "id": "P-006",
@@ -4708,7 +4708,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "5958adf8a175494f86a5cc373d8c2b7c",
+        "request_id": "f6e9e921fce24b3c89c66402a50411ea",
         "status": "completed",
         "sources": [
           {
@@ -4757,13 +4757,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 24.11,
+          "first_valid_text_ms": 26.64,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 40.74
+          "total_ms": 45.72
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 55.83
+        "elapsed_ms": 49.35
       },
       {
         "id": "P-007",
@@ -4798,7 +4798,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "b7ba246820764e5196c0a2c71f6c8569",
+        "request_id": "6b245365c1a44487afacada945fcba46",
         "status": "completed",
         "sources": [
           {
@@ -4835,13 +4835,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 23.97,
+          "first_valid_text_ms": 25.4,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 42.88
+          "total_ms": 43.38
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 63.5
+        "elapsed_ms": 46.95
       },
       {
         "id": "P-008",
@@ -4876,7 +4876,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "cd325b319d254515ac0f5e95a4938077",
+        "request_id": "eb529fb179c74d2fa39d2462db47f3cf",
         "status": "completed",
         "sources": [
           {
@@ -4937,13 +4937,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 25.97,
+          "first_valid_text_ms": 27.7,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 44.21
+          "total_ms": 46.03
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 48.2
+        "elapsed_ms": 49.97
       },
       {
         "id": "P-009",
@@ -4977,7 +4977,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "db622c28d4de4984960a5ee68dd16316",
+        "request_id": "5073069df4c24c20b6d82f6b5422494a",
         "status": "completed",
         "sources": [
           {
@@ -5014,13 +5014,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 26.87,
+          "first_valid_text_ms": 24.88,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 46.44
+          "total_ms": 42.3
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 49.97
+        "elapsed_ms": 64.23
       },
       {
         "id": "P-010",
@@ -5056,7 +5056,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "bef5603927d74494bcc3d34900be2fdf",
+        "request_id": "787ce36f3fe141e3b04edb2066b977f9",
         "status": "completed",
         "sources": [
           {
@@ -5093,13 +5093,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 25.43,
+          "first_valid_text_ms": 26.16,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 42.28
+          "total_ms": 44.33
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 69.23
+        "elapsed_ms": 48.4
       },
       {
         "id": "R-001",
@@ -5132,7 +5132,7 @@
         "is_refusal": true,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "725a0bf9b558404eb81227d6a3f2955e",
+        "request_id": "71ca95ed93004a62ba6ca50b756a71c1",
         "status": "refused",
         "sources": [],
         "mode": "demo",
@@ -5144,13 +5144,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 22.57,
+          "first_valid_text_ms": 26.33,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 37.74
+          "total_ms": 42.45
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 41.08
+        "elapsed_ms": 45.9
       },
       {
         "id": "R-002",
@@ -5181,7 +5181,7 @@
         "is_refusal": true,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "f72af9ec81144b8cbf7b2258b012942e",
+        "request_id": "2afa6aaf5b7d4cb8a9da54963ad58111",
         "status": "refused",
         "sources": [],
         "mode": "demo",
@@ -5193,13 +5193,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 24.47,
+          "first_valid_text_ms": 26.19,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 39.75
+          "total_ms": 42.18
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 61.88
+        "elapsed_ms": 45.93
       },
       {
         "id": "R-003",
@@ -5231,7 +5231,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "e54bb8d2b4324191bda5c5c115ef717e",
+        "request_id": "6200b41b7291447587feeb8f37942d61",
         "status": "completed",
         "sources": [
           {
@@ -5256,13 +5256,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 24.26,
+          "first_valid_text_ms": 25.69,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 41.54
+          "total_ms": 43.9
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 63.18
+        "elapsed_ms": 47.39
       },
       {
         "id": "R-004",
@@ -5300,7 +5300,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "02b5e721834e42719c8976d6fc5e2128",
+        "request_id": "8ce721190425419297d05b0cac73705d",
         "status": "completed",
         "sources": [
           {
@@ -5325,13 +5325,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 24.3,
+          "first_valid_text_ms": 26.54,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 41.67
+          "total_ms": 44.99
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 45.42
+        "elapsed_ms": 48.62
       },
       {
         "id": "R-005",
@@ -5367,7 +5367,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "a53cb2200f9a484d8244598be9c0f6cf",
+        "request_id": "294424ba47684f87a11d61e0ae7eb86e",
         "status": "completed",
         "sources": [
           {
@@ -5404,13 +5404,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 24.58,
+          "first_valid_text_ms": 26.48,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 42.24
+          "total_ms": 45.02
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 63.07
+        "elapsed_ms": 48.47
       },
       {
         "id": "R-006",
@@ -5442,7 +5442,7 @@
         "is_refusal": true,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "45814e94681247f586af106656ba5328",
+        "request_id": "9773d704e44842d4a52effa8e5c1e05d",
         "status": "refused",
         "sources": [],
         "mode": "demo",
@@ -5454,13 +5454,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 23.96,
+          "first_valid_text_ms": 27.24,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 38.51
+          "total_ms": 43.44
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 42.01
+        "elapsed_ms": 47.16
       },
       {
         "id": "R-007",
@@ -5494,7 +5494,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "fcc948767a5f46d090e2a4bb5a19e3d4",
+        "request_id": "71493d52371a465797f50560156551f8",
         "status": "completed",
         "sources": [
           {
@@ -5555,13 +5555,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 43.19,
+          "first_valid_text_ms": 26.92,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 72.91
+          "total_ms": 46.02
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 76.62
+        "elapsed_ms": 49.71
       },
       {
         "id": "R-008",
@@ -5598,7 +5598,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "6a1c170e93ce4df4a2975e1be54779bc",
+        "request_id": "952f9f631a4e4c3b81ecf5ab62cbd9a1",
         "status": "completed",
         "sources": [
           {
@@ -5635,13 +5635,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 38.14,
+          "first_valid_text_ms": 28.69,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 61.42
+          "total_ms": 47.8
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 66.0
+        "elapsed_ms": 51.23
       },
       {
         "id": "R-009",
@@ -5672,7 +5672,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "4cd2fa6ae2da438d9ecb172f10cc5cd1",
+        "request_id": "3690f82ede3a4f1eb6f5fba47cea8eab",
         "status": "completed",
         "sources": [
           {
@@ -5709,13 +5709,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 37.15,
+          "first_valid_text_ms": 25.77,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 68.47
+          "total_ms": 43.68
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 72.85
+        "elapsed_ms": 62.31
       },
       {
         "id": "R-010",
@@ -5753,7 +5753,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "137251d4177e4873bbcbb7a005ee2d36",
+        "request_id": "63e203a42d684b65bc95b1038ca9865b",
         "status": "completed",
         "sources": [
           {
@@ -5778,13 +5778,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 33.84,
+          "first_valid_text_ms": 25.57,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 54.91
+          "total_ms": 42.45
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 59.9
+        "elapsed_ms": 46.19
       },
       {
         "id": "PR-001",
@@ -5812,7 +5812,7 @@
         "is_refusal": true,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "38e0a6bdc0214e369bc1e2396191b8f1",
+        "request_id": "755c7c798d884314a09a14452e1eb23a",
         "status": "refused",
         "sources": [],
         "mode": "demo",
@@ -5824,13 +5824,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 28.86,
+          "first_valid_text_ms": 24.39,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 42.99
+          "total_ms": 39.2
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 47.52
+        "elapsed_ms": 42.54
       },
       {
         "id": "PR-002",
@@ -5860,7 +5860,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "d568d47dd0384796b4218546a7441e1e",
+        "request_id": "df95981ad2cb44d49ba1db1749b2b9af",
         "status": "completed",
         "sources": [
           {
@@ -5897,13 +5897,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 24.19,
+          "first_valid_text_ms": 25.99,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 41.46
+          "total_ms": 43.98
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 44.98
+        "elapsed_ms": 69.03
       },
       {
         "id": "PR-003",
@@ -5933,7 +5933,7 @@
         "is_refusal": true,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "2ae14b870f2240e3aefacd17bc134e9b",
+        "request_id": "1e5699560f1e4ebab917d6ab743ef7f2",
         "status": "refused",
         "sources": [],
         "mode": "demo",
@@ -5945,13 +5945,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 26.27,
+          "first_valid_text_ms": 23.79,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 42.0
+          "total_ms": 38.11
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 65.06
+        "elapsed_ms": 41.56
       },
       {
         "id": "PR-004",
@@ -5981,7 +5981,7 @@
         "is_refusal": true,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "e14ad4c859624da988ccf216d2db3dd4",
+        "request_id": "97780c33ead54d02b706318e0ac87563",
         "status": "refused",
         "sources": [],
         "mode": "demo",
@@ -5993,13 +5993,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 26.62,
+          "first_valid_text_ms": 25.19,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 42.49
+          "total_ms": 40.47
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 46.2
+        "elapsed_ms": 43.83
       },
       {
         "id": "PR-005",
@@ -6027,7 +6027,7 @@
         "is_refusal": true,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "17d7c7aa469a4d1fb983681c064a3967",
+        "request_id": "f37e9c86094940358a4f3c85068e189a",
         "status": "refused",
         "sources": [],
         "mode": "demo",
@@ -6039,13 +6039,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 24.68,
+          "first_valid_text_ms": 26.05,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 41.36
+          "total_ms": 41.7
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 44.59
+        "elapsed_ms": 67.44
       },
       {
         "id": "PR-006",
@@ -6080,7 +6080,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "b1195bb42fe74826aa38f8888137d1dd",
+        "request_id": "cb79812de39e4dd5ae0227d3341568d0",
         "status": "completed",
         "sources": [
           {
@@ -6141,13 +6141,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 26.31,
+          "first_valid_text_ms": 27.11,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 44.42
+          "total_ms": 45.57
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 63.73
+        "elapsed_ms": 65.86
       },
       {
         "id": "PR-007",
@@ -6178,7 +6178,7 @@
         "is_refusal": true,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "433829dc81354db9818131414f0d7717",
+        "request_id": "bc8a325565b446b68480f5d7141f00d2",
         "status": "refused",
         "sources": [],
         "mode": "demo",
@@ -6190,13 +6190,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 25.25,
+          "first_valid_text_ms": 24.39,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 41.44
+          "total_ms": 39.93
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 44.68
+        "elapsed_ms": 43.55
       },
       {
         "id": "PR-008",
@@ -6226,7 +6226,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "7575b560e464447085d10d3c95bdf941",
+        "request_id": "7853aabca727401a982570db2488c383",
         "status": "completed",
         "sources": [
           {
@@ -6275,13 +6275,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 25.64,
+          "first_valid_text_ms": 24.18,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 43.08
+          "total_ms": 41.37
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 46.62
+        "elapsed_ms": 60.19
       },
       {
         "id": "PR-009",
@@ -6310,7 +6310,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "6c54afaf271a4c8888622c0e32daf760",
+        "request_id": "1142eb01e644408e9098456ac1907df5",
         "status": "completed",
         "sources": [
           {
@@ -6335,13 +6335,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 24.41,
+          "first_valid_text_ms": 25.31,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 42.74
+          "total_ms": 42.99
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 60.06
+        "elapsed_ms": 46.35
       },
       {
         "id": "PR-010",
@@ -6371,7 +6371,7 @@
         "is_refusal": true,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "93204e74bafc44a8a95357b5a9276d18",
+        "request_id": "6d704218c3d245ce8723426ca8b38250",
         "status": "refused",
         "sources": [],
         "mode": "demo",
@@ -6383,13 +6383,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 26.24,
+          "first_valid_text_ms": 24.52,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 42.08
+          "total_ms": 39.63
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 45.86
+        "elapsed_ms": 60.1
       },
       {
         "id": "B-001",
@@ -6413,7 +6413,7 @@
         "is_refusal": true,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "bed81ce2bf064e3ca527bb7172dfdc08",
+        "request_id": "6fc70ef9b737449daf3cdc961a475f9b",
         "status": "refused",
         "sources": [],
         "mode": "demo",
@@ -6425,13 +6425,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 27.89,
+          "first_valid_text_ms": 24.28,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 43.34
+          "total_ms": 39.37
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 47.69
+        "elapsed_ms": 42.64
       },
       {
         "id": "B-002",
@@ -6455,7 +6455,7 @@
         "is_refusal": true,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "d93e2f2871c64ddfb4bd9243471c957e",
+        "request_id": "573223623a1b410d986907a7fab934bf",
         "status": "refused",
         "sources": [],
         "mode": "demo",
@@ -6467,13 +6467,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 25.39,
+          "first_valid_text_ms": 25.12,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 40.51
+          "total_ms": 39.91
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 57.27
+        "elapsed_ms": 43.73
       },
       {
         "id": "B-003",
@@ -6497,7 +6497,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "440c27e6057646ce8db929f78d8f138a",
+        "request_id": "6d37c31ccfe9421298f92ba95884b81d",
         "status": "completed",
         "sources": [
           {
@@ -6522,13 +6522,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 23.3,
+          "first_valid_text_ms": 25.1,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 40.35
+          "total_ms": 41.1
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 43.82
+        "elapsed_ms": 44.82
       },
       {
         "id": "B-004",
@@ -6552,7 +6552,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "8805863c5ee849c082ef92a03cd4d122",
+        "request_id": "d8307d259bf847f2a653e3a215254a69",
         "status": "completed",
         "sources": [
           {
@@ -6577,13 +6577,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 24.46,
+          "first_valid_text_ms": 23.4,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 41.79
+          "total_ms": 39.84
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 45.35
+        "elapsed_ms": 68.46
       },
       {
         "id": "B-005",
@@ -6607,7 +6607,7 @@
         "is_refusal": true,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "11002d54bbf640c380d79a43204e9d27",
+        "request_id": "4ce0643fe2554c589d96ae738189b878",
         "status": "refused",
         "sources": [],
         "mode": "demo",
@@ -6619,13 +6619,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 25.24,
+          "first_valid_text_ms": 23.7,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 40.74
+          "total_ms": 38.3
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 63.31
+        "elapsed_ms": 60.23
       },
       {
         "id": "B-006",
@@ -6649,7 +6649,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "c83f3ba0110b48c98cf50b41b193b9d6",
+        "request_id": "4f5b0bdd092f4e5b88096634c58e0a3c",
         "status": "completed",
         "sources": [
           {
@@ -6698,13 +6698,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 26.71,
+          "first_valid_text_ms": 24.69,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 44.96
+          "total_ms": 42.33
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 65.41
+        "elapsed_ms": 45.59
       },
       {
         "id": "B-007",
@@ -6728,7 +6728,7 @@
         "is_refusal": true,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "e68a759fa6524448baa71a9dc4d81c97",
+        "request_id": "80d37ca329af47308b10ae028bf647f2",
         "status": "refused",
         "sources": [],
         "mode": "demo",
@@ -6740,13 +6740,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 26.58,
+          "first_valid_text_ms": 26.99,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 43.29
+          "total_ms": 42.32
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 58.94
+        "elapsed_ms": 45.56
       },
       {
         "id": "B-008",
@@ -6770,7 +6770,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "bae2fdde7da741ab8d96f65e1d205c3d",
+        "request_id": "169a199810724883b50863db5356db92",
         "status": "completed",
         "sources": [
           {
@@ -6795,13 +6795,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 25.39,
+          "first_valid_text_ms": 25.4,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 43.46
+          "total_ms": 44.46
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 47.02
+        "elapsed_ms": 48.27
       },
       {
         "id": "B-009",
@@ -6825,7 +6825,7 @@
         "is_refusal": false,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "5f574165c03d40ff9cf82fcce82b02c1",
+        "request_id": "0e69e42976c540cda47b69e4c83655a9",
         "status": "completed",
         "sources": [
           {
@@ -6850,13 +6850,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 22.99,
+          "first_valid_text_ms": 25.77,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 38.99
+          "total_ms": 44.15
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 55.34
+        "elapsed_ms": 68.61
       },
       {
         "id": "B-010",
@@ -6880,7 +6880,7 @@
         "is_refusal": true,
         "factual_correctness": null,
         "citation_support": null,
-        "request_id": "e8ce8b62eae04b4abafd39c9d44b89d4",
+        "request_id": "6d7651094fdf4315b0cf97d21e18d1da",
         "status": "refused",
         "sources": [],
         "mode": "demo",
@@ -6892,13 +6892,13 @@
           "rejected_citations": 0
         },
         "timings": {
-          "first_valid_text_ms": 23.57,
+          "first_valid_text_ms": 24.15,
           "first_content_audio_ready_ms": null,
           "first_actual_audio_ms": null,
-          "total_ms": 36.62
+          "total_ms": 39.09
         },
         "knowledge_revision": 0,
-        "elapsed_ms": 58.86
+        "elapsed_ms": 58.41
       }
     ]
   }

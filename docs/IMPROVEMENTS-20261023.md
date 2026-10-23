@@ -4,11 +4,11 @@
 
 ## 评测修复与实际基线
 
-先新增四项失败回归，复现超时拒答题遗漏should_refuse导致分母0且显示1.0、无样本显示满分、错误JSON当答案评分、关键词命中掩盖正常题错误拒答。再修复评测器，增加后端字段/终态协议校验、env凭据、禁用TTS、每题随机独立capability和完整失败元数据；本轮评测契约共7项回归通过。/send返回request_id以与SSE一致。
+先新增四项失败回归，复现超时拒答题遗漏should_refuse导致分母0且显示1.0、无样本显示满分、错误JSON当答案评分、关键词命中掩盖正常题错误拒答。再修复评测器，增加后端字段/终态协议校验、env凭据、禁用TTS、每题随机独立capability和完整失败元数据；本轮评测契约共8项回归通过。/send返回request_id以与SSE一致。
 
 报告在 reports/eval：baseline是评测器修好后、口型和证据改进前的无Key基线；final是完整改进后的复跑。pre-fingerprint-fix保留一轮运行身份路径错误的中间报告，不作为最终运行身份依据；随后先以失败回归复现空哈希，再修正项目根路径。最终报告记录评测器及服务Git SHA、服务源码哈希、数据集校验、知识SQL版本0和快照ID。dirty标记如实保留（当时仅有未提交报告/后续文档等），不冒充干净发布构建。
 
-两份原始数据集均100题，SHA-256为c4344d97e5ea7d72910cf958dc33e1c187467228cec13e645642d3b93580f7f7，原题与参考答案均未修改。最终运行的服务与评测器代码SHA为57ef7bb436e2a2a6df168a4f97c462bd0ccd39c8；后续提交只补前端边界、文档和报告，CI另会用其实际SHA执行。
+两份原始数据集均100题，SHA-256为c4344d97e5ea7d72910cf958dc33e1c187467228cec13e645642d3b93580f7f7，原题与参考答案均未修改。最终报告中服务代码SHA为57ef7bb436e2a2a6df168a4f97c462bd0ccd39c8，评测器SHA为c8c96426ae65708abea9bb4ac0214c5099930109（后续补了来源子字段的协议校验，不改评分规则）。二者各自记录，未冒充同一运行提交；服务应用源码哈希不变，CI另用其实际SHA执行。
 
 - 请求成功100/100。这里要求字段有效且终态completed/refused；partial/failed/cancelled保留原文但不算请求成功，不参与答案评分，仍保留分母。
 - 90道非拒答题中，关键词组命中比例至少0.6的29题，规则通过率32.22%。纯数字按数值边界匹配，同组为别名；正常题错误拒答另记，不能据此称语义或事实准确率。
@@ -42,7 +42,7 @@
 
 ## 验证与未验证范围
 
-执行：`python -m pytest tests/backend -q --junitxml=test-results/backend.xml`（54项，2条依赖弃用提示）；`npm test`（16项）；`npm run build`（共享TS类型检查、15页/27脚本）；`python scripts/smoke_demo.py --base-url http://127.0.0.1:8093`（本地摘录、合成音、游客隔离通过）；两轮全部100题后端规则诊断；固定WAV实际浏览器验收与连续提问/停止交互。
+执行：`python -m pytest tests/backend -q --junitxml=test-results/backend.xml`（55项，2条依赖弃用提示）；`npm test`（16项）；`npm run build`（共享TS类型检查、15页/27脚本）；`python scripts/smoke_demo.py --base-url http://127.0.0.1:8093`（本地摘录、合成音、游客隔离通过）；两轮全部100题后端规则诊断；固定WAV实际浏览器验收与连续提问/停止交互。
 
 CI运行Windows/Linux后端、前端交互/类型/构建、Docker构建与演示冒烟，以及Docker内100题无Key诊断（TTS关闭，报告artifact，协议/请求失败阻断，规则分数不作为质量门禁）。固定WAV真实浏览器验收不是CI浏览器测试；pytest只自动验证固定音频的真实静音采样，Vitest验证时间轴/暂停/取消/队列。
 

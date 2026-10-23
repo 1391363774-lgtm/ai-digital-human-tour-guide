@@ -45,7 +45,7 @@ cd ..
 ./.venv/Scripts/python.exe scripts/smoke_demo.py --base-url http://127.0.0.1:8080
 ```
 
-2026-10-23 本轮通过 54 个后端、16 个前端回归，TypeScript 共享运行时类型检查及 15 页静态构建。测试不调用外部模型；真实 socket 回归检查进度/取消。100 题后端无 Key 基线已实际执行：请求成功100/100，关键词规则通过29/90，应拒答题5/10，正常题错误拒答14/90。它们不是事实或语义准确率，失败题全部保留；见[本轮记录](docs/IMPROVEMENTS-20261023.md)及[逐题报告](reports/eval/20261023-final.json)。
+2026-10-23 本轮通过 55 个后端、16 个前端回归，TypeScript 共享运行时类型检查及 15 页静态构建。测试不调用外部模型；真实 socket 回归检查进度/取消。100 题后端无 Key 基线已实际执行：请求成功100/100，关键词规则通过29/90，应拒答题5/10，正常题错误拒答14/90。它们不是事实或语义准确率，失败题全部保留；见[本轮记录](docs/IMPROVEMENTS-20261023.md)及[逐题报告](reports/eval/20261023-final.json)。
 
 评测命令：`python 评测包/eval.py --mode backend --api-url http://127.0.0.1:8080/api/chat/send --dataset data/eval/qa_testset.json --output .runtime/eval.json`。默认关闭TTS，每题使用独立游客凭据；直接模型模式用 `--mode openai --api-key-env EVAL_API_KEY --model <名称>`，不与后端RAG或浏览器离线结果混报。输出逐题JSON、汇总CSV、完整失败题；无适用样本以JSON null／CSV N/A表示。
 
