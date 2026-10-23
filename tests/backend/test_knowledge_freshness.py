@@ -84,3 +84,30 @@ def test_failed_build_never_publishes_half_index(client,monkeypatch):
     monkeypatch.setattr(rag_service,'_load_or_embed',fail)
     with pytest.raises(RuntimeError): client.portal.call(rag_service.build)
     assert rag_service._snapshot is snapshot
+
+
+def test_another_process_commit_refreshes_current_worker(client,tmp_path):
+    import subprocess,sys
+    script="""import sqlite3,sys
+db=sqlite3.connect(sys.argv[1])
+db.execute("INSERT INTO knowledge_items(category,title,content,source,status) VALUES(?,?,?,?,?)",('test','跨进程蓝鲸馆','跨进程公开测试资料','manual','published'))
+db.execute('UPDATE knowledge_revision SET value=value+1 WHERE id=1')
+db.commit()
+db.close()
+"""
+    before=rag_service.status['revision']
+    subprocess.run([sys.executable,'-c',script,str(tmp_path/'test.db')],check=True,capture_output=True)
+    assert any(c['title']=='跨进程蓝鲸馆' for c in search(client,'跨进程蓝鲸馆'))
+    assert rag_service.status['revision']>before
+
+
+def test_failed_transaction_does_not_publish_revision(client,monkeypatch):
+    import pytest
+    from sqlalchemy.ext.asyncio import AsyncSession
+    item=create(client);search(client,'蓝鲸回归馆')
+    before=client.portal.call(rag_service._state)
+    async def fail(_): raise RuntimeError('injected commit failure')
+    monkeypatch.setattr(AsyncSession,'commit',fail)
+    with pytest.raises(RuntimeError): client.put(f'/api/knowledge/items/{item}',headers=ADMIN,json={'content':'不应发布的新内容'})
+    assert client.portal.call(rag_service._state)==before
+    assert all('不应发布' not in c['content'] for c in search(client,'蓝鲸回归馆'))

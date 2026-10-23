@@ -7,3 +7,11 @@
 本版默认使用 Live2D Natori，另外提供 Haru/Hiyori。保留 vendor SDK 文件头及模型结构；Cubism Core、模型样例、pixi-live2d-display、PIXI 的许可彼此不同。应逐项核对官方条款、样例使用条件和署名，不能用“可下载”代替发布授权。SDK 和模型许可未核实完成是合并前人工审核事项。
 
 无真实游客数据库、聊天、私人录音、Key、TTS/向量缓存或 AI 模型权重。原数据报告和游客行为表格未纳入新基准。旧公开资料保留在备份分支；用途不明的技术文档保留 docs/legacy，均为历史资料。
+
+2026-10-23 已阅读上游入口，仍需团队核对其实际获取渠道、适用版本及项目用途：
+
+- [Cubism Core 官方协议](https://www.live2d.com/eula/live2d-proprietary-software-license-agreement_en.html)
+- [Live2D 样例模型与各项使用条件入口](https://www.live2d.com/en/learn/sample/)
+- [pixi-live2d-display 原项目许可证](https://github.com/guansss/pixi-live2d-display/blob/master/LICENSE)
+
+没有代替用户接受协议、购买许可或宣称已取得额外授权。构建产物保留本地 vendor 原文件头，并复制新引入 Lucide、ECharts 包的 LICENSE。依赖安装/CI 下载不等于模型与景区素材的再分发权已确认。
