@@ -148,9 +148,16 @@ def main():
         sha=subprocess.check_output(['git','rev-parse','HEAD'],cwd=SCRIPT_DIR,text=True,stderr=subprocess.DEVNULL).strip()
         dirty=bool(subprocess.check_output(['git','status','--porcelain'],cwd=SCRIPT_DIR,text=True))
     except (OSError,subprocess.CalledProcessError): sha,dirty=None,None
+    backend_status=None
+    if args.mode=='backend':
+        try:
+            status_url=urllib.parse.urlunsplit((url.scheme,url.netloc,'/api/status','',''))
+            with urllib.request.urlopen(status_url,timeout=10) as response: status=json.loads(response.read())
+            backend_status={k:status.get(k) for k in ('runtime','demo_mode','rag')}
+        except (OSError,ValueError): backend_status={'unavailable':True}
     summary=run_eval(dataset,args)
     report={'timestamp':datetime.now(timezone.utc).isoformat(),'git_sha':sha,'working_tree_dirty':dirty,'dataset_sha256':hashlib.sha256(raw).hexdigest(),'dataset_size':len(dataset),
-        'scope':{'backend':'backend_rag_http','openai':'direct_model','custom':'custom_http'}[args.mode],'browser_offline_evaluated':False,'api_url':args.api_url,
+        'scope':{'backend':'backend_rag_http','openai':'direct_model','custom':'custom_http'}[args.mode],'backend_status':backend_status,'browser_offline_evaluated':False,'api_url':args.api_url,
         'tts_enabled':False if args.mode=='backend' else None,'session_isolation':'fresh_capability_per_question' if args.mode=='backend' else 'independent_request',
         'scoring_rules':{'keyword_threshold':PASS_THRESHOLD,'keywords_are_semantic_accuracy':False,'request_failures_remain_in_denominators':True,'refusal':'refused terminal or text markers','no_applicable_samples':None,'factual_review':'not performed','relevance_labels':'not provided'},
         'knowledge_revisions':sorted({s.get('revision') for r in summary['results'] for s in (r.get('sources') or []) if s.get('revision') is not None}),'summary':summary}

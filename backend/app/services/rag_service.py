@@ -334,7 +334,9 @@ class RagService:
 
     @property
     def status(self):
-        return {'ready':self.ready,'chunks':len(self._snapshot['chunks']) if self.ready else 0,'engine':self.engine_mode,'revision':self._snapshot['state'][0] if self.ready else None,'embedding_model':settings.EMBEDDING_MODEL if self.vectors is not None else None,'build_time_s':round(self.build_time,2)}
+        return {'ready':self.ready,'chunks':len(self._snapshot['chunks']) if self.ready else 0,'engine':self.engine_mode,'revision':self._snapshot['state'][0] if self.ready else None,
+                'snapshot_id':hashlib.sha256('|'.join(c['chunk_id'] for c in self._snapshot['chunks']).encode()).hexdigest() if self.ready else None,
+                'embedding_model':settings.EMBEDDING_MODEL if self.vectors is not None else None,'build_time_s':round(self.build_time,2)}
 
 
 rag_service=RagService()

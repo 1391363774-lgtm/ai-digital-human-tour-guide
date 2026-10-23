@@ -5,6 +5,9 @@
 from contextlib import asynccontextmanager
 from pathlib import Path
 import uuid
+import hashlib
+import os
+import subprocess
 
 from fastapi import FastAPI,HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -16,6 +19,24 @@ from app.core.config import settings
 from app.core.access import admin_route,require_admin,visitor_owner
 from app.core.database import init_db
 from app.services.rag_service import rag_service
+
+
+def runtime_identity():
+    root=Path(__file__).resolve().parents[3]
+    digest=hashlib.sha256()
+    for path in sorted((root/'backend/app').rglob('*.py')):
+        digest.update(path.relative_to(root).as_posix().encode()); digest.update(path.read_bytes())
+    sha=os.environ.get('GUIDE_BUILD_SHA')
+    dirty=None
+    if not sha:
+        try:
+            sha=subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True,stderr=subprocess.DEVNULL).strip()
+            dirty=bool(subprocess.check_output(['git','status','--porcelain'],cwd=root,text=True,stderr=subprocess.DEVNULL))
+        except (OSError,subprocess.CalledProcessError): pass
+    return {'git_sha':sha,'working_tree_dirty_at_start':dirty,'backend_sha256':digest.hexdigest()}
+
+
+RUNTIME_IDENTITY=runtime_identity()
 
 
 @asynccontextmanager
@@ -71,6 +92,7 @@ async def health_check():
 async def system_status():
     from app.services.llm_service import llm_service
     return {
+        'runtime':RUNTIME_IDENTITY,
         'demo_mode':settings.DEMO_MODE,
         "llm_available": llm_service.available,
         "llm_model": settings.LLM_MODEL,
