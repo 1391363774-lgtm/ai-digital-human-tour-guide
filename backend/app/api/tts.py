@@ -40,7 +40,7 @@ async def get_audio(key: str, access: str = ''):
     path = tts_service.authorized_audio(key, access)
     if not path:
         raise HTTPException(404, "音频不存在")
-    return FileResponse(path, media_type="audio/mpeg")
+    return FileResponse(path, media_type="audio/wav" if path.suffix=='.wav' else "audio/mpeg",headers={'Cache-Control':'private, no-store'})
 
 
 @router.get("/voices")

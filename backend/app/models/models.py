@@ -21,6 +21,8 @@ class ChatMessage(Base):
     content = Column(Text)
     audio_url = Column(String(500), nullable=True)
     intent = Column(String(50), nullable=True)
+    outcome = Column(String(20), nullable=False, default='completed', server_default='completed')
+    request_id = Column(String(32), nullable=True, index=True)
     created_at = Column(DateTime, server_default=func.now())
 
 

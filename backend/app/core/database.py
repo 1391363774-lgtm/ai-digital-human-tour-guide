@@ -26,6 +26,14 @@ async def init_db():
     from app.models import models  # noqa: F401 - 确保模型已注册
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+        if conn.dialect.name == 'sqlite':
+            # Additive upgrade for databases created by this new-source baseline.
+            from sqlalchemy import text
+            columns={row[1] for row in (await conn.execute(text('PRAGMA table_info(chat_messages)'))).all()}
+            if 'outcome' not in columns:
+                await conn.execute(text("ALTER TABLE chat_messages ADD COLUMN outcome VARCHAR(20) NOT NULL DEFAULT 'completed'"))
+            if 'request_id' not in columns:
+                await conn.execute(text('ALTER TABLE chat_messages ADD COLUMN request_id VARCHAR(32)'))
     from app.models.models import KnowledgeRevision
     from sqlalchemy.exc import IntegrityError
     async with async_session() as db:

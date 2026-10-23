@@ -1,14 +1,18 @@
 """
 对话编排服务 - 全链路流式管线
 游客提问 → RAG检索 → LLM流式生成 → 按句切分 → 逐句TTS+口型时间轴 → SSE推送
-首句音频通常在1.5~2.5秒内就绪,满足赛题"语音问答延迟<5秒"硬指标。
+延迟必须实际测量；承接语音频不能当作模型内容首音频指标。
 """
 import asyncio
 import re
 import time
+import uuid
+import logging
+from contextlib import aclosing
+import anyio
 from typing import AsyncGenerator, Dict, List, Optional
 
-from sqlalchemy import select
+from sqlalchemy import select,update
 
 from app.core.database import async_session
 from app.models.models import ChatMessage, ChatSession, TouristFeedback
@@ -17,8 +21,8 @@ from app.services.rag_service import rag_service
 from app.services.sentiment import analyze_sentiment
 from app.services.tts_service import tts_service
 
-SENTENCE_END = re.compile(r"([。!?!?；;])")
-CLAUSE_END = re.compile(r"([。!?!?；;,,、])")
+SENTENCE_END = re.compile(r"([。！？!?；;])")
+CLAUSE_END = re.compile(r"([。！？!?；;，,、])")
 VALID_CHAR = re.compile(r"[一-鿿a-zA-Z0-9]")
 
 # 承接语池:提问瞬间先行开口(音频有缓存,二次触发合成≈0ms),
@@ -50,21 +54,23 @@ class ChatService:
             return s.id
 
     async def _save_message(self, session_id: int, role: str, content: str,
-                            intent: Optional[str] = None):
+                            intent: Optional[str] = None, outcome: str = 'completed', request_id: str | None = None):
         async with async_session() as db:
             db.add(ChatMessage(session_id=session_id, role=role,
-                               content=content, intent=intent))
+                               content=content, intent=intent, outcome=outcome, request_id=request_id))
             await db.commit()
 
     async def _log_feedback(self, tourist_id: str, question: str, answer: str):
         sentiment, score = analyze_sentiment(question)
         async with async_session() as db:
-            db.add(TouristFeedback(tourist_id=tourist_id, question=question,
+            row=TouristFeedback(tourist_id=tourist_id, question=question,
                                    answer=answer[:500], satisfaction=None,
-                                   sentiment=sentiment))
+                                   sentiment=sentiment)
+            db.add(row)
             await db.commit()
+            return row.id
 
-    async def get_history(self, tourist_id: str, limit: int = 6) -> List[Dict]:
+    async def get_history(self, tourist_id: str, limit: int = 6, model_context: bool = False) -> List[Dict]:
         async with async_session() as db:
             q = select(ChatSession).where(ChatSession.tourist_id == tourist_id) \
                 .order_by(ChatSession.id.desc()).limit(1)
@@ -73,8 +79,10 @@ class ChatService:
                 return []
             q2 = select(ChatMessage).where(ChatMessage.session_id == session.id) \
                 .order_by(ChatMessage.id.desc()).limit(limit)
+            if model_context:
+                q2=q2.where(ChatMessage.outcome.in_(['completed','refused']))
             rows = (await db.execute(q2)).scalars().all()
-            return [{"role": r.role, "content": r.content} for r in reversed(rows)]
+            return [{"role": r.role, "content": r.content, 'outcome':r.outcome, 'request_id':r.request_id} for r in reversed(rows)]
 
     # ---------------- 意图识别 ----------------
     @staticmethod
@@ -93,154 +101,121 @@ class ChatService:
                 return key
         return "general"
 
-    # ---------------- 主流式管线 ----------------
-    async def stream_pipeline(
-        self,
-        query: str,
-        tourist_id: str = "guest",
-        interest: Optional[str] = None,
-        time_budget: Optional[str] = None,
-        companions: Optional[str] = None,
-    ) -> AsyncGenerator[Dict, None]:
-        """
-        SSE事件流:
-          meta     {sources, intent, engine}
-          emotion  {emotion}
-          delta    {text}           增量文本(打字机效果)
-          sentence {index, text, audio_url, visemes, duration_ms}  逐句语音+口型
-          done     {full_text, latency_ms}
-          error    {message}
-        """
-        t0 = time.time()
-        intent = self.detect_intent(query)
+    async def stream_pipeline(self, query: str, tourist_id: str = 'guest', interest=None,
+                              time_budget=None, companions=None, tts_enabled=True):
+        """Bounded speech work; explicit partial/refused/cancelled outcomes; close upstream on exit."""
+        started=time.monotonic()
+        request_id=uuid.uuid4().hex
+        session_id=await self._ensure_session(tourist_id)
+        history=await self.get_history(tourist_id,model_context=True)
+        await self._save_message(session_id,'user',query,outcome='generating',request_id=request_id)
+        answer=''
+        emotion='calm'
+        status='failed'
+        pending={}
+        index=0
+        feedback_id=None
+        persisted=False
+        sources=[]
 
-        # 1. RAG检索 与 承接语TTS 并发执行(承接语几乎瞬时缓存命中)
-        prelude_text = PRELUDE_PHRASES[hash(tourist_id + query) % len(PRELUDE_PHRASES)]
-        chunks, prelude_meta = await asyncio.gather(
-            rag_service.retrieve(query),
-            tts_service.synthesize(prelude_text),
-        )
-        prelude_meta = tts_service.grant_audio(prelude_meta)
-        yield {"type": "meta", "intent": intent,
-               "engine": rag_service.engine_mode,
-               "sources": [{"title": c["title"], "score": c["score"]} for c in chunks]}
+        async def synth(idx,text,prelude):
+            try:
+                meta=await asyncio.wait_for(tts_service.synthesize(text),timeout=12)
+                meta=tts_service.grant_audio(meta)
+            except Exception:
+                meta={'ok':False,'engine':'none','reason':'语音合成暂不可用'}
+            return {'type':'sentence','index':idx,'text':text,'prelude':prelude,'audio_url':meta.get('audio_url'),
+                    'tts_ok':meta.get('ok',False),'visemes':meta.get('visemes',[]),'duration_ms':meta.get('duration_ms',0),
+                    'engine':meta.get('engine','none'),'request_id':request_id}
 
-        # 承接语立即下发(序号-1,前端插入队首,数字人秒开口)
-        yield {"type": "sentence", "index": -1, "text": prelude_text,
-               "audio_url": prelude_meta.get("audio_url"),
-               "tts_ok": prelude_meta.get("ok", False),
-               "visemes": prelude_meta.get("visemes", []),
-               "duration_ms": prelude_meta.get("duration_ms", 0),
-               "prelude": True}
+        async def enqueue(text,prelude=False):
+            nonlocal index
+            if not tts_enabled or not VALID_CHAR.search(text): return
+            if len(pending)>=4:
+                oldest=next(iter(pending))
+                yield await pending.pop(oldest)
+            idx=-1 if prelude else index
+            if not prelude: index+=1
+            pending[idx]=asyncio.create_task(synth(idx,text,prelude))
 
-        # 2. 历史上下文
-        session_id = await self._ensure_session(tourist_id)
-        history = await self.get_history(tourist_id)
-
-        # 3. LLM流式 + 情绪标签截获 + 按句切分 + 逐句TTS(就绪即推,不等全文)
-        full_text = ""
-        display_text = ""
-        emotion = "calm"
-        sentence_buf = ""
-        sentence_idx = 0
-        head_buf = ""           # 用于截获开头的[emotion:x]
-        head_resolved = False
-        pending: Dict[int, asyncio.Task] = {}   # idx -> TTS任务
-        next_yield = 0                           # 下一个待推送的句子序号
-
-        async def synth(idx: int, text: str):
-            meta = tts_service.grant_audio(await tts_service.synthesize(text))
-            return idx, text, meta
-
-        def make_sentence_events(idx: int, text: str, meta: Dict) -> Dict:
-            return {"type": "sentence", "index": idx, "text": text,
-                    "audio_url": meta.get("audio_url"),
-                    "tts_ok": meta.get("ok", False),
-                    "visemes": meta.get("visemes", []),
-                    "duration_ms": meta.get("duration_ms", 0)}
-
-        def dispatch_sentence(text: str):
-            """切出一句并发起并发TTS"""
-            nonlocal sentence_idx
-            pending[sentence_idx] = asyncio.create_task(synth(sentence_idx, text))
-            sentence_idx += 1
-
-        async for token in llm_service.stream_chat(
-                query, chunks, history, interest, time_budget, companions):
-            full_text += token
-
-            # --- 截获情感标签(在首个']'出现前都在头部缓冲) ---
-            if not head_resolved:
-                head_buf += token
-                if "]" in head_buf:
-                    emotion = parse_emotion(head_buf)
-                    remainder = strip_emotion(head_buf)
-                    head_resolved = True
-                    yield {"type": "emotion", "emotion": emotion}
-                    if remainder:
-                        token = remainder
-                    else:
-                        continue
-                elif len(head_buf) > 20:  # LLM未输出标签,放弃截获
-                    head_resolved = True
-                    yield {"type": "emotion", "emotion": emotion}
-                    token = head_buf
-                else:
-                    continue
-
-            display_text += token
-            sentence_buf += token
-            yield {"type": "delta", "text": token}
-
-            # 切句:强终止符直接切;逗号在缓冲超阈值时切
-            # 首句(sentence_idx==0)无阈值——"阿弥陀佛,"式开场白立即开口,数字人秒响应
-            hard = SENTENCE_END.split(sentence_buf)
-            while len(hard) >= 2:
-                sent = hard.pop(0) + hard.pop(0)
-                sentence_buf = "".join(hard)
-                if VALID_CHAR.search(sent):
-                    dispatch_sentence(sent.strip())
-            threshold = 28 if sentence_idx > 0 else 0
-            if len(sentence_buf) > threshold:
-                soft = CLAUSE_END.split(sentence_buf)
-                if len(soft) >= 2:
-                    sent = soft[0] + soft[1]
-                    sentence_buf = "".join(soft[2:])
-                    if VALID_CHAR.search(sent):
-                        dispatch_sentence(sent.strip())
-
-            # 就绪的句子立刻按序推送(核心:不等LLM全文生成完)
-            while next_yield in pending and pending[next_yield].done():
-                idx, text, meta = pending.pop(next_yield).result()
-                yield make_sentence_events(idx, text, meta)
-                next_yield += 1
-
-        if not head_resolved:
-            yield {"type": "emotion", "emotion": emotion}
-
-        # 尾句
-        tail = sentence_buf.strip()
-        if VALID_CHAR.search(tail):
-            dispatch_sentence(tail)
-
-        # 4. 收尾:按序等待并推送剩余句子
-        while next_yield < sentence_idx:
-            idx, text, meta = await pending.pop(next_yield)
-            yield make_sentence_events(idx, text, meta)
-            next_yield += 1
-
-        # 5. 持久化 + 情感记录(后台执行不阻塞)
-        latency = int((time.time() - t0) * 1000)
-        clean_answer = strip_emotion(full_text).strip()
         try:
-            await self._save_message(session_id, "user", query, intent)
-            await self._save_message(session_id, "assistant", clean_answer)
-            await self._log_feedback(tourist_id, query, clean_answer)
-        except Exception as e:
-            print(f"[Chat] 持久化失败: {e}")
+            chunks=await rag_service.retrieve(query)
+            sources=[{k:c[k] for k in ('title','source','score','content','chunk_id','revision') if k in c} for c in chunks]
+            generation=rag_service.status.get('revision')
+            yield {'type':'meta','intent':self.detect_intent(query),'engine':rag_service.engine_mode,'sources':sources,'request_id':request_id}
+            if not chunks:
+                answer='抱歉，本地景区知识库没有找到可靠依据，请换个问法或咨询景区工作人员。'
+                status='refused'
+                yield {'type':'delta','text':answer,'request_id':request_id}
+                async for evt in enqueue(answer): yield evt
+            else:
+                async for evt in enqueue(PRELUDE_PHRASES[hash(tourist_id+query)%len(PRELUDE_PHRASES)],True): yield evt
+                head=''
+                resolved=False
+                sentence=''
+                async with aclosing(llm_service.stream_chat(query,chunks,history,interest,time_budget,companions)) as stream:
+                    async for token in stream:
+                        if not resolved:
+                            head+=token
+                            if head.startswith('[emotion:') and ']' in head:
+                                emotion=parse_emotion(head)
+                                token=strip_emotion(head)
+                            elif '[emotion:'.startswith(head) or head.startswith('[emotion:') and len(head)<32:
+                                continue
+                            else: token=head
+                            resolved=True
+                            yield {'type':'emotion','emotion':emotion,'request_id':request_id}
+                        if not token: continue
+                        answer+=token
+                        if len(answer)>6000: raise RuntimeError('answer limit')
+                        sentence+=token
+                        yield {'type':'delta','text':token,'request_id':request_id}
+                        parts=SENTENCE_END.split(sentence)
+                        while len(parts)>=2:
+                            sent=parts.pop(0)+parts.pop(0)
+                            async for evt in enqueue(sent.strip()): yield evt
+                        sentence=''.join(parts)
+                        if len(sentence)>160:
+                            async for evt in enqueue(sentence[:160]): yield evt
+                            sentence=sentence[160:]
+                        while pending and pending[next(iter(pending))].done():
+                            yield await pending.pop(next(iter(pending)))
+                if not resolved and head:
+                    answer=head
+                    sentence=head
+                    yield {'type':'delta','text':head,'request_id':request_id}
+                if not answer.strip(): raise RuntimeError('empty final answer')
+                async for evt in enqueue(sentence.strip()): yield evt
+                if generation is not None and (await rag_service._state())[0]!=generation:
+                    raise RuntimeError('knowledge changed during answer')
+                status='completed'
+            while pending:
+                yield await pending.pop(next(iter(pending)))
+        except (asyncio.CancelledError,GeneratorExit):
+            status='cancelled'
+            raise
+        except Exception as exc:
+            status='partial' if answer.strip() else 'failed'
+            logging.getLogger(__name__).warning('chat_failed kind=%s partial=%s',type(exc).__name__,status=='partial')
+            yield {'type':'error','message':'回答中断，已保留收到的文字，请重试。','code':'answer_interrupted','partial':status=='partial','request_id':request_id}
+        finally:
+            tasks=list(pending.values())
+            for task in tasks: task.cancel()
+            with anyio.CancelScope(shield=True):
+                if tasks: await asyncio.gather(*tasks,return_exceptions=True)
+                try:
+                    async with async_session() as db:
+                        await db.execute(update(ChatMessage).where(ChatMessage.request_id==request_id).values(outcome=status))
+                        db.add(ChatMessage(session_id=session_id,role='assistant',content=answer,outcome=status,request_id=request_id))
+                        await db.commit()
+                    if status in ('completed','refused'):
+                        feedback_id=await self._log_feedback(tourist_id,query,answer)
+                    persisted=True
+                except Exception as exc:
+                    logging.getLogger(__name__).warning('chat_persistence_failed kind=%s',type(exc).__name__)
+        yield {'type':'done','full_text':answer,'emotion':emotion,'status':status,'request_id':request_id,
+               'latency_ms':round((time.monotonic()-started)*1000),'feedback_id':feedback_id,'persisted':persisted,
+               'mode':'local_extractive' if not llm_service.available else 'configured_model_chain'}
 
-        yield {"type": "done", "full_text": clean_answer,
-               "emotion": emotion, "latency_ms": latency}
 
-
-chat_service = ChatService()
+chat_service=ChatService()

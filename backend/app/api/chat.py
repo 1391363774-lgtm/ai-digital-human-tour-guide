@@ -2,11 +2,13 @@
 对话API - SSE流式接口(核心) + 非流式接口(兼容)
 """
 import json
+import asyncio
+from contextlib import aclosing
 from typing import Optional
 
 from fastapi import APIRouter,Depends,HTTPException
 from fastapi.responses import StreamingResponse
-from pydantic import BaseModel
+from pydantic import BaseModel,Field,field_validator
 
 from app.services.chat_service import chat_service
 from app.core.access import visitor_owner
@@ -15,12 +17,19 @@ router = APIRouter()
 
 
 class ChatRequest(BaseModel):
-    message: str
+    message: str = Field(min_length=1,max_length=2000)
+    tts_enabled: bool = True
     tourist_id: str = "guest"
     interest: Optional[str] = None        # 兴趣偏好(个性化推荐)
     time_budget: Optional[str] = None     # 可用时间
     companions: Optional[str] = None      # 同行人群
     dialect: str = "mandarin"
+
+    @field_validator('message')
+    @classmethod
+    def nonblank(cls,value):
+        if not value.strip(): raise ValueError('message cannot be blank')
+        return value.strip()
 
 
 @router.post("/stream")
@@ -29,16 +38,21 @@ async def chat_stream(req: ChatRequest, owner: str = Depends(visitor_owner)):
 
     async def event_gen():
         try:
-            async for evt in chat_service.stream_pipeline(
+            async with aclosing(chat_service.stream_pipeline(
                 query=req.message,
                 tourist_id=owner,
                 interest=req.interest,
                 time_budget=req.time_budget,
                 companions=req.companions,
-            ):
-                yield f"data: {json.dumps(evt, ensure_ascii=False)}\n\n"
-        except Exception as e:
-            yield f"data: {json.dumps({'type': 'error', 'message': str(e)[:200]}, ensure_ascii=False)}\n\n"
+                tts_enabled=req.tts_enabled,
+            )) as stream:
+                async for evt in stream:
+                    yield f"data: {json.dumps(evt, ensure_ascii=False)}\n\n"
+        except asyncio.CancelledError:
+            raise
+        except Exception:
+            yield 'data: {"type":"error","message":"请求未能完成，请重试。","partial":false}\n\n'
+            yield 'data: {"type":"done","status":"failed","full_text":""}\n\n'
         yield "data: [DONE]\n\n"
 
     return StreamingResponse(
@@ -52,10 +66,11 @@ async def chat_stream(req: ChatRequest, owner: str = Depends(visitor_owner)):
 async def chat_send(req: ChatRequest, owner: str = Depends(visitor_owner)):
     """非流式兼容接口:聚合全部事件后一次性返回"""
     full_text, emotion, sources, intent = "", "calm", [], "general"
-    sentences, latency = [], 0
+    sentences, latency, status = [], 0, 'failed'
     async for evt in chat_service.stream_pipeline(
         query=req.message, tourist_id=owner,
         interest=req.interest, time_budget=req.time_budget, companions=req.companions,
+        tts_enabled=req.tts_enabled,
     ):
         if evt["type"] == "meta":
             sources, intent = evt["sources"], evt["intent"]
@@ -65,8 +80,9 @@ async def chat_send(req: ChatRequest, owner: str = Depends(visitor_owner)):
             sentences.append(evt)
         elif evt["type"] == "done":
             full_text, latency = evt["full_text"], evt["latency_ms"]
+            status=evt['status']
     return {"answer": full_text, "emotion": emotion, "intent": intent,
-            "sources": sources, "sentences": sentences, "latency_ms": latency}
+            "sources": sources, "sentences": sentences, "latency_ms": latency,'status':status}
 
 
 @router.get("/history/{tourist_id}")
@@ -96,7 +112,7 @@ async def get_quick_questions():
 
 
 class VisionRequest(BaseModel):
-    image_b64: str          # base64图片(不含前缀)
+    image_b64: str = Field(max_length=4_000_000)
     tourist_id: str = "guest"
 
 

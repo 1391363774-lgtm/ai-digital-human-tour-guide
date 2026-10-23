@@ -14,6 +14,10 @@ import hashlib
 import re
 import secrets
 import time
+import asyncio
+import math
+import struct
+import wave
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
@@ -155,11 +159,60 @@ class TtsService:
     def __init__(self):
         self.cache_dir = Path(settings.TTS_CACHE_DIR)
         self.cache_dir.mkdir(parents=True, exist_ok=True)
+        self._inflight = {}
+        self._slots = asyncio.Semaphore(3)
 
     def _cache_key(self, text: str, voice: str) -> str:
-        return hashlib.md5(f"{voice}|{text}".encode("utf-8")).hexdigest()
+        return hashlib.md5(f"word-pinyin-estimate-v2|{settings.DEMO_MODE}|{voice}|{settings.TTS_RATE}|{settings.TTS_PITCH}|{text}".encode("utf-8")).hexdigest()
 
     async def synthesize(self, text: str, voice: Optional[str] = None) -> Dict:
+        text=text.strip()[:800]
+        if not text: return {'ok':False,'reason':'empty text'}
+        voice=voice or settings.TTS_VOICE
+        key=self._cache_key(text,voice)
+        entry=self._inflight.get(key)
+        if entry is None:
+            if len(self._inflight)>=64: return {'ok':False,'reason':'speech capacity reached'}
+            entry={'task':asyncio.create_task(self._limited_synthesize(text,voice)), 'waiters':0}
+            self._inflight[key]=entry
+        entry['waiters']+=1
+        try:
+            return dict(await asyncio.shield(entry['task']))
+        finally:
+            entry['waiters']-=1
+            if entry['waiters']==0:
+                if not entry['task'].done(): entry['task'].cancel()
+                await asyncio.gather(entry['task'],return_exceptions=True)
+                if self._inflight.get(key) is entry: self._inflight.pop(key,None)
+
+    async def _limited_synthesize(self,text,voice):
+        from starlette.concurrency import run_in_threadpool
+        async with self._slots:
+            await run_in_threadpool(self._prune_cache)
+            if settings.DEMO_MODE:
+                return await run_in_threadpool(self._demo_tone,text,voice)
+            try:
+                return await asyncio.wait_for(self._synthesize_cached(text,voice),timeout=10)
+            except asyncio.TimeoutError:
+                return {'ok':False,'reason':'speech timeout'}
+
+    def _prune_cache(self):
+        files=[p for p in self.cache_dir.iterdir() if p.suffix in ('.mp3','.json','.wav') and re.fullmatch('[a-f0-9]{32}',p.stem)]
+        files.sort(key=lambda p:p.stat().st_mtime)
+        for i,p in enumerate(files):
+            if i<len(files)-512 or time.time()-p.stat().st_mtime>86400:
+                p.unlink(missing_ok=True)
+
+    def _demo_tone(self,text,voice):
+        key=self._cache_key(text,voice)
+        path=self.cache_dir/(key+'.wav')
+        if not path.exists():
+            with wave.open(str(path),'wb') as audio:
+                audio.setnchannels(1); audio.setsampwidth(2); audio.setframerate(8000)
+                audio.writeframes(b''.join(struct.pack('<h',int(1400*math.sin(2*math.pi*440*i/8000))) for i in range(2000)))
+        return {'ok':True,'engine':'demo-tone','audio_url':f'/api/tts/audio/{key}','duration_ms':250,'visemes':[{'t':0,'v':'AA','d':250},{'t':250,'v':'sil','d':0}],'mouth_alignment':'synthetic_demo','cached':False}
+
+    async def _synthesize_cached(self, text: str, voice: Optional[str] = None) -> Dict:
         """
         合成语音并生成口型时间轴。
         返回: {ok, audio_url, duration_ms, visemes, engine}
@@ -186,7 +239,7 @@ class TtsService:
         word_boundaries: List[Dict] = []
         try:
             communicate = edge_tts.Communicate(
-                text, voice, rate=settings.TTS_RATE, pitch=settings.TTS_PITCH)
+                text, voice, rate=settings.TTS_RATE, pitch=settings.TTS_PITCH, boundary='WordBoundary')
             audio_chunks = []
             async for chunk in communicate.stream():
                 if chunk["type"] == "audio":
@@ -202,8 +255,8 @@ class TtsService:
                 return {"ok": False, "reason": "TTS无音频返回"}
             mp3_path.write_bytes(b"".join(audio_chunks))
         except Exception as e:
-            print(f"[TTS] 合成失败: {e}")
-            return {"ok": False, "reason": str(e)[:120]}
+            print(f"[TTS] 合成失败: {type(e).__name__}")
+            return {"ok": False, "reason": "语音服务暂不可用"}
 
         # 估算总时长(mp3 24kbps约3KB/s;用词边界末端更准)
         if word_boundaries:
@@ -217,6 +270,7 @@ class TtsService:
             "ok": True, "engine": "edge-tts", "voice": voice,
             "audio_url": f"/api/tts/audio/{key}",
             "duration_ms": total_ms, "visemes": visemes, "cached": False,
+            'mouth_alignment':'word_boundary_pinyin_estimate' if word_boundaries else 'text_duration_estimate',
         }
         import json as _json
         meta_path.write_text(_json.dumps(meta, ensure_ascii=False), encoding="utf-8")
@@ -226,6 +280,8 @@ class TtsService:
         if not re.fullmatch(r'[a-f0-9]{32}',key):
             return None
         p = self.cache_dir / f"{key}.mp3"
+        if settings.DEMO_MODE and (self.cache_dir/f'{key}.wav').exists():
+            p=self.cache_dir/f'{key}.wav'
         return p if p.exists() else None
 
     def grant_audio(self, meta: Dict) -> Dict:
