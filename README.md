@@ -25,7 +25,7 @@ Linux 使用 `.venv/bin/python`。打开 [游客首页](http://127.0.0.1:8080/pa
 ## 当前实现与边界
 
 - FastAPI SSE/HTTP，异步 httpx 模型请求；保留 primary → fallback → 本地摘录配置链。空白流可切换，部分回答失败会标记 partial，不拼接另一模型。
-- Markdown/JSON/已发布 SQL 知识 → 有重叠分块 → TF-IDF；可配置 DashScope embedding + numpy 余弦。数据库版本驱动完整快照，变更/删除/重分块后刷新，向量缓存绑定模型和维度。**没有实际接通 Milvus/Redis。**
+- Markdown/JSON/已发布 SQL 知识 → 有重叠分块 → jieba搜索分词与短窗口TF-IDF；可配置 DashScope embedding + numpy 余弦。数据库版本驱动完整快照，变更/删除/重分块后刷新，向量缓存绑定模型和维度。本地兜底按问题选择原文摘录及片段引用，仍不保证语义正确。**没有实际接通 Milvus/Redis。**
 - 游客由浏览器 capability 隔离；管理接口要求服务端密钥。SSE 增量解析、请求取消、旧请求保护，TTS 去重、有界并发与队列，停止后清理音频及口部状态。
 - Live2D 是 2D 渲染；音频口部驱动为词边界/拼音规则估算，不是音素强制对齐。事件间隔、暂停、缓冲与停止时闭嘴；浏览器自带语音无可用对齐时保持闭嘴并提示。PhotoHuman 是图片后备形变。
 - 原生页面仍提供形象切换、表情、地图/路线、浏览器 ASR、拍照识景、扫码与管理界面；真实设备、外部供应商和自然语音尚未本轮实测，见交付记录。
@@ -45,7 +45,7 @@ cd ..
 ./.venv/Scripts/python.exe scripts/smoke_demo.py --base-url http://127.0.0.1:8080
 ```
 
-2026-10-23 本轮通过 55 个后端、16 个前端回归，TypeScript 共享运行时类型检查及 15 页静态构建。测试不调用外部模型；真实 socket 回归检查进度/取消。100 题后端无 Key 基线已实际执行：请求成功100/100，关键词规则通过29/90，应拒答题5/10，正常题错误拒答14/90。它们不是事实或语义准确率，失败题全部保留；见[本轮记录](docs/IMPROVEMENTS-20261023.md)及[逐题报告](reports/eval/20261023-final.json)。
+2026-10-23 最新通过75个后端、18个前端回归，TypeScript共享运行时类型检查及15页静态构建。测试不调用外部模型；真实socket回归检查进度/取消。最新100题后端无Key诊断：请求成功100/100，关键词规则36/90，应拒答题5/10，正常题错误拒答8/90，仍有59个规则失败；相对本轮基线存在9个原通过题的退步，均完整保留。它们不是事实或语义准确率。见[增量检索记录](docs/RETRIEVAL-20261023.md)和[最新逐题报告](reports/eval/20261023-rag-final.json)；早期29/90、14/90基线及工程阶段记录保留于[前轮记录](docs/IMPROVEMENTS-20261023.md)。
 
 评测命令：`python 评测包/eval.py --mode backend --api-url http://127.0.0.1:8080/api/chat/send --dataset data/eval/qa_testset.json --output .runtime/eval.json`。默认关闭TTS，每题使用独立游客凭据；直接模型模式用 `--mode openai --api-key-env EVAL_API_KEY --model <名称>`，不与后端RAG或浏览器离线结果混报。输出逐题JSON、汇总CSV、完整失败题；无适用样本以JSON null／CSV N/A表示。
 
