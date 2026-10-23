@@ -12,6 +12,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db
 from app.models.models import ChatMessage, TouristFeedback, SpotVisit
+from app.core.access import visitor_owner
+from fastapi import HTTPException
 
 router = APIRouter()
 
@@ -161,14 +163,14 @@ class RateRequest(BaseModel):
 
 
 @router.post("/rate")
-async def rate_answer(req: RateRequest, db: AsyncSession = Depends(get_db)):
+async def rate_answer(req: RateRequest, db: AsyncSession = Depends(get_db), owner: str = Depends(visitor_owner)):
     """游客对回答打分(1-5),回填满意度"""
     row = await db.get(TouristFeedback, req.feedback_id)
-    if row:
+    if row and row.tourist_id == owner:
         row.satisfaction = max(1, min(5, req.satisfaction))
         await db.commit()
         return {"ok": True}
-    return {"ok": False, "message": "记录不存在"}
+    raise HTTPException(404,'记录不存在')
 
 
 @router.post("/suggestions")
@@ -237,19 +239,19 @@ class SpotCheckin(BaseModel):
 
 
 @router.post("/checkin")
-async def spot_checkin(req: SpotCheckin, db: AsyncSession = Depends(get_db)):
+async def spot_checkin(req: SpotCheckin, db: AsyncSession = Depends(get_db), owner: str = Depends(visitor_owner)):
     """景点扫码签到(GPS弱信号场景的定位替代方案)"""
-    db.add(SpotVisit(tourist_id=req.tourist_id, spot_id=req.spot_id,
+    db.add(SpotVisit(tourist_id=owner, spot_id=req.spot_id,
                      spot_name=req.spot_name, method=req.method))
     await db.commit()
     return {"ok": True, "spot": req.spot_name}
 
 
 @router.get("/my-visits")
-async def my_visits(tourist_id: str, db: AsyncSession = Depends(get_db)):
+async def my_visits(tourist_id: str = '', db: AsyncSession = Depends(get_db), owner: str = Depends(visitor_owner)):
     """个人足迹:当前游客的扫码签到记录(个人中心展示)"""
     rows = (await db.execute(
-        select(SpotVisit).where(SpotVisit.tourist_id == tourist_id)
+        select(SpotVisit).where(SpotVisit.tourist_id == owner)
         .order_by(SpotVisit.id.desc()).limit(20))).scalars().all()
     return {
         "visits": [{

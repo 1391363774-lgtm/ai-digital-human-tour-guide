@@ -120,6 +120,7 @@ class ChatService:
             rag_service.retrieve(query),
             tts_service.synthesize(prelude_text),
         )
+        prelude_meta = tts_service.grant_audio(prelude_meta)
         yield {"type": "meta", "intent": intent,
                "engine": rag_service.engine_mode,
                "sources": [{"title": c["title"], "score": c["score"]} for c in chunks]}
@@ -148,7 +149,7 @@ class ChatService:
         next_yield = 0                           # 下一个待推送的句子序号
 
         async def synth(idx: int, text: str):
-            meta = await tts_service.synthesize(text)
+            meta = tts_service.grant_audio(await tts_service.synthesize(text))
             return idx, text, meta
 
         def make_sentence_events(idx: int, text: str, meta: Dict) -> Dict:

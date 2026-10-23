@@ -3,6 +3,7 @@
 所有配置均可通过 backend/.env 覆盖,开箱即用、无Key自动降级。
 """
 import sys
+import os
 from pathlib import Path
 from pydantic_settings import BaseSettings
 
@@ -18,6 +19,9 @@ BACKEND_DIR = BASE_DIR / "backend"
 
 class Settings(BaseSettings):
     APP_NAME: str = "灵山胜境AI数字人导览系统"
+    ADMIN_API_KEY: str = ''
+    DEMO_MODE: bool = False
+    CORS_ORIGINS: str = 'http://127.0.0.1:8080,http://localhost:8080'
 
     # ---- LLM(兼容OpenAI接口:DashScope/DeepSeek/智谱/Kimi均可) ----
     # 现有 LLM_* 作为 primary，保留原变量名以兼容已有 .env。
@@ -81,7 +85,10 @@ class Settings(BaseSettings):
         extra = "ignore"
 
 
-settings = Settings()
+settings = Settings(_env_file=None) if os.environ.get('GUIDE_NO_ENV_FILE') == '1' else Settings()
+if settings.DEMO_MODE:
+    settings.LLM_API_KEY = ''
+    settings.LLM_FALLBACK_API_KEY = ''
 
 # 确保数据目录存在
 (BACKEND_DIR / "data").mkdir(parents=True, exist_ok=True)

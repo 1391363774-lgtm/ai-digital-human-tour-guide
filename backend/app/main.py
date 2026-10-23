@@ -5,13 +5,14 @@
 from contextlib import asynccontextmanager
 from pathlib import Path
 
-from fastapi import FastAPI
+from fastapi import FastAPI,HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, RedirectResponse
+from fastapi.responses import FileResponse, RedirectResponse,JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from app.api import chat, knowledge, avatar, analytics, tts
 from app.core.config import settings
+from app.core.access import admin_route,require_admin,visitor_owner
 from app.core.database import init_db
 from app.services.rag_service import rag_service
 
@@ -31,10 +32,24 @@ app = FastAPI(title="灵山胜境AI数字人导览系统", version="2.0.0", life
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[x.strip() for x in settings.CORS_ORIGINS.split(',') if x.strip()],
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.middleware('http')
+async def access_boundary(request,call_next):
+    path=request.url.path.rstrip('/')
+    try:
+        if request.method != 'OPTIONS':
+            if admin_route(path,request.method):
+                require_admin(request.headers.get('X-Admin-Key'))
+            elif path.startswith(('/api/chat/history','/api/chat/send','/api/chat/stream','/api/chat/vision')) or path.startswith('/api/tts') and not path.startswith('/api/tts/audio/') or path in ('/api/analytics/rate','/api/analytics/checkin','/api/analytics/my-visits'):
+                visitor_owner(request.headers.get('X-Visitor-Key'))
+        return await call_next(request)
+    except HTTPException as exc:
+        return JSONResponse({'detail':exc.detail},status_code=exc.status_code)
 
 app.include_router(chat.router, prefix="/api/chat", tags=["对话"])
 app.include_router(tts.router, prefix="/api/tts", tags=["语音合成"])

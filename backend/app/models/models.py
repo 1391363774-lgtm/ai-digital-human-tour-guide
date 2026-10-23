@@ -8,7 +8,7 @@ class ChatSession(Base):
     __tablename__ = "chat_sessions"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    tourist_id = Column(String(50), index=True)
+    tourist_id = Column(String(64), index=True)
     created_at = Column(DateTime, server_default=func.now())
 
 
@@ -28,7 +28,7 @@ class TouristFeedback(Base):
     __tablename__ = "tourist_feedback"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    tourist_id = Column(String(50))
+    tourist_id = Column(String(64))
     question = Column(Text)
     answer = Column(Text)
     satisfaction = Column(Integer, nullable=True)      # 1-5分,游客主动评价
@@ -65,7 +65,7 @@ class SpotVisit(Base):
     __tablename__ = "spot_visits"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    tourist_id = Column(String(50), index=True)
+    tourist_id = Column(String(64), index=True)
     spot_id = Column(String(20))
     spot_name = Column(String(100))
     method = Column(String(20), default="qrcode")  # qrcode / bluetooth / manual

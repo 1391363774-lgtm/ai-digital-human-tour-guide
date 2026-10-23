@@ -25,7 +25,7 @@ async def synthesize(req: TtsRequest):
         raise HTTPException(400, "文本不能为空")
     if len(req.text) > 800:
         req.text = req.text[:800]
-    return await tts_service.synthesize(req.text.strip(), req.voice)
+    return tts_service.grant_audio(await tts_service.synthesize(req.text.strip(), req.voice))
 
 
 @router.post("/timeline")
@@ -36,8 +36,8 @@ async def timeline_only(req: TtsRequest):
 
 
 @router.get("/audio/{key}")
-async def get_audio(key: str):
-    path = tts_service.audio_path(key)
+async def get_audio(key: str, access: str = ''):
+    path = tts_service.authorized_audio(key, access)
     if not path:
         raise HTTPException(404, "音频不存在")
     return FileResponse(path, media_type="audio/mpeg")

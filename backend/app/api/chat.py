@@ -4,11 +4,12 @@
 import json
 from typing import Optional
 
-from fastapi import APIRouter
+from fastapi import APIRouter,Depends,HTTPException
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 
 from app.services.chat_service import chat_service
+from app.core.access import visitor_owner
 
 router = APIRouter()
 
@@ -23,14 +24,14 @@ class ChatRequest(BaseModel):
 
 
 @router.post("/stream")
-async def chat_stream(req: ChatRequest):
+async def chat_stream(req: ChatRequest, owner: str = Depends(visitor_owner)):
     """SSE流式对话:文本增量 + 情感标签 + 逐句语音与口型时间轴"""
 
     async def event_gen():
         try:
             async for evt in chat_service.stream_pipeline(
                 query=req.message,
-                tourist_id=req.tourist_id,
+                tourist_id=owner,
                 interest=req.interest,
                 time_budget=req.time_budget,
                 companions=req.companions,
@@ -48,12 +49,12 @@ async def chat_stream(req: ChatRequest):
 
 
 @router.post("/send")
-async def chat_send(req: ChatRequest):
+async def chat_send(req: ChatRequest, owner: str = Depends(visitor_owner)):
     """非流式兼容接口:聚合全部事件后一次性返回"""
     full_text, emotion, sources, intent = "", "calm", [], "general"
     sentences, latency = [], 0
     async for evt in chat_service.stream_pipeline(
-        query=req.message, tourist_id=req.tourist_id,
+        query=req.message, tourist_id=owner,
         interest=req.interest, time_budget=req.time_budget, companions=req.companions,
     ):
         if evt["type"] == "meta":
@@ -69,8 +70,15 @@ async def chat_send(req: ChatRequest):
 
 
 @router.get("/history/{tourist_id}")
-async def get_history(tourist_id: str):
+async def get_history(tourist_id: str, owner: str = Depends(visitor_owner)):
+    if tourist_id != owner:
+        raise HTTPException(404,'会话不存在')
     return {"history": await chat_service.get_history(tourist_id, limit=20)}
+
+
+@router.get('/history')
+async def own_history(owner: str = Depends(visitor_owner)):
+    return {'history':await chat_service.get_history(owner,limit=20)}
 
 
 @router.get("/quick-questions")
@@ -93,7 +101,7 @@ class VisionRequest(BaseModel):
 
 
 @router.post("/vision")
-async def vision_recognize(req: VisionRequest):
+async def vision_recognize(req: VisionRequest, owner: str = Depends(visitor_owner)):
     """
     拍照识景(多模态大模型 qwen-vl-max):
     游客拍摄景点照片 → 视觉大模型识别 → 返回数字人讲解文本+语音口型
@@ -109,7 +117,7 @@ async def vision_recognize(req: VisionRequest):
         return {"ok": False, "message": "视觉识别服务暂不可用"}
     emotion = parse_emotion(answer)
     text = strip_emotion(answer)
-    tts = await tts_service.synthesize(text)
+    tts = tts_service.grant_audio(await tts_service.synthesize(text))
     return {
         "ok": True, "text": text, "emotion": emotion,
         "audio_url": tts.get("audio_url"), "visemes": tts.get("visemes", []),

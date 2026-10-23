@@ -12,6 +12,8 @@ TTS 语音合成 + 中文视素(Viseme)口型时间轴服务
 """
 import hashlib
 import re
+import secrets
+import time
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
@@ -221,8 +223,32 @@ class TtsService:
         return meta
 
     def audio_path(self, key: str) -> Optional[Path]:
+        if not re.fullmatch(r'[a-f0-9]{32}',key):
+            return None
         p = self.cache_dir / f"{key}.mp3"
         return p if p.exists() else None
+
+    def grant_audio(self, meta: Dict) -> Dict:
+        result = dict(meta)
+        url = result.get('audio_url')
+        if not url:
+            return result
+        if not hasattr(self, '_grants'):
+            self._grants = {}
+        now = time.monotonic()
+        self._grants = {k:v for k,v in self._grants.items() if v[1] > now}
+        if len(self._grants) >= 256:
+            self._grants.pop(next(iter(self._grants)))
+        token = secrets.token_urlsafe(24)
+        self._grants[token] = (url.rsplit('/',1)[-1], now + 300)
+        result['audio_url'] = url + '?access=' + token
+        return result
+
+    def authorized_audio(self, key, token):
+        grant = getattr(self, '_grants', {}).get(token or '')
+        if not grant or grant[0] != key or grant[1] < time.monotonic():
+            return None
+        return self.audio_path(key)
 
 
 tts_service = TtsService()
