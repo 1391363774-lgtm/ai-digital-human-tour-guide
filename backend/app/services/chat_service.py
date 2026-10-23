@@ -188,7 +188,9 @@ class ChatService:
                         if first_text_ms is None: first_text_ms=round((time.monotonic()-started)*1000,2)
                         answer+=token
                         if len(answer)>6000: raise RuntimeError('answer limit')
-                        sentence+=token
+                        # CitationFilter emits only complete validated markers;
+                        # retain them in the transcript, never read IDs aloud.
+                        sentence+=re.sub(r'\[cite:[^\]\r\n]*\]', '', token, flags=re.I)
                         yield {'type':'delta','text':token,'request_id':request_id}
                         parts=SENTENCE_END.split(sentence)
                         while len(parts)>=2:
@@ -203,13 +205,14 @@ class ChatService:
                 tail=citation_filter.feed(strip_emotion(head) if not resolved else '',final=True)
                 if tail:
                     if first_text_ms is None and tail.strip(): first_text_ms=round((time.monotonic()-started)*1000,2)
-                    answer+=tail; sentence+=tail
+                    answer+=tail
+                    sentence+=re.sub(r'\[cite:[^\]\r\n]*\]', '', tail, flags=re.I)
                     yield {'type':'delta','text':tail,'request_id':request_id}
                 if first_text_ms is None: raise RuntimeError('empty final answer')
                 async for evt in enqueue(sentence.strip()): yield evt
                 if generation is not None and (await rag_service._state())[0]!=generation:
                     raise RuntimeError('knowledge changed during answer')
-                status='completed'
+                status='refused' if trace.get('local_refusal') else 'completed'
             while pending:
                 yield await pending.pop(next(iter(pending)))
         except (asyncio.CancelledError,GeneratorExit):
