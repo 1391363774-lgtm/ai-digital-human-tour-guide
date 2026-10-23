@@ -8,10 +8,13 @@
 
 无真实游客数据库、聊天、私人录音、Key、TTS/向量缓存或 AI 模型权重。原数据报告和游客行为表格未纳入新基准。旧公开资料保留在备份分支；用途不明的技术文档保留 docs/legacy，均为历史资料。
 
-2026-10-23 已阅读上游入口，仍需团队核对其实际获取渠道、适用版本及项目用途：
+2026-10-23 已进一步检索官方条款并比对实际资源，具体证据及尚未解决的用法见[素材来源核查](docs/assets/RIGHTS-20261023.md)和[118个文件的校验清单](docs/assets/asset-provenance-20261023.json)。Natori属于合作角色，不能将其免费样例身份写成无条件再分发许可；Haru/Hiyori、SDK、显示插件和照片分别适用不同条件。
+
+核查入口：
 
 - [Cubism Core 官方协议](https://www.live2d.com/eula/live2d-proprietary-software-license-agreement_en.html)
 - [Live2D 样例模型与各项使用条件入口](https://www.live2d.com/en/learn/sample/)
 - [pixi-live2d-display 原项目许可证](https://github.com/guansss/pixi-live2d-display/blob/master/LICENSE)
+- [样例模型个别使用条件](https://www.live2d.com/zh-CHS/learn/sample/model-terms/)
 
 没有代替用户接受协议、购买许可或宣称已取得额外授权。构建产物保留本地 vendor 原文件头，并复制新引入 Lucide、ECharts 包的 LICENSE。依赖安装/CI 下载不等于模型与景区素材的再分发权已确认。
