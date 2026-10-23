@@ -15,7 +15,6 @@ var online = false;
 var ttsEnabled = true;
 var dh = null;
 var isAnswering = false;
-var currentFeedbackId = null;
 
 // ---------- 数字人初始化(Live2D Natori + 口型同步,失败降级PhotoHuman) ----------
 dh = new GuideHuman('digital-human', { size: 280 });
@@ -89,11 +88,12 @@ function setStatus(text, speaking) {
 // ============================================================
 function checkOnline() {
     return fetch(API + '/api/status', { method: 'GET' })
-        .then(function (r) { return r.json(); })
+        .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
         .then(function (d) {
             online = true;
+            backendMode = d.demo_mode ? '离线演示 · 本地摘录 + 合成测试音' : d.llm_available ? '服务可达 · 模型已配置（未探测）' : '本地 TF-IDF · 资料摘录';
             document.getElementById('offline-badge').style.display = 'none';
-            setStatus('在线 · ' + (d.llm_available ? '大模型已接入' : '本地模式'), false);
+            setStatus(backendMode, false);
             return true;
         })
         .catch(function () {
@@ -145,7 +145,7 @@ function finalizeBotMsg(row, fullText) {
     if (cursor) cursor.remove();
     var txtEl = row.querySelector('.txt');
     var m = fullText.match(/\[MAP:(.+?)\]/);
-    if (m) {
+    if (m && m[1] === '../assets/lingshan-map.jpg') {
         txtEl.innerHTML = esc(fullText.replace(/\[MAP:.+?\]/, '').trim());
         var img = document.createElement('img');
         img.className = 'map-img';
@@ -169,10 +169,11 @@ function rateAnswer(btn, rateRow) {
     rateRow.querySelectorAll('.rate-btn').forEach(function (b) { b.classList.remove('rated'); });
     btn.classList.add('rated');
     rateRow.querySelector('.rate-thanks').style.display = 'inline';
-    if (online && currentFeedbackId) {
+    var feedbackId = Number(rateRow.closest('.msg-row').dataset.feedbackId || 0);
+    if (online && feedbackId) {
         fetch(API + '/api/analytics/rate', {
             method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ feedback_id: currentFeedbackId, satisfaction: score })
+            body: JSON.stringify({ feedback_id: feedbackId, satisfaction: score })
         }).catch(function () {});
     }
 }
@@ -180,149 +181,118 @@ function rateAnswer(btn, rateRow) {
 // ============================================================
 // 语音播放队列(口型同步核心)
 // ============================================================
-var speechQueue = [];
-var playing = false;
+var chatClient = new GuideRuntime.ChatClient();
+var auxRequests = new GuideRuntime.RequestEpoch();
+var currentAuxScope = null, localSpeaker = null, localIndex = 0;
+var activeRow = null, backendMode = '本地服务', asrEpoch = 0, asrTimer = null;
 
-function enqueueSpeech(item) { speechQueue.push(item); pumpQueue(); }
-
-function pumpQueue() {
-    if (playing || !speechQueue.length) return;
-    var item = speechQueue.shift();
-    if (!ttsEnabled) { pumpQueue(); return; }
-    playing = true;
-    setStatus('讲解中...', true);
-    if (item.audio_url) {
-        dh.playAudio(API + item.audio_url, item.visemes).then(function () {
-            playing = false;
-            if (!speechQueue.length) setStatus('在线 · 大模型已接入', false);
-            pumpQueue();
-        });
-    } else {
-        browserSpeak(item.text, item.visemes, item.duration_ms);
-    }
+function statusNote(row, text) {
+    var note = row.querySelector('.reply-status');
+    if (!note) { note = document.createElement('div'); note.className = 'reply-status'; note.setAttribute('role', 'status'); note.style.cssText = 'font-size:11px;color:var(--blue-300);margin-top:6px'; row.querySelector('.bubble').appendChild(note); }
+    note.textContent = text;
 }
 
-function stopAllSpeech() {
-    speechQueue.length = 0;
-    playing = false;
-    dh.stopAudio();
-    if ('speechSynthesis' in window) speechSynthesis.cancel();
-    setStatus(online ? '在线 · 大模型已接入' : '离线模式', false);
-}
-
-// 浏览器TTS兜底(离线模式)
-function browserSpeak(text, visemes, durationMs) {
-    if (!('speechSynthesis' in window)) { playing = false; pumpQueue(); return; }
-    var clean = text.replace(/[【】\[\]]/g, '');
-    var dur = durationMs || clean.length * 195;
-    var u = new SpeechSynthesisUtterance(clean);
-    u.lang = 'zh-CN'; u.rate = 1.0; u.pitch = 1.1;
-    dh.startTimeline(visemes || estimateVisemes(clean), dur);
-    var finished = false;
-    function finish() {
-        if (finished) return;
-        finished = true;
-        dh.stopSpeaking(); playing = false;
-        if (!speechQueue.length) setStatus(online ? '在线 · 大模型已接入' : '离线模式', false);
-        pumpQueue();
-    }
-    u.onend = finish;
-    u.onerror = finish;
-    setTimeout(finish, dur + 1500);
-    speechSynthesis.speak(u);
-}
-
-// 前端简易视素估算(离线兜底)
-function estimateVisemes(text) {
-    var pool = ['AA', 'EH', 'OO', 'II', 'AA', 'UU'];
-    var vis = [], t = 0, per = 195;
-    for (var i = 0; i < text.length; i++) {
-        var ch = text[i];
-        if ('，。！？、；：,.!?;:'.indexOf(ch) >= 0) { vis.push({ t: t, v: 'sil', d: 220 }); t += 220; continue; }
-        var code = ch.charCodeAt(0);
-        vis.push({ t: t, v: pool[code % pool.length], d: per });
-        t += per;
-    }
-    vis.push({ t: t, v: 'sil', d: 0 });
-    return vis;
-}
-
-// ============================================================
-// 在线流式问答(SSE)
-// ============================================================
-function askOnline(text) {
-    var row = addBotMsg(true);
-    var txtEl = row.querySelector('.txt');
-    var fullText = '';
-    dh.setEmotion('think');
-    setStatus('思考中...', true);
-
-    var body = { message: text, tourist_id: touristId };
-    var interest = sessionStorage.getItem('lingshan_interest');
-    if (interest) body.interest = interest;
-
-    fetch(API + '/api/chat/stream', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
-    }).then(function (resp) {
-        var reader = resp.body.getReader();
-        var decoder = new TextDecoder('utf-8');
-        var buf = '';
-
-        function pump() {
-            return reader.read().then(function (res) {
-                if (res.done) { finish(); return; }
-                buf += decoder.decode(res.value, { stream: true });
-                var lines = buf.split('\n');
-                buf = lines.pop();
-                lines.forEach(function (line) {
-                    if (!line.startsWith('data:')) return;
-                    var payload = line.slice(5).trim();
-                    if (payload === '[DONE]') return;
-                    try { handleEvent(JSON.parse(payload)); } catch (e) {}
-                });
-                return pump();
-            });
+function playSegment(item, signal) {
+    return new Promise(function (resolve, reject) {
+        var timer = null, utterance = null, settled = false;
+        function finish(error) {
+            if (settled) return; settled = true;
+            clearTimeout(timer); signal.removeEventListener('abort', abort);
+            if (utterance) { utterance.onend = utterance.onerror = utterance.onstart = null; }
+            if (error) reject(error); else resolve();
         }
-
-        function handleEvent(evt) {
-            if (evt.type === 'emotion') {
-                dh.setEmotion(evt.emotion);
-            } else if (evt.type === 'delta') {
-                fullText += evt.text;
-                txtEl.textContent = fullText;
-                document.getElementById('chatArea').scrollTop = 1e9;
-            } else if (evt.type === 'sentence') {
-                enqueueSpeech(evt);
-            } else if (evt.type === 'done') {
-                fullText = evt.full_text || fullText;
-            } else if (evt.type === 'error') {
-                txtEl.textContent = '抱歉,服务暂时开小差了,请稍后再试。';
-            }
+        function abort() {
+            dh.stopAudio();
+            if (utterance && window.speechSynthesis) speechSynthesis.cancel();
+            finish(new DOMException('Cancelled', 'AbortError'));
         }
-
-        function finish() {
-            isAnswering = false;
-            finalizeBotMsg(row, fullText);
-            setTimeout(function () {
-                fetch(API + '/api/analytics/feedback?page=1&page_size=1')
-                    .then(function (r) { return r.json(); })
-                    .then(function (d) { if (d.items && d.items[0]) currentFeedbackId = d.items[0].id; })
-                    .catch(function () {});
-            }, 600);
-        }
-        return pump();
-    }).catch(function () {
-        isAnswering = false;
-        row.remove();
-        askOffline(text);
+        if (signal.aborted) { abort(); return; }
+        signal.addEventListener('abort', abort, { once: true });
+        setStatus('讲解中 · ' + (item.engine === 'demo-tone' ? '合成测试音' : '估算口型'), true);
+        timer = setTimeout(function () { dh.stopAudio(); if (utterance && window.speechSynthesis) speechSynthesis.cancel(); finish(new Error('播放超时，已保留文字')); }, 60000);
+        if (item.audio_url) {
+            var url = new URL(item.audio_url, location.href);
+            if (url.origin !== location.origin || url.pathname.indexOf('/api/tts/audio/') !== 0) { finish(new Error('无效音频地址')); return; }
+            dh.playAudio(url.href, item.visemes).then(function () { finish(); }, finish);
+        } else if (window.speechSynthesis && ttsEnabled) {
+            utterance = new SpeechSynthesisUtterance(item.text.replace(/\[MAP:.*?\]/g, ''));
+            utterance.lang = 'zh-CN';
+            utterance.onstart = function () { if (!signal.aborted) dh.startTimeline(item.visemes || estimateVisemes(item.text), item.duration_ms || item.text.length * 195); };
+            utterance.onend = function () { dh.stopSpeaking(); finish(); };
+            utterance.onerror = function () { dh.stopSpeaking(); finish(new Error('浏览器语音不可用，已保留文字')); };
+            speechSynthesis.speak(utterance);
+        } else finish();
     });
 }
 
-// ============================================================
-// 离线问答(本地知识库引擎)
-// ============================================================
+function enqueueSpeech(item) {
+    if (!ttsEnabled || !currentAuxScope || !currentAuxScope.current()) return;
+    if (!localSpeaker) localSpeaker = new GuideRuntime.SpeechScheduler({
+        signal: currentAuxScope.signal, capacity: 4, play: playSegment,
+        onError: function () { setStatus('语音不可用 · 文字已保留', false); }
+    });
+    item.index = localIndex++;
+    void localSpeaker.enqueue(item).catch(function () {});
+}
+
+function stopAllSpeech() {
+    chatClient.cancel(); auxRequests.cancel();
+    if (localSpeaker) localSpeaker.cancel(); localSpeaker = null;
+    currentAuxScope = null; localIndex = 0; isAnswering = false;
+    asrEpoch++; clearTimeout(asrTimer);
+    if (recognition) { recognition._active = false; try { recognition.abort(); } catch (_) {} }
+    dh.stopAudio();
+    if (window.speechSynthesis) speechSynthesis.cancel();
+    setStatus('已停止 · ' + backendMode, false);
+}
+
+function estimateVisemes(text) {
+    // Text-duration animation estimate, never phoneme alignment.
+    return [{ t: 0, v: 'AA', d: text.length * 195 }, { t: text.length * 195, v: 'sil', d: 0 }];
+}
+
+function renderSources(row, sources) {
+    if (!sources || !sources.length) return;
+    var details = document.createElement('details'), summary = document.createElement('summary');
+    summary.textContent = '知识来源（检索片段）'; details.appendChild(summary);
+    sources.forEach(function (source) {
+        var p = document.createElement('p');
+        p.textContent = String(source.title || '') + ' · ' + String(source.source || '') + ' · 版本 ' + String(source.revision) + '\n' + String(source.content || '').slice(0, 300);
+        details.appendChild(p);
+    });
+    details.style.cssText = 'font-size:11px;white-space:pre-wrap;margin-top:8px';
+    row.querySelector('.bubble').appendChild(details);
+}
+
+function askOnline(text) {
+    var row = addBotMsg(true), txtEl = row.querySelector('.txt'), fullText = '';
+    activeRow = row; isAnswering = true; dh.setEmotion('think'); setStatus('检索与生成中...', true);
+    var body = { message: text, tourist_id: touristId, tts_enabled: ttsEnabled };
+    var interest = sessionStorage.getItem('lingshan_interest'); if (interest) body.interest = interest;
+    void chatClient.start(body, {
+        play: playSegment,
+        onEvent: function (evt) {
+            row.dataset.requestId = evt.request_id;
+            if (evt.type === 'meta') renderSources(row, evt.sources);
+            else if (evt.type === 'emotion') dh.setEmotion(evt.emotion);
+            else if (evt.type === 'delta') { fullText += evt.text; txtEl.textContent = fullText; document.getElementById('chatArea').scrollTop = 1e9; }
+            else if (evt.type === 'error') { statusNote(row, '回答中断，已保留文字'); row.dataset.outcome = evt.partial ? 'partial' : 'failed'; }
+            else if (evt.type === 'done') {
+                fullText = evt.full_text; txtEl.textContent = fullText;
+                row.dataset.outcome = evt.status; row.dataset.feedbackId = evt.feedback_id || '';
+                finalizeBotMsg(row, fullText);
+                statusNote(row, evt.status === 'completed' ? backendMode : evt.status === 'refused' ? '缺少依据，已如实拒答' : '回答未完整完成：' + evt.status);
+                isAnswering = false;
+            }
+        },
+        onError: function (error) { isAnswering = false; row.dataset.outcome = fullText ? 'partial' : 'failed'; finalizeBotMsg(row, fullText); statusNote(row, (fullText ? '连接中断，已保留文字。' : '请求失败。') + error.message); setStatus('回答未完成', false); },
+        onAudioError: function () { statusNote(row, '语音不可用或被浏览器拦截，文字已保留'); },
+        onCancel: function () { if (!['completed','refused'].includes(row.dataset.outcome)) row.dataset.outcome = 'cancelled'; finalizeBotMsg(row, fullText); statusNote(row, '已停止播放或生成'); },
+        onQueue: function (n) { row.dataset.speechBuffered = n; },
+        onFinish: function () { isAnswering = false; if (activeRow === row) activeRow = null; setStatus(backendMode, false); dh.setEmotion('calm'); }
+    });
+}
+
 var spotsData = {}, routesData = [], baseInfoData = {}, knowledgeLoaded = false;
 fetch('../assets/knowledge.json').then(function (r) { return r.json(); }).then(function (data) {
     spotsData = data.spots; routesData = data.routes; baseInfoData = data.baseInfo;
@@ -330,17 +300,14 @@ fetch('../assets/knowledge.json').then(function (r) { return r.json(); }).then(f
 }).catch(function () {});
 
 function askOffline(text) {
-    dh.setEmotion('think');
-    setStatus('本地检索中...', true);
+    currentAuxScope = auxRequests.start();
     var row = addBotMsg(false);
-    setTimeout(function () {
-        var answer = localFindAnswer(text);
-        row.querySelector('.txt').textContent = answer;
-        dh.setEmotion('happy');
-        finalizeBotMsg(row, answer);
-        enqueueSpeech({ text: answer, visemes: estimateVisemes(answer.replace(/\[MAP:.+?\]/, '')), audio_url: null });
-        isAnswering = false;
-    }, 400);
+    var answer = '【浏览器离线关键词检索】\n' + localFindAnswer(text);
+    row.querySelector('.txt').textContent = answer;
+    finalizeBotMsg(row, answer);
+    statusNote(row, '本地静态资料，时效信息以景区官方为准');
+    enqueueSpeech({ text: answer, visemes: estimateVisemes(answer), audio_url: null });
+    isAnswering = false;
 }
 
 function localFindAnswer(question) {
@@ -395,16 +362,20 @@ document.getElementById('photoBtn').onclick = function () {
 document.getElementById('photoInput').onchange = function (e) {
     var file = e.target.files[0];
     if (!file) return;
+    stopAllSpeech();
+    var photoScope = auxRequests.start(); currentAuxScope = photoScope;
     var reader = new FileReader();
     reader.onload = function () {
+        if (!photoScope.current()) return;
         var b64 = reader.result.split(',')[1];
         document.getElementById('photo-preview').src = reader.result;
         document.getElementById('photo-modal').style.display = 'flex';
         dh.setEmotion('think');
         fetch(API + '/api/chat/vision', {
-            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            signal: photoScope.signal, method: 'POST', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ image_b64: b64, tourist_id: touristId })
         }).then(function (r) { return r.json(); }).then(function (d) {
+            if (!photoScope.current()) return;
             document.getElementById('photo-modal').style.display = 'none';
             if (d.ok) {
                 addUserMsg('📷 [拍摄了一张照片]');
@@ -497,11 +468,11 @@ function simulateCheckin(spot) {
 function sendMessage() {
     var input = document.getElementById('chatInput');
     var text = input.value.trim();
-    if (!text || isAnswering) return;
+    if (!text) return;
+    stopAllSpeech();
     isAnswering = true;
     input.value = '';
     addUserMsg(text);
-    stopAllSpeech();
     if (online) askOnline(text);
     else askOffline(text);
 }
@@ -519,7 +490,11 @@ document.getElementById('ttsBtn').onclick = function () {
         : '<i data-lucide="volume-x" style="width:18px;height:18px;"></i>';
     lucide.createIcons();
     this.classList.toggle('muted', !ttsEnabled);
-    if (!ttsEnabled) stopAllSpeech();
+    if (!ttsEnabled) {
+        chatClient.mute(); if (localSpeaker) localSpeaker.cancel();
+        dh.stopAudio(); if (window.speechSynthesis) speechSynthesis.cancel();
+        setStatus('仅文字 · 语音已关闭', false);
+    }
 };
 
 // ============================================================
@@ -538,6 +513,7 @@ if (SR) {
         document.getElementById('voice-hint').textContent = '正在聆听,请说话...';
     };
     recognition.onresult = function (e) {
+        if (!recognition._active) return;
         var t = '';
         for (var i = e.resultIndex; i < e.results.length; i++) t += e.results[i][0].transcript;
         document.getElementById('chatInput').value = t;
@@ -546,9 +522,12 @@ if (SR) {
         voiceBtn.classList.remove('listening');
         document.getElementById('voice-hint').textContent = '';
         var input = document.getElementById('chatInput');
-        if (input.value.trim()) setTimeout(sendMessage, 250);
+        var wasActive = recognition._active; recognition._active = false;
+        var epoch = asrEpoch;
+        if (wasActive && input.value.trim()) asrTimer = setTimeout(function () { if (epoch === asrEpoch) sendMessage(); }, 250);
     };
     recognition.onerror = function (e) {
+        recognition._active = false;
         voiceBtn.classList.remove('listening');
         document.getElementById('voice-hint').textContent =
             e.error === 'not-allowed' ? '请允许使用麦克风' : '语音识别失败,请重试';
@@ -556,7 +535,9 @@ if (SR) {
 }
 voiceBtn.onclick = function () {
     if (!recognition) { alert('当前浏览器不支持语音输入,请使用Chrome/Edge'); return; }
-    try { recognition.start(); } catch (e) {}
+    stopAllSpeech();
+    recognition._active = true;
+    try { recognition.start(); } catch (e) { recognition._active = false; }
 };
 
 // ============================================================
@@ -617,3 +598,6 @@ if (location.hash.indexOf('#q=') === 0) {
         document.body.setAttribute('data-test-online', String(online));
     }, 500);
 }
+
+document.getElementById('stopBtn').onclick = stopAllSpeech;
+window.addEventListener('pagehide', function () { stopAllSpeech(); if (dh.destroy) dh.destroy(); });

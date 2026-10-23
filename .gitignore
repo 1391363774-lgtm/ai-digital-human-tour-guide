@@ -24,3 +24,4 @@ test-results/
 *.safetensors
 data/eval/*report*.json
 评测包/*report*.json
+design/lingshan-guide/assets/guide-runtime.js

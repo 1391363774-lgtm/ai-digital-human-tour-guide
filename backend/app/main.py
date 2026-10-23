@@ -67,6 +67,7 @@ async def health_check():
 async def system_status():
     from app.services.llm_service import llm_service
     return {
+        'demo_mode':settings.DEMO_MODE,
         "llm_available": llm_service.available,
         "llm_model": settings.LLM_MODEL,
         "llm": llm_service.status,

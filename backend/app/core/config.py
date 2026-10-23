@@ -71,8 +71,8 @@ class Settings(BaseSettings):
 
     # ---- 路径 ----
     KNOWLEDGE_MD: str = str(BASE_DIR / "知识库" / "灵山胜境完整知识库.md")
-    FRONTEND_DIR: str = str(BASE_DIR / "design" / "lingshan-guide")
-    ADMIN_DIR: str = str(BASE_DIR / "design" / "lingshan-admin")
+    FRONTEND_DIR: str = str(BASE_DIR / "frontend/dist/lingshan-guide" if (BASE_DIR / "frontend/dist/lingshan-guide").exists() else BASE_DIR / "design/lingshan-guide")
+    ADMIN_DIR: str = str(BASE_DIR / "frontend/dist/lingshan-admin" if (BASE_DIR / "frontend/dist/lingshan-admin").exists() else BASE_DIR / "design/lingshan-admin")
     VECTOR_CACHE: str = str(BACKEND_DIR / "data" / "knowledge_vectors.npz")
     TTS_CACHE_DIR: str = str(BACKEND_DIR / "data" / "tts_cache")
 

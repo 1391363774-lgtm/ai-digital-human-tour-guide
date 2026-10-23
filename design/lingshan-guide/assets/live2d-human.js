@@ -91,7 +91,7 @@
     var self = this, o = this.opts;
     window.PIXI.live2d.Live2DModel.from(o.model, { autoInteract: false })
       .then(function (m) {
-        if (self.destroyed) return;
+        if (self.destroyed) { m.destroy({ children: true, texture: true, baseTexture: true }); return; }
         self.model = m;
         if (o.focus === 'face') {
           // 放大至上半身/面部,适合小尺寸桌宠与头像(下半身自然裁出画布)
@@ -116,7 +116,7 @@
         if (self.loadingEl) self.loadingEl.style.display = 'none';
         if (typeof o.onReady === 'function') o.onReady(m);
       })
-      .catch(function (e) { self._fail(e); });
+      .catch(function (e) { if (!self.destroyed) self._fail(e); });
   };
 
   Live2DHuman.prototype._fail = function (e) {

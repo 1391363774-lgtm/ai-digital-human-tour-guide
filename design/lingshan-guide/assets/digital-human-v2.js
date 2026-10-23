@@ -86,7 +86,7 @@
     this.eyesClosed.src = this.frameBase.replace(/m$/, '') + 'e0.png';
 
     this._loop = this._loop.bind(this);
-    requestAnimationFrame(this._loop);
+    this.raf = requestAnimationFrame(this._loop);
   }
 
   // ================= 对外API =================
@@ -100,34 +100,23 @@
   };
 
   PhotoHuman.prototype.playAudio = function (url, visemes) {
-    var self = this;
     this.stopAudio();
-    this.visemes = visemes || [];
-    this.audio = new Audio(url);
-    this.speaking = true;
-    try {
-      if (!this.audioCtx) {
-        var AC = global.AudioContext || global.webkitAudioContext;
-        this.audioCtx = new AC();
+    var self = this, audio = new Audio(url);
+    this.visemes = visemes || []; this.audio = audio;
+    return new Promise(function (resolve, reject) {
+      var settled = false;
+      function finish(error) {
+        if (settled) return; settled = true;
+        audio.onended = audio.onerror = null;
+        try { audio.pause(); audio.removeAttribute('src'); audio.load(); } catch (_) {}
+        if (self.audio === audio) { self.audio = null; self.speaking = false; self.setViseme('sil'); }
+        self._settle = null;
+        if (error) reject(error); else resolve();
       }
-      if (this.audioCtx.state === 'suspended') this.audioCtx.resume();
-      var src = this.audioCtx.createMediaElementSource(this.audio);
-      this.analyser = this.audioCtx.createAnalyser();
-      this.analyser.fftSize = 256;
-      src.connect(this.analyser);
-      this.analyser.connect(this.audioCtx.destination);
-      this.freqBuf = new Uint8Array(this.analyser.frequencyBinCount);
-    } catch (e) { this.analyser = null; }
-
-    return new Promise(function (resolve) {
-      self.audio.onended = function () {
-        self.speaking = false; self.setViseme('sil');
-        if (self.onSpeakEnd) self.onSpeakEnd();
-        resolve();
-      };
-      self.audio.onerror = function () { self.speaking = false; resolve(); };
-      var p = self.audio.play();
-      if (p && p.catch) p.catch(function () { self.speaking = false; resolve(); });
+      self._settle = function () { finish(); };
+      audio.onended = function () { finish(); };
+      audio.onerror = function () { finish(new Error('音频加载失败')); };
+      audio.play().then(function () { if (!settled) self.speaking = true; }).catch(function () { finish(new Error('浏览器阻止播放')); });
     });
   };
 
@@ -144,6 +133,7 @@
   };
 
   PhotoHuman.prototype.stopAudio = function () {
+    if (this._settle) this._settle();
     if (this.audio) { try { this.audio.pause(); } catch (e) {} this.audio = null; }
     this.speaking = false;
     this.setViseme('sil');
@@ -151,7 +141,8 @@
 
   // ================= 渲染 =================
   PhotoHuman.prototype._loop = function () {
-    requestAnimationFrame(this._loop);
+    if (this.destroyed) return;
+    this.raf = requestAnimationFrame(this._loop);
     if (!this.ready) return;
     var now = performance.now();
     this.t += 0.016;
@@ -233,6 +224,10 @@
     ctx.restore();
   };
 
+  PhotoHuman.prototype.destroy = function () {
+    this.destroyed = true; this.stopAudio(); cancelAnimationFrame(this.raf);
+    if (this.audioCtx) { this.audioCtx.close().catch(function () {}); this.audioCtx = null; }
+  };
   global.PhotoHuman = PhotoHuman;
   global.DH_VISEMES_V2 = VISEMES;
 })(window);

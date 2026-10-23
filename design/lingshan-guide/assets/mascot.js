@@ -156,6 +156,7 @@
   document.body.appendChild(panel);
 
   function togglePanel() {
+    if (panel.classList.contains('open')) stopMini();
     panel.classList.toggle('open');
     if (panel.classList.contains('open')) {
       tip.style.display = 'none';
@@ -166,96 +167,80 @@
 
   // ================= 问答链路(复用SSE管线) =================
   var tid = localStorage.getItem('lingshan_tid') || 'guest';
-  var asking = false;
-  var speechQ = [], playing = false;
+  var client = new GuideRuntime.ChatClient(), asking = false, miniMedia = null, miniRAF = 0, miniEpoch = 0, miniSendTimer = null;
 
   function addMsg(text, who) {
-    var body = document.getElementById('lxx-body');
-    var div = document.createElement('div');
-    div.className = 'lxx-msg ' + who;
-    div.textContent = text;
-    body.appendChild(div);
-    body.scrollTop = body.scrollHeight;
-    return div;
+    var body = document.getElementById('lxx-body'), div = document.createElement('div');
+    div.className = 'lxx-msg ' + who; div.textContent = text;
+    body.appendChild(div); body.scrollTop = body.scrollHeight; return div;
   }
-
-  function pump() {
-    if (playing || !speechQ.length) return;
-    var item = speechQ.shift();
-    playing = true;
-    document.getElementById('lxx-st').textContent = '讲解中...';
-    if (item.audio_url) {
-      dh.playAudio(item.audio_url, item.visemes).then(function () {
-        playing = false;
-        if (!speechQ.length) document.getElementById('lxx-st').textContent = '随时问~';
-        pump();
-      });
-    } else {
-      playing = false;
-      pump();
-    }
+  function stopMini() {
+    client.cancel(); asking = false; miniEpoch++; clearTimeout(miniSendTimer);
+    if (rec) { rec._active = false; try { rec.abort(); } catch (_) {} }
+    dh.stopAudio(); cancelAnimationFrame(miniRAF);
+    if (miniMedia) { miniMedia.pause(); miniMedia.removeAttribute('src'); miniMedia.load(); miniMedia = null; }
+    if (window.dh && window.dh.setMouthOpen) window.dh.setMouthOpen(0);
   }
-
-  function ask(q) {
-    if (asking || !q.trim()) return;
-    asking = true;
-    addMsg(q, 'user');
-    document.getElementById('lxx-text').value = '';
-    dh.setEmotion('think');
-    document.getElementById('lxx-st').textContent = '思考中...';
-    var botMsg = addMsg('...', 'bot');
-    var full = '';
-
-    fetch('/api/chat/stream', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: q, tourist_id: tid,
-        interest: sessionStorage.getItem('lingshan_interest') || undefined })
-    }).then(function (resp) {
-      var reader = resp.body.getReader();
-      var dec = new TextDecoder('utf-8');
-      var buf = '';
-      (function read() {
-        reader.read().then(function (res) {
-          if (res.done) { finish(); return; }
-          buf += dec.decode(res.value, { stream: true });
-          var lines = buf.split('\n');
-          buf = lines.pop();
-          lines.forEach(function (line) {
-            if (!line.startsWith('data:')) return;
-            var payload = line.slice(5).trim();
-            if (payload === '[DONE]') return;
-            try { handle(JSON.parse(payload)); } catch (e) {}
-          });
-          read();
-        });
-      })();
-      function handle(evt) {
-        if (evt.type === 'delta') { full += evt.text; botMsg.textContent = full; }
-        else if (evt.type === 'emotion') dh.setEmotion(evt.emotion);
-        else if (evt.type === 'sentence') { speechQ.push(evt); pump(); }
-        else if (evt.type === 'done') full = evt.full_text || full;
-        else if (evt.type === 'error') botMsg.textContent = '抱歉,我暂时开小差了,请再试一次~';
+  function playMini(item, signal) {
+    if (!item.audio_url) return Promise.resolve();
+    var url = new URL(item.audio_url, location.href);
+    if (url.origin !== location.origin || url.pathname.indexOf('/api/tts/audio/') !== 0) return Promise.reject(new Error('invalid audio URL'));
+    return new Promise(function (resolve, reject) {
+      var settled = false, timer = null, audio = null;
+      function finish(error) {
+        if (settled) return; settled = true;
+        clearTimeout(timer); cancelAnimationFrame(miniRAF); signal.removeEventListener('abort', abort);
+        if (audio) { audio.onended = audio.onerror = null; audio.pause(); audio.removeAttribute('src'); audio.load(); }
+        if (miniMedia === audio) miniMedia = null;
+        if (window.dh && window.dh.setMouthOpen) window.dh.setMouthOpen(0);
+        if (error) reject(error); else resolve();
       }
-      function finish() {
-        asking = false;
-        dh.setEmotion('calm');
-        document.getElementById('lxx-body').scrollTop = 1e9;
-      }
-    }).catch(function () {
-      asking = false;
-      botMsg.textContent = '网络不太稳定,请到导览页与我详聊~';
-      dh.setEmotion('sorry');
-      document.getElementById('lxx-st').textContent = '随时问~';
+      function abort() { dh.stopAudio(); finish(new DOMException('Cancelled', 'AbortError')); }
+      if (signal.aborted) { abort(); return; }
+      signal.addEventListener('abort', abort, { once: true });
+      timer = setTimeout(function () { dh.stopAudio(); finish(new Error('播放超时')); }, 60000);
+      if (!document.getElementById('home-dh')) { dh.playAudio(url.href, item.visemes).then(function () { finish(); }, finish); return; }
+      // Home keeps its original static floating portrait; drive the existing main Live2D canvas.
+      audio = new Audio(url.href); miniMedia = audio;
+      audio.onended = function () { finish(); }; audio.onerror = function () { finish(new Error('语音不可用')); };
+      audio.play().then(function () {
+        function mouth() {
+          if (settled || signal.aborted) return;
+          var ms = audio.currentTime * 1000, value = 0;
+          (item.visemes || []).forEach(function (v) { if (v.t <= ms && ms < v.t + v.d) value = v.v === 'sil' ? 0 : 0.5; });
+          if (window.dh && window.dh.setMouthOpen) window.dh.setMouthOpen(value);
+          miniRAF = requestAnimationFrame(mouth);
+        }
+        mouth();
+      }).catch(function () { finish(new Error('浏览器阻止播放')); });
     });
   }
-
-  document.getElementById('lxx-send').onclick = function () {
-    ask(document.getElementById('lxx-text').value);
-  };
-  document.getElementById('lxx-text').addEventListener('keydown', function (e) {
-    if (e.key === 'Enter') ask(this.value);
-  });
+  function ask(q) {
+    if (!q.trim()) return;
+    stopMini(); asking = true; addMsg(q, 'user');
+    document.getElementById('lxx-text').value = '';
+    dh.setEmotion('think'); document.getElementById('lxx-st').textContent = '检索中...';
+    var botMsg = addMsg('...', 'bot'), full = '';
+    void client.start({ message:q, tourist_id:tid, interest:sessionStorage.getItem('lingshan_interest') || undefined }, {
+      play: playMini,
+      onEvent: function (evt) {
+        if (evt.type === 'delta') { full += evt.text; botMsg.textContent = full; }
+        else if (evt.type === 'emotion') dh.setEmotion(evt.emotion);
+        else if (evt.type === 'done') { full = evt.full_text; botMsg.textContent = full; botMsg.dataset.outcome = evt.status; document.getElementById('lxx-st').textContent = evt.mode === 'demo' ? '演示 · 合成测试音' : '回答已结束'; }
+        else if (evt.type === 'error') { botMsg.dataset.outcome = evt.partial ? 'partial' : 'failed'; document.getElementById('lxx-st').textContent = '回答中断'; }
+      },
+      onCancel: function () { document.getElementById('lxx-st').textContent = '已停止'; },
+      onError: function () { botMsg.textContent = full || '服务未连接，请到导览页查看文字资料。'; document.getElementById('lxx-st').textContent = '回答未完成'; asking = false; },
+      onAudioError: function () { document.getElementById('lxx-st').textContent = '文字保留 · 语音不可用'; },
+      onFinish: function () { asking = false; dh.setEmotion('calm'); }
+    });
+  }
+  document.getElementById('lxx-send').onclick = function () { ask(document.getElementById('lxx-text').value); };
+  document.getElementById('lxx-text').addEventListener('keydown', function (e) { if (e.key === 'Enter') ask(this.value); });
+  var stopButton = document.createElement('button'); stopButton.textContent = '■'; stopButton.title = '停止讲解'; stopButton.setAttribute('aria-label', '停止讲解'); stopButton.onclick = stopMini;
+  stopButton.style.cssText = 'border:0;background:transparent;color:#DFC98A;cursor:pointer'; panel.querySelector('.p-head').appendChild(stopButton);
+  window.addEventListener('pagehide', function () { stopMini(); if (dh.destroy) dh.destroy(); });
+  document.addEventListener('visibilitychange', function () { if (document.hidden) stopMini(); });
 
   // ================= 语音输入 =================
   var micBtn = document.getElementById('lxx-mic');
@@ -265,6 +250,7 @@
     rec.lang = 'zh-CN'; rec.continuous = false; rec.interimResults = true;
     rec.onstart = function () { micBtn.classList.add('listening'); };
     rec.onresult = function (e) {
+      if (!rec._active) return;
       var t = '';
       for (var i = e.resultIndex; i < e.results.length; i++) t += e.results[i][0].transcript;
       document.getElementById('lxx-text').value = t;
@@ -272,10 +258,11 @@
     rec.onend = function () {
       micBtn.classList.remove('listening');
       var v = document.getElementById('lxx-text').value.trim();
-      if (v) setTimeout(function () { ask(v); }, 250);
+      var wasActive = rec._active; rec._active = false; var epoch = miniEpoch;
+      if (wasActive && v) miniSendTimer = setTimeout(function () { if (epoch === miniEpoch) ask(v); }, 250);
     };
-    rec.onerror = function () { micBtn.classList.remove('listening'); };
-    micBtn.onclick = function () { try { rec.start(); } catch (e) {} };
+    rec.onerror = function () { rec._active = false; micBtn.classList.remove('listening'); };
+    micBtn.onclick = function () { stopMini(); rec._active = true; try { rec.start(); } catch (e) { rec._active = false; } };
   } else {
     micBtn.style.display = 'none';
   }

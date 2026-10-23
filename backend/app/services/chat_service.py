@@ -15,6 +15,7 @@ from typing import AsyncGenerator, Dict, List, Optional
 from sqlalchemy import select,update
 
 from app.core.database import async_session
+from app.core.config import settings
 from app.models.models import ChatMessage, ChatSession, TouristFeedback
 from app.services.llm_service import llm_service, parse_emotion, strip_emotion
 from app.services.rag_service import rag_service
@@ -215,7 +216,7 @@ class ChatService:
                     logging.getLogger(__name__).warning('chat_persistence_failed kind=%s',type(exc).__name__)
         yield {'type':'done','full_text':answer,'emotion':emotion,'status':status,'request_id':request_id,
                'latency_ms':round((time.monotonic()-started)*1000),'feedback_id':feedback_id,'persisted':persisted,
-               'mode':'local_extractive' if not llm_service.available else 'configured_model_chain'}
+               'mode':'demo' if settings.DEMO_MODE else 'local_extractive' if not llm_service.available else 'configured_model_chain'}
 
 
 chat_service=ChatService()

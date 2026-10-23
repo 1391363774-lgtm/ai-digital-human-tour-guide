@@ -1,0 +1,17 @@
+{
+  "name": "lingshan-runtime-checks",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "build": "npm run typecheck && node build.mjs"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3",
+    "vitest": "4.0.18",
+    "jsdom": "27.4.0",
+    "lucide": "0.468.0",
+    "echarts": "5.6.0"
+  }
+}

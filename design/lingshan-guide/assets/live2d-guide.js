@@ -105,6 +105,7 @@
 
   // 热切换 Live2D 模型(导览页形象切换用)
   GuideHuman.prototype.switchModel = function (modelKey) {
+    this.stopAudio();
     if (this._fallback) return;            // 降级态无法切换
     var path = (window.LIVE2D_MODELS && LIVE2D_MODELS[modelKey]) || getLive2DModel();
     var emo = this._lastEmotion;
@@ -159,29 +160,42 @@
   // ---------- 在线音频 + 视素口型 ----------
   GuideHuman.prototype.playAudio = function (url, visemes) {
     if (this._fallback) return this._fallback.playAudio(url, visemes);
-    var self = this;
     this.stopAudio();
-    this.visemes = visemes || [];
-    return new Promise(function (resolve) {
-      var a = new Audio();
-      self.audio = a;
-      self.speaking = true;
-      a.onended = function () { self.speaking = false; self._mouth(0); resolve(); };
-      a.onerror = function () { self.speaking = false; self._mouth(0); resolve(); };
+    var self = this, a = new Audio(), epoch = this._playEpoch;
+    this.audio = a; this.visemes = visemes || [];
+    return new Promise(function (resolve, reject) {
+      var settled = false;
+      function finish(error) {
+        if (settled) return; settled = true;
+        a.onended = a.onerror = null;
+        try { a.pause(); a.removeAttribute('src'); a.load(); } catch (_) {}
+        if (self.audio === a) { self.audio = null; self.speaking = false; self._mouth(0); cancelAnimationFrame(self.raf); }
+        self._settle = null;
+        if (error) reject(error); else resolve();
+      }
+      self._settle = function () { finish(); };
+      a.onended = function () { if (epoch === self._playEpoch) finish(); };
+      a.onerror = function () { if (epoch === self._playEpoch) finish(new Error('音频加载失败')); };
       a.src = url;
-      a.play().then(function () { self._drive(); }).catch(function () {
-        // 自动播放被拦截 → 视为播放结束(避免卡死)
-        self.speaking = false; self._mouth(0); resolve();
-      });
+      a.play().then(function () {
+        if (epoch !== self._playEpoch || settled) return;
+        self.speaking = true; self._drive();
+      }).catch(function () { if (epoch === self._playEpoch) finish(new Error('浏览器阻止播放，请先点击页面')); });
     });
   };
 
   GuideHuman.prototype.stopAudio = function () {
-    cancelAnimationFrame(this.raf);
-    this.speaking = false;
-    if (this.audio) { try { this.audio.pause(); } catch (e) {} this.audio = null; }
+    this._playEpoch = (this._playEpoch || 0) + 1;
+    clearTimeout(this._timelineTimer); this._timelineTimer = null;
+    cancelAnimationFrame(this.raf); this.speaking = false;
+    if (this._settle) this._settle();
+    if (this.audio) {
+      this.audio.onended = this.audio.onerror = null;
+      try { this.audio.pause(); this.audio.removeAttribute('src'); this.audio.load(); } catch (_) {}
+      this.audio = null;
+    }
     this._mouth(0);
-    if (this._fallback) this._fallback.stopAudio && this._fallback.stopAudio();
+    if (this._fallback && this._fallback.stopAudio) this._fallback.stopAudio();
   };
 
   // ---------- 浏览器 TTS 兜底口型(离线模式) ----------
@@ -192,8 +206,10 @@
     this.playStart = performance.now();
     this.speaking = true;
     this._drive();
-    setTimeout(function () {
-      if (self.speaking) { self.speaking = false; self._mouth(0); }
+    clearTimeout(this._timelineTimer);
+    var epoch = this._playEpoch;
+    this._timelineTimer = setTimeout(function () {
+      if (epoch === self._playEpoch && self.speaking) { self.speaking = false; self._mouth(0); }
     }, durationMs || 3000);
   };
 
@@ -202,5 +218,11 @@
     if (this._fallback) this._fallback.stopSpeaking && this._fallback.stopSpeaking();
   };
 
+  GuideHuman.prototype.destroy = function () {
+    this.stopAudio();
+    if (this._l2d) this._l2d.destroy();
+    if (this._fallback && this._fallback.destroy) this._fallback.destroy();
+    this._l2d = this._fallback = null;
+  };
   window.GuideHuman = GuideHuman;
 })();

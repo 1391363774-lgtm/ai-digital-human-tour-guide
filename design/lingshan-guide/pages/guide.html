@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
+<script src="/assets/guide-runtime.js"></script>
 <script src="/assets/access.js"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -244,7 +245,7 @@ footer { flex-shrink:0; padding:12px 16px; background:#FFF; border-top:1px solid
   <section class="chat-col">
     <div class="chat-head">
       <span class="ttl">与灵小仙对话</span>
-      <span class="sub">语音/文字/拍照/扫码 · 口型同步讲解</span>
+      <span class="sub">语音/文字/拍照/扫码 · 估算口型讲解</span>
     </div>
     <div id="quick-row" class="no-scrollbar"></div>
     <div id="interest-row" class="no-scrollbar">
@@ -263,7 +264,8 @@ footer { flex-shrink:0; padding:12px 16px; background:#FFF; border-top:1px solid
         <input id="chatInput" type="text" placeholder="问我任何灵山胜境的问题..." autocomplete="off">
         <button id="locateBtn" class="round-btn" title="扫码定位(弱GPS场景)"><i data-lucide="map-pin" style="width:18px;height:18px;"></i></button>
         <button id="photoBtn" class="round-btn" title="拍照识景"><i data-lucide="camera" style="width:18px;height:18px;"></i></button>
-        <button id="ttsBtn" class="round-btn" title="语音开关"><i data-lucide="volume-2" style="width:18px;height:18px;"></i></button>
+        <button id="stopBtn" type="button" aria-label="停止讲解" title="停止讲解" style="border:1px solid #C5A55A;border-radius:50%;padding:10px;background:#101A33;color:#EBDCB0">■</button>
+    <button id="ttsBtn" class="round-btn" title="语音开关"><i data-lucide="volume-2" style="width:18px;height:18px;"></i></button>
         <button id="sendBtn" class="round-btn" title="发送"><i data-lucide="send" style="width:17px;height:17px;"></i></button>
       </div>
       <div id="voice-hint"></div>

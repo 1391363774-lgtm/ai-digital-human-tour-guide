@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
+<script src="/assets/guide-runtime.js"></script>
 <script src="/assets/access.js"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -153,8 +154,8 @@ body { font-family:var(--sans); color:var(--text); background:var(--bg); }
     <span class="tag">AI数字人导游</span>
     <span class="name">灵小仙</span>
     <div id="home-dh"></div>
-    <span class="ai-status"><i></i>已就绪 · 大模型在线</span>
-    <p class="ai-desc">会听 · 会说 · 会看 · 有表情<br>口型同步讲解,一问她就答</p>
+    <span class="ai-status"><i></i>正在检测服务状态</span>
+    <p class="ai-desc">会听 · 会说 · 会看 · 有表情<br>估算口型讲解,一问她就答</p>
     <button class="ai-cta" onclick="location.href='guide.html'">
       开始导览<small>与灵小仙对话</small>
     </button>
@@ -234,6 +235,12 @@ var dh = new Live2DHuman('home-dh', {
 document.querySelectorAll('.spot').forEach(function (s) {
   s.addEventListener('click', function () { location.href = s.dataset.go; });
 });
+</script>
+<script>
+fetch('/api/status').then(function (r) { if (!r.ok) throw new Error('unavailable'); return r.json(); }).then(function (d) {
+  document.querySelector('.ai-status').textContent = d.demo_mode ? '离线演示 · 本地检索 + 合成测试音' : d.llm_available ? '服务可达 · 模型已配置（未探测）' : '本地 TF-IDF · 资料摘录';
+}).catch(function () { document.querySelector('.ai-status').textContent = '静态页面 · 后端未连接'; });
+window.addEventListener('pagehide', function () { if (dh && dh.destroy) dh.destroy(); });
 </script>
 </body>
 </html>
