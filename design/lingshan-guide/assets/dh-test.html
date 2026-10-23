@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>灵小仙数字人 - 口型同步测试</title>
+<style>
+  body { margin: 0; background: linear-gradient(180deg, #0A1226, #101A33); color: #F5EDD6;
+         font-family: 'Microsoft YaHei', sans-serif; display: flex; flex-direction: column;
+         align-items: center; min-height: 100vh; padding: 20px; }
+  #stage { display: flex; gap: 40px; align-items: flex-start; }
+  #avatar-box { text-align: center; }
+  #dh { width: 300px; height: 360px; }
+  #viseme-display { font-size: 28px; color: #C5A55A; height: 40px; font-weight: bold; }
+  .panel { background: rgba(197,165,90,.08); border: 1px solid rgba(197,165,90,.3);
+           border-radius: 12px; padding: 16px; margin-top: 16px; width: 560px; }
+  button { background: linear-gradient(135deg, #C5A55A, #A88B3E); color: #fff; border: none;
+           padding: 8px 16px; border-radius: 20px; cursor: pointer; margin: 4px; font-size: 14px; }
+  button:hover { opacity: .85; }
+  .viseme-btns button { font-family: monospace; width: 56px; }
+  h3 { color: #C5A55A; margin: 8px 0; font-size: 15px; }
+  #status { color: #96A6C4; font-size: 13px; margin-top: 8px; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="avatar-box">
+    <div id="dh"></div>
+    <div id="viseme-display">—</div>
+    <div style="color:#C5A55A;font-size:14px;">灵小仙 · AI数字人</div>
+  </div>
+</div>
+
+<div class="panel">
+  <h3>🎭 表情测试</h3>
+  <button onclick="dh.setEmotion('welcome')">欢迎</button>
+  <button onclick="dh.setEmotion('happy')">开心</button>
+  <button onclick="dh.setEmotion('calm')">平静</button>
+  <button onclick="dh.setEmotion('think')">沉思</button>
+  <button onclick="dh.setEmotion('sorry')">抱歉</button>
+  <button onclick="dh.setEmotion('surprise')">惊叹</button>
+</div>
+
+<div class="panel viseme-btns">
+  <h3>👄 视素口型测试(按住查看)</h3>
+  <div id="vb"></div>
+</div>
+
+<div class="panel">
+  <h3>🔊 语音+口型同步测试(真实TTS管线)</h3>
+  <button onclick="testTTS()">▶ 播放讲解(口型同步)</button>
+  <button onclick="testBrowserTTS()">▶ 浏览器TTS兜底(估算时间轴)</button>
+  <div id="status">点击按钮测试</div>
+</div>
+
+<script src="digital-human.js"></script>
+<script>
+var dh = new DigitalHuman('dh', {
+  size: 300,
+  onViseme: function(v) { document.getElementById('viseme-display').textContent = v; }
+});
+
+// URL参数控制(截图调试用): #viseme=AA&emotion=happy&freeze=1
+(function() {
+  var hash = location.hash.slice(1);
+  if (!hash) return;
+  var params = {};
+  hash.split('&').forEach(function(kv) {
+    var p = kv.split('='); params[p[0]] = decodeURIComponent(p[1] || '');
+  });
+  if (params.emotion) dh.setEmotion(params.emotion);
+  if (params.freeze) {
+    // 冻结弹簧:直接设到目标值,并禁用眨眼便于截图
+    dh.nextBlink = Infinity;
+    setTimeout(function() {
+      dh.expr = Object.assign({}, dh.exprTarget);
+      if (params.viseme) {
+        var p = DH_VISEMES[params.viseme];
+        dh.mouth = { open: p.open, width: p.width, round: p.round,
+                     teeth: p.teeth ? 1 : 0, tongue: p.tongue ? 1 : 0 };
+        dh.mouthTarget = Object.assign({}, dh.mouth);
+      }
+    }, 1200);
+  }
+  if (params.viseme) {
+    document.getElementById('viseme-display').textContent = params.viseme;
+  }
+})();
+
+// 视素按钮
+var vs = ['sil','MM','AA','EH','II','OO','UU','FF','DD','SS','RR','KK'];
+var vb = document.getElementById('vb');
+vs.forEach(function(v) {
+  var b = document.createElement('button');
+  b.textContent = v;
+  b.onmousedown = function() { dh.setViseme(v); };
+  b.onmouseup = function() { dh.setViseme('sil'); };
+  vb.appendChild(b);
+});
+
+// 真实TTS管线测试(需后端运行)
+function testTTS() {
+  var st = document.getElementById('status');
+  st.textContent = '合成中...';
+  fetch('/api/tts', {
+    method: 'POST', headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({text: '阿弥陀佛,欢迎来到灵山胜境。灵山大佛通高八十八米,是世界上最高的露天青铜释迦牟尼立像。'})
+  }).then(function(r) { return r.json(); }).then(function(d) {
+    if (d.ok) {
+      st.textContent = '播放中 | 时长:' + d.duration_ms + 'ms | 视素:' + d.visemes.length + '个';
+      dh.setEmotion('welcome');
+      dh.playAudio(d.audio_url, d.visemes).then(function() {
+        dh.setEmotion('calm');
+        st.textContent = '播放完成';
+      });
+    } else {
+      st.textContent = 'TTS失败: ' + (d.reason || '未知');
+    }
+  }).catch(function(e) { st.textContent = '请求失败(后端未启动?): ' + e.message; });
+}
+
+// 浏览器TTS兜底测试
+function testBrowserTTS() {
+  var text = '灵山胜境位于无锡太湖之滨,是国家五A级旅游景区。';
+  var charsPerSec = 5.2;
+  // 本地估算时间轴(与后端同规则)
+  var visemes = [], t = 0;
+  var msPerChar = 1000 / charsPerSec;
+  var FINAL = {a:'AA',o:'OO',e:'EH',i:'II',u:'UU',v:'UU'};
+  for (var i = 0; i < text.length; i++) {
+    var ch = text[i];
+    if ('，。！？、；：'.indexOf(ch) >= 0) { visemes.push({t:t, v:'sil', d:250}); t += 250; continue; }
+    visemes.push({t:t, v:'AA', d:msPerChar}); t += msPerChar;
+  }
+  var u = new SpeechSynthesisUtterance(text);
+  u.lang = 'zh-CN'; u.rate = 1.0;
+  dh.startTimeline(visemes, t);
+  dh.setEmotion('happy');
+  u.onend = function() { dh.stopSpeaking(); dh.setEmotion('calm'); };
+  speechSynthesis.speak(u);
+}
+</script>
+</body>
+</html>

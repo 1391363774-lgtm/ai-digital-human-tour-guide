@@ -1,56 +1,27 @@
-# Python
-__pycache__/
-*.py[cod]
-*.db
-.pytest_cache/
-.venv/
-venv/
-.mypy_cache/
-.ruff_cache/
-
-# Node
-node_modules/
-dist/
-coverage/
-.local-build/
-.local-demo/
-test-results/
-*.tsbuildinfo
-
-# Env
+backend/.env
 .env
 .env.*
 !.env.example
-
-# Data and generated assets
-data/vector_store/*
-!data/vector_store/.gitkeep
-data/processed/*
-!data/processed/.gitkeep
-uploads/
-logs/
-data/eval/eval_*.json
-
-# Local deployment/research notes (not product source)
-live2d-*-prompt.md
-tts-lipsync-deploy-prompt.md
-
-# IDE
-.idea/
-.vscode/
-*.local
-
-# Raw local test traces may contain workstation paths. Portable timings and
-# the execution summary under docs/evidence/reliability remain reviewable.
-docs/evidence/reliability/regression-*.txt
-docs/evidence/reliability/*.xml
-
-# Build / packaging artifacts (PyInstaller etc.)
-build_pyinstaller/
-dist_exe/
+__pycache__/
+*.py[cod]
+.venv/
+node_modules/
+dist/
+build/
+backend/data/
+.runtime/
+.pytest_cache/
+test-results/
+*.sqlite*
+*.db
+*.npz
+*.log
+*.wav
+*.mp3
 *.exe
-
-# Large / generated assets not needed in repo
-*.zip
-*.7z
-*.rar
+*.pt
+*.onnx
+*.safetensors
+data/eval/*report*.json
+评测包/*report*.json
+design/lingshan-guide/assets/guide-runtime.js

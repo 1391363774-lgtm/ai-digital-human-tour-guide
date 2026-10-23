@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>灵小仙照片级数字人 - 口型同步测试</title>
+<style>
+  body { margin: 0; background: linear-gradient(180deg, #0A1226, #101A33); color: #F5EDD6;
+         font-family: 'Microsoft YaHei', sans-serif; display: flex; flex-direction: column;
+         align-items: center; min-height: 100vh; padding: 20px; }
+  #dh { position: relative; }
+  #dh::before { content:''; position:absolute; inset:-24px; border-radius:50%;
+         background: radial-gradient(circle, rgba(197,165,90,.35), transparent 70%); z-index:-1; }
+  #viseme-display { font-size: 24px; color: #C5A55A; height: 34px; font-weight: bold; text-align:center; }
+  .panel { background: rgba(197,165,90,.08); border: 1px solid rgba(197,165,90,.3);
+           border-radius: 12px; padding: 16px; margin-top: 14px; width: 560px; }
+  button { background: linear-gradient(135deg, #C5A55A, #A88B3E); color: #fff; border: none;
+           padding: 8px 14px; border-radius: 20px; cursor: pointer; margin: 3px; font-size: 13px; }
+  .viseme-btns button { font-family: monospace; width: 52px; }
+  h3 { color: #C5A55A; margin: 6px 0; font-size: 14px; }
+  #status { color: #96A6C4; font-size: 12px; margin-top: 6px; }
+</style>
+</head>
+<body>
+<div id="dh"></div>
+<div id="viseme-display">—</div>
+<div style="color:#C5A55A;font-size:14px;">灵小仙 · AI数字人(照片级)</div>
+
+<div class="panel">
+  <h3>🎭 表情</h3>
+  <button onclick="dh.setEmotion('welcome')">欢迎</button>
+  <button onclick="dh.setEmotion('happy')">开心</button>
+  <button onclick="dh.setEmotion('calm')">平静</button>
+  <button onclick="dh.setEmotion('think')">沉思</button>
+  <button onclick="dh.setEmotion('sorry')">抱歉</button>
+  <button onclick="dh.setEmotion('surprise')">惊叹</button>
+</div>
+<div class="panel viseme-btns">
+  <h3>👄 视素(按住)</h3>
+  <div id="vb"></div>
+</div>
+<div class="panel">
+  <h3>🔊 语音口型同步</h3>
+  <button onclick="testTTS()">▶ 真实TTS管线</button>
+  <button onclick="testLoop()">▶ 口型循环演示</button>
+  <div id="status">就绪</div>
+</div>
+
+<script src="digital-human-v2.js"></script>
+<script>
+var dh = new PhotoHuman('dh', {
+  size: 380,
+  onViseme: function(v) { document.getElementById('viseme-display').textContent = v; }
+});
+
+// URL参数冻结(截图): #viseme=AA&emotion=happy&freeze=1
+(function() {
+  var hash = location.hash.slice(1);
+  if (!hash) return;
+  var params = {};
+  hash.split('&').forEach(function(kv) { var p = kv.split('='); params[p[0]] = decodeURIComponent(p[1] || ''); });
+  if (params.emotion) dh.setEmotion(params.emotion);
+  if (params.freeze) {
+    dh.nextBlink = Infinity;
+    setTimeout(function() {
+      dh.expr = Object.assign({}, dh.exprTarget);
+      if (params.viseme) {
+        dh.open = DH_VISEMES_V2[params.viseme] || 0;
+        dh.openTarget = dh.open;
+      }
+    }, 1000);
+  }
+})();
+
+var vs = ['sil','MM','AA','EH','II','OO','UU','FF','DD','SS','RR','KK'];
+var vb = document.getElementById('vb');
+vs.forEach(function(v) {
+  var b = document.createElement('button');
+  b.textContent = v;
+  b.onmousedown = function() { dh.setViseme(v); };
+  b.onmouseup = function() { dh.setViseme('sil'); };
+  vb.appendChild(b);
+});
+
+function testTTS() {
+  var st = document.getElementById('status');
+  st.textContent = '合成中...';
+  fetch('/api/tts', {
+    method: 'POST', headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({text: '阿弥陀佛,欢迎来到灵山胜境。灵山大佛通高八十八米,是世界上最高的露天青铜释迦牟尼立像。'})
+  }).then(function(r) { return r.json(); }).then(function(d) {
+    if (d.ok) {
+      st.textContent = '播放 | ' + d.duration_ms + 'ms | 视素' + d.visemes.length + '个';
+      dh.setEmotion('welcome');
+      dh.playAudio(d.audio_url, d.visemes).then(function() {
+        dh.setEmotion('calm'); st.textContent = '完成';
+      });
+    } else st.textContent = 'TTS失败: ' + (d.reason || '');
+  }).catch(function(e) { st.textContent = '请求失败: ' + e.message; });
+}
+
+function testLoop() {
+  var seq = ['AA','OO','II','EH','UU','MM','DD','SS','sil'];
+  var i = 0;
+  dh.speaking = true;
+  var timer = setInterval(function() {
+    dh.setViseme(seq[i % seq.length]);
+    document.getElementById('viseme-display').textContent = seq[i % seq.length];
+    i++;
+    if (i > seq.length * 3) { clearInterval(timer); dh.speaking = false; dh.setViseme('sil'); }
+  }, 220);
+}
+</script>
+</body>
+</html>

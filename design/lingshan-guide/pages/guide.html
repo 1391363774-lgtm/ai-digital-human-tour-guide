@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<script src="/assets/guide-runtime.js"></script>
+<script src="/assets/access.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI导游 - 灵山胜境智慧导览</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold-100:#F5EDD6; --gold-200:#EBDCB0; --gold-300:#DFC98A; --gold-400:#D4B96E;
+  --gold-500:#C5A55A; --gold-600:#A88B3E; --gold-700:#8A7130;
+  --blue-300:#96A6C4; --blue-400:#677EA8; --blue-500:#1B2A4A; --blue-600:#152240;
+  --blue-700:#101A33; --blue-800:#0A1226; --blue-900:#050A19;
+  --red-500:#C25450;
+  --bg:#F2F4F8; --card:#FFF; --line:#E4E8F0; --text:#1B2A4A; --text2:#677EA8;
+  --font-head:'Noto Serif SC',serif;
+  --font-body:'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:var(--font-body); background:var(--bg); color:var(--text); }
+.no-scrollbar::-webkit-scrollbar { display:none; }
+.no-scrollbar { scrollbar-width:none; }
+
+/* ================= 桌面双栏布局 ================= */
+.guide-wrap { display:grid; grid-template-columns:400px minmax(0,1fr); gap:22px;
+  padding:22px 26px; max-width:1500px; margin:0 auto; height:calc(100vh - 64px); }
+
+/* ---------- 左:数字人舱 ---------- */
+#stage { position:relative; border-radius:20px; overflow:hidden;
+  background:radial-gradient(ellipse 90% 60% at 50% 0%, rgba(197,165,90,.14), transparent 60%),
+             linear-gradient(180deg,var(--blue-900),var(--blue-800));
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  box-shadow:0 10px 30px rgba(10,18,38,.35); }
+#stage::after { content:'🪷'; position:absolute; right:6%; top:16px; font-size:56px;
+  opacity:.07; transform:rotate(12deg); pointer-events:none; }
+#offline-badge { display:none; position:absolute; top:14px; right:14px; z-index:10; font-size:10px;
+  color:#f59e0b; border:1px solid #f59e0b; border-radius:6px; padding:2px 8px; }
+#dh-box { position:relative; z-index:1; animation:dhEnter 1s cubic-bezier(.22,.9,.32,1.1); }
+@keyframes dhEnter { from { opacity:0; transform:translateY(16px) scale(.94); } to { opacity:1; transform:none; } }
+#digital-human { position:relative; }
+#digital-human::before { content:''; position:absolute; inset:-20px; border-radius:50%;
+  background:radial-gradient(circle,rgba(197,165,90,.32),transparent 70%); z-index:-1; }
+.halo-ring { position:absolute; left:50%; top:44%; transform:translate(-50%,-50%);
+  border-radius:50%; pointer-events:none; z-index:0; animation:haloSpin 14s linear infinite, fadeIn 1.2s ease-out; }
+.halo-ring.r1 { width:250px; height:250px; border:1.5px solid rgba(197,165,90,.35);
+  border-top-color:rgba(197,165,90,.85); border-bottom-color:rgba(197,165,90,.85); }
+.halo-ring.r2 { width:272px; height:272px; border:1px dashed rgba(197,165,90,.22);
+  animation:haloSpin 26s linear infinite reverse, fadeIn 1.6s ease-out; }
+@keyframes haloSpin { to { transform:translate(-50%,-50%) rotate(360deg); } }
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+.qi-p { position:absolute; width:4px; height:4px; border-radius:50%;
+  background:var(--gold-300); opacity:0; pointer-events:none; z-index:2;
+  animation:qiFloat 7s ease-in-out infinite; box-shadow:0 0 6px rgba(223,201,138,.8); }
+@keyframes qiFloat {
+  0% { opacity:0; transform:translateY(10px) scale(.6); }
+  18% { opacity:.8; } 60% { opacity:.5; }
+  100% { opacity:0; transform:translateY(-140px) scale(1.1); } }
+#dh-nameplate { position:relative; z-index:2; text-align:center; margin-top:14px; animation:fadeIn 1.4s ease-out; }
+#dh-name { font-family:var(--font-head); font-size:24px; letter-spacing:8px; font-weight:900;
+  background:linear-gradient(135deg,#F5EDD6,#DFC98A 55%,#C5A55A);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  text-shadow:0 0 18px rgba(197,165,90,.25); }
+#dh-title { font-size:10px; color:var(--blue-300); letter-spacing:3px; margin-top:3px; }
+#dh-status { display:inline-flex; align-items:center; gap:6px; margin-top:10px; padding:4px 16px;
+  font-size:11px; color:var(--gold-200); border-radius:999px;
+  background:rgba(197,165,90,.10); border:1px solid rgba(197,165,90,.28); transition:all .3s; }
+#dh-status.speaking { background:rgba(197,165,90,.22); border-color:var(--gold-400);
+  box-shadow:0 0 14px rgba(197,165,90,.3); color:var(--gold-100); }
+#dh-status .st-dot { width:6px; height:6px; border-radius:50%; background:#4ade80;
+  animation:pulse 1.6s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+/* 舞台小工具按钮 */
+.stage-tools { position:absolute; left:14px; top:14px; z-index:10; display:flex; gap:8px; }
+.stage-tools button { padding:6px 12px; border-radius:999px; font-size:11px; cursor:pointer;
+  background:rgba(197,165,90,.12); border:1px solid rgba(197,165,90,.3); color:var(--gold-200); }
+.stage-tools button:hover { background:rgba(197,165,90,.25); }
+
+/* 形象切换 */
+#dh-switcher { position:relative; z-index:3; display:flex; align-items:center; gap:7px;
+  margin-top:16px; padding:6px 10px; border-radius:999px;
+  background:rgba(10,18,38,.45); border:1px solid rgba(197,165,90,.22); backdrop-filter:blur(4px); }
+.dh-sw-label { font-size:10px; color:var(--blue-300); letter-spacing:1px; margin-right:2px; }
+.dh-sw { display:flex; align-items:center; gap:5px; padding:4px 10px 4px 4px; border-radius:999px;
+  border:1px solid transparent; background:transparent; color:var(--blue-300); font-size:11px;
+  cursor:pointer; transition:all .2s; font-family:inherit; }
+.dh-sw img { width:22px; height:22px; border-radius:50%; object-fit:cover; object-position:top;
+  border:1px solid rgba(197,165,90,.4); }
+.dh-sw:hover { color:var(--gold-200); background:rgba(197,165,90,.1); }
+.dh-sw.on { background:linear-gradient(135deg,rgba(197,165,90,.3),rgba(168,139,62,.2));
+  color:var(--gold-100); border-color:rgba(197,165,90,.6); box-shadow:0 0 12px rgba(197,165,90,.25); }
+.dh-sw.on img { border-color:var(--gold-400); }
+
+/* 表情测试 */
+#dh-expr-wrap { position:relative; z-index:3; display:flex; align-items:flex-start; gap:7px;
+  margin-top:8px; max-width:360px; justify-content:center; }
+.dh-expr-label { font-size:10px; color:var(--blue-300); letter-spacing:1px; margin-top:2px; }
+.dh-expr-row { display:flex; gap:5px; flex-wrap:wrap; justify-content:center; }
+.dh-ex { padding:3px 9px; border-radius:999px; border:1px solid rgba(197,165,90,.3);
+  background:rgba(197,165,90,.1); color:var(--gold-200); font-size:10px; cursor:pointer;
+  font-family:inherit; transition:all .2s; }
+.dh-ex:hover { background:rgba(197,165,90,.28); color:var(--gold-100); }
+.dh-ex.none { color:var(--blue-300); border-color:transparent; background:transparent; cursor:default; }
+
+/* ---------- 右:聊天舱 ---------- */
+.chat-col { display:flex; flex-direction:column; background:var(--card); border-radius:20px;
+  box-shadow:0 6px 24px rgba(27,42,74,.08); overflow:hidden; min-height:0; }
+.chat-head { padding:14px 20px; border-bottom:1px solid var(--line);
+  display:flex; align-items:center; gap:10px; }
+.chat-head .ttl { font-family:var(--font-head); font-size:16px; color:var(--text); letter-spacing:1px; }
+.chat-head .sub { font-size:11px; color:var(--text2); margin-left:auto; }
+#quick-row { display:flex; gap:8px; padding:12px 18px 4px; overflow-x:auto; flex-shrink:0;
+  -webkit-mask-image:linear-gradient(90deg,transparent,black 4%,black 96%,transparent);
+  mask-image:linear-gradient(90deg,transparent,black 4%,black 96%,transparent); }
+.quick-q { flex-shrink:0; padding:6px 14px; border-radius:999px; font-size:12px; cursor:pointer;
+  background:#F6F3EA; border:1px solid #E4D9BC; color:#8A7130; transition:all .25s; }
+.quick-q:hover { transform:translateY(-2px); box-shadow:0 4px 12px rgba(197,165,90,.3);
+  background:#FFF; }
+#interest-row { display:flex; gap:6px; padding:6px 18px 10px; overflow-x:auto; flex-shrink:0;
+  align-items:center; border-bottom:1px solid var(--line);
+  -webkit-mask-image:linear-gradient(90deg,transparent,black 4%,black 96%,transparent);
+  mask-image:linear-gradient(90deg,transparent,black 4%,black 96%,transparent); }
+#interest-label { font-size:11px; color:var(--text2); flex-shrink:0; }
+.interest-chip { flex-shrink:0; padding:3px 10px; border-radius:999px; font-size:11px; cursor:pointer;
+  background:transparent; border:1px solid #D5DBE8; color:var(--text2); transition:all .2s; }
+.interest-chip.selected { background:#F6F3EA; border-color:var(--gold-400); color:#8A7130; }
+
+#chatArea { flex:1; overflow-y:auto; padding:18px 20px; display:flex; flex-direction:column;
+  gap:14px; background:linear-gradient(180deg,#FBFCFE,#F7F9FC); }
+.msg-row { display:flex; gap:8px; animation:fadeUp .4s ease-out; }
+.msg-row.user { justify-content:flex-end; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+.avatar-ico { width:36px; height:36px; border-radius:50%; flex-shrink:0; overflow:hidden;
+  display:flex; align-items:center; justify-content:center; font-size:18px;
+  background:linear-gradient(135deg,var(--gold-500),var(--gold-700));
+  box-shadow:0 0 10px rgba(197,165,90,.35); border:1.5px solid rgba(223,201,138,.5); }
+.avatar-ico img { width:100%; height:100%; object-fit:cover; object-position:top; }
+.avatar-ico.user { background:var(--blue-400); box-shadow:none; border-color:#D5DBE8; color:#FFF; }
+.bubble { max-width:78%; padding:12px 16px; border-radius:16px; font-size:14px; line-height:1.8;
+  white-space:pre-wrap; word-break:break-word; }
+.msg-row.bot .bubble { background:#FFF; border:1px solid #E9E4D4; border-top-left-radius:4px;
+  color:var(--text); box-shadow:0 2px 10px rgba(27,42,74,.06); }
+.msg-row.user .bubble { background:linear-gradient(135deg,var(--gold-600),var(--gold-700));
+  border-top-right-radius:4px; color:var(--gold-100);
+  box-shadow:0 2px 10px rgba(138,113,48,.3); }
+.msg-name { font-size:11px; color:var(--gold-600); margin-bottom:4px; }
+.msg-row.user .msg-name { color:var(--text2); text-align:right; }
+.bubble img.map-img { width:100%; border-radius:10px; margin-top:10px; cursor:pointer;
+  border:1px solid #E4D9BC; display:block; }
+.rate-row { display:flex; gap:10px; margin-top:8px; align-items:center; }
+.rate-btn { background:none; border:1px solid #E4D9BC; border-radius:8px;
+  color:var(--text2); font-size:12px; padding:3px 10px; cursor:pointer; transition:all .2s; }
+.rate-btn:hover { color:var(--gold-600); border-color:var(--gold-400); }
+.rate-btn.rated { color:var(--gold-600); border-color:var(--gold-400); background:#F6F3EA; }
+.typing-cursor { display:inline-block; width:2px; height:1em; background:var(--gold-500);
+  vertical-align:-2px; animation:pulse 1s infinite; }
+
+/* 输入区 */
+footer { flex-shrink:0; padding:12px 16px; background:#FFF; border-top:1px solid var(--line); }
+.input-row { display:flex; align-items:center; gap:7px; }
+.round-btn { width:40px; height:40px; border-radius:50%; border:none; cursor:pointer; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center; color:#FFF; transition:all .25s; }
+.round-btn:active { transform:scale(.92); }
+#voiceBtn { background:linear-gradient(135deg,var(--gold-500),var(--gold-600));
+  box-shadow:0 2px 10px rgba(197,165,90,.35); }
+#voiceBtn.listening { background:linear-gradient(135deg,var(--red-500),#A34340);
+  animation:voicePulse 1.2s infinite; }
+@keyframes voicePulse { 0%,100%{box-shadow:0 0 0 0 rgba(194,82,80,.45)} 50%{box-shadow:0 0 0 10px rgba(194,82,80,0)} }
+#photoBtn, #ttsBtn, #locateBtn { background:#F6F8FB; border:1px solid #D5DBE8; color:var(--text2); }
+#photoBtn:hover, #ttsBtn:hover, #locateBtn:hover { border-color:var(--gold-400); color:var(--gold-600); }
+#ttsBtn.muted { opacity:.45; }
+#sendBtn { background:linear-gradient(135deg,var(--gold-500),var(--gold-600));
+  box-shadow:0 2px 10px rgba(197,165,90,.35); }
+#chatInput { flex:1; min-width:0; padding:11px 16px; border-radius:999px; border:1px solid #D5DBE8;
+  background:#F6F8FB; color:var(--text); font-size:14px; outline:none;
+  transition:border-color .25s, box-shadow .25s; }
+#chatInput:focus { border-color:var(--gold-400); box-shadow:0 0 0 3px rgba(197,165,90,.15); background:#FFF; }
+#chatInput::placeholder { color:#A3A395; }
+#voice-hint { text-align:center; font-size:11px; color:var(--red-500); height:14px; margin-top:4px; }
+
+/* 弹窗 */
+#photo-modal { position:fixed; inset:0; background:rgba(5,10,25,.85); z-index:960; display:none;
+  align-items:center; justify-content:center; flex-direction:column; gap:14px; }
+#photo-modal img { max-width:86%; max-height:55%; border-radius:12px; border:2px solid var(--gold-500); }
+#photo-modal .tip { color:var(--gold-200); font-size:14px; }
+#locate-modal { position:fixed; inset:0; background:rgba(5,10,25,.88); z-index:960; display:none;
+  align-items:center; justify-content:center; }
+#locate-modal .panel { background:var(--blue-700); border:1px solid rgba(197,165,90,.3);
+  border-radius:16px; padding:24px; width:86%; max-width:360px; }
+#locate-modal h3 { color:var(--gold-300); font-size:16px; margin-bottom:6px; font-family:var(--font-head); }
+#locate-modal .sub { font-size:11px; color:var(--blue-300); margin-bottom:16px; line-height:1.6; }
+.spot-item { display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px;
+  background:rgba(197,165,90,.06); border:1px solid rgba(197,165,90,.15);
+  margin-bottom:8px; cursor:pointer; transition:all .2s; font-size:13px; color:#F5F5F0; }
+.spot-item:hover { background:rgba(197,165,90,.15); transform:translateX(4px); }
+.spot-item .sid { font-size:10px; color:var(--blue-300); font-family:monospace; }
+
+/* ---------- 移动端:单栏 ---------- */
+@media (max-width:1000px) {
+  .guide-wrap { grid-template-columns:1fr; height:auto; padding:12px; gap:12px; }
+  #stage { height:44vh; min-height:340px; }
+  .chat-col { height:calc(100vh - 64px - 44vh - 24px); min-height:420px; }
+  .halo-ring.r1 { width:200px; height:200px; }
+  .halo-ring.r2 { width:220px; height:220px; }
+}
+</style>
+</head>
+<body data-page="guide">
+
+<div class="guide-wrap">
+  <!-- ========== 左:数字人舱 ========== -->
+  <section id="stage">
+    <div id="offline-badge">离线模式 · 本地知识库</div>
+    <div class="stage-tools">
+      <button onclick="location.href='route.html'">🗺 游览路线</button>
+      <button onclick="location.href='exhibit-detail.html'">🏛 必看景点</button>
+    </div>
+    <div class="halo-ring r1"></div>
+    <div class="halo-ring r2"></div>
+    <div id="dh-box"><div id="digital-human"></div></div>
+    <span class="qi-p" style="left:22%;top:70%;animation-delay:0s;"></span>
+    <span class="qi-p" style="left:76%;top:64%;animation-delay:1.8s;"></span>
+    <span class="qi-p" style="left:14%;top:40%;animation-delay:3.2s;"></span>
+    <span class="qi-p" style="left:84%;top:36%;animation-delay:4.6s;"></span>
+    <span class="qi-p" style="left:50%;top:78%;animation-delay:5.8s;"></span>
+    <div id="dh-nameplate">
+      <div id="dh-name">灵小仙</div>
+      <div id="dh-title">LINGXIAOXIAN · 禅意AI导游</div>
+      <div id="dh-status"><span class="st-dot"></span><span id="dh-status-txt">在线</span></div>
+    </div>
+    <div id="dh-switcher">
+      <span class="dh-sw-label">形象</span>
+      <button class="dh-sw" data-m="natori"><img src="../assets/natori-avatar.png" alt="">Natori</button>
+      <button class="dh-sw" data-m="haru"><img src="../assets/haru-avatar.png" alt="">Haru</button>
+      <button class="dh-sw" data-m="hiyori"><img src="../assets/hiyori-avatar.png" alt="">Hiyori</button>
+    </div>
+    <div id="dh-expr-wrap">
+      <span class="dh-expr-label">表情</span>
+      <div id="dh-expr" class="dh-expr-row"></div>
+    </div>
+  </section>
+
+  <!-- ========== 右:聊天舱 ========== -->
+  <section class="chat-col">
+    <div class="chat-head">
+      <span class="ttl">与灵小仙对话</span>
+      <span class="sub">语音/文字/拍照/扫码 · 估算口型讲解</span>
+    </div>
+    <div id="quick-row" class="no-scrollbar"></div>
+    <div id="interest-row" class="no-scrollbar">
+      <span id="interest-label">🎯 我的兴趣:</span>
+      <span class="interest-chip" data-v="">不限</span>
+      <span class="interest-chip" data-v="佛教历史文化">佛教历史文化</span>
+      <span class="interest-chip" data-v="自然风光与摄影">自然风光与摄影</span>
+      <span class="interest-chip" data-v="亲子家庭游">亲子家庭游</span>
+      <span class="interest-chip" data-v="禅修体验">禅修体验</span>
+      <span class="interest-chip" data-v="美食与休闲">美食与休闲</span>
+    </div>
+    <main id="chatArea" class="no-scrollbar"></main>
+    <footer>
+      <div class="input-row">
+        <button id="voiceBtn" class="round-btn" title="语音输入"><i data-lucide="mic" style="width:19px;height:19px;"></i></button>
+        <input id="chatInput" type="text" placeholder="问我任何灵山胜境的问题..." autocomplete="off">
+        <button id="locateBtn" class="round-btn" title="扫码定位(弱GPS场景)"><i data-lucide="map-pin" style="width:18px;height:18px;"></i></button>
+        <button id="photoBtn" class="round-btn" title="拍照识景"><i data-lucide="camera" style="width:18px;height:18px;"></i></button>
+        <button id="stopBtn" type="button" aria-label="停止讲解" title="停止讲解" style="border:1px solid #C5A55A;border-radius:50%;padding:10px;background:#101A33;color:#EBDCB0">■</button>
+    <button id="ttsBtn" class="round-btn" title="语音开关"><i data-lucide="volume-2" style="width:18px;height:18px;"></i></button>
+        <button id="sendBtn" class="round-btn" title="发送"><i data-lucide="send" style="width:17px;height:17px;"></i></button>
+      </div>
+      <div id="voice-hint"></div>
+      <input type="file" id="photoInput" accept="image/*" style="display:none">
+    </footer>
+  </section>
+</div>
+
+<!-- 拍照识景弹窗 -->
+<div id="photo-modal">
+  <img id="photo-preview" alt="照片预览" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==">
+  <div class="tip">灵小仙正在辨认照片中的景物...</div>
+</div>
+
+<!-- 扫码定位弹窗(GPS弱信号解决方案) -->
+<div id="locate-modal">
+  <div class="panel">
+    <h3>📍 扫码定位 · 当前所在景点</h3>
+    <div class="sub">山区GPS信号弱?扫描景点二维码即可精准定位,<br>灵小仙立即为您讲解眼前风景。(演示:点击模拟扫码)</div>
+    <div id="spot-list"></div>
+    <button style="margin:6px auto 0;display:block;width:auto;padding:8px 22px;border-radius:20px;background:var(--blue-600);color:var(--blue-200);font-size:12px;border:none;cursor:pointer;" onclick="document.getElementById('locate-modal').style.display='none'">关闭</button>
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+<script src="../assets/vendor/pixi.min.js"></script>
+<script src="../assets/vendor/live2dcubismcore.min.js"></script>
+<script src="../assets/vendor/cubism4.min.js"></script>
+<script src="../assets/live2d-human.js?v=l2d7"></script>
+<script src="../assets/live2d-guide.js?v=l2d7"></script>
+<script src="../assets/digital-human-v2.js"></script>
+<script src="../assets/shell.js"></script>
+<script src="guide-app.js?v=l2d7"></script>
+</body>
+</html>

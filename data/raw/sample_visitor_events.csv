@@ -1,7 +1,0 @@
-事件类型,会话ID,景点ID,页面路径,来源,停留秒数,发生时间,备注
-page_view,demo-session-001,1,/chat,web,45,2026-07-15 09:00:00,游客进入问答页
-chat_message,demo-session-001,1,/chat,web,18,2026-07-15 09:01:00,询问灵山大佛历史
-route_generate,demo-session-001,,/routes,web,30,2026-07-15 09:03:00,生成历史文化路线
-spot_view,demo-session-002,5,/spots/5,mobile,62,2026-07-15 10:10:00,查看菩提大道
-favorite_add,demo-session-002,5,/favorites,mobile,12,2026-07-15 10:12:00,收藏景点
-feedback_submit,demo-session-003,,/feedback,web,25,2026-07-15 11:20:00,提交满意度反馈
