@@ -147,7 +147,7 @@ function finalizeBotMsg(row, fullText) {
     var txtEl = row.querySelector('.txt');
     var m = fullText.match(/\[MAP:(.+?)\]/);
     if (m && m[1] === '../assets/lingshan-map.jpg') {
-        txtEl.innerHTML = esc(fullText.replace(/\[MAP:.+?\]/, '').trim());
+        txtEl.innerHTML = esc(GuideRuntime.formatCitationText(fullText.replace(/\[MAP:.+?\]/, '').trim(), row._retrievedSources || []));
         var img = document.createElement('img');
         img.className = 'map-img';
         img.src = m[1];
@@ -261,9 +261,9 @@ function renderSources(row, sources) {
     if (!sources || !sources.length) return;
     var details = document.createElement('details'), summary = document.createElement('summary');
     summary.textContent = '检索片段（是否支持答案尚未核实）'; details.appendChild(summary);
-    sources.forEach(function (source) {
+    sources.forEach(function (source, index) {
         var p = document.createElement('p');
-        p.textContent = String(source.title || '') + ' · ' + String(source.source || '') + ' · 片段 ' + String(source.chunk_id || '未知') + ' · 知识版本 ' + String(source.revision ?? '未知') + '\n资料更新时间：' + String(source.updated_at || '未知') + (source.updated_at ? '（记录更新时间，不代表事实核验）' : '') + '\n' + String(source.content || '').slice(0, 300);
+        p.textContent = '[' + (index + 1) + '] ' + String(source.title || '') + ' · ' + String(source.source || '') + ' · 片段 ' + String(source.chunk_id || '未知') + ' · 知识版本 ' + String(source.revision ?? '未知') + '\n资料更新时间：' + String(source.updated_at || '未知') + (source.updated_at ? '（记录更新时间，不代表事实核验）' : '') + '\n' + String(source.content || '').slice(0, 300);
         details.appendChild(p);
     });
     details.style.cssText = 'font-size:11px;white-space:pre-wrap;margin-top:8px';
@@ -279,12 +279,12 @@ function askOnline(text) {
         play: playSegment,
         onEvent: function (evt) {
             row.dataset.requestId = evt.request_id;
-            if (evt.type === 'meta') renderSources(row, evt.sources);
+            if (evt.type === 'meta') { row._retrievedSources = evt.sources; renderSources(row, evt.sources); }
             else if (evt.type === 'emotion') dh.setEmotion(evt.emotion);
-            else if (evt.type === 'delta') { fullText += evt.text; txtEl.textContent = fullText; document.getElementById('chatArea').scrollTop = 1e9; }
+            else if (evt.type === 'delta') { fullText += evt.text; txtEl.textContent = GuideRuntime.formatCitationText(fullText, row._retrievedSources || []); document.getElementById('chatArea').scrollTop = 1e9; }
             else if (evt.type === 'error') { statusNote(row, '回答中断，已保留文字'); row.dataset.outcome = evt.partial ? 'partial' : 'failed'; }
             else if (evt.type === 'done') {
-                fullText = evt.full_text; txtEl.textContent = fullText;
+                fullText = evt.full_text; txtEl.textContent = GuideRuntime.formatCitationText(fullText, row._retrievedSources || []);
                 row.dataset.outcome = evt.status; row.dataset.feedbackId = evt.feedback_id || '';
                 finalizeBotMsg(row, fullText);
                 var path = evt.provenance && evt.provenance.path || '未知';

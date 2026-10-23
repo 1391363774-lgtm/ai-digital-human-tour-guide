@@ -1,11 +1,21 @@
 import {afterEach,expect,it,vi} from 'vitest'
-import {readEvents,SpeechScheduler,ChatClient} from '../src/runtime'
+import {readEvents,SpeechScheduler,ChatClient,formatCitationText} from '../src/runtime'
 
 afterEach(()=>vi.unstubAllGlobals())
 const encode=(text:string)=>new TextEncoder().encode(text)
 const evt=(type:string,data:object={})=>'data:'+JSON.stringify({type,request_id:'req',...data})+'\r\n\r\n'
 const response=(wire:string)=>new Response(new ReadableStream({start(c){for(const byte of encode(wire))c.enqueue(new Uint8Array([byte]));c.close()}}),{headers:{'Content-Type':'text/event-stream'}})
 async function collect(r:Response) {const out=[];for await(const e of readEvents(r))out.push(e);return out}
+
+it('displays short citations in source order while rejecting unknown IDs',()=>{
+  expect(formatCitationText('甲[cite:b] 乙[cite:a] 丙[cite:forged]',[{chunk_id:'a'},{chunk_id:'b'}]))
+    .toBe('甲[2] 乙[1] 丙[引用编号无效]')
+})
+it('citation numbering belongs to the current reply and remains plain text',()=>{
+  const text='<img src=x onerror=alert(1)>[cite:a]'
+  expect(formatCitationText(text,[{chunk_id:'a'}])).toBe('<img src=x onerror=alert(1)>[1]')
+  expect(formatCitationText(text,[{chunk_id:'b'}])).toContain('[引用编号无效]')
+})
 
 it('preserves split UTF-8/CRLF, final JSON without delimiter, and closes reader',async()=>{
   const r=response(evt('delta',{text:'中文'})+evt('done',{full_text:'中文',status:'completed'}).trimEnd())

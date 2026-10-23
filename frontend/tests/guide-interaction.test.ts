@@ -2,7 +2,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import {afterEach,expect,it,vi} from 'vitest'
-import {ChatClient,SpeechScheduler,RequestEpoch} from '../src/runtime'
+import {ChatClient,SpeechScheduler,RequestEpoch,formatCitationText} from '../src/runtime'
 
 afterEach(()=>{vi.clearAllTimers();vi.useRealTimers();vi.unstubAllGlobals()})
 it('real page bindings accept a second question, cancel the first reader and retain separate answers',async()=>{
@@ -11,7 +11,7 @@ it('real page bindings accept a second question, cancel the first reader and ret
   const html=fs.readFileSync(path.join(folder,'guide.html'),'utf8')
   document.body.innerHTML=html.slice(html.indexOf('>',html.indexOf('<body'))+1,html.lastIndexOf('</body>'))
   document.querySelectorAll('script').forEach(s=>s.remove())
-  ;(window as any).GuideRuntime={ChatClient,SpeechScheduler,RequestEpoch}
+  ;(window as any).GuideRuntime={ChatClient,SpeechScheduler,RequestEpoch,formatCitationText}
   ;(window as any).lucide={createIcons:vi.fn()}
   ;(window as any).GuideHuman=function(){this.setEmotion=vi.fn();this.stopAudio=vi.fn();this.playAudio=async()=>{};this.startTimeline=vi.fn();this.destroy=vi.fn()}
   const cancel=vi.fn()
@@ -25,8 +25,8 @@ it('real page bindings accept a second question, cancel the first reader and ret
     return new Response(new ReadableStream({start(c){
       const id=message==='first'?'one':'two'
       c.enqueue(new TextEncoder().encode(wire(id,'meta',{sources:[{title:'<img src=x onerror=alert(1)>',source:'<script>alert(1)</script>',chunk_id:'trusted-id',revision:2,updated_at:null,content:'untrusted text'}]})))
-      c.enqueue(new TextEncoder().encode(wire(id,'delta',{text:message==='first'?'旧片段':'新回答'})))
-      if(message!=='first'){c.enqueue(new TextEncoder().encode(wire(id,'done',{full_text:'新回答',status:'completed'})));c.close()}
+      c.enqueue(new TextEncoder().encode(wire(id,'delta',{text:message==='first'?'旧片段':'新回答 [cite:trusted-id]'})))
+      if(message!=='first'){c.enqueue(new TextEncoder().encode(wire(id,'done',{full_text:'新回答 [cite:trusted-id]',status:'completed'})));c.close()}
     },cancel}),{headers:{'Content-Type':'text/event-stream'}})
   }))
   window.eval(fs.readFileSync(path.join(folder,'guide-app.js'),'utf8'))
@@ -36,7 +36,7 @@ it('real page bindings accept a second question, cancel the first reader and ret
   input.value='first';(document.getElementById('sendBtn') as HTMLButtonElement).click()
   await vi.waitFor(()=>expect(document.body.textContent).toContain('旧片段'))
   input.value='second';(document.getElementById('sendBtn') as HTMLButtonElement).click()
-  await vi.waitFor(()=>expect(document.querySelectorAll('.msg-row.bot .txt')[2]?.textContent).toBe('新回答'))
+  await vi.waitFor(()=>expect(document.querySelectorAll('.msg-row.bot .txt')[2]?.textContent).toBe('新回答 [1]'))
   expect(cancel).toHaveBeenCalledOnce()
   expect(document.querySelectorAll('.msg-row.bot')[1].getAttribute('data-outcome')).toBe('cancelled')
   expect(document.querySelectorAll('.msg-row.bot')[2].getAttribute('data-outcome')).toBe('completed')

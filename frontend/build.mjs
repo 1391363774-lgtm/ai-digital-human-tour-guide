@@ -24,7 +24,7 @@ copyTree(path.join(root,'design'),output)
 const assets=path.join(output,'lingshan-guide','assets')
 const source=['stream.ts','runtime.ts'].map(name=>fs.readFileSync(path.join(here,'src',name),'utf8').replace(/^import .*from ['"].+['"]\s*;?\s*$/gm,'').replace(/^export /gm,'')).join('\n')
 const compiled=ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.None}}).outputText
-fs.writeFileSync(path.join(assets,'guide-runtime.js'),'(function(window){\n'+compiled+'\nwindow.GuideRuntime={readEvents,RequestEpoch,SpeechScheduler,ChatClient};\n})(window);\n')
+fs.writeFileSync(path.join(assets,'guide-runtime.js'),'(function(window){\n'+compiled+'\nwindow.GuideRuntime={readEvents,RequestEpoch,SpeechScheduler,ChatClient,formatCitationText};\n})(window);\n')
 fs.writeFileSync(path.join(assets,'vendor/lucide.min.js'),fs.readFileSync(path.join(here,'node_modules/lucide/dist/umd/lucide.min.js')))
 fs.writeFileSync(path.join(assets,'vendor/echarts.min.js'),fs.readFileSync(path.join(here,'node_modules/echarts/dist/echarts.min.js')))
 for(const [name,folder] of [['lucide','lucide'],['echarts','echarts']]) {

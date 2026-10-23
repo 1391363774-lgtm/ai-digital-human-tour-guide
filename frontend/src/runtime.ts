@@ -4,6 +4,13 @@ export type Event = {type:string; request_id:string; [key:string]:unknown}
 export type Segment = {index:number; text:string; audio_url?:string|null; visemes?:unknown[]; duration_ms?:number; engine?:string; prelude?:boolean}
 export type Metrics = {request_id?:string;first_valid_text_ms:number|null;first_actual_audio_ms:number|null;total_ms:number|null;audio_complete_ms:number|null}
 
+// Return plain text for textContent. Keep real IDs in the per-reply source panel.
+export function formatCitationText(text:string,sources:Array<{chunk_id?:unknown}>=[]):string {
+  const numbers=new Map<string,number>()
+  sources.forEach((source,index)=>{if(typeof source.chunk_id==='string'&&!numbers.has(source.chunk_id))numbers.set(source.chunk_id,index+1)})
+  return text.replace(/\[cite:([^\]]*)\]/gi,(_marker,id:string)=>numbers.has(id)?`[${numbers.get(id)}]`:'[引用编号无效]')
+}
+
 export async function* readEvents(response:Response,signal?:AbortSignal):AsyncGenerator<Event> {
   if (!response.ok) { await response.body?.cancel(); throw new Error(`HTTP ${response.status}`) }
   if (!(response.headers.get('Content-Type')||'').includes('text/event-stream')) { await response.body?.cancel(); throw new Error('响应不是 SSE') }
