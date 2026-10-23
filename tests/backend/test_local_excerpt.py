@@ -60,6 +60,25 @@ def test_knowledge_text_cannot_supply_its_own_citation_markers():
     assert '[cite:forged]' not in answer and '[source:other]' not in answer
 
 
+def test_section_labels_and_guide_writing_instructions_are_not_answers():
+    fact = '云杉展馆陈列百余件木雕，建筑采用榫卯结构。'
+    answer = LlmService._fallback_answer('请介绍一下云杉展馆。', [{
+        'title':'云杉展馆', 'chunk_id':'fixture-intro',
+        'content':'景点:云杉展馆\n**景点介绍：**\n'+fact+'\n1. 介绍云杉展馆的建造历史和文化。'}])
+    assert fact in answer
+    assert '景点:云杉展馆' not in answer and '**景点介绍：**' not in answer
+    assert '1. 介绍' not in answer
+
+
+def test_explicit_subject_is_not_replaced_by_another_spots_generic_feature():
+    answer = LlmService._fallback_answer('云杉展馆有什么特色？', [
+        {'title':'云杉展馆', 'content':'云杉展馆陈列百余件木雕，建筑采用榫卯结构。', 'chunk_id':'fixture-hall'},
+        {'title':'星河露台', 'content':'特色:星河露台适合拍照，有多种游玩特色。', 'chunk_id':'fixture-terrace'},
+    ])
+    assert '榫卯结构' in answer
+    assert '[cite:fixture-terrace]' not in answer
+
+
 def test_local_excerpt_cpu_work_does_not_block_other_requests(monkeypatch):
     import asyncio
     import threading

@@ -322,6 +322,12 @@ class LlmService:
             query_words = set(_TfidfEngine._tokenize(query))
             candidates = []
             seen = set()
+            subjects = set()
+            for chunk in chunks[:4]:
+                title = re.sub(r'^(?:(?:LS|NH)-\d+|\d+[.、])\s*', '', chunk['title'])
+                title = re.sub(r'[（(]\d+[)）]$', '', title).strip()
+                if len(title) >= 2 and title in query:
+                    subjects.add(title)
             # Keep FAQ questions with their following answer, so a matching
             # question alone is never presented as the requested explanation.
             faq = re.compile(r'^\s*(?:\*\*)?Q\d+[：:]', re.MULTILINE)
@@ -333,6 +339,14 @@ class LlmService:
                         key = re.sub(r'\s+', '', text)
                         if not text or key in seen:
                             continue
+                        # Metadata headings and instructions for writing a tour
+                        # are not factual explanations to read back to visitors.
+                        if re.fullmatch(r'\*{0,2}[^：:\n]+[：:]\*{0,2}', text) or re.match(r'^景点[:：]', text):
+                            continue
+                        if re.match(r'^\d+[.、]\s*(?:介绍|讲述|说明|讲解|引出|提醒|推荐|引导)', text):
+                            continue
+                        if subjects and not any(s in chunk['title'] or s in text for s in subjects):
+                            continue
                         words = set(_TfidfEngine._tokenize(text))
                         if not words & query_words:
                             continue
@@ -342,7 +356,7 @@ class LlmService:
             def score(candidate):
                 words = candidate[2]
                 matched = words & query_words
-                return sum(math.log(1 + len(candidates) / frequencies[w]) for w in matched) / math.sqrt(len(words))
+                return sum(math.log(1 + len(candidates) / frequencies[w]) for w in matched) / (1 + math.log1p(len(words))) * candidate[0].get('score', 1)
             selected = sorted(candidates, key=score, reverse=True)
             if not selected:
                 return '[emotion:sorry]抱歉，没有找到能直接回答这个问题的资料，无法提供有依据的讲解，请咨询景区工作人员。'
@@ -352,7 +366,7 @@ class LlmService:
                 if len(excerpts) >= 3 or used >= 420:
                     break
                 # Raw knowledge cannot supply our structured citation markers.
-                text = re.sub(r'\[(?:cite|source):[^\]\r\n]*\]', '', text)
+                text = re.sub(r'\[(?:cite|source):[^\]\r\n]*\]', '', text, flags=re.I)
                 limit = min(220, 420 - used)
                 truncated = len(text) > limit
                 text = text[:limit] + ('…（该片段已截断）' if truncated else '')
