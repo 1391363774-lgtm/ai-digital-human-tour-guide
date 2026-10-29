@@ -40,3 +40,12 @@ def test_measurement_unit_alone_cannot_answer_an_unrelated_weight_question():
         'title':'青竹寺', 'chunk_id':'unrelated', 'score':.8,
         'content':'院内悬挂铜钟，重达7.6吨。'}])
     assert '没有找到能直接回答' in answer and '[cite:' not in answer
+
+
+def test_place_name_with_intervening_words_does_not_outrank_inscription_detail():
+    fact = '顾青先生亲笔题字，书法艺术价值极高。'
+    answer = LlmService._fallback_answer('青竹景区的大照壁上有谁的题字？', [{
+        'title':'青竹大照壁', 'chunk_id':'wall', 'score':.8,
+        'content':'青竹大照壁是青竹景区的标志入口。青竹景区大照壁长39米。'
+                  '青竹大照壁与青竹景区的建筑群相呼应。'+fact}])
+    assert fact in answer.split('[cite:')[0]
