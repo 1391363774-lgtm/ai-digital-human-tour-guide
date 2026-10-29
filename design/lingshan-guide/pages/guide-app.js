@@ -275,6 +275,10 @@ function askOnline(text) {
     activeRow = row; isAnswering = true; dh.setEmotion('think'); setStatus('检索与生成中...', true);
     var body = { message: text, tourist_id: touristId, tts_enabled: ttsEnabled };
     var interest = sessionStorage.getItem('lingshan_interest'); if (interest) body.interest = interest;
+    var timeChoice = document.getElementById('tripTime').value;
+    var companionsChoice = document.getElementById('tripCompanions').value;
+    if (timeChoice) body.time_budget = timeChoice;
+    if (companionsChoice) body.companions = companionsChoice;
     void chatClient.start(body, {
         play: playSegment,
         onEvent: function (evt) {
@@ -434,6 +438,14 @@ document.getElementById('photoInput').onchange = function (e) {
                 setTimeout(function () { dh.setEmotion('calm'); }, 2500);
             }
         };
+    });
+})();
+
+(function initTripOptions() {
+    ['tripTime', 'tripCompanions'].forEach(function (id) {
+        var select = document.getElementById(id), saved = sessionStorage.getItem('lingshan_' + id);
+        if (saved && Array.from(select.options).some(function (option) { return option.value === saved; })) select.value = saved;
+        select.onchange = function () { sessionStorage.setItem('lingshan_' + id, select.value); };
     });
 })();
 

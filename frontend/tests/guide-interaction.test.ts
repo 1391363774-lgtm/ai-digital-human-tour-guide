@@ -15,13 +15,15 @@ it('real page bindings accept a second question, cancel the first reader and ret
   ;(window as any).lucide={createIcons:vi.fn()}
   ;(window as any).GuideHuman=function(){this.setEmotion=vi.fn();this.stopAudio=vi.fn();this.playAudio=async()=>{};this.startTimeline=vi.fn();this.destroy=vi.fn()}
   const cancel=vi.fn()
+  const payloads:any[]=[]
   const wire=(id:string,type:string,extra:object)=>'data:'+JSON.stringify({type,request_id:id,...extra})+'\n\n'
   vi.stubGlobal('fetch',vi.fn(async(input:any,init:any)=>{
     const url=String(input)
     if(url==='/api/status')return Response.json({demo_mode:true,llm_available:false})
     if(url.includes('knowledge.json'))return Response.json({spots:{},routes:[],baseInfo:{}})
     if(url.includes('quick-questions'))return Response.json({questions:[]})
-    const message=JSON.parse(init.body).message
+    const payload=JSON.parse(init.body);payloads.push(payload)
+    const message=payload.message
     return new Response(new ReadableStream({start(c){
       const id=message==='first'?'one':'two'
       c.enqueue(new TextEncoder().encode(wire(id,'meta',{sources:[{title:'<img src=x onerror=alert(1)>',source:'<script>alert(1)</script>',chunk_id:'trusted-id',revision:2,updated_at:null,content:'untrusted text'}]})))
@@ -32,12 +34,18 @@ it('real page bindings accept a second question, cancel the first reader and ret
   window.eval(fs.readFileSync(path.join(folder,'guide-app.js'),'utf8'))
   await vi.waitFor(()=>expect(document.querySelector('.msg-row.bot')).toBeTruthy())
   ;(document.getElementById('ttsBtn') as HTMLButtonElement).click()
+  ;(document.getElementById('tripTime') as HTMLSelectElement).value='4小时'
+  ;(document.getElementById('tripCompanions') as HTMLSelectElement).value='孩子'
   const input=document.getElementById('chatInput') as HTMLInputElement
   input.value='first';(document.getElementById('sendBtn') as HTMLButtonElement).click()
   await vi.waitFor(()=>expect(document.body.textContent).toContain('旧片段'))
+  ;(document.getElementById('tripTime') as HTMLSelectElement).value='6小时'
+  ;(document.getElementById('tripCompanions') as HTMLSelectElement).value='独自'
   input.value='second';(document.getElementById('sendBtn') as HTMLButtonElement).click()
   await vi.waitFor(()=>expect(document.querySelectorAll('.msg-row.bot .txt')[2]?.textContent).toBe('新回答 [1]'))
   expect(cancel).toHaveBeenCalledOnce()
+  expect(payloads[0]).toMatchObject({time_budget:'4小时',companions:'孩子'})
+  expect(payloads[1]).toMatchObject({time_budget:'6小时',companions:'独自'})
   expect(document.querySelectorAll('.msg-row.bot')[1].getAttribute('data-outcome')).toBe('cancelled')
   expect(document.querySelectorAll('.msg-row.bot')[2].getAttribute('data-outcome')).toBe('completed')
   expect(document.querySelector('img[src="x"]')).toBe(null)
