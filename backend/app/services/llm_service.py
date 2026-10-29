@@ -328,13 +328,18 @@ class LlmService:
                 title = re.sub(r'[（(]\d+[)）]$', '', title).strip()
                 if len(title) >= 2 and title in query:
                     subjects.add(title)
+            subject_words = set(_TfidfEngine._tokenize(' '.join(subjects)))
+            focus_words = query_words - subject_words - {'介绍','一下','特色','特点','什么样','景观','应该','好玩','玩','多高','多重','高','重'}
+            weight_question = bool(re.search(r'多重|重量|重多少|几吨|多少吨', query))
+            height_question = bool(re.search(r'多高|高度|高多少|高几|几米', query))
+            intro_question = bool(re.search(r'介绍|特色|特点|什么样|景观', query)) and not (weight_question or height_question)
             # Keep FAQ questions with their following answer, so a matching
             # question alone is never presented as the requested explanation.
             faq = re.compile(r'^\s*(?:\*\*)?Q\d+[：:]', re.MULTILINE)
             for chunk in chunks[:4]:
                 for block in re.split(r'(?m)(?=^\s*(?:\*\*)?Q\d+[：:])', chunk['content']):
                     units = [block] if faq.match(block) else re.findall(r'[^\n。！？!?；;]+[。！？!?；;]?', block)
-                    for unit in units:
+                    for position, unit in enumerate(units):
                         text = unit.strip()
                         key = re.sub(r'\s+', '', text)
                         if not text or key in seen:
@@ -348,21 +353,35 @@ class LlmService:
                         if subjects and not any(s in chunk['title'] or s in text for s in subjects):
                             continue
                         words = set(_TfidfEngine._tokenize(text))
-                        if not words & query_words:
+                        has_measurement = bool(subjects) and weight_question and bool(re.search(r'\d+(?:\.\d+)?\s*(?:吨|千克|公斤)', text))
+                        if not words & query_words and not has_measurement:
                             continue
                         seen.add(key)
-                        candidates.append((chunk, text, words))
-            frequencies = Counter(word for _, _, words in candidates for word in words)
+                        # Keep one adjacent descriptive sentence for a broad
+                        # introduction, rather than assembling unrelated snippets.
+                        context = text
+                        if intro_question and text.startswith(('介绍:', '介绍：')) and position + 1 < len(units):
+                            following = units[position + 1].strip()
+                            if len(context + following) <= 220:
+                                context += following
+                        candidates.append((chunk, text, words, context))
+            frequencies = Counter(word for _, _, words, _ in candidates for word in words)
             def score(candidate):
                 words = candidate[2]
                 matched = words & query_words
-                return sum(math.log(1 + len(candidates) / frequencies[w]) for w in matched) / (1 + math.log1p(len(words))) * candidate[0].get('score', 1)
+                text = candidate[1]
+                # Subject names repeated in every sentence cannot outweigh the
+                # requested detail. Measurement units are explicit rule features.
+                measure = weight_question and bool(re.search(r'\d+(?:\.\d+)?\s*(?:吨|千克|公斤)', text))
+                measure = measure or height_question and bool(re.search(r'\d+(?:\.\d+)?\s*米', text))
+                lexical = sum(math.log(1 + len(candidates) / frequencies[w]) for w in matched) / (1 + math.log1p(len(words))) * candidate[0].get('score', 1)
+                return (len(words & focus_words), int(measure), int(intro_question and text.startswith(('介绍:', '介绍：'))), lexical)
             selected = sorted(candidates, key=score, reverse=True)
             if not selected:
                 return '[emotion:sorry]抱歉，没有找到能直接回答这个问题的资料，无法提供有依据的讲解，请咨询景区工作人员。'
             excerpts = []
             used = 0
-            for chunk, text, _ in selected:
+            for chunk, _text, _words, text in selected:
                 if len(excerpts) >= 3 or used >= 420:
                     break
                 # Raw knowledge cannot supply our structured citation markers.

@@ -112,7 +112,9 @@ class _TfidfEngine:
     @staticmethod
     def _tokenize(text: str) -> List[str]:
         import jieba
-        return [w for w in jieba.lcut_for_search(text.lower())
+        # Small, explicit lexical equivalence; this is not semantic embedding.
+        text = re.sub(r'晚上|夜晚|夜里', '夜间', text.lower())
+        return [w for w in jieba.lcut_for_search(text)
                 if re.fullmatch(r'[^\W_]+(?:\.[0-9]+)?', w) and w not in _TfidfEngine.STOP_WORDS]
 
     def fit(self, docs: List[str]):
