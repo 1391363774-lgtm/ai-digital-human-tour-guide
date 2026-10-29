@@ -180,6 +180,11 @@ footer { flex-shrink:0; padding:12px 16px; background:#FFF; border-top:1px solid
 #voice-hint { text-align:center; font-size:11px; color:var(--red-500); height:14px; margin-top:4px; }
 
 /* 弹窗 */
+.trip-options { display:flex; gap:14px; flex-wrap:wrap; align-items:center; padding:6px 16px;
+  font-size:11px; color:var(--blue-400); border-bottom:1px solid rgba(197,165,90,.12); }
+.trip-options label { display:flex; gap:5px; align-items:center; }
+.trip-options select { max-width:132px; border:1px solid rgba(197,165,90,.3); border-radius:12px;
+  padding:4px 7px; color:var(--blue-600); background:var(--gold-50,#FAF7EF); font:inherit; }
 #photo-modal { position:fixed; inset:0; background:rgba(5,10,25,.85); z-index:960; display:none;
   align-items:center; justify-content:center; flex-direction:column; gap:14px; }
 #photo-modal img { max-width:86%; max-height:55%; border-radius:12px; border:2px solid var(--gold-500); }
@@ -256,6 +261,14 @@ footer { flex-shrink:0; padding:12px 16px; background:#FFF; border-top:1px solid
       <span class="interest-chip" data-v="亲子家庭游">亲子家庭游</span>
       <span class="interest-chip" data-v="禅修体验">禅修体验</span>
       <span class="interest-chip" data-v="美食与休闲">美食与休闲</span>
+    </div>
+    <div class="trip-options" aria-label="路线筛选条件">
+      <label for="tripTime">可用时间
+        <select id="tripTime"><option value="">未指定</option><option value="2小时">2小时</option><option value="4小时">4小时</option><option value="5小时">5小时</option><option value="6小时">6小时</option></select>
+      </label>
+      <label for="tripCompanions">同行
+        <select id="tripCompanions"><option value="">未指定</option><option value="独自">独自</option><option value="孩子">带孩子</option><option value="老人">有老人</option><option value="轮椅或婴儿车">轮椅／婴儿车</option></select>
+      </label>
     </div>
     <main id="chatArea" class="no-scrollbar"></main>
     <footer>

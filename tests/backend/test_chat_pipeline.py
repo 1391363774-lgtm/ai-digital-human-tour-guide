@@ -81,3 +81,28 @@ def test_partial_outcome_persists_and_feedback_id_is_request_specific(client,mon
     assert done['persisted'] and done['feedback_id']
     history=client.get('/api/chat/history',headers=HEADERS).json()['history']
     assert history[-1]['request_id']==done['request_id'] and history[-1]['outcome']=='completed'
+
+
+def test_split_citations_remain_visible_but_are_not_spoken(client,monkeypatch):
+    spoken=[]
+    async def stream(*args):
+        yield '[emotion:calm]'+('正文'*90)+'[ci'
+        yield 'te:test]。'
+    mock_dependencies(monkeypatch,stream)
+    async def synth(text):
+        spoken.append(text)
+        return {'ok':False,'engine':'mock'}
+    monkeypatch.setattr(tts_service,'synthesize',synth)
+    result=client.post('/api/chat/send',headers=HEADERS,json={'message':'测试','tts_enabled':True}).json()
+    assert '[cite:test]' in result['answer']
+    assert spoken and all('[cite:' not in text and '[ci' not in text for text in spoken)
+
+
+def test_local_no_overlap_is_an_explicit_refused_terminal(client,monkeypatch):
+    async def retrieve(*args,**kwargs):
+        return [{'title':'云杉展馆','content':'云杉展馆陈列木雕。','source':'fixture','score':1,'chunk_id':'fixture','revision':0}]
+    monkeypatch.setattr(rag_service,'retrieve',retrieve)
+    result=client.post('/api/chat/send',headers=HEADERS,json={'message':'火星探测器的燃料是什么？','tts_enabled':False}).json()
+    assert result['status']=='refused'
+    assert result['provenance']['local_refusal'] is True
+    assert '[cite:' not in result['answer']

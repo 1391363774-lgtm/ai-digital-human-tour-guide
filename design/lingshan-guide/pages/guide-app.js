@@ -98,8 +98,9 @@ function checkOnline() {
         })
         .catch(function () {
             online = false;
+            backendMode = '浏览器静态离线 · 非后端 RAG';
             document.getElementById('offline-badge').style.display = 'block';
-            setStatus('离线模式 · 本地知识库服务中', false);
+            setStatus(backendMode, false);
             return false;
         });
 }
@@ -146,7 +147,7 @@ function finalizeBotMsg(row, fullText) {
     var txtEl = row.querySelector('.txt');
     var m = fullText.match(/\[MAP:(.+?)\]/);
     if (m && m[1] === '../assets/lingshan-map.jpg') {
-        txtEl.innerHTML = esc(fullText.replace(/\[MAP:.+?\]/, '').trim());
+        txtEl.innerHTML = esc(GuideRuntime.formatCitationText(fullText.replace(/\[MAP:.+?\]/, '').trim(), row._retrievedSources || []));
         var img = document.createElement('img');
         img.className = 'map-img';
         img.src = m[1];
@@ -192,13 +193,13 @@ function statusNote(row, text) {
     note.textContent = text;
 }
 
-function playSegment(item, signal) {
+function playSegment(item, signal, onStarted) {
     return new Promise(function (resolve, reject) {
         var timer = null, utterance = null, settled = false;
         function finish(error) {
             if (settled) return; settled = true;
             clearTimeout(timer); signal.removeEventListener('abort', abort);
-            if (utterance) { utterance.onend = utterance.onerror = utterance.onstart = null; }
+            if (utterance) { utterance.onend = utterance.onerror = utterance.onstart = utterance.onpause = utterance.onresume = null; }
             if (error) reject(error); else resolve();
         }
         function abort() {
@@ -208,16 +209,21 @@ function playSegment(item, signal) {
         }
         if (signal.aborted) { abort(); return; }
         signal.addEventListener('abort', abort, { once: true });
-        setStatus('讲解中 · ' + (item.engine === 'demo-tone' ? '合成测试音' : '估算口型'), true);
+        setStatus('音频加载中 · ' + (item.engine === 'demo-tone' ? '合成测试音' : '估算口型'), false);
         timer = setTimeout(function () { dh.stopAudio(); if (utterance && window.speechSynthesis) speechSynthesis.cancel(); finish(new Error('播放超时，已保留文字')); }, 60000);
         if (item.audio_url) {
             var url = new URL(item.audio_url, location.href);
             if (url.origin !== location.origin || url.pathname.indexOf('/api/tts/audio/') !== 0) { finish(new Error('无效音频地址')); return; }
-            dh.playAudio(url.href, item.visemes).then(function () { finish(); }, finish);
+            dh.playAudio(url.href, item.visemes, {
+                onPlaying: function () { if (!settled && !signal.aborted) { setStatus('播放中 · ' + (item.engine === 'demo-tone' ? '合成测试音' : '规则估算口型'), true); if (onStarted) onStarted(); } },
+                onState: function () { if (!settled && !signal.aborted) setStatus('暂停或缓冲 · 口部已停止', false); }
+            }).then(function () { finish(); }, finish);
         } else if (window.speechSynthesis && ttsEnabled) {
             utterance = new SpeechSynthesisUtterance(item.text.replace(/\[MAP:.*?\]/g, ''));
             utterance.lang = 'zh-CN';
-            utterance.onstart = function () { if (!signal.aborted) dh.startTimeline(item.visemes || estimateVisemes(item.text), item.duration_ms || item.text.length * 195); };
+            // Browser voices expose no usable PCM/word timing here: keep mouth closed.
+            utterance.onstart = utterance.onresume = function () { if (!settled && !signal.aborted) { dh.stopSpeaking(); setStatus('浏览器语音 · 无对齐数据，口型关闭', false); if (onStarted) onStarted(); } };
+            utterance.onpause = function () { if (!signal.aborted) dh.stopSpeaking(); };
             utterance.onend = function () { dh.stopSpeaking(); finish(); };
             utterance.onerror = function () { dh.stopSpeaking(); finish(new Error('浏览器语音不可用，已保留文字')); };
             speechSynthesis.speak(utterance);
@@ -254,10 +260,10 @@ function estimateVisemes(text) {
 function renderSources(row, sources) {
     if (!sources || !sources.length) return;
     var details = document.createElement('details'), summary = document.createElement('summary');
-    summary.textContent = '知识来源（检索片段）'; details.appendChild(summary);
-    sources.forEach(function (source) {
+    summary.textContent = '检索片段（是否支持答案尚未核实）'; details.appendChild(summary);
+    sources.forEach(function (source, index) {
         var p = document.createElement('p');
-        p.textContent = String(source.title || '') + ' · ' + String(source.source || '') + ' · 版本 ' + String(source.revision) + '\n' + String(source.content || '').slice(0, 300);
+        p.textContent = '[' + (index + 1) + '] ' + String(source.title || '') + ' · ' + String(source.source || '') + ' · 片段 ' + String(source.chunk_id || '未知') + ' · 知识版本 ' + String(source.revision ?? '未知') + '\n资料更新时间：' + String(source.updated_at || '未知') + (source.updated_at ? '（记录更新时间，不代表事实核验）' : '') + '\n' + String(source.content || '').slice(0, 300);
         details.appendChild(p);
     });
     details.style.cssText = 'font-size:11px;white-space:pre-wrap;margin-top:8px';
@@ -269,19 +275,25 @@ function askOnline(text) {
     activeRow = row; isAnswering = true; dh.setEmotion('think'); setStatus('检索与生成中...', true);
     var body = { message: text, tourist_id: touristId, tts_enabled: ttsEnabled };
     var interest = sessionStorage.getItem('lingshan_interest'); if (interest) body.interest = interest;
+    var timeChoice = document.getElementById('tripTime').value;
+    var companionsChoice = document.getElementById('tripCompanions').value;
+    if (timeChoice) body.time_budget = timeChoice;
+    if (companionsChoice) body.companions = companionsChoice;
     void chatClient.start(body, {
         play: playSegment,
         onEvent: function (evt) {
             row.dataset.requestId = evt.request_id;
-            if (evt.type === 'meta') renderSources(row, evt.sources);
+            if (evt.type === 'meta') { row._retrievedSources = evt.sources; renderSources(row, evt.sources); }
             else if (evt.type === 'emotion') dh.setEmotion(evt.emotion);
-            else if (evt.type === 'delta') { fullText += evt.text; txtEl.textContent = fullText; document.getElementById('chatArea').scrollTop = 1e9; }
+            else if (evt.type === 'delta') { fullText += evt.text; txtEl.textContent = GuideRuntime.formatCitationText(fullText, row._retrievedSources || []); document.getElementById('chatArea').scrollTop = 1e9; }
             else if (evt.type === 'error') { statusNote(row, '回答中断，已保留文字'); row.dataset.outcome = evt.partial ? 'partial' : 'failed'; }
             else if (evt.type === 'done') {
-                fullText = evt.full_text; txtEl.textContent = fullText;
+                fullText = evt.full_text; txtEl.textContent = GuideRuntime.formatCitationText(fullText, row._retrievedSources || []);
                 row.dataset.outcome = evt.status; row.dataset.feedbackId = evt.feedback_id || '';
                 finalizeBotMsg(row, fullText);
-                statusNote(row, evt.status === 'completed' ? backendMode : evt.status === 'refused' ? '缺少依据，已如实拒答' : '回答未完整完成：' + evt.status);
+                var path = evt.provenance && evt.provenance.path || '未知';
+                row.dataset.modelPath = path;
+                statusNote(row, '终态：' + evt.status + ' · 实际路径：' + path + (evt.provenance && evt.provenance.model ? ' / ' + evt.provenance.model : '') + (evt.provenance && evt.provenance.switch_reason ? ' · 原因：' + evt.provenance.switch_reason : ''));
                 isAnswering = false;
             }
         },
@@ -289,6 +301,13 @@ function askOnline(text) {
         onAudioError: function () { statusNote(row, '语音不可用或被浏览器拦截，文字已保留'); },
         onCancel: function () { if (!['completed','refused'].includes(row.dataset.outcome)) row.dataset.outcome = 'cancelled'; finalizeBotMsg(row, fullText); statusNote(row, '已停止播放或生成'); },
         onQueue: function (n) { row.dataset.speechBuffered = n; },
+        onMetrics: function (metrics) {
+            var node = row.querySelector('.reply-metrics');
+            if (!node) { node = document.createElement('div'); node.className = 'reply-metrics'; node.style.cssText = 'font-size:11px;margin-top:4px'; row.querySelector('.bubble').appendChild(node); }
+            function ms(value) { return value === null ? '未发生' : value + 'ms'; }
+            node.textContent = '正文首文本 ' + ms(metrics.first_valid_text_ms) + ' · 正文首播放 ' + ms(metrics.first_actual_audio_ms) + ' · 回答总耗时 ' + ms(metrics.total_ms);
+            row.dataset.firstAudioMs = metrics.first_actual_audio_ms === null ? '' : metrics.first_actual_audio_ms;
+        },
         onFinish: function () { isAnswering = false; if (activeRow === row) activeRow = null; setStatus(backendMode, false); dh.setEmotion('calm'); }
     });
 }
@@ -302,10 +321,10 @@ fetch('../assets/knowledge.json').then(function (r) { return r.json(); }).then(f
 function askOffline(text) {
     currentAuxScope = auxRequests.start();
     var row = addBotMsg(false);
-    var answer = '【浏览器离线关键词检索】\n' + localFindAnswer(text);
+    var answer = '【浏览器离线关键词检索 · 静态资料，更新时间未知，不代表实时信息】\n' + localFindAnswer(text);
     row.querySelector('.txt').textContent = answer;
     finalizeBotMsg(row, answer);
-    statusNote(row, '本地静态资料，时效信息以景区官方为准');
+    statusNote(row, '来源：knowledge.json 静态资料；无后端知识版本；片段支持性未核实，时效信息以景区官方为准');
     enqueueSpeech({ text: answer, visemes: estimateVisemes(answer), audio_url: null });
     isAnswering = false;
 }
@@ -345,8 +364,7 @@ function localFindAnswer(question) {
         return out + '\n说"详细介绍路线X"可看完整讲解。\n\n[MAP:../assets/lingshan-map.jpg]';
     }
     if (/门票|票价|多少钱|免费/.test(q)) return '【门票信息】\n\n' + baseInfoData.ticket + '\n\n' + baseInfoData.freeTicket;
-    if (/几点|时间|开放|表演|场次/.test(q)) return '【开放时间】\n\n' + baseInfoData.openTime +
-        '\n\n九龙灌浴:10:00/11:30/14:00/16:00\n吉祥颂:10:35/11:30/14:00/16:00\n禅行灯光秀:19:00/20:00';
+    if (/几点|时间|开放|表演|场次/.test(q)) return '【历史开放时间资料】\n\n' + baseInfoData.openTime + '\n\n演出场次未实时核验，请以景区当日公告为准。';
     if (/交通|怎么去|公交|地铁|停车/.test(q)) return '【交通指南】\n\n' + baseInfoData.transport;
     if (/吃饭|餐厅|素斋|美食/.test(q)) return '【餐饮信息】\n\n' + baseInfoData.dining;
     if (/住宿|酒店/.test(q)) return '【住宿推荐】\n\n' + baseInfoData.accommodation;
@@ -420,6 +438,14 @@ document.getElementById('photoInput').onchange = function (e) {
                 setTimeout(function () { dh.setEmotion('calm'); }, 2500);
             }
         };
+    });
+})();
+
+(function initTripOptions() {
+    ['tripTime', 'tripCompanions'].forEach(function (id) {
+        var select = document.getElementById(id), saved = sessionStorage.getItem('lingshan_' + id);
+        if (saved && Array.from(select.options).some(function (option) { return option.value === saved; })) select.value = saved;
+        select.onchange = function () { sessionStorage.setItem('lingshan_' + id, select.value); };
     });
 })();
 

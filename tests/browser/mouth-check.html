@@ -1,0 +1,35 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>Natori 固定音频口型验收</title>
+<style>body{font-family:system-ui;margin:32px;background:#f4f5f8;color:#17243c}button{padding:12px 24px;background:#b89a4c;color:white;border:0;border-radius:8px}#avatar{width:300px;height:330px;background:white;border-radius:20px}pre{white-space:pre-wrap}</style>
+<h1>Natori 固定音频口型验收</h1><p>仅使用固定合成音与静音：0–300ms、800–1100ms有音，其余静音。时间轴规则估算，不是自然TTS或音素对齐。</p>
+<div id="avatar"></div><button id="run">运行固定音频验收</button><pre id="results" role="status">等待运行</pre>
+<script src="/assets/vendor/pixi.min.js"></script><script src="/assets/vendor/live2dcubismcore.min.js"></script><script src="/assets/vendor/cubism4.min.js"></script>
+<script src="/assets/live2d-human.js"></script><script src="/assets/live2d-guide.js"></script>
+<script>
+const human=new GuideHuman('avatar',{size:300,model:'/assets/live2d/natori/Natori.model3.json'});
+let mouth=0;const original=human._mouth;
+human._mouth=function(value){mouth=value;original.call(this,value)};
+const timeline=[{t:0,v:'AA',d:300},{t:800,v:'OO',d:300},{t:1600,v:'sil',d:0}];
+const delay=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+document.getElementById('run').onclick=async function(){
+  this.disabled=true;const out=document.getElementById('results');out.textContent='播放固定音频并采样中…';
+  const samples=[];let timer;
+  try {
+    const playback=human.playAudio('/fixture.wav',timeline);
+    timer=setInterval(()=>{if(human.audio)samples.push({ms:human.audio.currentTime*1000,mouth})},10);
+    await playback;clearInterval(timer);
+    const select=(lo,hi)=>samples.filter(x=>lo<x.ms&&x.ms<hi);
+    const gaps=select(400,650).concat(select(1200,1450));const voice=select(100,220).concat(select(900,1000));
+    const result={mode:'fixed_synthetic_wav_not_natural_tts',silence_samples:gaps.length,voice_samples:voice.length,
+      gap_closed:gaps.length>0&&gaps.every(x=>x.mouth===0),voice_open:voice.length>0&&voice.every(x=>x.mouth>0),ended_closed:mouth===0,
+      gap_failures:gaps.filter(x=>x.mouth!==0).slice(0,8)};
+    let playing;const started=new Promise(r=>playing=r);const second=human.playAudio('/fixture.wav',timeline,{onPlaying:()=>playing()});
+    await started;const audio=human.audio;audio.pause();await delay(30);result.pause_closed=mouth===0;
+    audio.dispatchEvent(new Event('playing'));audio.dispatchEvent(new Event('waiting'));result.buffer_event_closed=mouth===0;
+    const stale=audio.onplaying;human.stopAudio();await second;stale();await delay(20);result.cancel_and_stale_closed=mouth===0&&!human.speaking;
+    result.natori_loaded=!!(human._l2d&&human._l2d.model);
+    result.pass=result.gap_closed&&result.voice_open&&result.ended_closed&&result.pause_closed&&result.buffer_event_closed&&result.cancel_and_stale_closed;
+    out.textContent=JSON.stringify(result,null,2);
+  }catch(error){out.textContent='FAIL: '+error.message}finally{clearInterval(timer);human.stopAudio();this.disabled=false}
+};
+window.addEventListener('pagehide',()=>human.destroy());
+</script></html>

@@ -1,0 +1,16 @@
+﻿metric,value
+total,100
+request_success,100
+request_success_rate,1.0
+keyword_total,90
+keyword_pass,42
+keyword_pass_rate,0.4667
+refusal_total,10
+refusal_pass,5
+refusal_accuracy,0.5
+wrong_refusal_total,8
+wrong_refusal_rate,0.0889
+factual_accuracy,N/A
+citation_support_rate,N/A
+recall_at_k,N/A
+mrr,N/A

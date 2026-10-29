@@ -1,0 +1,4421 @@
+[
+  {
+    "id": "F-005",
+    "question": "灵山大佛是哪一年建成开光的？",
+    "expected_keywords": [
+      "1997"
+    ],
+    "category": "factual",
+    "difficulty": "medium",
+    "spot_names": [
+      "灵山大佛"
+    ],
+    "should_refuse": false,
+    "answer": "阿弥陀佛,关于「灵山大佛」,为您讲解如下:\n景点:灵山大佛\n介绍:灵山大佛是世界最高露天青铜释迦牟尼佛立像，通高88米（佛体79米+莲花座9米），连同莲花座下基座总高101.5米，共用铜725吨。大佛右手施无畏印，寓意除却众生一切痛苦与恐惧；左手施与愿印，寓意赐予众生一切欢乐与福祉。大佛坐落于太湖之滨的小灵山南麓，面朝太湖，背倚群山，法相庄严。游客需攀登216级台阶方可抵达大佛脚下，在抱佛脚处可以近距离瞻仰大佛，俯瞰太湖全景。\n文化内涵:灵山大佛的建造始于1994年，由中国佛教协\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.0,
+    "keyword_ok": false,
+    "answer_matched": [],
+    "answer_ok": false,
+    "refusal_correct": true,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "e16719ba22844cd59cefe010b7a18e5b",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "灵山大佛",
+        "source": "LS-011",
+        "score": 0.3629,
+        "content": "景点:灵山大佛\n介绍:灵山大佛是世界最高露天青铜释迦牟尼佛立像，通高88米（佛体79米+莲花座9米），连同莲花座下基座总高101.5米，共用铜725吨。大佛右手施无畏印，寓意除却众生一切痛苦与恐惧；左手施与愿印，寓意赐予众生一切欢乐与福祉。大佛坐落于太湖之滨的小灵山南麓，面朝太湖，背倚群山，法相庄严。游客需攀登216级台阶方可抵达大佛脚下，在抱佛脚处可以近距离瞻仰大佛，俯瞰太湖全景。\n文化内涵:灵山大佛的建造始于1994年，由中国佛教协会会长赵朴初先生倡导，历时三年落成。大佛选址依据佛教左青龙、右白虎、前朱雀、后玄武的风水理念，背靠小灵山，面朝太湖，山水相依，气势非凡。佛像铸造采用先进的分段铸造、整体组装技术，725吨铜被精密焊接为一体。大佛右手无畏印象征佛陀以大无畏的勇气教化众生，左手与愿印象征佛陀以慈悲心满足众生善愿。抱佛脚源自民间俗语，在此被赋予了积极含义——亲近佛法、获得庇佑。\n亮点:世界最高露天青铜释迦牟尼立像、通高88米，总高101.5米，耗铜725吨、右手无畏印、左手与愿印、216级台阶登顶、抱佛脚祈福、俯瞰太湖全景\n游览提示:攀登216级台阶需要一定体力，建议穿舒适的鞋子。登顶后在大佛脚部可以贴金祈福。天气晴好时在台阶上可以拍到太湖与大佛同框的壮丽照片。",
+        "chunk_id": "07bc5ff6db95768fafa9066d",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 26.57,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 45.34
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 48.74
+  },
+  {
+    "id": "F-009",
+    "question": "九龙灌浴用了多少千克黄金？",
+    "expected_keywords": [
+      "18"
+    ],
+    "category": "factual",
+    "difficulty": "hard",
+    "spot_names": [
+      "九龙灌浴"
+    ],
+    "should_refuse": false,
+    "answer": "阿弥陀佛,关于「九龙灌浴」,为您讲解如下:\n景点:九龙灌浴\n介绍:九龙灌浴是灵山胜境最具标志性的动态景观，总高27.2米，再现了释迦牟尼佛诞生时九龙吐水沐浴太子的祥瑞场景。音乐响起时，巨大的莲花花瓣缓缓绽放，一尊高7.2米、重12吨的鎏金太子佛像从莲花中升起，周围九条龙同时喷出净水，场面极为壮观。表演结束后，游客还可接取圣水祈福。\n文化内涵:据佛经记载，释迦牟尼佛诞生于蓝毗尼园时，天降甘露，九龙从空中喷出水柱为太子沐浴，这一场景被称为九龙灌浴，是佛教最重要的诞生典故之一。太子出生\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.0,
+    "keyword_ok": false,
+    "answer_matched": [],
+    "answer_ok": false,
+    "refusal_correct": true,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "911b8945bc664682b130be8a61bcf30a",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "九龙灌浴",
+        "source": "LS-006",
+        "score": 0.3701,
+        "content": "景点:九龙灌浴\n介绍:九龙灌浴是灵山胜境最具标志性的动态景观，总高27.2米，再现了释迦牟尼佛诞生时九龙吐水沐浴太子的祥瑞场景。音乐响起时，巨大的莲花花瓣缓缓绽放，一尊高7.2米、重12吨的鎏金太子佛像从莲花中升起，周围九条龙同时喷出净水，场面极为壮观。表演结束后，游客还可接取圣水祈福。\n文化内涵:据佛经记载，释迦牟尼佛诞生于蓝毗尼园时，天降甘露，九龙从空中喷出水柱为太子沐浴，这一场景被称为九龙灌浴，是佛教最重要的诞生典故之一。太子出生后即向东南西北各走七步，一手指天一手指地，说出天上天下，唯我独尊的偈语。灵山胜境将这一经典场景以大型动态雕塑的形式呈现，让游客身临其境感受佛陀降生的殊胜时刻。\n亮点:总高27.2米大型动态景观、鎏金太子佛高7.2米重12吨、莲花绽放九龙喷水、表演场次：10:00/11:30/14:00/16:00、可接取圣水祈福\n游览提示:建议提前10-15分钟到达广场占据好位置。表演时莲花底座周围有圣水流出，可以用手接取或用瓶子收集，寓意洗去烦恼、获得福气。注意观赏时保持安全距离。",
+        "chunk_id": "fa82b82de67f08355d43a743",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 23.17,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 39.77
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 42.93
+  },
+  {
+    "id": "F-011",
+    "question": "九龙灌浴外围共有多少只凤凰？",
+    "expected_keywords": [
+      "72"
+    ],
+    "category": "factual",
+    "difficulty": "hard",
+    "spot_names": [
+      "九龙灌浴"
+    ],
+    "should_refuse": false,
+    "answer": "阿弥陀佛,关于「九龙灌浴」,为您讲解如下:\n景点:九龙灌浴\n介绍:九龙灌浴是灵山胜境最具标志性的动态景观，总高27.2米，再现了释迦牟尼佛诞生时九龙吐水沐浴太子的祥瑞场景。音乐响起时，巨大的莲花花瓣缓缓绽放，一尊高7.2米、重12吨的鎏金太子佛像从莲花中升起，周围九条龙同时喷出净水，场面极为壮观。表演结束后，游客还可接取圣水祈福。\n文化内涵:据佛经记载，释迦牟尼佛诞生于蓝毗尼园时，天降甘露，九龙从空中喷出水柱为太子沐浴，这一场景被称为九龙灌浴，是佛教最重要的诞生典故之一。太子出生\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.0,
+    "keyword_ok": false,
+    "answer_matched": [],
+    "answer_ok": false,
+    "refusal_correct": true,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "fd24b8b07dd34233966f403e147f1a6a",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "九龙灌浴",
+        "source": "LS-006",
+        "score": 0.3496,
+        "content": "景点:九龙灌浴\n介绍:九龙灌浴是灵山胜境最具标志性的动态景观，总高27.2米，再现了释迦牟尼佛诞生时九龙吐水沐浴太子的祥瑞场景。音乐响起时，巨大的莲花花瓣缓缓绽放，一尊高7.2米、重12吨的鎏金太子佛像从莲花中升起，周围九条龙同时喷出净水，场面极为壮观。表演结束后，游客还可接取圣水祈福。\n文化内涵:据佛经记载，释迦牟尼佛诞生于蓝毗尼园时，天降甘露，九龙从空中喷出水柱为太子沐浴，这一场景被称为九龙灌浴，是佛教最重要的诞生典故之一。太子出生后即向东南西北各走七步，一手指天一手指地，说出天上天下，唯我独尊的偈语。灵山胜境将这一经典场景以大型动态雕塑的形式呈现，让游客身临其境感受佛陀降生的殊胜时刻。\n亮点:总高27.2米大型动态景观、鎏金太子佛高7.2米重12吨、莲花绽放九龙喷水、表演场次：10:00/11:30/14:00/16:00、可接取圣水祈福\n游览提示:建议提前10-15分钟到达广场占据好位置。表演时莲花底座周围有圣水流出，可以用手接取或用瓶子收集，寓意洗去烦恼、获得福气。注意观赏时保持安全距离。",
+        "chunk_id": "fa82b82de67f08355d43a743",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      },
+      {
+        "title": "景点相关",
+        "source": "知识库.md",
+        "score": 0.1587,
+        "content": "**Q9：灵山大佛有多高？**\nA：灵山大佛佛像高88米（佛体79米，莲花座9米），连同基座总高101.5米，是世界上最高的露天青铜释迦牟尼佛立像，共用青铜725吨铸造。\n**Q10：九龙灌浴每天有几场表演？**\nA：九龙灌浴每天通常有4-5场表演，具体时间请参考景区当日公告。建议入园时先确认当日表演时间表，合理安排行程。\n**Q11：梵宫《吉祥颂》演出时间是什么？**\nA：《吉祥颂》演出通常安排在10:35、11:30、14:00、16:00，每场约30分钟。具体时间可能因季节和特殊情况调整，请以景区当日公告为准。\n**Q12：五印坛城可以转经筒吗？**\nA：可以。五印坛城周围共有108个转经筒，游客可以亲手转动。请按照顺时针方向转动，每转动一圈相当于诵读一遍经文。\n**Q13：灵山胜境有多少个景点？**\nA：灵山胜境景区共有16个主要景点，加上拈花湾禅意小镇的6个景点，总计22个景点。",
+        "chunk_id": "ffc527655b8bf1024c5d878c",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 22.96,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 38.44
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 41.84
+  },
+  {
+    "id": "F-012",
+    "question": "灵山梵宫占地面积有多大？",
+    "expected_keywords": [
+      "30000",
+      "3万",
+      "三万"
+    ],
+    "expected_keyword_groups": [
+      [
+        "30000",
+        "3万",
+        "三万"
+      ]
+    ],
+    "category": "factual",
+    "difficulty": "medium",
+    "spot_names": [
+      "灵山梵宫"
+    ],
+    "should_refuse": false,
+    "answer": "阿弥陀佛,关于「灵山梵宫」,为您讲解如下:\n景点:灵山梵宫\n介绍:灵山梵宫是灵山胜境的标志性建筑，建筑面积达72000平方米，最高处66.5米，被誉为东方卢浮宫，荣获中国建筑行业最高奖——鲁班奖。梵宫内部艺术珍品云集：28米高的星空穹顶以数千块琉璃拼接而成，璀璨夺目；华藏世界琉璃巨制以琉璃艺术再现佛教宇宙观；12幅高12米的油画生动呈现佛教传法故事。梵宫圣坛拥有全球唯一的大型旋转舞台，每日上演大型音乐史诗灵山吉祥颂，演出时间为10:35、11:30、14:00、16:00。\n文化\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.0,
+    "keyword_ok": false,
+    "answer_matched": [],
+    "answer_ok": false,
+    "refusal_correct": true,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "cdfba6ab1b7e463d8a2481c7d18bb4aa",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "灵山梵宫",
+        "source": "LS-013",
+        "score": 0.2985,
+        "content": "景点:灵山梵宫\n介绍:灵山梵宫是灵山胜境的标志性建筑，建筑面积达72000平方米，最高处66.5米，被誉为东方卢浮宫，荣获中国建筑行业最高奖——鲁班奖。梵宫内部艺术珍品云集：28米高的星空穹顶以数千块琉璃拼接而成，璀璨夺目；华藏世界琉璃巨制以琉璃艺术再现佛教宇宙观；12幅高12米的油画生动呈现佛教传法故事。梵宫圣坛拥有全球唯一的大型旋转舞台，每日上演大型音乐史诗灵山吉祥颂，演出时间为10:35、11:30、14:00、16:00。\n文化内涵:梵宫的设计融合了中国传统建筑、佛教艺术和现代建筑技术的精华，集中展现了汉传佛教文化的恢弘气象。穹顶的星空图案象征佛教华藏世界——以毗卢遮那佛为中心的无尽庄严世界。12幅油画由国内顶尖画家历时数年创作，每一幅都讲述了一个重要的佛教传法故事。旋转舞台的设计让观众如同置身于佛法宣讲的现场，全方位感受佛教文化的魅力。\n亮点:72000平方米，最高66.5米、荣获鲁班奖，被誉为东方卢浮宫、28米星空穹顶、华藏世界琉璃巨制、12幅高12米油画、吉祥颂演出：10:35/11:30/14:00/16:00\n游览提示:吉祥颂演出时间有限，建议合理安排行程提前到达圣坛。梵宫内部不允许拍照的部分请遵守规定。穹顶和琉璃墙是必看重点，可以抬头慢慢欣赏。",
+        "chunk_id": "31438748c5a419ad849ecbf8",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 24.19,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 40.95
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 43.9
+  },
+  {
+    "id": "F-013",
+    "question": "灵山梵宫是哪一年正式开放的？",
+    "expected_keywords": [
+      "2009"
+    ],
+    "category": "factual",
+    "difficulty": "medium",
+    "spot_names": [
+      "灵山梵宫"
+    ],
+    "should_refuse": false,
+    "answer": "【时效提醒】资料更新时间未核实，以下内容不代表实时票价、开放或演出安排，请以景区官方公告为准。\n阿弥陀佛,关于「灵山梵宫」,为您讲解如下:\n景点:灵山梵宫\n介绍:灵山梵宫是灵山胜境的标志性建筑，建筑面积达72000平方米，最高处66.5米，被誉为东方卢浮宫，荣获中国建筑行业最高奖——鲁班奖。梵宫内部艺术珍品云集：28米高的星空穹顶以数千块琉璃拼接而成，璀璨夺目；华藏世界琉璃巨制以琉璃艺术再现佛教宇宙观；12幅高12米的油画生动呈现佛教传法故事。梵宫圣坛拥有全球唯一的大型旋转舞台，每日上演大型音乐史诗灵山吉祥颂，演出时间为10:35、11:30、14:00、16:00。\n文化\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.0,
+    "keyword_ok": false,
+    "answer_matched": [],
+    "answer_ok": false,
+    "refusal_correct": true,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "51e898cadf964561b956efa2f0a5410c",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "灵山梵宫",
+        "source": "LS-013",
+        "score": 0.3304,
+        "content": "景点:灵山梵宫\n介绍:灵山梵宫是灵山胜境的标志性建筑，建筑面积达72000平方米，最高处66.5米，被誉为东方卢浮宫，荣获中国建筑行业最高奖——鲁班奖。梵宫内部艺术珍品云集：28米高的星空穹顶以数千块琉璃拼接而成，璀璨夺目；华藏世界琉璃巨制以琉璃艺术再现佛教宇宙观；12幅高12米的油画生动呈现佛教传法故事。梵宫圣坛拥有全球唯一的大型旋转舞台，每日上演大型音乐史诗灵山吉祥颂，演出时间为10:35、11:30、14:00、16:00。\n文化内涵:梵宫的设计融合了中国传统建筑、佛教艺术和现代建筑技术的精华，集中展现了汉传佛教文化的恢弘气象。穹顶的星空图案象征佛教华藏世界——以毗卢遮那佛为中心的无尽庄严世界。12幅油画由国内顶尖画家历时数年创作，每一幅都讲述了一个重要的佛教传法故事。旋转舞台的设计让观众如同置身于佛法宣讲的现场，全方位感受佛教文化的魅力。\n亮点:72000平方米，最高66.5米、荣获鲁班奖，被誉为东方卢浮宫、28米星空穹顶、华藏世界琉璃巨制、12幅高12米油画、吉祥颂演出：10:35/11:30/14:00/16:00\n游览提示:吉祥颂演出时间有限，建议合理安排行程提前到达圣坛。梵宫内部不允许拍照的部分请遵守规定。穹顶和琉璃墙是必看重点，可以抬头慢慢欣赏。",
+        "chunk_id": "31438748c5a419ad849ecbf8",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      },
+      {
+        "title": "开放时间相关",
+        "source": "知识库.md",
+        "score": 0.2828,
+        "content": "**Q7：灵山胜境的开放时间是什么？**\nA：夏令（一般为4月-10月）开放时间为7:00-17:30；冬令（一般为11月-次年3月）开放时间为7:00-17:00。建议提前查询景区官方公告确认当日开放时间。\n**Q8：拈花湾的开放时间是什么？**\nA：拈花湾禅意小镇通常在9:30举行开园仪式后正式开放，夜间《禅行》灯光秀结束后关闭（约21:00），具体时间请参考景区当日公告。",
+        "chunk_id": "a2220809e4a03de5d959a9c1",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 25.78,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 42.84
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 57.49
+  },
+  {
+    "id": "F-016",
+    "question": "灵山梵宫圣坛面积有多大？",
+    "expected_keywords": [
+      "3500"
+    ],
+    "category": "factual",
+    "difficulty": "hard",
+    "spot_names": [
+      "灵山梵宫"
+    ],
+    "should_refuse": false,
+    "answer": "阿弥陀佛,关于「灵山梵宫」,为您讲解如下:\n景点:灵山梵宫\n介绍:灵山梵宫是灵山胜境的标志性建筑，建筑面积达72000平方米，最高处66.5米，被誉为东方卢浮宫，荣获中国建筑行业最高奖——鲁班奖。梵宫内部艺术珍品云集：28米高的星空穹顶以数千块琉璃拼接而成，璀璨夺目；华藏世界琉璃巨制以琉璃艺术再现佛教宇宙观；12幅高12米的油画生动呈现佛教传法故事。梵宫圣坛拥有全球唯一的大型旋转舞台，每日上演大型音乐史诗灵山吉祥颂，演出时间为10:35、11:30、14:00、16:00。\n文化\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.0,
+    "keyword_ok": false,
+    "answer_matched": [],
+    "answer_ok": false,
+    "refusal_correct": true,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "f0eb1d5985304108a034f97ce7bd5902",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "灵山梵宫",
+        "source": "LS-013",
+        "score": 0.3399,
+        "content": "景点:灵山梵宫\n介绍:灵山梵宫是灵山胜境的标志性建筑，建筑面积达72000平方米，最高处66.5米，被誉为东方卢浮宫，荣获中国建筑行业最高奖——鲁班奖。梵宫内部艺术珍品云集：28米高的星空穹顶以数千块琉璃拼接而成，璀璨夺目；华藏世界琉璃巨制以琉璃艺术再现佛教宇宙观；12幅高12米的油画生动呈现佛教传法故事。梵宫圣坛拥有全球唯一的大型旋转舞台，每日上演大型音乐史诗灵山吉祥颂，演出时间为10:35、11:30、14:00、16:00。\n文化内涵:梵宫的设计融合了中国传统建筑、佛教艺术和现代建筑技术的精华，集中展现了汉传佛教文化的恢弘气象。穹顶的星空图案象征佛教华藏世界——以毗卢遮那佛为中心的无尽庄严世界。12幅油画由国内顶尖画家历时数年创作，每一幅都讲述了一个重要的佛教传法故事。旋转舞台的设计让观众如同置身于佛法宣讲的现场，全方位感受佛教文化的魅力。\n亮点:72000平方米，最高66.5米、荣获鲁班奖，被誉为东方卢浮宫、28米星空穹顶、华藏世界琉璃巨制、12幅高12米油画、吉祥颂演出：10:35/11:30/14:00/16:00\n游览提示:吉祥颂演出时间有限，建议合理安排行程提前到达圣坛。梵宫内部不允许拍照的部分请遵守规定。穹顶和琉璃墙是必看重点，可以抬头慢慢欣赏。",
+        "chunk_id": "31438748c5a419ad849ecbf8",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 26.74,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 44.87
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 48.59
+  },
+  {
+    "id": "F-017",
+    "question": "灵山梵宫圣坛可以容纳多少人？",
+    "expected_keywords": [
+      "2000"
+    ],
+    "category": "factual",
+    "difficulty": "hard",
+    "spot_names": [
+      "灵山梵宫"
+    ],
+    "should_refuse": false,
+    "answer": "阿弥陀佛,关于「灵山梵宫」,为您讲解如下:\n景点:灵山梵宫\n介绍:灵山梵宫是灵山胜境的标志性建筑，建筑面积达72000平方米，最高处66.5米，被誉为东方卢浮宫，荣获中国建筑行业最高奖——鲁班奖。梵宫内部艺术珍品云集：28米高的星空穹顶以数千块琉璃拼接而成，璀璨夺目；华藏世界琉璃巨制以琉璃艺术再现佛教宇宙观；12幅高12米的油画生动呈现佛教传法故事。梵宫圣坛拥有全球唯一的大型旋转舞台，每日上演大型音乐史诗灵山吉祥颂，演出时间为10:35、11:30、14:00、16:00。\n文化\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.0,
+    "keyword_ok": false,
+    "answer_matched": [],
+    "answer_ok": false,
+    "refusal_correct": true,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "057ce20f0a5145e4901e28bc64df6f5e",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "灵山梵宫",
+        "source": "LS-013",
+        "score": 0.3546,
+        "content": "景点:灵山梵宫\n介绍:灵山梵宫是灵山胜境的标志性建筑，建筑面积达72000平方米，最高处66.5米，被誉为东方卢浮宫，荣获中国建筑行业最高奖——鲁班奖。梵宫内部艺术珍品云集：28米高的星空穹顶以数千块琉璃拼接而成，璀璨夺目；华藏世界琉璃巨制以琉璃艺术再现佛教宇宙观；12幅高12米的油画生动呈现佛教传法故事。梵宫圣坛拥有全球唯一的大型旋转舞台，每日上演大型音乐史诗灵山吉祥颂，演出时间为10:35、11:30、14:00、16:00。\n文化内涵:梵宫的设计融合了中国传统建筑、佛教艺术和现代建筑技术的精华，集中展现了汉传佛教文化的恢弘气象。穹顶的星空图案象征佛教华藏世界——以毗卢遮那佛为中心的无尽庄严世界。12幅油画由国内顶尖画家历时数年创作，每一幅都讲述了一个重要的佛教传法故事。旋转舞台的设计让观众如同置身于佛法宣讲的现场，全方位感受佛教文化的魅力。\n亮点:72000平方米，最高66.5米、荣获鲁班奖，被誉为东方卢浮宫、28米星空穹顶、华藏世界琉璃巨制、12幅高12米油画、吉祥颂演出：10:35/11:30/14:00/16:00\n游览提示:吉祥颂演出时间有限，建议合理安排行程提前到达圣坛。梵宫内部不允许拍照的部分请遵守规定。穹顶和琉璃墙是必看重点，可以抬头慢慢欣赏。",
+        "chunk_id": "31438748c5a419ad849ecbf8",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 26.86,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 45.9
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 49.14
+  },
+  {
+    "id": "F-018",
+    "question": "五印坛城是哪一年建成的？",
+    "expected_keywords": [
+      "2011"
+    ],
+    "category": "factual",
+    "difficulty": "medium",
+    "spot_names": [
+      "五印坛城"
+    ],
+    "should_refuse": false,
+    "answer": "阿弥陀佛,关于「五印坛城」,为您讲解如下:\n景点:五印坛城\n介绍:五印坛城是一座五层、高约30米的藏式佛教建筑，外形庄严华丽，被誉为小布达拉宫。坛城内部装饰以藏族传统风格为主，色彩浓烈、金碧辉煌，展出精美的唐卡、佛像和法器。最令人印象深刻的体验是108个转经筒——顺时针转动每一个转经筒并默诵经文，是藏传佛教中积累功德的重要方式。\n文化内涵:坛城（Mandala）在藏传佛教中是诸佛菩萨的宫殿和道场的象征，代表圆满的佛教世界观。五印坛城的五印指的是五方佛的五种种姓印：大圆镜印、平等性\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.0,
+    "keyword_ok": false,
+    "answer_matched": [],
+    "answer_ok": false,
+    "refusal_correct": true,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "d4a217092e144ab2b27a136f96a67b31",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "五印坛城",
+        "source": "LS-014",
+        "score": 0.3485,
+        "content": "景点:五印坛城\n介绍:五印坛城是一座五层、高约30米的藏式佛教建筑，外形庄严华丽，被誉为小布达拉宫。坛城内部装饰以藏族传统风格为主，色彩浓烈、金碧辉煌，展出精美的唐卡、佛像和法器。最令人印象深刻的体验是108个转经筒——顺时针转动每一个转经筒并默诵经文，是藏传佛教中积累功德的重要方式。\n文化内涵:坛城（Mandala）在藏传佛教中是诸佛菩萨的宫殿和道场的象征，代表圆满的佛教世界观。五印坛城的五印指的是五方佛的五种种姓印：大圆镜印、平等性印、妙观察印、成所作印和法界体性印。108个转经筒对应藏传佛教中的108种烦恼，转动转经筒即相当于诵经，寓意以佛法力量消除一切烦恼。五印坛城与灵山梵宫（汉传）、曼飞龙塔（南传）共同构成了灵山胜境三大语系汇聚的独特格局。\n亮点:五层约30米藏式建筑、小布达拉宫、108个转经筒体验、精美唐卡、佛像、法器展出、藏传佛教文化代表\n游览提示:进入坛城后可以依次转动108个转经筒，感受藏族祈福文化。注意要顺时针方向转动。坛城内色彩艳丽，拍照效果很好。",
+        "chunk_id": "b6afc9addfc8ed6046e25e90",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 28.16,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 46.48
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 67.91
+  },
+  {
+    "id": "F-019",
+    "question": "五印坛城占地面积多少平方米？",
+    "expected_keywords": [
+      "5000"
+    ],
+    "category": "factual",
+    "difficulty": "hard",
+    "spot_names": [
+      "五印坛城"
+    ],
+    "should_refuse": false,
+    "answer": "阿弥陀佛,关于「五印坛城」,为您讲解如下:\n景点:五印坛城\n介绍:五印坛城是一座五层、高约30米的藏式佛教建筑，外形庄严华丽，被誉为小布达拉宫。坛城内部装饰以藏族传统风格为主，色彩浓烈、金碧辉煌，展出精美的唐卡、佛像和法器。最令人印象深刻的体验是108个转经筒——顺时针转动每一个转经筒并默诵经文，是藏传佛教中积累功德的重要方式。\n文化内涵:坛城（Mandala）在藏传佛教中是诸佛菩萨的宫殿和道场的象征，代表圆满的佛教世界观。五印坛城的五印指的是五方佛的五种种姓印：大圆镜印、平等性\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.0,
+    "keyword_ok": false,
+    "answer_matched": [],
+    "answer_ok": false,
+    "refusal_correct": true,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "c758cac3a1d24125bb335432084146bb",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "五印坛城",
+        "source": "LS-014",
+        "score": 0.3561,
+        "content": "景点:五印坛城\n介绍:五印坛城是一座五层、高约30米的藏式佛教建筑，外形庄严华丽，被誉为小布达拉宫。坛城内部装饰以藏族传统风格为主，色彩浓烈、金碧辉煌，展出精美的唐卡、佛像和法器。最令人印象深刻的体验是108个转经筒——顺时针转动每一个转经筒并默诵经文，是藏传佛教中积累功德的重要方式。\n文化内涵:坛城（Mandala）在藏传佛教中是诸佛菩萨的宫殿和道场的象征，代表圆满的佛教世界观。五印坛城的五印指的是五方佛的五种种姓印：大圆镜印、平等性印、妙观察印、成所作印和法界体性印。108个转经筒对应藏传佛教中的108种烦恼，转动转经筒即相当于诵经，寓意以佛法力量消除一切烦恼。五印坛城与灵山梵宫（汉传）、曼飞龙塔（南传）共同构成了灵山胜境三大语系汇聚的独特格局。\n亮点:五层约30米藏式建筑、小布达拉宫、108个转经筒体验、精美唐卡、佛像、法器展出、藏传佛教文化代表\n游览提示:进入坛城后可以依次转动108个转经筒，感受藏族祈福文化。注意要顺时针方向转动。坛城内色彩艳丽，拍照效果很好。",
+        "chunk_id": "b6afc9addfc8ed6046e25e90",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 23.53,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 38.89
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 53.15
+  },
+  {
+    "id": "F-020",
+    "question": "五印坛城建在什么上面？",
+    "expected_keywords": [
+      "香水海",
+      "圆岛"
+    ],
+    "category": "factual",
+    "difficulty": "medium",
+    "spot_names": [
+      "五印坛城"
+    ],
+    "should_refuse": false,
+    "answer": "阿弥陀佛,关于「五印坛城」,为您讲解如下:\n景点:五印坛城\n介绍:五印坛城是一座五层、高约30米的藏式佛教建筑，外形庄严华丽，被誉为小布达拉宫。坛城内部装饰以藏族传统风格为主，色彩浓烈、金碧辉煌，展出精美的唐卡、佛像和法器。最令人印象深刻的体验是108个转经筒——顺时针转动每一个转经筒并默诵经文，是藏传佛教中积累功德的重要方式。\n文化内涵:坛城（Mandala）在藏传佛教中是诸佛菩萨的宫殿和道场的象征，代表圆满的佛教世界观。五印坛城的五印指的是五方佛的五种种姓印：大圆镜印、平等性\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.0,
+    "keyword_ok": false,
+    "answer_matched": [],
+    "answer_ok": false,
+    "refusal_correct": true,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "e669552fc4ea4f82af3de6cf54be9f0e",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "五印坛城",
+        "source": "LS-014",
+        "score": 0.3276,
+        "content": "景点:五印坛城\n介绍:五印坛城是一座五层、高约30米的藏式佛教建筑，外形庄严华丽，被誉为小布达拉宫。坛城内部装饰以藏族传统风格为主，色彩浓烈、金碧辉煌，展出精美的唐卡、佛像和法器。最令人印象深刻的体验是108个转经筒——顺时针转动每一个转经筒并默诵经文，是藏传佛教中积累功德的重要方式。\n文化内涵:坛城（Mandala）在藏传佛教中是诸佛菩萨的宫殿和道场的象征，代表圆满的佛教世界观。五印坛城的五印指的是五方佛的五种种姓印：大圆镜印、平等性印、妙观察印、成所作印和法界体性印。108个转经筒对应藏传佛教中的108种烦恼，转动转经筒即相当于诵经，寓意以佛法力量消除一切烦恼。五印坛城与灵山梵宫（汉传）、曼飞龙塔（南传）共同构成了灵山胜境三大语系汇聚的独特格局。\n亮点:五层约30米藏式建筑、小布达拉宫、108个转经筒体验、精美唐卡、佛像、法器展出、藏传佛教文化代表\n游览提示:进入坛城后可以依次转动108个转经筒，感受藏族祈福文化。注意要顺时针方向转动。坛城内色彩艳丽，拍照效果很好。",
+        "chunk_id": "b6afc9addfc8ed6046e25e90",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      },
+      {
+        "title": "表演和活动",
+        "source": "知识库.md",
+        "score": 0.1711,
+        "content": "**Q14：拈花湾夜间有什么活动？**\nA：拈花湾夜间最不可错过的活动是五灯湖的《禅行》灯光秀，演出时间通常为19:00和20:00。此外，香月花街在夜间也有灯光装饰和夜间商业活动。\n**Q15：拈花堂的讲座时间是什么？**\nA：拈花堂每日10:30和15:30举办禅文化讲座，内容包括禅修入门、禅茶文化等，免费参加，建议提前入场。\n**Q16：拈花湾的开园仪式是什么时间？**\nA：拈花湾每日9:30在拈花广场举行开园仪式，有禅意舞蹈和音乐表演，建议提前到达观看。",
+        "chunk_id": "d6e135484dcca1b44b0d5c54",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      },
+      {
+        "title": "景点相关",
+        "source": "知识库.md",
+        "score": 0.1543,
+        "content": "**Q9：灵山大佛有多高？**\nA：灵山大佛佛像高88米（佛体79米，莲花座9米），连同基座总高101.5米，是世界上最高的露天青铜释迦牟尼佛立像，共用青铜725吨铸造。\n**Q10：九龙灌浴每天有几场表演？**\nA：九龙灌浴每天通常有4-5场表演，具体时间请参考景区当日公告。建议入园时先确认当日表演时间表，合理安排行程。\n**Q11：梵宫《吉祥颂》演出时间是什么？**\nA：《吉祥颂》演出通常安排在10:35、11:30、14:00、16:00，每场约30分钟。具体时间可能因季节和特殊情况调整，请以景区当日公告为准。\n**Q12：五印坛城可以转经筒吗？**\nA：可以。五印坛城周围共有108个转经筒，游客可以亲手转动。请按照顺时针方向转动，每转动一圈相当于诵读一遍经文。\n**Q13：灵山胜境有多少个景点？**\nA：灵山胜境景区共有16个主要景点，加上拈花湾禅意小镇的6个景点，总计22个景点。",
+        "chunk_id": "ffc527655b8bf1024c5d878c",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 23.01,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 40.18
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 43.22
+  },
+  {
+    "id": "F-021",
+    "question": "五印坛城的山门有多高？",
+    "expected_keywords": [
+      "8",
+      "八"
+    ],
+    "expected_keyword_groups": [
+      [
+        "8",
+        "八"
+      ]
+    ],
+    "category": "factual",
+    "difficulty": "hard",
+    "spot_names": [
+      "五印坛城"
+    ],
+    "should_refuse": false,
+    "answer": "阿弥陀佛,关于「五印坛城」,为您讲解如下:\n景点:五印坛城\n介绍:五印坛城是一座五层、高约30米的藏式佛教建筑，外形庄严华丽，被誉为小布达拉宫。坛城内部装饰以藏族传统风格为主，色彩浓烈、金碧辉煌，展出精美的唐卡、佛像和法器。最令人印象深刻的体验是108个转经筒——顺时针转动每一个转经筒并默诵经文，是藏传佛教中积累功德的重要方式。\n文化内涵:坛城（Mandala）在藏传佛教中是诸佛菩萨的宫殿和道场的象征，代表圆满的佛教世界观。五印坛城的五印指的是五方佛的五种种姓印：大圆镜印、平等性\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.0,
+    "keyword_ok": false,
+    "answer_matched": [],
+    "answer_ok": false,
+    "refusal_correct": true,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "ac514cdb8be74d3d9b1f5b89f0e7a6c1",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "五印坛城",
+        "source": "LS-014",
+        "score": 0.3884,
+        "content": "景点:五印坛城\n介绍:五印坛城是一座五层、高约30米的藏式佛教建筑，外形庄严华丽，被誉为小布达拉宫。坛城内部装饰以藏族传统风格为主，色彩浓烈、金碧辉煌，展出精美的唐卡、佛像和法器。最令人印象深刻的体验是108个转经筒——顺时针转动每一个转经筒并默诵经文，是藏传佛教中积累功德的重要方式。\n文化内涵:坛城（Mandala）在藏传佛教中是诸佛菩萨的宫殿和道场的象征，代表圆满的佛教世界观。五印坛城的五印指的是五方佛的五种种姓印：大圆镜印、平等性印、妙观察印、成所作印和法界体性印。108个转经筒对应藏传佛教中的108种烦恼，转动转经筒即相当于诵经，寓意以佛法力量消除一切烦恼。五印坛城与灵山梵宫（汉传）、曼飞龙塔（南传）共同构成了灵山胜境三大语系汇聚的独特格局。\n亮点:五层约30米藏式建筑、小布达拉宫、108个转经筒体验、精美唐卡、佛像、法器展出、藏传佛教文化代表\n游览提示:进入坛城后可以依次转动108个转经筒，感受藏族祈福文化。注意要顺时针方向转动。坛城内色彩艳丽，拍照效果很好。",
+        "chunk_id": "b6afc9addfc8ed6046e25e90",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      },
+      {
+        "title": "景点相关",
+        "source": "知识库.md",
+        "score": 0.1916,
+        "content": "**Q9：灵山大佛有多高？**\nA：灵山大佛佛像高88米（佛体79米，莲花座9米），连同基座总高101.5米，是世界上最高的露天青铜释迦牟尼佛立像，共用青铜725吨铸造。\n**Q10：九龙灌浴每天有几场表演？**\nA：九龙灌浴每天通常有4-5场表演，具体时间请参考景区当日公告。建议入园时先确认当日表演时间表，合理安排行程。\n**Q11：梵宫《吉祥颂》演出时间是什么？**\nA：《吉祥颂》演出通常安排在10:35、11:30、14:00、16:00，每场约30分钟。具体时间可能因季节和特殊情况调整，请以景区当日公告为准。\n**Q12：五印坛城可以转经筒吗？**\nA：可以。五印坛城周围共有108个转经筒，游客可以亲手转动。请按照顺时针方向转动，每转动一圈相当于诵读一遍经文。\n**Q13：灵山胜境有多少个景点？**\nA：灵山胜境景区共有16个主要景点，加上拈花湾禅意小镇的6个景点，总计22个景点。",
+        "chunk_id": "ffc527655b8bf1024c5d878c",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 26.9,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 46.2
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 70.98
+  },
+  {
+    "id": "F-022",
+    "question": "五印坛城的山门仿照了哪里的建筑？",
+    "expected_keywords": [
+      "布达拉宫",
+      "雪村"
+    ],
+    "category": "factual",
+    "difficulty": "medium",
+    "spot_names": [
+      "五印坛城"
+    ],
+    "should_refuse": false,
+    "answer": "阿弥陀佛,关于「五印坛城」,为您讲解如下:\n景点:五印坛城\n介绍:五印坛城是一座五层、高约30米的藏式佛教建筑，外形庄严华丽，被誉为小布达拉宫。坛城内部装饰以藏族传统风格为主，色彩浓烈、金碧辉煌，展出精美的唐卡、佛像和法器。最令人印象深刻的体验是108个转经筒——顺时针转动每一个转经筒并默诵经文，是藏传佛教中积累功德的重要方式。\n文化内涵:坛城（Mandala）在藏传佛教中是诸佛菩萨的宫殿和道场的象征，代表圆满的佛教世界观。五印坛城的五印指的是五方佛的五种种姓印：大圆镜印、平等性\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.5,
+    "keyword_ok": false,
+    "answer_matched": [
+      "布达拉宫"
+    ],
+    "answer_ok": false,
+    "refusal_correct": true,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "ef57e37e2cdb4f2ba442e29e898cedf3",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "五印坛城",
+        "source": "LS-014",
+        "score": 0.4626,
+        "content": "景点:五印坛城\n介绍:五印坛城是一座五层、高约30米的藏式佛教建筑，外形庄严华丽，被誉为小布达拉宫。坛城内部装饰以藏族传统风格为主，色彩浓烈、金碧辉煌，展出精美的唐卡、佛像和法器。最令人印象深刻的体验是108个转经筒——顺时针转动每一个转经筒并默诵经文，是藏传佛教中积累功德的重要方式。\n文化内涵:坛城（Mandala）在藏传佛教中是诸佛菩萨的宫殿和道场的象征，代表圆满的佛教世界观。五印坛城的五印指的是五方佛的五种种姓印：大圆镜印、平等性印、妙观察印、成所作印和法界体性印。108个转经筒对应藏传佛教中的108种烦恼，转动转经筒即相当于诵经，寓意以佛法力量消除一切烦恼。五印坛城与灵山梵宫（汉传）、曼飞龙塔（南传）共同构成了灵山胜境三大语系汇聚的独特格局。\n亮点:五层约30米藏式建筑、小布达拉宫、108个转经筒体验、精美唐卡、佛像、法器展出、藏传佛教文化代表\n游览提示:进入坛城后可以依次转动108个转经筒，感受藏族祈福文化。注意要顺时针方向转动。坛城内色彩艳丽，拍照效果很好。",
+        "chunk_id": "b6afc9addfc8ed6046e25e90",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      },
+      {
+        "title": "景点相关",
+        "source": "知识库.md",
+        "score": 0.1507,
+        "content": "**Q9：灵山大佛有多高？**\nA：灵山大佛佛像高88米（佛体79米，莲花座9米），连同基座总高101.5米，是世界上最高的露天青铜释迦牟尼佛立像，共用青铜725吨铸造。\n**Q10：九龙灌浴每天有几场表演？**\nA：九龙灌浴每天通常有4-5场表演，具体时间请参考景区当日公告。建议入园时先确认当日表演时间表，合理安排行程。\n**Q11：梵宫《吉祥颂》演出时间是什么？**\nA：《吉祥颂》演出通常安排在10:35、11:30、14:00、16:00，每场约30分钟。具体时间可能因季节和特殊情况调整，请以景区当日公告为准。\n**Q12：五印坛城可以转经筒吗？**\nA：可以。五印坛城周围共有108个转经筒，游客可以亲手转动。请按照顺时针方向转动，每转动一圈相当于诵读一遍经文。\n**Q13：灵山胜境有多少个景点？**\nA：灵山胜境景区共有16个主要景点，加上拈花湾禅意小镇的6个景点，总计22个景点。",
+        "chunk_id": "ffc527655b8bf1024c5d878c",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 27.48,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 47.13
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 50.7
+  },
+  {
+    "id": "F-024",
+    "question": "祥符禅寺的大钟有多高？",
+    "expected_keywords": [
+      "3.8"
+    ],
+    "category": "factual",
+    "difficulty": "hard",
+    "spot_names": [
+      "祥符禅寺"
+    ],
+    "should_refuse": false,
+    "answer": "阿弥陀佛,关于「祥符禅寺」,为您讲解如下:\n景点:祥符禅寺\n介绍:祥符禅寺始建于唐贞观年间（公元627-649年），由玄奘法师的高足窥基法师创建，距今已有一千三百多年历史。寺内有一棵千年银杏古树，枝繁叶茂、遮天蔽日，是灵山历史的活见证。寺内还悬有一口重达12.8吨的祥符禅钟，钟声浑厚悠远，回荡山谷。祥符禅寺历经兴废，现已成为江南地区重要的佛教修行道场。\n文化内涵:窥基法师是玄奘法师最杰出的弟子之一，被誉为百本疏主，是法相唯识宗的奠基人。他奉师命到江南弘法，创建了祥符禅寺，使灵山成\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.0,
+    "keyword_ok": false,
+    "answer_matched": [],
+    "answer_ok": false,
+    "refusal_correct": true,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "be128f1ff0a544f69cb8a204a7771597",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "祥符禅寺",
+        "source": "LS-010",
+        "score": 0.4637,
+        "content": "景点:祥符禅寺\n介绍:祥符禅寺始建于唐贞观年间（公元627-649年），由玄奘法师的高足窥基法师创建，距今已有一千三百多年历史。寺内有一棵千年银杏古树，枝繁叶茂、遮天蔽日，是灵山历史的活见证。寺内还悬有一口重达12.8吨的祥符禅钟，钟声浑厚悠远，回荡山谷。祥符禅寺历经兴废，现已成为江南地区重要的佛教修行道场。\n文化内涵:窥基法师是玄奘法师最杰出的弟子之一，被誉为百本疏主，是法相唯识宗的奠基人。他奉师命到江南弘法，创建了祥符禅寺，使灵山成为江南佛教重镇。千年银杏古树见证了这座古刹的千年沧桑，12.8吨的祥符禅钟则是晨钟暮鼓佛教修行传统的延续。寺院建筑遵循中国传统的伽蓝七堂制式，中轴对称、庄严肃穆。\n亮点:唐贞观年间玄奘弟子窥基创建，1300余年历史、千年银杏古树，灵山历史的活见证、12.8吨祥符禅钟，钟声悠远、江南重要佛教修行道场\n游览提示:可以在祥符禅寺内静心参拜，聆听禅钟悠扬。秋季银杏叶金黄时尤为壮观，是摄影的好时节。",
+        "chunk_id": "63af12938269ff2668548c18",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      },
+      {
+        "title": "LS-010 祥符禅寺",
+        "source": "知识库.md",
+        "score": 0.1723,
+        "content": "| 属性 | 内容  **景点编号** | LS-010  **景点名称** | 祥符禅寺  **位置** | 灵山大佛前方  **始建年代** | 唐贞观年间  **重要文物** | 千年银杏古树、12.8吨祥符禅钟 |\n**景点介绍：**\n祥符禅寺是一座具有千年历史的唐代古刹，由玄奘法师的弟子窥基始建于唐贞观年间，北宋大中祥符年间获朝廷赐额\"祥符禅寺\"。寺内古木参天，其中一棵千年银杏古树历经沧桑仍枝繁叶茂，是寺庙历史的活见证。寺内还悬挂着一口重达12.8吨的祥符禅钟，钟声浑厚悠远，余音绕梁。\n**文化内涵：**\n祥符禅寺是灵山佛教文化的源头。唐贞观年间，玄奘法师西行归来途经马山，见此处山水灵秀，遂命名\"小灵山\"，嘱弟子窥基在此建道场，祥符禅寺由此诞生。此后千年间，寺院历经宋元明清各代兴衰更迭，虽曾毁于战火，但法脉不断。1994年，祥符禅寺修复工程启动，与灵山大佛工程同步推进，使千年古刹重焕生机。银杏古树是佛教\"古树名木\"保护传统的体现，禅钟则寓意\"钟鸣谷应、声闻于天\"。\n**游玩亮点：**\n- 千年古刹的庄严氛围，梵音缭绕\n- 千年银杏古树，秋季金黄满树，美不胜收\n- 12.8吨祥符禅钟可参观，钟声悠远\n- 寺内可上香祈福，感受传统佛教仪轨\n- 寺庙建筑古朴典雅，唐风犹存\n**讲解重点：**\n1. 追溯祥符禅寺从唐代到现代的千年兴衰史\n2. 介绍千年银杏古树的历史和生态价值\n3. 讲解禅钟在佛教修行中的作用和寓意\n4. 引导游客在寺庙中保持安静恭敬\n---",
+        "chunk_id": "4194db136085296a38e136e8",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 26.03,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 43.38
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 47.03
+  },
+  {
+    "id": "F-026",
+    "question": "谁将此地命名为'小灵山'？",
+    "expected_keywords": [
+      "玄奘"
+    ],
+    "category": "factual",
+    "difficulty": "medium",
+    "spot_names": [
+      "祥符禅寺",
+      "灵山大佛"
+    ],
+    "should_refuse": false,
+    "answer": "抱歉，本地景区知识库没有找到可靠依据，请换个问法或咨询景区工作人员。",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.0,
+    "keyword_ok": false,
+    "answer_matched": [],
+    "answer_ok": false,
+    "refusal_correct": false,
+    "wrong_refusal": true,
+    "is_refusal": true,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "1a9867b8719a49aea60e8b645d140c94",
+    "status": "refused",
+    "sources": [],
+    "mode": "demo",
+    "provenance": {
+      "path": "no_evidence_refusal",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_retrieved_evidence",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 27.37,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 43.66
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 47.67
+  },
+  {
+    "id": "F-027",
+    "question": "拈花湾禅意小镇占地多少亩？",
+    "expected_keywords": [
+      "1600",
+      "1600亩"
+    ],
+    "expected_keyword_groups": [
+      [
+        "1600",
+        "1600亩"
+      ]
+    ],
+    "category": "factual",
+    "difficulty": "medium",
+    "spot_names": [
+      "拈花湾禅意小镇",
+      "拈花湾"
+    ],
+    "should_refuse": false,
+    "answer": "阿弥陀佛,关于「表演和活动」,为您讲解如下:\n**Q14：拈花湾夜间有什么活动？**\nA：拈花湾夜间最不可错过的活动是五灯湖的《禅行》灯光秀，演出时间通常为19:00和20:00。此外，香月花街在夜间也有灯光装饰和夜间商业活动。\n**Q15：拈花堂的讲座时间是什么？**\nA：拈花堂每日10:30和15:30举办禅文化讲座，内容包括禅修入门、禅茶文化等，免费参加，建议提前入场。\n**Q16：拈花湾的开园仪式是什么时间？**\nA：拈花湾每日9:30在拈花广场举行开园仪式，有禅意舞蹈和音\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.0,
+    "keyword_ok": false,
+    "answer_matched": [],
+    "answer_ok": false,
+    "refusal_correct": true,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "401c10356bc04ba489335c610f5845e5",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "表演和活动",
+        "source": "知识库.md",
+        "score": 0.1653,
+        "content": "**Q14：拈花湾夜间有什么活动？**\nA：拈花湾夜间最不可错过的活动是五灯湖的《禅行》灯光秀，演出时间通常为19:00和20:00。此外，香月花街在夜间也有灯光装饰和夜间商业活动。\n**Q15：拈花堂的讲座时间是什么？**\nA：拈花堂每日10:30和15:30举办禅文化讲座，内容包括禅修入门、禅茶文化等，免费参加，建议提前入场。\n**Q16：拈花湾的开园仪式是什么时间？**\nA：拈花湾每日9:30在拈花广场举行开园仪式，有禅意舞蹈和音乐表演，建议提前到达观看。",
+        "chunk_id": "d6e135484dcca1b44b0d5c54",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      },
+      {
+        "title": "拈花广场",
+        "source": "NH-001",
+        "score": 0.1566,
+        "content": "景点:拈花广场\n介绍:拈花广场是拈花湾禅意小镇的核心广场，中央矗立着一尊高12米的拈花微笑鎏金雕塑，再现了佛教拈花微笑的经典典故——佛陀在灵山法会上拈起一朵金色莲花，默然不语，唯有大弟子摩诃迦叶破颜微笑，佛陀便将正法眼藏、涅槃妙心传于迦叶，禅宗由此诞生。每日9:30，拈花广场还会举行盛大的开园仪式。\n文化内涵:拈花微笑是禅宗最核心的起源故事。佛陀不立文字、以心传心的方式，开创了禅宗教外别传、不立文字、直指人心、见性成佛的独特传统。拈花湾小镇的名字正来源于此。这尊12米的鎏金雕塑将拈花与微笑两个瞬间凝固为永恒，是拈花湾的精神象征。每日9:30的开园仪式融入禅意表演，为游客开启一段心灵之旅。\n亮点:12米拈花微笑鎏金雕塑、再现禅宗起源拈花微笑典故、每日9:30开园仪式、拈花湾禅意小镇核心地标\n游览提示:建议9:30前到达广场观看开园仪式，仪式有禅意表演非常值得一看。鎏金雕塑在阳光下金光闪闪，是拈花湾最经典的拍照点。",
+        "chunk_id": "9a63ffd7d4901b373d040cf5",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 26.93,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 44.53
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 48.86
+  },
+  {
+    "id": "F-028",
+    "question": "拈花湾禅意小镇以什么文化为主题？",
+    "expected_keywords": [
+      "禅意",
+      "唐"
+    ],
+    "category": "factual",
+    "difficulty": "easy",
+    "spot_names": [
+      "拈花湾禅意小镇"
+    ],
+    "should_refuse": false,
+    "answer": "阿弥陀佛,关于「表演和活动」,为您讲解如下:\n**Q14：拈花湾夜间有什么活动？**\nA：拈花湾夜间最不可错过的活动是五灯湖的《禅行》灯光秀，演出时间通常为19:00和20:00。此外，香月花街在夜间也有灯光装饰和夜间商业活动。\n**Q15：拈花堂的讲座时间是什么？**\nA：拈花堂每日10:30和15:30举办禅文化讲座，内容包括禅修入门、禅茶文化等，免费参加，建议提前入场。\n**Q16：拈花湾的开园仪式是什么时间？**\nA：拈花湾每日9:30在拈花广场举行开园仪式，有禅意舞蹈和音\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.5,
+    "keyword_ok": false,
+    "answer_matched": [
+      "禅意"
+    ],
+    "answer_ok": false,
+    "refusal_correct": true,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "112b822ea70a4e8a858dcd304c7ac68a",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "表演和活动",
+        "source": "知识库.md",
+        "score": 0.2369,
+        "content": "**Q14：拈花湾夜间有什么活动？**\nA：拈花湾夜间最不可错过的活动是五灯湖的《禅行》灯光秀，演出时间通常为19:00和20:00。此外，香月花街在夜间也有灯光装饰和夜间商业活动。\n**Q15：拈花堂的讲座时间是什么？**\nA：拈花堂每日10:30和15:30举办禅文化讲座，内容包括禅修入门、禅茶文化等，免费参加，建议提前入场。\n**Q16：拈花湾的开园仪式是什么时间？**\nA：拈花湾每日9:30在拈花广场举行开园仪式，有禅意舞蹈和音乐表演，建议提前到达观看。",
+        "chunk_id": "d6e135484dcca1b44b0d5c54",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      },
+      {
+        "title": "核心构成",
+        "source": "知识库.md",
+        "score": 0.1926,
+        "content": "灵山胜境由两大板块组成：\n1. **灵山胜境（佛教文化朝圣）**：以灵山大佛为核心，汇集梵宫、五印坛城、曼飞龙塔等佛教文化建筑群，展示汉传、藏传、南传三大语系佛教艺术，是世界佛教论坛永久会址。\n2. **拈花湾禅意小镇（禅意休闲体验）**：以\"拈花微笑\"禅意主题打造的休闲度假小镇，涵盖禅意商业街、花海、夜间灯光秀等体验项目。\n---",
+        "chunk_id": "d1a58ac501ffa676e644199b",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      },
+      {
+        "title": "拈花广场",
+        "source": "NH-001",
+        "score": 0.1742,
+        "content": "景点:拈花广场\n介绍:拈花广场是拈花湾禅意小镇的核心广场，中央矗立着一尊高12米的拈花微笑鎏金雕塑，再现了佛教拈花微笑的经典典故——佛陀在灵山法会上拈起一朵金色莲花，默然不语，唯有大弟子摩诃迦叶破颜微笑，佛陀便将正法眼藏、涅槃妙心传于迦叶，禅宗由此诞生。每日9:30，拈花广场还会举行盛大的开园仪式。\n文化内涵:拈花微笑是禅宗最核心的起源故事。佛陀不立文字、以心传心的方式，开创了禅宗教外别传、不立文字、直指人心、见性成佛的独特传统。拈花湾小镇的名字正来源于此。这尊12米的鎏金雕塑将拈花与微笑两个瞬间凝固为永恒，是拈花湾的精神象征。每日9:30的开园仪式融入禅意表演，为游客开启一段心灵之旅。\n亮点:12米拈花微笑鎏金雕塑、再现禅宗起源拈花微笑典故、每日9:30开园仪式、拈花湾禅意小镇核心地标\n游览提示:建议9:30前到达广场观看开园仪式，仪式有禅意表演非常值得一看。鎏金雕塑在阳光下金光闪闪，是拈花湾最经典的拍照点。",
+        "chunk_id": "9a63ffd7d4901b373d040cf5",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      },
+      {
+        "title": "开放时间相关",
+        "source": "知识库.md",
+        "score": 0.1627,
+        "content": "**Q7：灵山胜境的开放时间是什么？**\nA：夏令（一般为4月-10月）开放时间为7:00-17:30；冬令（一般为11月-次年3月）开放时间为7:00-17:00。建议提前查询景区官方公告确认当日开放时间。\n**Q8：拈花湾的开放时间是什么？**\nA：拈花湾禅意小镇通常在9:30举行开园仪式后正式开放，夜间《禅行》灯光秀结束后关闭（约21:00），具体时间请参考景区当日公告。",
+        "chunk_id": "a2220809e4a03de5d959a9c1",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 24.27,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 39.72
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 42.77
+  },
+  {
+    "id": "F-030",
+    "question": "九龙灌浴用了多少吨铜？",
+    "expected_keywords": [
+      "180"
+    ],
+    "category": "factual",
+    "difficulty": "hard",
+    "spot_names": [
+      "九龙灌浴"
+    ],
+    "should_refuse": false,
+    "answer": "阿弥陀佛,关于「九龙灌浴」,为您讲解如下:\n景点:九龙灌浴\n介绍:九龙灌浴是灵山胜境最具标志性的动态景观，总高27.2米，再现了释迦牟尼佛诞生时九龙吐水沐浴太子的祥瑞场景。音乐响起时，巨大的莲花花瓣缓缓绽放，一尊高7.2米、重12吨的鎏金太子佛像从莲花中升起，周围九条龙同时喷出净水，场面极为壮观。表演结束后，游客还可接取圣水祈福。\n文化内涵:据佛经记载，释迦牟尼佛诞生于蓝毗尼园时，天降甘露，九龙从空中喷出水柱为太子沐浴，这一场景被称为九龙灌浴，是佛教最重要的诞生典故之一。太子出生\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.0,
+    "keyword_ok": false,
+    "answer_matched": [],
+    "answer_ok": false,
+    "refusal_correct": true,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "5ef362aaa5d54da4a72beb8d819bcc34",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "九龙灌浴",
+        "source": "LS-006",
+        "score": 0.3678,
+        "content": "景点:九龙灌浴\n介绍:九龙灌浴是灵山胜境最具标志性的动态景观，总高27.2米，再现了释迦牟尼佛诞生时九龙吐水沐浴太子的祥瑞场景。音乐响起时，巨大的莲花花瓣缓缓绽放，一尊高7.2米、重12吨的鎏金太子佛像从莲花中升起，周围九条龙同时喷出净水，场面极为壮观。表演结束后，游客还可接取圣水祈福。\n文化内涵:据佛经记载，释迦牟尼佛诞生于蓝毗尼园时，天降甘露，九龙从空中喷出水柱为太子沐浴，这一场景被称为九龙灌浴，是佛教最重要的诞生典故之一。太子出生后即向东南西北各走七步，一手指天一手指地，说出天上天下，唯我独尊的偈语。灵山胜境将这一经典场景以大型动态雕塑的形式呈现，让游客身临其境感受佛陀降生的殊胜时刻。\n亮点:总高27.2米大型动态景观、鎏金太子佛高7.2米重12吨、莲花绽放九龙喷水、表演场次：10:00/11:30/14:00/16:00、可接取圣水祈福\n游览提示:建议提前10-15分钟到达广场占据好位置。表演时莲花底座周围有圣水流出，可以用手接取或用瓶子收集，寓意洗去烦恼、获得福气。注意观赏时保持安全距离。",
+        "chunk_id": "fa82b82de67f08355d43a743",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 24.74,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 43.06
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 46.11
+  },
+  {
+    "id": "F-032",
+    "question": "九龙灌浴的莲花花瓣有多长？",
+    "expected_keywords": [
+      "6",
+      "六"
+    ],
+    "expected_keyword_groups": [
+      [
+        "6",
+        "六"
+      ]
+    ],
+    "category": "factual",
+    "difficulty": "hard",
+    "spot_names": [
+      "九龙灌浴"
+    ],
+    "should_refuse": false,
+    "answer": "阿弥陀佛,关于「九龙灌浴」,为您讲解如下:\n景点:九龙灌浴\n介绍:九龙灌浴是灵山胜境最具标志性的动态景观，总高27.2米，再现了释迦牟尼佛诞生时九龙吐水沐浴太子的祥瑞场景。音乐响起时，巨大的莲花花瓣缓缓绽放，一尊高7.2米、重12吨的鎏金太子佛像从莲花中升起，周围九条龙同时喷出净水，场面极为壮观。表演结束后，游客还可接取圣水祈福。\n文化内涵:据佛经记载，释迦牟尼佛诞生于蓝毗尼园时，天降甘露，九龙从空中喷出水柱为太子沐浴，这一场景被称为九龙灌浴，是佛教最重要的诞生典故之一。太子出生\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.0,
+    "keyword_ok": false,
+    "answer_matched": [],
+    "answer_ok": false,
+    "refusal_correct": true,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "3f0f873a605945348cc4ccfb447a43da",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "九龙灌浴",
+        "source": "LS-006",
+        "score": 0.4737,
+        "content": "景点:九龙灌浴\n介绍:九龙灌浴是灵山胜境最具标志性的动态景观，总高27.2米，再现了释迦牟尼佛诞生时九龙吐水沐浴太子的祥瑞场景。音乐响起时，巨大的莲花花瓣缓缓绽放，一尊高7.2米、重12吨的鎏金太子佛像从莲花中升起，周围九条龙同时喷出净水，场面极为壮观。表演结束后，游客还可接取圣水祈福。\n文化内涵:据佛经记载，释迦牟尼佛诞生于蓝毗尼园时，天降甘露，九龙从空中喷出水柱为太子沐浴，这一场景被称为九龙灌浴，是佛教最重要的诞生典故之一。太子出生后即向东南西北各走七步，一手指天一手指地，说出天上天下，唯我独尊的偈语。灵山胜境将这一经典场景以大型动态雕塑的形式呈现，让游客身临其境感受佛陀降生的殊胜时刻。\n亮点:总高27.2米大型动态景观、鎏金太子佛高7.2米重12吨、莲花绽放九龙喷水、表演场次：10:00/11:30/14:00/16:00、可接取圣水祈福\n游览提示:建议提前10-15分钟到达广场占据好位置。表演时莲花底座周围有圣水流出，可以用手接取或用瓶子收集，寓意洗去烦恼、获得福气。注意观赏时保持安全距离。",
+        "chunk_id": "fa82b82de67f08355d43a743",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 27.07,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 46.21
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 49.78
+  },
+  {
+    "id": "F-033",
+    "question": "祥符禅寺大钟的口径有多大？",
+    "expected_keywords": [
+      "2.5"
+    ],
+    "category": "factual",
+    "difficulty": "hard",
+    "spot_names": [
+      "祥符禅寺"
+    ],
+    "should_refuse": false,
+    "answer": "阿弥陀佛,关于「祥符禅寺」,为您讲解如下:\n景点:祥符禅寺\n介绍:祥符禅寺始建于唐贞观年间（公元627-649年），由玄奘法师的高足窥基法师创建，距今已有一千三百多年历史。寺内有一棵千年银杏古树，枝繁叶茂、遮天蔽日，是灵山历史的活见证。寺内还悬有一口重达12.8吨的祥符禅钟，钟声浑厚悠远，回荡山谷。祥符禅寺历经兴废，现已成为江南地区重要的佛教修行道场。\n文化内涵:窥基法师是玄奘法师最杰出的弟子之一，被誉为百本疏主，是法相唯识宗的奠基人。他奉师命到江南弘法，创建了祥符禅寺，使灵山成\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.0,
+    "keyword_ok": false,
+    "answer_matched": [],
+    "answer_ok": false,
+    "refusal_correct": true,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "b6d38b73974a48e9a4d8795ec501da4b",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "祥符禅寺",
+        "source": "LS-010",
+        "score": 0.4608,
+        "content": "景点:祥符禅寺\n介绍:祥符禅寺始建于唐贞观年间（公元627-649年），由玄奘法师的高足窥基法师创建，距今已有一千三百多年历史。寺内有一棵千年银杏古树，枝繁叶茂、遮天蔽日，是灵山历史的活见证。寺内还悬有一口重达12.8吨的祥符禅钟，钟声浑厚悠远，回荡山谷。祥符禅寺历经兴废，现已成为江南地区重要的佛教修行道场。\n文化内涵:窥基法师是玄奘法师最杰出的弟子之一，被誉为百本疏主，是法相唯识宗的奠基人。他奉师命到江南弘法，创建了祥符禅寺，使灵山成为江南佛教重镇。千年银杏古树见证了这座古刹的千年沧桑，12.8吨的祥符禅钟则是晨钟暮鼓佛教修行传统的延续。寺院建筑遵循中国传统的伽蓝七堂制式，中轴对称、庄严肃穆。\n亮点:唐贞观年间玄奘弟子窥基创建，1300余年历史、千年银杏古树，灵山历史的活见证、12.8吨祥符禅钟，钟声悠远、江南重要佛教修行道场\n游览提示:可以在祥符禅寺内静心参拜，聆听禅钟悠扬。秋季银杏叶金黄时尤为壮观，是摄影的好时节。",
+        "chunk_id": "63af12938269ff2668548c18",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      },
+      {
+        "title": "LS-010 祥符禅寺",
+        "source": "知识库.md",
+        "score": 0.17,
+        "content": "| 属性 | 内容  **景点编号** | LS-010  **景点名称** | 祥符禅寺  **位置** | 灵山大佛前方  **始建年代** | 唐贞观年间  **重要文物** | 千年银杏古树、12.8吨祥符禅钟 |\n**景点介绍：**\n祥符禅寺是一座具有千年历史的唐代古刹，由玄奘法师的弟子窥基始建于唐贞观年间，北宋大中祥符年间获朝廷赐额\"祥符禅寺\"。寺内古木参天，其中一棵千年银杏古树历经沧桑仍枝繁叶茂，是寺庙历史的活见证。寺内还悬挂着一口重达12.8吨的祥符禅钟，钟声浑厚悠远，余音绕梁。\n**文化内涵：**\n祥符禅寺是灵山佛教文化的源头。唐贞观年间，玄奘法师西行归来途经马山，见此处山水灵秀，遂命名\"小灵山\"，嘱弟子窥基在此建道场，祥符禅寺由此诞生。此后千年间，寺院历经宋元明清各代兴衰更迭，虽曾毁于战火，但法脉不断。1994年，祥符禅寺修复工程启动，与灵山大佛工程同步推进，使千年古刹重焕生机。银杏古树是佛教\"古树名木\"保护传统的体现，禅钟则寓意\"钟鸣谷应、声闻于天\"。\n**游玩亮点：**\n- 千年古刹的庄严氛围，梵音缭绕\n- 千年银杏古树，秋季金黄满树，美不胜收\n- 12.8吨祥符禅钟可参观，钟声悠远\n- 寺内可上香祈福，感受传统佛教仪轨\n- 寺庙建筑古朴典雅，唐风犹存\n**讲解重点：**\n1. 追溯祥符禅寺从唐代到现代的千年兴衰史\n2. 介绍千年银杏古树的历史和生态价值\n3. 讲解禅钟在佛教修行中的作用和寓意\n4. 引导游客在寺庙中保持安静恭敬\n---",
+        "chunk_id": "4194db136085296a38e136e8",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 28.81,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 47.7
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 51.57
+  },
+  {
+    "id": "F-035",
+    "question": "灵山大佛与国内其他哪几尊大佛并称五方五佛？",
+    "expected_keywords": [
+      "乐山",
+      "天坛",
+      "云冈",
+      "龙门"
+    ],
+    "category": "factual",
+    "difficulty": "hard",
+    "spot_names": [
+      "灵山大佛"
+    ],
+    "should_refuse": false,
+    "answer": "阿弥陀佛,关于「五方五佛」,为您讲解如下:\n五方五佛:五方五佛是密宗佛教的核心概念，代表五方佛的五种智慧：\n【中央】毗卢遮那佛——法界体性智\n代表佛法的本体智慧，是宇宙万法的根本\n【东方】阿閦佛——大圆镜智\n如大圆镜般照见一切诸法，不染不着\n【南方】宝生佛——平等性智\n视一切众生平等无差别，广施福德\n【西方】阿弥陀佛——妙观察智\n以无碍智慧观察众生根机，应机说法\n【北方】不空成就佛——成所作智\n以大智慧成就一切利生事业\n五方五佛的智慧理念在灵山胜境的五智门（五门）中得到了建筑化的\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.0,
+    "keyword_ok": false,
+    "answer_matched": [],
+    "answer_ok": false,
+    "refusal_correct": true,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "70b5a6c7e0524791b3270661b1cae807",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "五方五佛",
+        "source": "BASE-fiveBuddhas",
+        "score": 0.4002,
+        "content": "五方五佛:五方五佛是密宗佛教的核心概念，代表五方佛的五种智慧：\n\n【中央】毗卢遮那佛——法界体性智\n代表佛法的本体智慧，是宇宙万法的根本\n\n【东方】阿閦佛——大圆镜智\n如大圆镜般照见一切诸法，不染不着\n\n【南方】宝生佛——平等性智\n视一切众生平等无差别，广施福德\n\n【西方】阿弥陀佛——妙观察智\n以无碍智慧观察众生根机，应机说法\n\n【北方】不空成就佛——成所作智\n以大智慧成就一切利生事业\n\n五方五佛的智慧理念在灵山胜境的五智门（五门）中得到了建筑化的呈现。",
+        "chunk_id": "ddb3d9adefbea050df51aece",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      },
+      {
+        "title": "灵山大佛",
+        "source": "LS-011",
+        "score": 0.3996,
+        "content": "景点:灵山大佛\n介绍:灵山大佛是世界最高露天青铜释迦牟尼佛立像，通高88米（佛体79米+莲花座9米），连同莲花座下基座总高101.5米，共用铜725吨。大佛右手施无畏印，寓意除却众生一切痛苦与恐惧；左手施与愿印，寓意赐予众生一切欢乐与福祉。大佛坐落于太湖之滨的小灵山南麓，面朝太湖，背倚群山，法相庄严。游客需攀登216级台阶方可抵达大佛脚下，在抱佛脚处可以近距离瞻仰大佛，俯瞰太湖全景。\n文化内涵:灵山大佛的建造始于1994年，由中国佛教协会会长赵朴初先生倡导，历时三年落成。大佛选址依据佛教左青龙、右白虎、前朱雀、后玄武的风水理念，背靠小灵山，面朝太湖，山水相依，气势非凡。佛像铸造采用先进的分段铸造、整体组装技术，725吨铜被精密焊接为一体。大佛右手无畏印象征佛陀以大无畏的勇气教化众生，左手与愿印象征佛陀以慈悲心满足众生善愿。抱佛脚源自民间俗语，在此被赋予了积极含义——亲近佛法、获得庇佑。\n亮点:世界最高露天青铜释迦牟尼立像、通高88米，总高101.5米，耗铜725吨、右手无畏印、左手与愿印、216级台阶登顶、抱佛脚祈福、俯瞰太湖全景\n游览提示:攀登216级台阶需要一定体力，建议穿舒适的鞋子。登顶后在大佛脚部可以贴金祈福。天气晴好时在台阶上可以拍到太湖与大佛同框的壮丽照片。",
+        "chunk_id": "07bc5ff6db95768fafa9066d",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 29.13,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 48.67
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 52.17
+  },
+  {
+    "id": "I-005",
+    "question": "请介绍一下祥符禅寺。",
+    "expected_keywords": [
+      "玄奘",
+      "唐代",
+      "小灵山"
+    ],
+    "category": "intro",
+    "difficulty": "medium",
+    "spot_names": [
+      "祥符禅寺"
+    ],
+    "should_refuse": false,
+    "answer": "阿弥陀佛,关于「祥符禅寺」,为您讲解如下:\n景点:祥符禅寺\n介绍:祥符禅寺始建于唐贞观年间（公元627-649年），由玄奘法师的高足窥基法师创建，距今已有一千三百多年历史。寺内有一棵千年银杏古树，枝繁叶茂、遮天蔽日，是灵山历史的活见证。寺内还悬有一口重达12.8吨的祥符禅钟，钟声浑厚悠远，回荡山谷。祥符禅寺历经兴废，现已成为江南地区重要的佛教修行道场。\n文化内涵:窥基法师是玄奘法师最杰出的弟子之一，被誉为百本疏主，是法相唯识宗的奠基人。他奉师命到江南弘法，创建了祥符禅寺，使灵山成\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.3333,
+    "keyword_ok": false,
+    "answer_matched": [
+      "玄奘"
+    ],
+    "answer_ok": false,
+    "refusal_correct": true,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "f3b70255e98747709e07c7055cb8ccf5",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "祥符禅寺",
+        "source": "LS-010",
+        "score": 0.5281,
+        "content": "景点:祥符禅寺\n介绍:祥符禅寺始建于唐贞观年间（公元627-649年），由玄奘法师的高足窥基法师创建，距今已有一千三百多年历史。寺内有一棵千年银杏古树，枝繁叶茂、遮天蔽日，是灵山历史的活见证。寺内还悬有一口重达12.8吨的祥符禅钟，钟声浑厚悠远，回荡山谷。祥符禅寺历经兴废，现已成为江南地区重要的佛教修行道场。\n文化内涵:窥基法师是玄奘法师最杰出的弟子之一，被誉为百本疏主，是法相唯识宗的奠基人。他奉师命到江南弘法，创建了祥符禅寺，使灵山成为江南佛教重镇。千年银杏古树见证了这座古刹的千年沧桑，12.8吨的祥符禅钟则是晨钟暮鼓佛教修行传统的延续。寺院建筑遵循中国传统的伽蓝七堂制式，中轴对称、庄严肃穆。\n亮点:唐贞观年间玄奘弟子窥基创建，1300余年历史、千年银杏古树，灵山历史的活见证、12.8吨祥符禅钟，钟声悠远、江南重要佛教修行道场\n游览提示:可以在祥符禅寺内静心参拜，聆听禅钟悠扬。秋季银杏叶金黄时尤为壮观，是摄影的好时节。",
+        "chunk_id": "63af12938269ff2668548c18",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      },
+      {
+        "title": "LS-010 祥符禅寺",
+        "source": "知识库.md",
+        "score": 0.2319,
+        "content": "| 属性 | 内容  **景点编号** | LS-010  **景点名称** | 祥符禅寺  **位置** | 灵山大佛前方  **始建年代** | 唐贞观年间  **重要文物** | 千年银杏古树、12.8吨祥符禅钟 |\n**景点介绍：**\n祥符禅寺是一座具有千年历史的唐代古刹，由玄奘法师的弟子窥基始建于唐贞观年间，北宋大中祥符年间获朝廷赐额\"祥符禅寺\"。寺内古木参天，其中一棵千年银杏古树历经沧桑仍枝繁叶茂，是寺庙历史的活见证。寺内还悬挂着一口重达12.8吨的祥符禅钟，钟声浑厚悠远，余音绕梁。\n**文化内涵：**\n祥符禅寺是灵山佛教文化的源头。唐贞观年间，玄奘法师西行归来途经马山，见此处山水灵秀，遂命名\"小灵山\"，嘱弟子窥基在此建道场，祥符禅寺由此诞生。此后千年间，寺院历经宋元明清各代兴衰更迭，虽曾毁于战火，但法脉不断。1994年，祥符禅寺修复工程启动，与灵山大佛工程同步推进，使千年古刹重焕生机。银杏古树是佛教\"古树名木\"保护传统的体现，禅钟则寓意\"钟鸣谷应、声闻于天\"。\n**游玩亮点：**\n- 千年古刹的庄严氛围，梵音缭绕\n- 千年银杏古树，秋季金黄满树，美不胜收\n- 12.8吨祥符禅钟可参观，钟声悠远\n- 寺内可上香祈福，感受传统佛教仪轨\n- 寺庙建筑古朴典雅，唐风犹存\n**讲解重点：**\n1. 追溯祥符禅寺从唐代到现代的千年兴衰史\n2. 介绍千年银杏古树的历史和生态价值\n3. 讲解禅钟在佛教修行中的作用和寓意\n4. 引导游客在寺庙中保持安静恭敬\n---",
+        "chunk_id": "4194db136085296a38e136e8",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 30.22,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 50.77
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 54.54
+  },
+  {
+    "id": "I-006",
+    "question": "拈花湾禅意小镇是什么样的地方？",
+    "expected_keywords": [
+      "禅意",
+      "唐风",
+      "休闲"
+    ],
+    "category": "intro",
+    "difficulty": "easy",
+    "spot_names": [
+      "拈花湾禅意小镇"
+    ],
+    "should_refuse": false,
+    "answer": "阿弥陀佛,关于「拈花广场」,为您讲解如下:\n景点:拈花广场\n介绍:拈花广场是拈花湾禅意小镇的核心广场，中央矗立着一尊高12米的拈花微笑鎏金雕塑，再现了佛教拈花微笑的经典典故——佛陀在灵山法会上拈起一朵金色莲花，默然不语，唯有大弟子摩诃迦叶破颜微笑，佛陀便将正法眼藏、涅槃妙心传于迦叶，禅宗由此诞生。每日9:30，拈花广场还会举行盛大的开园仪式。\n文化内涵:拈花微笑是禅宗最核心的起源故事。佛陀不立文字、以心传心的方式，开创了禅宗教外别传、不立文字、直指人心、见性成佛的独特传统。拈花湾\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.3333,
+    "keyword_ok": false,
+    "answer_matched": [
+      "禅意"
+    ],
+    "answer_ok": false,
+    "refusal_correct": true,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "0674d923a3894a93aa446a86c4b06901",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "拈花广场",
+        "source": "NH-001",
+        "score": 0.1999,
+        "content": "景点:拈花广场\n介绍:拈花广场是拈花湾禅意小镇的核心广场，中央矗立着一尊高12米的拈花微笑鎏金雕塑，再现了佛教拈花微笑的经典典故——佛陀在灵山法会上拈起一朵金色莲花，默然不语，唯有大弟子摩诃迦叶破颜微笑，佛陀便将正法眼藏、涅槃妙心传于迦叶，禅宗由此诞生。每日9:30，拈花广场还会举行盛大的开园仪式。\n文化内涵:拈花微笑是禅宗最核心的起源故事。佛陀不立文字、以心传心的方式，开创了禅宗教外别传、不立文字、直指人心、见性成佛的独特传统。拈花湾小镇的名字正来源于此。这尊12米的鎏金雕塑将拈花与微笑两个瞬间凝固为永恒，是拈花湾的精神象征。每日9:30的开园仪式融入禅意表演，为游客开启一段心灵之旅。\n亮点:12米拈花微笑鎏金雕塑、再现禅宗起源拈花微笑典故、每日9:30开园仪式、拈花湾禅意小镇核心地标\n游览提示:建议9:30前到达广场观看开园仪式，仪式有禅意表演非常值得一看。鎏金雕塑在阳光下金光闪闪，是拈花湾最经典的拍照点。",
+        "chunk_id": "9a63ffd7d4901b373d040cf5",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      },
+      {
+        "title": "表演和活动",
+        "source": "知识库.md",
+        "score": 0.1985,
+        "content": "**Q14：拈花湾夜间有什么活动？**\nA：拈花湾夜间最不可错过的活动是五灯湖的《禅行》灯光秀，演出时间通常为19:00和20:00。此外，香月花街在夜间也有灯光装饰和夜间商业活动。\n**Q15：拈花堂的讲座时间是什么？**\nA：拈花堂每日10:30和15:30举办禅文化讲座，内容包括禅修入门、禅茶文化等，免费参加，建议提前入场。\n**Q16：拈花湾的开园仪式是什么时间？**\nA：拈花湾每日9:30在拈花广场举行开园仪式，有禅意舞蹈和音乐表演，建议提前到达观看。",
+        "chunk_id": "d6e135484dcca1b44b0d5c54",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      },
+      {
+        "title": "NH-001 拈花广场",
+        "source": "知识库.md",
+        "score": 0.1587,
+        "content": "| 属性 | 内容  **景点编号** | NH-001  **景点名称** | 拈花广场  **位置** | 拈花湾禅意小镇入口处  **核心雕塑** | \"拈花微笑\"鎏金雕塑，高12米  **活动** | 每日9:30开园仪式 |\n**景点介绍：**\n拈花广场是拈花湾禅意小镇的核心广场和标志性入口。广场中央矗立着一尊高12米的\"拈花微笑\"鎏金雕塑，以佛陀在灵山法会上拈花、迦叶微笑的典故为原型，造型优美，金光璀璨。每日9:30，广场举行盛大的开园仪式，禅意舞蹈和音乐表演为游客开启一天的美好旅程。\n**文化内涵：**\n\"拈花微笑\"是佛教禅宗最重要的典故之一。据记载，佛陀在灵山法会上手持一朵金婆罗花示众，众人不解其意，唯有大弟子摩诃迦叶破颜微笑。佛陀遂将\"正法眼藏、涅槃妙心\"付嘱迦叶，禅宗由此传承。这一典故寓意\"不立文字、教外别传、直指人心、见性成佛\"的禅宗精神。拈花湾小镇以此典故命名，旨在传递\"简单生活、自在欢喜\"的禅意生活理念。\n**游玩亮点：**\n- 12米鎏金雕塑的视觉效果极为震撼\n- 每日9:30开园仪式表演精彩，不容错过\n- 广场开阔，是拈花湾小镇的最佳拍照点\n- 禅意氛围浓厚，适合静坐冥想\n**讲解重点：**\n1. 讲述\"拈花微笑\"的完整禅宗典故\n2. 介绍拈花湾小镇\"简单生活、自在欢喜\"的理念\n3. 提醒开园仪式时间（9:30），建议提前到达\n4. 说明小镇的整体布局和游览建议\n---",
+        "chunk_id": "669f2e540c14eab072241b70",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 29.07,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 52.17
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 55.96
+  },
+  {
+    "id": "I-007",
+    "question": "灵山大照壁在哪里？有什么意义？",
+    "expected_keywords": [
+      "入口",
+      "中轴线",
+      "赵朴初"
+    ],
+    "category": "intro",
+    "difficulty": "medium",
+    "spot_names": [
+      "灵山大照壁"
+    ],
+    "should_refuse": false,
+    "answer": "阿弥陀佛,关于「灵山大照壁」,为您讲解如下:\n景点:灵山大照壁\n介绍:灵山大照壁被誉为华夏第一壁，全长39.8米、高7米，是目前中国最大的石材照壁之一。照壁正面由原中国佛教协会会长赵朴初先生亲笔题写灵山胜境四个大字，笔力遒劲，气势磅礴。照壁背面刻有小灵山三字，追溯灵山与唐代高僧玄奘法师的历史渊源——相传玄奘法师西天取经归来后，见无锡马山山峰层峦叠嶂、紫气东来，宛如天竺灵鹫山，便命名为小灵山，灵山之名由此而来。\n文化内涵:照壁是中国传统建筑中的独特元素，具有挡风、遮蔽、装饰和镇宅的作\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.3333,
+    "keyword_ok": false,
+    "answer_matched": [
+      "赵朴初"
+    ],
+    "answer_ok": false,
+    "refusal_correct": true,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "b112423ded8c4f34b40414cd730d1463",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "灵山大照壁",
+        "source": "LS-001",
+        "score": 0.4397,
+        "content": "景点:灵山大照壁\n介绍:灵山大照壁被誉为华夏第一壁，全长39.8米、高7米，是目前中国最大的石材照壁之一。照壁正面由原中国佛教协会会长赵朴初先生亲笔题写灵山胜境四个大字，笔力遒劲，气势磅礴。照壁背面刻有小灵山三字，追溯灵山与唐代高僧玄奘法师的历史渊源——相传玄奘法师西天取经归来后，见无锡马山山峰层峦叠嶂、紫气东来，宛如天竺灵鹫山，便命名为小灵山，灵山之名由此而来。\n文化内涵:照壁是中国传统建筑中的独特元素，具有挡风、遮蔽、装饰和镇宅的作用。在佛教文化中，照壁象征隔尘之意，提醒信众跨过照壁便踏入清净佛地，放下世俗烦恼。灵山大照壁不仅是景区的标志入口，更是佛教文化与中国传统建筑艺术完美融合的典范。\n亮点:华夏第一壁，长39.8米高7米、赵朴初亲笔题写灵山胜境、背面小灵山追溯玄奘法师命名渊源\n游览提示:大照壁是进入景区后的第一个标志性景点，建议在此拍照留念，感受华夏第一壁的恢弘气势。",
+        "chunk_id": "31ebe1af3c8481e27f9fd811",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      },
+      {
+        "title": "表演和活动",
+        "source": "知识库.md",
+        "score": 0.1715,
+        "content": "**Q14：拈花湾夜间有什么活动？**\nA：拈花湾夜间最不可错过的活动是五灯湖的《禅行》灯光秀，演出时间通常为19:00和20:00。此外，香月花街在夜间也有灯光装饰和夜间商业活动。\n**Q15：拈花堂的讲座时间是什么？**\nA：拈花堂每日10:30和15:30举办禅文化讲座，内容包括禅修入门、禅茶文化等，免费参加，建议提前入场。\n**Q16：拈花湾的开园仪式是什么时间？**\nA：拈花湾每日9:30在拈花广场举行开园仪式，有禅意舞蹈和音乐表演，建议提前到达观看。",
+        "chunk_id": "d6e135484dcca1b44b0d5c54",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      },
+      {
+        "title": "景点相关",
+        "source": "知识库.md",
+        "score": 0.164,
+        "content": "**Q9：灵山大佛有多高？**\nA：灵山大佛佛像高88米（佛体79米，莲花座9米），连同基座总高101.5米，是世界上最高的露天青铜释迦牟尼佛立像，共用青铜725吨铸造。\n**Q10：九龙灌浴每天有几场表演？**\nA：九龙灌浴每天通常有4-5场表演，具体时间请参考景区当日公告。建议入园时先确认当日表演时间表，合理安排行程。\n**Q11：梵宫《吉祥颂》演出时间是什么？**\nA：《吉祥颂》演出通常安排在10:35、11:30、14:00、16:00，每场约30分钟。具体时间可能因季节和特殊情况调整，请以景区当日公告为准。\n**Q12：五印坛城可以转经筒吗？**\nA：可以。五印坛城周围共有108个转经筒，游客可以亲手转动。请按照顺时针方向转动，每转动一圈相当于诵读一遍经文。\n**Q13：灵山胜境有多少个景点？**\nA：灵山胜境景区共有16个主要景点，加上拈花湾禅意小镇的6个景点，总计22个景点。",
+        "chunk_id": "ffc527655b8bf1024c5d878c",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 31.31,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 53.06
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 57.45
+  },
+  {
+    "id": "I-009",
+    "question": "佛足坛是什么？",
+    "expected_keywords": [
+      "佛足",
+      "礼佛",
+      "脚印"
+    ],
+    "category": "intro",
+    "difficulty": "medium",
+    "spot_names": [
+      "佛足坛"
+    ],
+    "should_refuse": false,
+    "answer": "阿弥陀佛,关于「佛足坛」,为您讲解如下:\n景点:佛足坛\n介绍:佛足坛中央供奉着一枚巨大的青铜佛足印，按1:1比例铸造，足心刻有32种吉祥图案，包括千辐轮、三宝标、宝瓶、双鱼、吉祥结等佛教吉祥纹样。佛足印在佛教中具有极高的崇敬意义，源见识足如见佛的传统——佛陀入灭后，信众通过礼拜佛足印来表达对佛陀的追思与敬仰。\n文化内涵:佛足印是佛教最早的象征符号之一，早于佛像的出现。在佛陀住世时代，信徒不直接塑佛像，而是以佛足印作为礼拜对象。足心的32种吉祥图案对应佛陀的三十二相，是佛陀圆满功\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.3333,
+    "keyword_ok": false,
+    "answer_matched": [
+      "佛足"
+    ],
+    "answer_ok": false,
+    "refusal_correct": true,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "ae37f30514174b4a87367ec545a6f909",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "佛足坛",
+        "source": "LS-003",
+        "score": 0.4462,
+        "content": "景点:佛足坛\n介绍:佛足坛中央供奉着一枚巨大的青铜佛足印，按1:1比例铸造，足心刻有32种吉祥图案，包括千辐轮、三宝标、宝瓶、双鱼、吉祥结等佛教吉祥纹样。佛足印在佛教中具有极高的崇敬意义，源见识足如见佛的传统——佛陀入灭后，信众通过礼拜佛足印来表达对佛陀的追思与敬仰。\n文化内涵:佛足印是佛教最早的象征符号之一，早于佛像的出现。在佛陀住世时代，信徒不直接塑佛像，而是以佛足印作为礼拜对象。足心的32种吉祥图案对应佛陀的三十二相，是佛陀圆满功德的象征。佛足坛让游客有机会近距离感受这一古老的佛教传统，体验见足如见佛的虔诚心境。\n亮点:1:1比例青铜佛足印、足心32种吉祥图案、见足如见佛的佛教传统\n游览提示:游客可围绕佛足印顺时针绕行三圈以示恭敬，也可用手触摸佛足印感受其庄严。",
+        "chunk_id": "32e8d00ac26b168ab92f278f",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      },
+      {
+        "title": "表演和活动",
+        "source": "知识库.md",
+        "score": 0.1526,
+        "content": "**Q14：拈花湾夜间有什么活动？**\nA：拈花湾夜间最不可错过的活动是五灯湖的《禅行》灯光秀，演出时间通常为19:00和20:00。此外，香月花街在夜间也有灯光装饰和夜间商业活动。\n**Q15：拈花堂的讲座时间是什么？**\nA：拈花堂每日10:30和15:30举办禅文化讲座，内容包括禅修入门、禅茶文化等，免费参加，建议提前入场。\n**Q16：拈花湾的开园仪式是什么时间？**\nA：拈花湾每日9:30在拈花广场举行开园仪式，有禅意舞蹈和音乐表演，建议提前到达观看。",
+        "chunk_id": "d6e135484dcca1b44b0d5c54",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 30.52,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 51.98
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 75.63
+  },
+  {
+    "id": "I-012",
+    "question": "拈花塔有什么看点？",
+    "expected_keywords": [
+      "塔",
+      "小镇",
+      "打卡"
+    ],
+    "category": "intro",
+    "difficulty": "medium",
+    "spot_names": [
+      "拈花塔"
+    ],
+    "should_refuse": false,
+    "answer": "阿弥陀佛,关于「表演和活动」,为您讲解如下:\n**Q14：拈花湾夜间有什么活动？**\nA：拈花湾夜间最不可错过的活动是五灯湖的《禅行》灯光秀，演出时间通常为19:00和20:00。此外，香月花街在夜间也有灯光装饰和夜间商业活动。\n**Q15：拈花堂的讲座时间是什么？**\nA：拈花堂每日10:30和15:30举办禅文化讲座，内容包括禅修入门、禅茶文化等，免费参加，建议提前入场。\n**Q16：拈花湾的开园仪式是什么时间？**\nA：拈花湾每日9:30在拈花广场举行开园仪式，有禅意舞蹈和音\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.0,
+    "keyword_ok": false,
+    "answer_matched": [],
+    "answer_ok": false,
+    "refusal_correct": true,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "a734f84b84a0464aa04077415ddbf9fa",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "表演和活动",
+        "source": "知识库.md",
+        "score": 0.2794,
+        "content": "**Q14：拈花湾夜间有什么活动？**\nA：拈花湾夜间最不可错过的活动是五灯湖的《禅行》灯光秀，演出时间通常为19:00和20:00。此外，香月花街在夜间也有灯光装饰和夜间商业活动。\n**Q15：拈花堂的讲座时间是什么？**\nA：拈花堂每日10:30和15:30举办禅文化讲座，内容包括禅修入门、禅茶文化等，免费参加，建议提前入场。\n**Q16：拈花湾的开园仪式是什么时间？**\nA：拈花湾每日9:30在拈花广场举行开园仪式，有禅意舞蹈和音乐表演，建议提前到达观看。",
+        "chunk_id": "d6e135484dcca1b44b0d5c54",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 27.12,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 45.89
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 72.29
+  },
+  {
+    "id": "I-013",
+    "question": "微笑广场为什么叫这个名字？",
+    "expected_keywords": [
+      "微笑",
+      "拈花微笑",
+      "禅"
+    ],
+    "category": "intro",
+    "difficulty": "medium",
+    "spot_names": [
+      "微笑广场"
+    ],
+    "should_refuse": false,
+    "answer": "抱歉，本地景区知识库没有找到可靠依据，请换个问法或咨询景区工作人员。",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.0,
+    "keyword_ok": false,
+    "answer_matched": [],
+    "answer_ok": false,
+    "refusal_correct": false,
+    "wrong_refusal": true,
+    "is_refusal": true,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "219400f2e4864bca9beb53eba0e7e455",
+    "status": "refused",
+    "sources": [],
+    "mode": "demo",
+    "provenance": {
+      "path": "no_evidence_refusal",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_retrieved_evidence",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 27.35,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 43.64
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 47.52
+  },
+  {
+    "id": "I-014",
+    "question": "妙音台是体验什么的地方？",
+    "expected_keywords": [
+      "音乐",
+      "演艺",
+      "灯光"
+    ],
+    "category": "intro",
+    "difficulty": "medium",
+    "spot_names": [
+      "妙音台"
+    ],
+    "should_refuse": false,
+    "answer": "抱歉，本地景区知识库没有找到可靠依据，请换个问法或咨询景区工作人员。",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.0,
+    "keyword_ok": false,
+    "answer_matched": [],
+    "answer_ok": false,
+    "refusal_correct": false,
+    "wrong_refusal": true,
+    "is_refusal": true,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "3eef14f7729943be935351265929d3f9",
+    "status": "refused",
+    "sources": [],
+    "mode": "demo",
+    "provenance": {
+      "path": "no_evidence_refusal",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_retrieved_evidence",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 27.63,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 43.9
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 47.85
+  },
+  {
+    "id": "I-015",
+    "question": "半山衔日是什么景观？",
+    "expected_keywords": [
+      "观景",
+      "日落",
+      "半山"
+    ],
+    "category": "intro",
+    "difficulty": "medium",
+    "spot_names": [
+      "半山衔日"
+    ],
+    "should_refuse": false,
+    "answer": "阿弥陀佛,关于「表演和活动」,为您讲解如下:\n**Q14：拈花湾夜间有什么活动？**\nA：拈花湾夜间最不可错过的活动是五灯湖的《禅行》灯光秀，演出时间通常为19:00和20:00。此外，香月花街在夜间也有灯光装饰和夜间商业活动。\n**Q15：拈花堂的讲座时间是什么？**\nA：拈花堂每日10:30和15:30举办禅文化讲座，内容包括禅修入门、禅茶文化等，免费参加，建议提前入场。\n**Q16：拈花湾的开园仪式是什么时间？**\nA：拈花湾每日9:30在拈花广场举行开园仪式，有禅意舞蹈和音\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.0,
+    "keyword_ok": false,
+    "answer_matched": [],
+    "answer_ok": false,
+    "refusal_correct": true,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "a5efb969371743d7a8c4e63bf0d0d65a",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "表演和活动",
+        "source": "知识库.md",
+        "score": 0.1763,
+        "content": "**Q14：拈花湾夜间有什么活动？**\nA：拈花湾夜间最不可错过的活动是五灯湖的《禅行》灯光秀，演出时间通常为19:00和20:00。此外，香月花街在夜间也有灯光装饰和夜间商业活动。\n**Q15：拈花堂的讲座时间是什么？**\nA：拈花堂每日10:30和15:30举办禅文化讲座，内容包括禅修入门、禅茶文化等，免费参加，建议提前入场。\n**Q16：拈花湾的开园仪式是什么时间？**\nA：拈花湾每日9:30在拈花广场举行开园仪式，有禅意舞蹈和音乐表演，建议提前到达观看。",
+        "chunk_id": "d6e135484dcca1b44b0d5c54",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 27.96,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 47.11
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 51.09
+  },
+  {
+    "id": "C-003",
+    "question": "'小灵山'这个名字是怎么来的？",
+    "expected_keywords": [
+      "玄奘",
+      "灵鹫山",
+      "秦履峰"
+    ],
+    "category": "cultural",
+    "difficulty": "medium",
+    "spot_names": [
+      "祥符禅寺",
+      "灵山大佛"
+    ],
+    "should_refuse": false,
+    "answer": "抱歉，本地景区知识库没有找到可靠依据，请换个问法或咨询景区工作人员。",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.0,
+    "keyword_ok": false,
+    "answer_matched": [],
+    "answer_ok": false,
+    "refusal_correct": false,
+    "wrong_refusal": true,
+    "is_refusal": true,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "2c76f94b337d42d1badcb13f822f8998",
+    "status": "refused",
+    "sources": [],
+    "mode": "demo",
+    "provenance": {
+      "path": "no_evidence_refusal",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_retrieved_evidence",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 27.41,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 44.09
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 48.26
+  },
+  {
+    "id": "C-005",
+    "question": "祥符禅寺的寺名是怎么来的？",
+    "expected_keywords": [
+      "宋真宗",
+      "祥符",
+      "北宋"
+    ],
+    "category": "cultural",
+    "difficulty": "hard",
+    "spot_names": [
+      "祥符禅寺"
+    ],
+    "should_refuse": false,
+    "answer": "阿弥陀佛,关于「祥符禅寺」,为您讲解如下:\n景点:祥符禅寺\n介绍:祥符禅寺始建于唐贞观年间（公元627-649年），由玄奘法师的高足窥基法师创建，距今已有一千三百多年历史。寺内有一棵千年银杏古树，枝繁叶茂、遮天蔽日，是灵山历史的活见证。寺内还悬有一口重达12.8吨的祥符禅钟，钟声浑厚悠远，回荡山谷。祥符禅寺历经兴废，现已成为江南地区重要的佛教修行道场。\n文化内涵:窥基法师是玄奘法师最杰出的弟子之一，被誉为百本疏主，是法相唯识宗的奠基人。他奉师命到江南弘法，创建了祥符禅寺，使灵山成\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.3333,
+    "keyword_ok": false,
+    "answer_matched": [
+      "祥符"
+    ],
+    "answer_ok": false,
+    "refusal_correct": true,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "9afb540e2b3845e1bfd73c96b16b83c4",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "祥符禅寺",
+        "source": "LS-010",
+        "score": 0.5187,
+        "content": "景点:祥符禅寺\n介绍:祥符禅寺始建于唐贞观年间（公元627-649年），由玄奘法师的高足窥基法师创建，距今已有一千三百多年历史。寺内有一棵千年银杏古树，枝繁叶茂、遮天蔽日，是灵山历史的活见证。寺内还悬有一口重达12.8吨的祥符禅钟，钟声浑厚悠远，回荡山谷。祥符禅寺历经兴废，现已成为江南地区重要的佛教修行道场。\n文化内涵:窥基法师是玄奘法师最杰出的弟子之一，被誉为百本疏主，是法相唯识宗的奠基人。他奉师命到江南弘法，创建了祥符禅寺，使灵山成为江南佛教重镇。千年银杏古树见证了这座古刹的千年沧桑，12.8吨的祥符禅钟则是晨钟暮鼓佛教修行传统的延续。寺院建筑遵循中国传统的伽蓝七堂制式，中轴对称、庄严肃穆。\n亮点:唐贞观年间玄奘弟子窥基创建，1300余年历史、千年银杏古树，灵山历史的活见证、12.8吨祥符禅钟，钟声悠远、江南重要佛教修行道场\n游览提示:可以在祥符禅寺内静心参拜，聆听禅钟悠扬。秋季银杏叶金黄时尤为壮观，是摄影的好时节。",
+        "chunk_id": "63af12938269ff2668548c18",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      },
+      {
+        "title": "LS-010 祥符禅寺",
+        "source": "知识库.md",
+        "score": 0.2225,
+        "content": "| 属性 | 内容  **景点编号** | LS-010  **景点名称** | 祥符禅寺  **位置** | 灵山大佛前方  **始建年代** | 唐贞观年间  **重要文物** | 千年银杏古树、12.8吨祥符禅钟 |\n**景点介绍：**\n祥符禅寺是一座具有千年历史的唐代古刹，由玄奘法师的弟子窥基始建于唐贞观年间，北宋大中祥符年间获朝廷赐额\"祥符禅寺\"。寺内古木参天，其中一棵千年银杏古树历经沧桑仍枝繁叶茂，是寺庙历史的活见证。寺内还悬挂着一口重达12.8吨的祥符禅钟，钟声浑厚悠远，余音绕梁。\n**文化内涵：**\n祥符禅寺是灵山佛教文化的源头。唐贞观年间，玄奘法师西行归来途经马山，见此处山水灵秀，遂命名\"小灵山\"，嘱弟子窥基在此建道场，祥符禅寺由此诞生。此后千年间，寺院历经宋元明清各代兴衰更迭，虽曾毁于战火，但法脉不断。1994年，祥符禅寺修复工程启动，与灵山大佛工程同步推进，使千年古刹重焕生机。银杏古树是佛教\"古树名木\"保护传统的体现，禅钟则寓意\"钟鸣谷应、声闻于天\"。\n**游玩亮点：**\n- 千年古刹的庄严氛围，梵音缭绕\n- 千年银杏古树，秋季金黄满树，美不胜收\n- 12.8吨祥符禅钟可参观，钟声悠远\n- 寺内可上香祈福，感受传统佛教仪轨\n- 寺庙建筑古朴典雅，唐风犹存\n**讲解重点：**\n1. 追溯祥符禅寺从唐代到现代的千年兴衰史\n2. 介绍千年银杏古树的历史和生态价值\n3. 讲解禅钟在佛教修行中的作用和寓意\n4. 引导游客在寺庙中保持安静恭敬\n---",
+        "chunk_id": "4194db136085296a38e136e8",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 31.54,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 52.03
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 79.88
+  },
+  {
+    "id": "C-006",
+    "question": "拈花湾的'拈花'二字有什么典故？",
+    "expected_keywords": [
+      "拈花微笑",
+      "禅",
+      "迦叶"
+    ],
+    "category": "cultural",
+    "difficulty": "hard",
+    "spot_names": [
+      "拈花湾禅意小镇"
+    ],
+    "should_refuse": false,
+    "answer": "阿弥陀佛,关于「表演和活动」,为您讲解如下:\n**Q14：拈花湾夜间有什么活动？**\nA：拈花湾夜间最不可错过的活动是五灯湖的《禅行》灯光秀，演出时间通常为19:00和20:00。此外，香月花街在夜间也有灯光装饰和夜间商业活动。\n**Q15：拈花堂的讲座时间是什么？**\nA：拈花堂每日10:30和15:30举办禅文化讲座，内容包括禅修入门、禅茶文化等，免费参加，建议提前入场。\n**Q16：拈花湾的开园仪式是什么时间？**\nA：拈花湾每日9:30在拈花广场举行开园仪式，有禅意舞蹈和音\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.3333,
+    "keyword_ok": false,
+    "answer_matched": [
+      "禅"
+    ],
+    "answer_ok": false,
+    "refusal_correct": true,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "0bd3e3a9b88646098352492f84bfaa31",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "表演和活动",
+        "source": "知识库.md",
+        "score": 0.1962,
+        "content": "**Q14：拈花湾夜间有什么活动？**\nA：拈花湾夜间最不可错过的活动是五灯湖的《禅行》灯光秀，演出时间通常为19:00和20:00。此外，香月花街在夜间也有灯光装饰和夜间商业活动。\n**Q15：拈花堂的讲座时间是什么？**\nA：拈花堂每日10:30和15:30举办禅文化讲座，内容包括禅修入门、禅茶文化等，免费参加，建议提前入场。\n**Q16：拈花湾的开园仪式是什么时间？**\nA：拈花湾每日9:30在拈花广场举行开园仪式，有禅意舞蹈和音乐表演，建议提前到达观看。",
+        "chunk_id": "d6e135484dcca1b44b0d5c54",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 28.56,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 48.71
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 52.89
+  },
+  {
+    "id": "C-007",
+    "question": "灵山梵宫顶部的五座莲花圣塔代表什么？",
+    "expected_keywords": [
+      "五方五佛",
+      "莲花",
+      "五座"
+    ],
+    "category": "cultural",
+    "difficulty": "medium",
+    "spot_names": [
+      "灵山梵宫"
+    ],
+    "should_refuse": false,
+    "answer": "阿弥陀佛,关于「灵山梵宫」,为您讲解如下:\n景点:灵山梵宫\n介绍:灵山梵宫是灵山胜境的标志性建筑，建筑面积达72000平方米，最高处66.5米，被誉为东方卢浮宫，荣获中国建筑行业最高奖——鲁班奖。梵宫内部艺术珍品云集：28米高的星空穹顶以数千块琉璃拼接而成，璀璨夺目；华藏世界琉璃巨制以琉璃艺术再现佛教宇宙观；12幅高12米的油画生动呈现佛教传法故事。梵宫圣坛拥有全球唯一的大型旋转舞台，每日上演大型音乐史诗灵山吉祥颂，演出时间为10:35、11:30、14:00、16:00。\n文化\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.0,
+    "keyword_ok": false,
+    "answer_matched": [],
+    "answer_ok": false,
+    "refusal_correct": true,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "8acb115a70a74b7784e7fdbd651ad801",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "灵山梵宫",
+        "source": "LS-013",
+        "score": 0.319,
+        "content": "景点:灵山梵宫\n介绍:灵山梵宫是灵山胜境的标志性建筑，建筑面积达72000平方米，最高处66.5米，被誉为东方卢浮宫，荣获中国建筑行业最高奖——鲁班奖。梵宫内部艺术珍品云集：28米高的星空穹顶以数千块琉璃拼接而成，璀璨夺目；华藏世界琉璃巨制以琉璃艺术再现佛教宇宙观；12幅高12米的油画生动呈现佛教传法故事。梵宫圣坛拥有全球唯一的大型旋转舞台，每日上演大型音乐史诗灵山吉祥颂，演出时间为10:35、11:30、14:00、16:00。\n文化内涵:梵宫的设计融合了中国传统建筑、佛教艺术和现代建筑技术的精华，集中展现了汉传佛教文化的恢弘气象。穹顶的星空图案象征佛教华藏世界——以毗卢遮那佛为中心的无尽庄严世界。12幅油画由国内顶尖画家历时数年创作，每一幅都讲述了一个重要的佛教传法故事。旋转舞台的设计让观众如同置身于佛法宣讲的现场，全方位感受佛教文化的魅力。\n亮点:72000平方米，最高66.5米、荣获鲁班奖，被誉为东方卢浮宫、28米星空穹顶、华藏世界琉璃巨制、12幅高12米油画、吉祥颂演出：10:35/11:30/14:00/16:00\n游览提示:吉祥颂演出时间有限，建议合理安排行程提前到达圣坛。梵宫内部不允许拍照的部分请遵守规定。穹顶和琉璃墙是必看重点，可以抬头慢慢欣赏。",
+        "chunk_id": "31438748c5a419ad849ecbf8",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 30.1,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 50.72
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 67.78
+  },
+  {
+    "id": "C-009",
+    "question": "五印坛城四门的守护瑞兽分别是什么？",
+    "expected_keywords": [
+      "马",
+      "孔雀",
+      "象",
+      "共命鸟"
+    ],
+    "category": "cultural",
+    "difficulty": "hard",
+    "spot_names": [
+      "五印坛城"
+    ],
+    "should_refuse": false,
+    "answer": "阿弥陀佛,关于「五印坛城」,为您讲解如下:\n景点:五印坛城\n介绍:五印坛城是一座五层、高约30米的藏式佛教建筑，外形庄严华丽，被誉为小布达拉宫。坛城内部装饰以藏族传统风格为主，色彩浓烈、金碧辉煌，展出精美的唐卡、佛像和法器。最令人印象深刻的体验是108个转经筒——顺时针转动每一个转经筒并默诵经文，是藏传佛教中积累功德的重要方式。\n文化内涵:坛城（Mandala）在藏传佛教中是诸佛菩萨的宫殿和道场的象征，代表圆满的佛教世界观。五印坛城的五印指的是五方佛的五种种姓印：大圆镜印、平等性\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.25,
+    "keyword_ok": false,
+    "answer_matched": [
+      "象"
+    ],
+    "answer_ok": false,
+    "refusal_correct": true,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "3a4ac9f8a93a4befa87888347536d690",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "五印坛城",
+        "source": "LS-014",
+        "score": 0.397,
+        "content": "景点:五印坛城\n介绍:五印坛城是一座五层、高约30米的藏式佛教建筑，外形庄严华丽，被誉为小布达拉宫。坛城内部装饰以藏族传统风格为主，色彩浓烈、金碧辉煌，展出精美的唐卡、佛像和法器。最令人印象深刻的体验是108个转经筒——顺时针转动每一个转经筒并默诵经文，是藏传佛教中积累功德的重要方式。\n文化内涵:坛城（Mandala）在藏传佛教中是诸佛菩萨的宫殿和道场的象征，代表圆满的佛教世界观。五印坛城的五印指的是五方佛的五种种姓印：大圆镜印、平等性印、妙观察印、成所作印和法界体性印。108个转经筒对应藏传佛教中的108种烦恼，转动转经筒即相当于诵经，寓意以佛法力量消除一切烦恼。五印坛城与灵山梵宫（汉传）、曼飞龙塔（南传）共同构成了灵山胜境三大语系汇聚的独特格局。\n亮点:五层约30米藏式建筑、小布达拉宫、108个转经筒体验、精美唐卡、佛像、法器展出、藏传佛教文化代表\n游览提示:进入坛城后可以依次转动108个转经筒，感受藏族祈福文化。注意要顺时针方向转动。坛城内色彩艳丽，拍照效果很好。",
+        "chunk_id": "b6afc9addfc8ed6046e25e90",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 31.22,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 52.24
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 56.71
+  },
+  {
+    "id": "C-010",
+    "question": "灵山胜境为什么叫'灵山'？",
+    "expected_keywords": [
+      "玄奘",
+      "小灵山",
+      "灵鹫山"
+    ],
+    "category": "cultural",
+    "difficulty": "medium",
+    "spot_names": [
+      "灵山大佛",
+      "祥符禅寺"
+    ],
+    "should_refuse": false,
+    "answer": "抱歉，本地景区知识库没有找到可靠依据，请换个问法或咨询景区工作人员。",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.0,
+    "keyword_ok": false,
+    "answer_matched": [],
+    "answer_ok": false,
+    "refusal_correct": false,
+    "wrong_refusal": true,
+    "is_refusal": true,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "a2bd48a876dd45b7a2693f87fab75cf1",
+    "status": "refused",
+    "sources": [],
+    "mode": "demo",
+    "provenance": {
+      "path": "no_evidence_refusal",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_retrieved_evidence",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 27.45,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 44.4
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 48.27
+  },
+  {
+    "id": "P-001",
+    "question": "灵山胜境和拈花湾在游览风格上有什么区别？",
+    "expected_keywords": [
+      "佛教",
+      "禅意",
+      "灵山",
+      "拈花湾"
+    ],
+    "category": "comparative",
+    "difficulty": "medium",
+    "spot_names": [
+      "灵山大佛",
+      "拈花湾禅意小镇"
+    ],
+    "should_refuse": false,
+    "answer": "阿弥陀佛,关于「表演和活动」,为您讲解如下:\n**Q14：拈花湾夜间有什么活动？**\nA：拈花湾夜间最不可错过的活动是五灯湖的《禅行》灯光秀，演出时间通常为19:00和20:00。此外，香月花街在夜间也有灯光装饰和夜间商业活动。\n**Q15：拈花堂的讲座时间是什么？**\nA：拈花堂每日10:30和15:30举办禅文化讲座，内容包括禅修入门、禅茶文化等，免费参加，建议提前入场。\n**Q16：拈花湾的开园仪式是什么时间？**\nA：拈花湾每日9:30在拈花广场举行开园仪式，有禅意舞蹈和音\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.5,
+    "keyword_ok": false,
+    "answer_matched": [
+      "禅意",
+      "拈花湾"
+    ],
+    "answer_ok": false,
+    "refusal_correct": true,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "114c9b6b02804efcb803c6451fc11700",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "表演和活动",
+        "source": "知识库.md",
+        "score": 0.2321,
+        "content": "**Q14：拈花湾夜间有什么活动？**\nA：拈花湾夜间最不可错过的活动是五灯湖的《禅行》灯光秀，演出时间通常为19:00和20:00。此外，香月花街在夜间也有灯光装饰和夜间商业活动。\n**Q15：拈花堂的讲座时间是什么？**\nA：拈花堂每日10:30和15:30举办禅文化讲座，内容包括禅修入门、禅茶文化等，免费参加，建议提前入场。\n**Q16：拈花湾的开园仪式是什么时间？**\nA：拈花湾每日9:30在拈花广场举行开园仪式，有禅意舞蹈和音乐表演，建议提前到达观看。",
+        "chunk_id": "d6e135484dcca1b44b0d5c54",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      },
+      {
+        "title": "游览建议",
+        "source": "知识库.md",
+        "score": 0.1558,
+        "content": "**Q19：游览灵山胜境需要多长时间？**\nA：根据游览深度不同，建议预留4-6小时。历史文化爱好者建议安排6小时深度游；自然风光爱好者可安排5小时全景游；亲子家庭4小时轻松游即可。\n**Q20：灵山胜境最佳游览季节是什么时候？**\nA：四季皆宜。春季（3-5月）万物复苏，气候宜人；夏季（6-8月）九龙灌浴表演最为壮观，但天气较热；秋季（9-11月）祥符禅寺银杏金黄，是摄影最佳季节；冬季（12-2月）游客较少，适合静心游览。\n**Q21：景区对游客着装有要求吗？**\nA：灵山胜境作为佛教文化景区，建议游客穿着得体、庄重，避免过于暴露的服装。参观寺庙（如祥符禅寺）和大佛基座内部时，请保持安静恭敬。\n**Q22：景区内有存包处吗？**\nA：景区入口处设有寄存服务，大件行李和背包可以寄存，方便轻装游览。具体费用和操作请咨询景区游客服务中心。\n**Q23：灵山胜境的承载量是多少？**\nA：景区最大瞬时承载量为31,500人，当日最大承载量为43,500人。节假日高峰期建议提前购票并尽早入园，避开人流高峰。\n**Q24：景区内有WiFi吗？**\nA：景区主要区域覆盖免费WiFi，游客可连接后使用。如需使用AI数字人导览系统，建议连接景区WiFi以获得最佳体验。\n**Q25：灵山胜境和拈花湾是在一起的吗？可以一起游览吗？**\nA：灵山胜境和拈花湾禅意小镇是两大相邻的板块，可以安排在一天内游览。建议上午游览灵山胜境（参观大佛、梵宫等主要景点），下午和傍晚前往拈花湾（逛花街、看花海、夜间观《禅行》灯光秀）。\n---\n> 本知识库最后更新时间：2026年7月\n>\n> 注：表演时间、门票价格等信息可能因季节调整，请以景区当日公告为准。",
+        "chunk_id": "91d41a27424012d99f43d426",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 30.67,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 50.31
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 69.11
+  },
+  {
+    "id": "P-002",
+    "question": "灵山梵宫和五印坛城分别代表了什么佛教文化？",
+    "expected_keywords": [
+      "汉传",
+      "藏传",
+      "梵宫",
+      "坛城"
+    ],
+    "category": "comparative",
+    "difficulty": "hard",
+    "spot_names": [
+      "灵山梵宫",
+      "五印坛城"
+    ],
+    "should_refuse": false,
+    "answer": "阿弥陀佛,关于「五印坛城」,为您讲解如下:\n景点:五印坛城\n介绍:五印坛城是一座五层、高约30米的藏式佛教建筑，外形庄严华丽，被誉为小布达拉宫。坛城内部装饰以藏族传统风格为主，色彩浓烈、金碧辉煌，展出精美的唐卡、佛像和法器。最令人印象深刻的体验是108个转经筒——顺时针转动每一个转经筒并默诵经文，是藏传佛教中积累功德的重要方式。\n文化内涵:坛城（Mandala）在藏传佛教中是诸佛菩萨的宫殿和道场的象征，代表圆满的佛教世界观。五印坛城的五印指的是五方佛的五种种姓印：大圆镜印、平等性\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.5,
+    "keyword_ok": false,
+    "answer_matched": [
+      "藏传",
+      "坛城"
+    ],
+    "answer_ok": false,
+    "refusal_correct": true,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "af4d68d464924978ae08f32f16b33382",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "五印坛城",
+        "source": "LS-014",
+        "score": 0.3441,
+        "content": "景点:五印坛城\n介绍:五印坛城是一座五层、高约30米的藏式佛教建筑，外形庄严华丽，被誉为小布达拉宫。坛城内部装饰以藏族传统风格为主，色彩浓烈、金碧辉煌，展出精美的唐卡、佛像和法器。最令人印象深刻的体验是108个转经筒——顺时针转动每一个转经筒并默诵经文，是藏传佛教中积累功德的重要方式。\n文化内涵:坛城（Mandala）在藏传佛教中是诸佛菩萨的宫殿和道场的象征，代表圆满的佛教世界观。五印坛城的五印指的是五方佛的五种种姓印：大圆镜印、平等性印、妙观察印、成所作印和法界体性印。108个转经筒对应藏传佛教中的108种烦恼，转动转经筒即相当于诵经，寓意以佛法力量消除一切烦恼。五印坛城与灵山梵宫（汉传）、曼飞龙塔（南传）共同构成了灵山胜境三大语系汇聚的独特格局。\n亮点:五层约30米藏式建筑、小布达拉宫、108个转经筒体验、精美唐卡、佛像、法器展出、藏传佛教文化代表\n游览提示:进入坛城后可以依次转动108个转经筒，感受藏族祈福文化。注意要顺时针方向转动。坛城内色彩艳丽，拍照效果很好。",
+        "chunk_id": "b6afc9addfc8ed6046e25e90",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      },
+      {
+        "title": "灵山梵宫",
+        "source": "LS-013",
+        "score": 0.3128,
+        "content": "景点:灵山梵宫\n介绍:灵山梵宫是灵山胜境的标志性建筑，建筑面积达72000平方米，最高处66.5米，被誉为东方卢浮宫，荣获中国建筑行业最高奖——鲁班奖。梵宫内部艺术珍品云集：28米高的星空穹顶以数千块琉璃拼接而成，璀璨夺目；华藏世界琉璃巨制以琉璃艺术再现佛教宇宙观；12幅高12米的油画生动呈现佛教传法故事。梵宫圣坛拥有全球唯一的大型旋转舞台，每日上演大型音乐史诗灵山吉祥颂，演出时间为10:35、11:30、14:00、16:00。\n文化内涵:梵宫的设计融合了中国传统建筑、佛教艺术和现代建筑技术的精华，集中展现了汉传佛教文化的恢弘气象。穹顶的星空图案象征佛教华藏世界——以毗卢遮那佛为中心的无尽庄严世界。12幅油画由国内顶尖画家历时数年创作，每一幅都讲述了一个重要的佛教传法故事。旋转舞台的设计让观众如同置身于佛法宣讲的现场，全方位感受佛教文化的魅力。\n亮点:72000平方米，最高66.5米、荣获鲁班奖，被誉为东方卢浮宫、28米星空穹顶、华藏世界琉璃巨制、12幅高12米油画、吉祥颂演出：10:35/11:30/14:00/16:00\n游览提示:吉祥颂演出时间有限，建议合理安排行程提前到达圣坛。梵宫内部不允许拍照的部分请遵守规定。穹顶和琉璃墙是必看重点，可以抬头慢慢欣赏。",
+        "chunk_id": "31438748c5a419ad849ecbf8",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 29.69,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 51.03
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 55.45
+  },
+  {
+    "id": "P-003",
+    "question": "九龙灌浴和降魔成道都是演艺景观，有什么不同？",
+    "expected_keywords": [
+      "诞生",
+      "成道",
+      "灌浴",
+      "降魔"
+    ],
+    "category": "comparative",
+    "difficulty": "medium",
+    "spot_names": [
+      "九龙灌浴",
+      "降魔成道"
+    ],
+    "should_refuse": false,
+    "answer": "阿弥陀佛,关于「九龙灌浴」,为您讲解如下:\n景点:九龙灌浴\n介绍:九龙灌浴是灵山胜境最具标志性的动态景观，总高27.2米，再现了释迦牟尼佛诞生时九龙吐水沐浴太子的祥瑞场景。音乐响起时，巨大的莲花花瓣缓缓绽放，一尊高7.2米、重12吨的鎏金太子佛像从莲花中升起，周围九条龙同时喷出净水，场面极为壮观。表演结束后，游客还可接取圣水祈福。\n文化内涵:据佛经记载，释迦牟尼佛诞生于蓝毗尼园时，天降甘露，九龙从空中喷出水柱为太子沐浴，这一场景被称为九龙灌浴，是佛教最重要的诞生典故之一。太子出生\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.5,
+    "keyword_ok": false,
+    "answer_matched": [
+      "诞生",
+      "灌浴"
+    ],
+    "answer_ok": false,
+    "refusal_correct": true,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "e39c305805a342c3bd832dc2fe7154ba",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "九龙灌浴",
+        "source": "LS-006",
+        "score": 0.3697,
+        "content": "景点:九龙灌浴\n介绍:九龙灌浴是灵山胜境最具标志性的动态景观，总高27.2米，再现了释迦牟尼佛诞生时九龙吐水沐浴太子的祥瑞场景。音乐响起时，巨大的莲花花瓣缓缓绽放，一尊高7.2米、重12吨的鎏金太子佛像从莲花中升起，周围九条龙同时喷出净水，场面极为壮观。表演结束后，游客还可接取圣水祈福。\n文化内涵:据佛经记载，释迦牟尼佛诞生于蓝毗尼园时，天降甘露，九龙从空中喷出水柱为太子沐浴，这一场景被称为九龙灌浴，是佛教最重要的诞生典故之一。太子出生后即向东南西北各走七步，一手指天一手指地，说出天上天下，唯我独尊的偈语。灵山胜境将这一经典场景以大型动态雕塑的形式呈现，让游客身临其境感受佛陀降生的殊胜时刻。\n亮点:总高27.2米大型动态景观、鎏金太子佛高7.2米重12吨、莲花绽放九龙喷水、表演场次：10:00/11:30/14:00/16:00、可接取圣水祈福\n游览提示:建议提前10-15分钟到达广场占据好位置。表演时莲花底座周围有圣水流出，可以用手接取或用瓶子收集，寓意洗去烦恼、获得福气。注意观赏时保持安全距离。",
+        "chunk_id": "fa82b82de67f08355d43a743",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 32.17,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 56.13
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 60.72
+  },
+  {
+    "id": "P-004",
+    "question": "灵山大佛和祥符禅寺是什么关系？",
+    "expected_keywords": [
+      "祥符禅寺",
+      "后方",
+      "大佛",
+      "小灵山"
+    ],
+    "category": "comparative",
+    "difficulty": "medium",
+    "spot_names": [
+      "灵山大佛",
+      "祥符禅寺"
+    ],
+    "should_refuse": false,
+    "answer": "阿弥陀佛,关于「祥符禅寺」,为您讲解如下:\n景点:祥符禅寺\n介绍:祥符禅寺始建于唐贞观年间（公元627-649年），由玄奘法师的高足窥基法师创建，距今已有一千三百多年历史。寺内有一棵千年银杏古树，枝繁叶茂、遮天蔽日，是灵山历史的活见证。寺内还悬有一口重达12.8吨的祥符禅钟，钟声浑厚悠远，回荡山谷。祥符禅寺历经兴废，现已成为江南地区重要的佛教修行道场。\n文化内涵:窥基法师是玄奘法师最杰出的弟子之一，被誉为百本疏主，是法相唯识宗的奠基人。他奉师命到江南弘法，创建了祥符禅寺，使灵山成\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.25,
+    "keyword_ok": false,
+    "answer_matched": [
+      "祥符禅寺"
+    ],
+    "answer_ok": false,
+    "refusal_correct": true,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "126e25ca5d7147f2a044a8b0a3561adf",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "祥符禅寺",
+        "source": "LS-010",
+        "score": 0.4364,
+        "content": "景点:祥符禅寺\n介绍:祥符禅寺始建于唐贞观年间（公元627-649年），由玄奘法师的高足窥基法师创建，距今已有一千三百多年历史。寺内有一棵千年银杏古树，枝繁叶茂、遮天蔽日，是灵山历史的活见证。寺内还悬有一口重达12.8吨的祥符禅钟，钟声浑厚悠远，回荡山谷。祥符禅寺历经兴废，现已成为江南地区重要的佛教修行道场。\n文化内涵:窥基法师是玄奘法师最杰出的弟子之一，被誉为百本疏主，是法相唯识宗的奠基人。他奉师命到江南弘法，创建了祥符禅寺，使灵山成为江南佛教重镇。千年银杏古树见证了这座古刹的千年沧桑，12.8吨的祥符禅钟则是晨钟暮鼓佛教修行传统的延续。寺院建筑遵循中国传统的伽蓝七堂制式，中轴对称、庄严肃穆。\n亮点:唐贞观年间玄奘弟子窥基创建，1300余年历史、千年银杏古树，灵山历史的活见证、12.8吨祥符禅钟，钟声悠远、江南重要佛教修行道场\n游览提示:可以在祥符禅寺内静心参拜，聆听禅钟悠扬。秋季银杏叶金黄时尤为壮观，是摄影的好时节。",
+        "chunk_id": "63af12938269ff2668548c18",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      },
+      {
+        "title": "灵山大佛",
+        "source": "LS-011",
+        "score": 0.3415,
+        "content": "景点:灵山大佛\n介绍:灵山大佛是世界最高露天青铜释迦牟尼佛立像，通高88米（佛体79米+莲花座9米），连同莲花座下基座总高101.5米，共用铜725吨。大佛右手施无畏印，寓意除却众生一切痛苦与恐惧；左手施与愿印，寓意赐予众生一切欢乐与福祉。大佛坐落于太湖之滨的小灵山南麓，面朝太湖，背倚群山，法相庄严。游客需攀登216级台阶方可抵达大佛脚下，在抱佛脚处可以近距离瞻仰大佛，俯瞰太湖全景。\n文化内涵:灵山大佛的建造始于1994年，由中国佛教协会会长赵朴初先生倡导，历时三年落成。大佛选址依据佛教左青龙、右白虎、前朱雀、后玄武的风水理念，背靠小灵山，面朝太湖，山水相依，气势非凡。佛像铸造采用先进的分段铸造、整体组装技术，725吨铜被精密焊接为一体。大佛右手无畏印象征佛陀以大无畏的勇气教化众生，左手与愿印象征佛陀以慈悲心满足众生善愿。抱佛脚源自民间俗语，在此被赋予了积极含义——亲近佛法、获得庇佑。\n亮点:世界最高露天青铜释迦牟尼立像、通高88米，总高101.5米，耗铜725吨、右手无畏印、左手与愿印、216级台阶登顶、抱佛脚祈福、俯瞰太湖全景\n游览提示:攀登216级台阶需要一定体力，建议穿舒适的鞋子。登顶后在大佛脚部可以贴金祈福。天气晴好时在台阶上可以拍到太湖与大佛同框的壮丽照片。",
+        "chunk_id": "07bc5ff6db95768fafa9066d",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      },
+      {
+        "title": "LS-010 祥符禅寺",
+        "source": "知识库.md",
+        "score": 0.17,
+        "content": "| 属性 | 内容  **景点编号** | LS-010  **景点名称** | 祥符禅寺  **位置** | 灵山大佛前方  **始建年代** | 唐贞观年间  **重要文物** | 千年银杏古树、12.8吨祥符禅钟 |\n**景点介绍：**\n祥符禅寺是一座具有千年历史的唐代古刹，由玄奘法师的弟子窥基始建于唐贞观年间，北宋大中祥符年间获朝廷赐额\"祥符禅寺\"。寺内古木参天，其中一棵千年银杏古树历经沧桑仍枝繁叶茂，是寺庙历史的活见证。寺内还悬挂着一口重达12.8吨的祥符禅钟，钟声浑厚悠远，余音绕梁。\n**文化内涵：**\n祥符禅寺是灵山佛教文化的源头。唐贞观年间，玄奘法师西行归来途经马山，见此处山水灵秀，遂命名\"小灵山\"，嘱弟子窥基在此建道场，祥符禅寺由此诞生。此后千年间，寺院历经宋元明清各代兴衰更迭，虽曾毁于战火，但法脉不断。1994年，祥符禅寺修复工程启动，与灵山大佛工程同步推进，使千年古刹重焕生机。银杏古树是佛教\"古树名木\"保护传统的体现，禅钟则寓意\"钟鸣谷应、声闻于天\"。\n**游玩亮点：**\n- 千年古刹的庄严氛围，梵音缭绕\n- 千年银杏古树，秋季金黄满树，美不胜收\n- 12.8吨祥符禅钟可参观，钟声悠远\n- 寺内可上香祈福，感受传统佛教仪轨\n- 寺庙建筑古朴典雅，唐风犹存\n**讲解重点：**\n1. 追溯祥符禅寺从唐代到现代的千年兴衰史\n2. 介绍千年银杏古树的历史和生态价值\n3. 讲解禅钟在佛教修行中的作用和寓意\n4. 引导游客在寺庙中保持安静恭敬\n---",
+        "chunk_id": "4194db136085296a38e136e8",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      },
+      {
+        "title": "路线:历史文化深度游",
+        "source": "ROUTE-1",
+        "score": 0.151,
+        "content": "游览路线1:历史文化深度游\n时长:约6小时 | 适合人群:喜欢佛教文化、历史人文的深度游游客\n路线:南门 → 大照壁 → 五明桥 → 佛手广场 → 祥符禅寺 → 灵山大佛（登顶） → 万佛殿 → 梵宫（吉祥颂） → 五印坛城 → 三圣殿 → 出口\n讲解重点:大照壁：讲解灵山的佛教起源和五明学问体系，追溯玄奘法师与小灵山的因缘；祥符禅寺：讲述千年古刹的兴衰历程，观赏千年银杏和12.8吨祥符禅钟；灵山大佛：详解右手无畏印和左手与愿印的含义，讲述大佛725吨铜的铸造过程；万佛殿：领略万佛朝宗的震撼场面，解读9999+1=10000的佛教哲学；梵宫：赏析28米星空穹顶和华藏世界琉璃的艺术之美，12幅传法图油画的历史故事；五印坛城：体验藏传佛教转经筒文化，了解三大语系汇聚的独特格局\n特色体验:攀登216级台阶瞻仰大佛、在大佛脚下抱佛脚祈福、观赏梵宫灵山吉祥颂大型演出、转动五印坛城108个转经筒、聆听祥符禅寺千年禅钟",
+        "chunk_id": "9f6e6a96c6b7fb4ea88d4489",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 32.24,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 53.55
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 58.36
+  },
+  {
+    "id": "P-005",
+    "question": "拈花塔和香月花街哪个更适合拍照打卡？",
+    "expected_keywords": [
+      "拈花塔",
+      "花街",
+      "打卡"
+    ],
+    "category": "comparative",
+    "difficulty": "easy",
+    "spot_names": [
+      "拈花塔",
+      "香月花街"
+    ],
+    "should_refuse": false,
+    "answer": "阿弥陀佛,关于「香月花街」,为您讲解如下:\n景点:香月花街\n介绍:香月花街全长约800米，是拈花湾最具禅意的商业步行街。街道两旁店铺林立，汇聚了非遗手作、禅茶馆、文创商品、特色美食等多种业态。街道建筑采用唐宋风格的木结构，青瓦白墙、飞檐翘角，小桥流水穿插其间，处处透着禅意与诗意。在这里可以品尝禅茶、购买禅意文创纪念品、观赏非遗手工艺人现场制作。\n文化内涵:香月花街的名字源自香月一词，在佛教中香代表戒定慧之香，月代表清凉圆满的智慧。花街的设计灵感来自唐宋时期的市井风貌，融合了江南水\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.3333,
+    "keyword_ok": false,
+    "answer_matched": [
+      "花街"
+    ],
+    "answer_ok": false,
+    "refusal_correct": true,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "75a0b0b5a550423c873ccfd36a64baed",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "香月花街",
+        "source": "NH-003",
+        "score": 0.3371,
+        "content": "景点:香月花街\n介绍:香月花街全长约800米，是拈花湾最具禅意的商业步行街。街道两旁店铺林立，汇聚了非遗手作、禅茶馆、文创商品、特色美食等多种业态。街道建筑采用唐宋风格的木结构，青瓦白墙、飞檐翘角，小桥流水穿插其间，处处透着禅意与诗意。在这里可以品尝禅茶、购买禅意文创纪念品、观赏非遗手工艺人现场制作。\n文化内涵:香月花街的名字源自香月一词，在佛教中香代表戒定慧之香，月代表清凉圆满的智慧。花街的设计灵感来自唐宋时期的市井风貌，融合了江南水乡的婉约气质。这里的每一间店铺都经过精心设计，商品都与禅文化相关，让游客在购物休闲中感受禅意生活美学。\n亮点:800米禅意商业步行街、非遗手作、禅茶、文创商品、唐宋风格木结构建筑、青瓦白墙、小桥流水\n游览提示:花街适合慢慢逛，推荐体验禅茶馆的茶道。傍晚时分花街灯光亮起，氛围更加迷人。可以购买一些禅意小物件作为纪念品。",
+        "chunk_id": "fb06e92fd571eafab4d0c9b4",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 30.18,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 49.96
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 54.49
+  },
+  {
+    "id": "P-006",
+    "question": "灵山梵宫的圣坛和九龙灌浴的表演哪个场面更大？",
+    "expected_keywords": [
+      "梵宫",
+      "圣坛",
+      "灌浴",
+      "2000"
+    ],
+    "category": "comparative",
+    "difficulty": "hard",
+    "spot_names": [
+      "灵山梵宫",
+      "九龙灌浴"
+    ],
+    "should_refuse": false,
+    "answer": "【时效提醒】资料更新时间未核实，以下内容不代表实时票价、开放或演出安排，请以景区官方公告为准。\n阿弥陀佛,关于「九龙灌浴」,为您讲解如下:\n景点:九龙灌浴\n介绍:九龙灌浴是灵山胜境最具标志性的动态景观，总高27.2米，再现了释迦牟尼佛诞生时九龙吐水沐浴太子的祥瑞场景。音乐响起时，巨大的莲花花瓣缓缓绽放，一尊高7.2米、重12吨的鎏金太子佛像从莲花中升起，周围九条龙同时喷出净水，场面极为壮观。表演结束后，游客还可接取圣水祈福。\n文化内涵:据佛经记载，释迦牟尼佛诞生于蓝毗尼园时，天降甘露，九龙从空中喷出水柱为太子沐浴，这一场景被称为九龙灌浴，是佛教最重要的诞生典故之一。太子出生\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.25,
+    "keyword_ok": false,
+    "answer_matched": [
+      "灌浴"
+    ],
+    "answer_ok": false,
+    "refusal_correct": true,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "e6a8e4ec491044b3bc3fe003c7470b0f",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "九龙灌浴",
+        "source": "LS-006",
+        "score": 0.4037,
+        "content": "景点:九龙灌浴\n介绍:九龙灌浴是灵山胜境最具标志性的动态景观，总高27.2米，再现了释迦牟尼佛诞生时九龙吐水沐浴太子的祥瑞场景。音乐响起时，巨大的莲花花瓣缓缓绽放，一尊高7.2米、重12吨的鎏金太子佛像从莲花中升起，周围九条龙同时喷出净水，场面极为壮观。表演结束后，游客还可接取圣水祈福。\n文化内涵:据佛经记载，释迦牟尼佛诞生于蓝毗尼园时，天降甘露，九龙从空中喷出水柱为太子沐浴，这一场景被称为九龙灌浴，是佛教最重要的诞生典故之一。太子出生后即向东南西北各走七步，一手指天一手指地，说出天上天下，唯我独尊的偈语。灵山胜境将这一经典场景以大型动态雕塑的形式呈现，让游客身临其境感受佛陀降生的殊胜时刻。\n亮点:总高27.2米大型动态景观、鎏金太子佛高7.2米重12吨、莲花绽放九龙喷水、表演场次：10:00/11:30/14:00/16:00、可接取圣水祈福\n游览提示:建议提前10-15分钟到达广场占据好位置。表演时莲花底座周围有圣水流出，可以用手接取或用瓶子收集，寓意洗去烦恼、获得福气。注意观赏时保持安全距离。",
+        "chunk_id": "fa82b82de67f08355d43a743",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      },
+      {
+        "title": "灵山梵宫",
+        "source": "LS-013",
+        "score": 0.3633,
+        "content": "景点:灵山梵宫\n介绍:灵山梵宫是灵山胜境的标志性建筑，建筑面积达72000平方米，最高处66.5米，被誉为东方卢浮宫，荣获中国建筑行业最高奖——鲁班奖。梵宫内部艺术珍品云集：28米高的星空穹顶以数千块琉璃拼接而成，璀璨夺目；华藏世界琉璃巨制以琉璃艺术再现佛教宇宙观；12幅高12米的油画生动呈现佛教传法故事。梵宫圣坛拥有全球唯一的大型旋转舞台，每日上演大型音乐史诗灵山吉祥颂，演出时间为10:35、11:30、14:00、16:00。\n文化内涵:梵宫的设计融合了中国传统建筑、佛教艺术和现代建筑技术的精华，集中展现了汉传佛教文化的恢弘气象。穹顶的星空图案象征佛教华藏世界——以毗卢遮那佛为中心的无尽庄严世界。12幅油画由国内顶尖画家历时数年创作，每一幅都讲述了一个重要的佛教传法故事。旋转舞台的设计让观众如同置身于佛法宣讲的现场，全方位感受佛教文化的魅力。\n亮点:72000平方米，最高66.5米、荣获鲁班奖，被誉为东方卢浮宫、28米星空穹顶、华藏世界琉璃巨制、12幅高12米油画、吉祥颂演出：10:35/11:30/14:00/16:00\n游览提示:吉祥颂演出时间有限，建议合理安排行程提前到达圣坛。梵宫内部不允许拍照的部分请遵守规定。穹顶和琉璃墙是必看重点，可以抬头慢慢欣赏。",
+        "chunk_id": "31438748c5a419ad849ecbf8",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      },
+      {
+        "title": "LS-006 九龙灌浴",
+        "source": "知识库.md",
+        "score": 0.1545,
+        "content": "| 属性 | 内容  **景点编号** | LS-006  **景点名称** | 九龙灌浴  **位置** | 菩提大道尽头，灵山胜境核心区域  **总高度** | 27.2米  **鎏金太子佛** | 高7.2米，重12吨  **表演场次** | 每日4-5场（具体时间请参考景区当日公告） |\n**景点介绍：**\n九龙灌浴是灵山胜境最具标志性的动态景观，再现了佛教经典中释迦牟尼佛诞生时\"九龙喷水沐浴\"的盛大场景。整组雕塑总高27.2米，中央的莲花座上供奉着一尊高7.2米、重12吨的鎏金太子佛像。表演开始时，莲花缓缓绽放，太子佛从莲花中升起，围绕莲台的九条龙（八大龙+一条金龙）同时喷出圣水，沐浴太子佛身，气势磅礴，场面震撼。\n**文化内涵：**\n据佛教经典记载，释迦牟尼佛诞生于蓝毗尼园时，天降瑞相，九龙自天空飞来，口吐香水为太子沐浴。这一场景被称为\"九龙灌浴\"，是佛教中最著名的诞生故事之一。在灵山胜境再现这一场景，不仅展示了佛教艺术的精湛，也向世人传递了新生、净化和祝福的美好寓意。游客可接取九龙喷出的圣水，寓意洗涤身心、获福无量。\n**游玩亮点：**\n- 大型动态音乐雕塑表演，莲花绽放、九龙喷水的场面极为壮观\n- 可接取\"圣水\"带回家中，是灵山胜境最受欢迎的体验项目之一\n- 鎏金太子佛造型精美，金光闪耀\n- 配有佛教音乐和喷泉灯光效果\n**讲解重点：**\n1. 提前告知游客表演时间和最佳观赏位置\n2. 讲述释迦牟尼佛诞生和九龙灌浴的佛教故事\n3. 引导游客有序接取圣水，提醒注意安全\n4. 介绍整组雕塑的艺术设计和工程规模\n---",
+        "chunk_id": "60af22858396d887755b0e01",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 30.75,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 52.51
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 56.75
+  },
+  {
+    "id": "P-007",
+    "question": "白天游灵山胜境和晚上游拈花湾，体验上有什么不同？",
+    "expected_keywords": [
+      "白天",
+      "夜",
+      "大佛",
+      "灯光"
+    ],
+    "category": "comparative",
+    "difficulty": "medium",
+    "spot_names": [
+      "灵山大佛",
+      "拈花湾禅意小镇"
+    ],
+    "should_refuse": false,
+    "answer": "阿弥陀佛,关于「表演和活动」,为您讲解如下:\n**Q14：拈花湾夜间有什么活动？**\nA：拈花湾夜间最不可错过的活动是五灯湖的《禅行》灯光秀，演出时间通常为19:00和20:00。此外，香月花街在夜间也有灯光装饰和夜间商业活动。\n**Q15：拈花堂的讲座时间是什么？**\nA：拈花堂每日10:30和15:30举办禅文化讲座，内容包括禅修入门、禅茶文化等，免费参加，建议提前入场。\n**Q16：拈花湾的开园仪式是什么时间？**\nA：拈花湾每日9:30在拈花广场举行开园仪式，有禅意舞蹈和音\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.5,
+    "keyword_ok": false,
+    "answer_matched": [
+      "夜",
+      "灯光"
+    ],
+    "answer_ok": false,
+    "refusal_correct": true,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "ee70e10789a840bc828b51f0079a35be",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "表演和活动",
+        "source": "知识库.md",
+        "score": 0.1965,
+        "content": "**Q14：拈花湾夜间有什么活动？**\nA：拈花湾夜间最不可错过的活动是五灯湖的《禅行》灯光秀，演出时间通常为19:00和20:00。此外，香月花街在夜间也有灯光装饰和夜间商业活动。\n**Q15：拈花堂的讲座时间是什么？**\nA：拈花堂每日10:30和15:30举办禅文化讲座，内容包括禅修入门、禅茶文化等，免费参加，建议提前入场。\n**Q16：拈花湾的开园仪式是什么时间？**\nA：拈花湾每日9:30在拈花广场举行开园仪式，有禅意舞蹈和音乐表演，建议提前到达观看。",
+        "chunk_id": "d6e135484dcca1b44b0d5c54",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      },
+      {
+        "title": "游览建议",
+        "source": "知识库.md",
+        "score": 0.1624,
+        "content": "**Q19：游览灵山胜境需要多长时间？**\nA：根据游览深度不同，建议预留4-6小时。历史文化爱好者建议安排6小时深度游；自然风光爱好者可安排5小时全景游；亲子家庭4小时轻松游即可。\n**Q20：灵山胜境最佳游览季节是什么时候？**\nA：四季皆宜。春季（3-5月）万物复苏，气候宜人；夏季（6-8月）九龙灌浴表演最为壮观，但天气较热；秋季（9-11月）祥符禅寺银杏金黄，是摄影最佳季节；冬季（12-2月）游客较少，适合静心游览。\n**Q21：景区对游客着装有要求吗？**\nA：灵山胜境作为佛教文化景区，建议游客穿着得体、庄重，避免过于暴露的服装。参观寺庙（如祥符禅寺）和大佛基座内部时，请保持安静恭敬。\n**Q22：景区内有存包处吗？**\nA：景区入口处设有寄存服务，大件行李和背包可以寄存，方便轻装游览。具体费用和操作请咨询景区游客服务中心。\n**Q23：灵山胜境的承载量是多少？**\nA：景区最大瞬时承载量为31,500人，当日最大承载量为43,500人。节假日高峰期建议提前购票并尽早入园，避开人流高峰。\n**Q24：景区内有WiFi吗？**\nA：景区主要区域覆盖免费WiFi，游客可连接后使用。如需使用AI数字人导览系统，建议连接景区WiFi以获得最佳体验。\n**Q25：灵山胜境和拈花湾是在一起的吗？可以一起游览吗？**\nA：灵山胜境和拈花湾禅意小镇是两大相邻的板块，可以安排在一天内游览。建议上午游览灵山胜境（参观大佛、梵宫等主要景点），下午和傍晚前往拈花湾（逛花街、看花海、夜间观《禅行》灯光秀）。\n---\n> 本知识库最后更新时间：2026年7月\n>\n> 注：表演时间、门票价格等信息可能因季节调整，请以景区当日公告为准。",
+        "chunk_id": "91d41a27424012d99f43d426",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 31.85,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 52.38
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 57.1
+  },
+  {
+    "id": "P-008",
+    "question": "五印坛城和灵山梵宫在建筑风格上有什么差异？",
+    "expected_keywords": [
+      "藏传",
+      "菩提伽耶",
+      "坛城",
+      "梵宫"
+    ],
+    "category": "comparative",
+    "difficulty": "hard",
+    "spot_names": [
+      "五印坛城",
+      "灵山梵宫"
+    ],
+    "should_refuse": false,
+    "answer": "阿弥陀佛,关于「五印坛城」,为您讲解如下:\n景点:五印坛城\n介绍:五印坛城是一座五层、高约30米的藏式佛教建筑，外形庄严华丽，被誉为小布达拉宫。坛城内部装饰以藏族传统风格为主，色彩浓烈、金碧辉煌，展出精美的唐卡、佛像和法器。最令人印象深刻的体验是108个转经筒——顺时针转动每一个转经筒并默诵经文，是藏传佛教中积累功德的重要方式。\n文化内涵:坛城（Mandala）在藏传佛教中是诸佛菩萨的宫殿和道场的象征，代表圆满的佛教世界观。五印坛城的五印指的是五方佛的五种种姓印：大圆镜印、平等性\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.5,
+    "keyword_ok": false,
+    "answer_matched": [
+      "藏传",
+      "坛城"
+    ],
+    "answer_ok": false,
+    "refusal_correct": true,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "99fc7536bfaf4bd6b310f9b773486987",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "五印坛城",
+        "source": "LS-014",
+        "score": 0.3748,
+        "content": "景点:五印坛城\n介绍:五印坛城是一座五层、高约30米的藏式佛教建筑，外形庄严华丽，被誉为小布达拉宫。坛城内部装饰以藏族传统风格为主，色彩浓烈、金碧辉煌，展出精美的唐卡、佛像和法器。最令人印象深刻的体验是108个转经筒——顺时针转动每一个转经筒并默诵经文，是藏传佛教中积累功德的重要方式。\n文化内涵:坛城（Mandala）在藏传佛教中是诸佛菩萨的宫殿和道场的象征，代表圆满的佛教世界观。五印坛城的五印指的是五方佛的五种种姓印：大圆镜印、平等性印、妙观察印、成所作印和法界体性印。108个转经筒对应藏传佛教中的108种烦恼，转动转经筒即相当于诵经，寓意以佛法力量消除一切烦恼。五印坛城与灵山梵宫（汉传）、曼飞龙塔（南传）共同构成了灵山胜境三大语系汇聚的独特格局。\n亮点:五层约30米藏式建筑、小布达拉宫、108个转经筒体验、精美唐卡、佛像、法器展出、藏传佛教文化代表\n游览提示:进入坛城后可以依次转动108个转经筒，感受藏族祈福文化。注意要顺时针方向转动。坛城内色彩艳丽，拍照效果很好。",
+        "chunk_id": "b6afc9addfc8ed6046e25e90",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      },
+      {
+        "title": "灵山梵宫",
+        "source": "LS-013",
+        "score": 0.3024,
+        "content": "景点:灵山梵宫\n介绍:灵山梵宫是灵山胜境的标志性建筑，建筑面积达72000平方米，最高处66.5米，被誉为东方卢浮宫，荣获中国建筑行业最高奖——鲁班奖。梵宫内部艺术珍品云集：28米高的星空穹顶以数千块琉璃拼接而成，璀璨夺目；华藏世界琉璃巨制以琉璃艺术再现佛教宇宙观；12幅高12米的油画生动呈现佛教传法故事。梵宫圣坛拥有全球唯一的大型旋转舞台，每日上演大型音乐史诗灵山吉祥颂，演出时间为10:35、11:30、14:00、16:00。\n文化内涵:梵宫的设计融合了中国传统建筑、佛教艺术和现代建筑技术的精华，集中展现了汉传佛教文化的恢弘气象。穹顶的星空图案象征佛教华藏世界——以毗卢遮那佛为中心的无尽庄严世界。12幅油画由国内顶尖画家历时数年创作，每一幅都讲述了一个重要的佛教传法故事。旋转舞台的设计让观众如同置身于佛法宣讲的现场，全方位感受佛教文化的魅力。\n亮点:72000平方米，最高66.5米、荣获鲁班奖，被誉为东方卢浮宫、28米星空穹顶、华藏世界琉璃巨制、12幅高12米油画、吉祥颂演出：10:35/11:30/14:00/16:00\n游览提示:吉祥颂演出时间有限，建议合理安排行程提前到达圣坛。梵宫内部不允许拍照的部分请遵守规定。穹顶和琉璃墙是必看重点，可以抬头慢慢欣赏。",
+        "chunk_id": "31438748c5a419ad849ecbf8",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      },
+      {
+        "title": "景点相关",
+        "source": "知识库.md",
+        "score": 0.1707,
+        "content": "**Q9：灵山大佛有多高？**\nA：灵山大佛佛像高88米（佛体79米，莲花座9米），连同基座总高101.5米，是世界上最高的露天青铜释迦牟尼佛立像，共用青铜725吨铸造。\n**Q10：九龙灌浴每天有几场表演？**\nA：九龙灌浴每天通常有4-5场表演，具体时间请参考景区当日公告。建议入园时先确认当日表演时间表，合理安排行程。\n**Q11：梵宫《吉祥颂》演出时间是什么？**\nA：《吉祥颂》演出通常安排在10:35、11:30、14:00、16:00，每场约30分钟。具体时间可能因季节和特殊情况调整，请以景区当日公告为准。\n**Q12：五印坛城可以转经筒吗？**\nA：可以。五印坛城周围共有108个转经筒，游客可以亲手转动。请按照顺时针方向转动，每转动一圈相当于诵读一遍经文。\n**Q13：灵山胜境有多少个景点？**\nA：灵山胜境景区共有16个主要景点，加上拈花湾禅意小镇的6个景点，总计22个景点。",
+        "chunk_id": "ffc527655b8bf1024c5d878c",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      },
+      {
+        "title": "表演和活动",
+        "source": "知识库.md",
+        "score": 0.1546,
+        "content": "**Q14：拈花湾夜间有什么活动？**\nA：拈花湾夜间最不可错过的活动是五灯湖的《禅行》灯光秀，演出时间通常为19:00和20:00。此外，香月花街在夜间也有灯光装饰和夜间商业活动。\n**Q15：拈花堂的讲座时间是什么？**\nA：拈花堂每日10:30和15:30举办禅文化讲座，内容包括禅修入门、禅茶文化等，免费参加，建议提前入场。\n**Q16：拈花湾的开园仪式是什么时间？**\nA：拈花湾每日9:30在拈花广场举行开园仪式，有禅意舞蹈和音乐表演，建议提前到达观看。",
+        "chunk_id": "d6e135484dcca1b44b0d5c54",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 30.53,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 51.6
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 56.08
+  },
+  {
+    "id": "P-009",
+    "question": "灵山大照壁和佛足坛在游览动线上是什么关系？",
+    "expected_keywords": [
+      "照壁",
+      "佛足",
+      "入口",
+      "中轴"
+    ],
+    "category": "comparative",
+    "difficulty": "medium",
+    "spot_names": [
+      "灵山大照壁",
+      "佛足坛"
+    ],
+    "should_refuse": false,
+    "answer": "阿弥陀佛,关于「灵山大照壁」,为您讲解如下:\n景点:灵山大照壁\n介绍:灵山大照壁被誉为华夏第一壁，全长39.8米、高7米，是目前中国最大的石材照壁之一。照壁正面由原中国佛教协会会长赵朴初先生亲笔题写灵山胜境四个大字，笔力遒劲，气势磅礴。照壁背面刻有小灵山三字，追溯灵山与唐代高僧玄奘法师的历史渊源——相传玄奘法师西天取经归来后，见无锡马山山峰层峦叠嶂、紫气东来，宛如天竺灵鹫山，便命名为小灵山，灵山之名由此而来。\n文化内涵:照壁是中国传统建筑中的独特元素，具有挡风、遮蔽、装饰和镇宅的作\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.25,
+    "keyword_ok": false,
+    "answer_matched": [
+      "照壁"
+    ],
+    "answer_ok": false,
+    "refusal_correct": true,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "96636eb91f4e45f5837640b17d323b31",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "灵山大照壁",
+        "source": "LS-001",
+        "score": 0.4464,
+        "content": "景点:灵山大照壁\n介绍:灵山大照壁被誉为华夏第一壁，全长39.8米、高7米，是目前中国最大的石材照壁之一。照壁正面由原中国佛教协会会长赵朴初先生亲笔题写灵山胜境四个大字，笔力遒劲，气势磅礴。照壁背面刻有小灵山三字，追溯灵山与唐代高僧玄奘法师的历史渊源——相传玄奘法师西天取经归来后，见无锡马山山峰层峦叠嶂、紫气东来，宛如天竺灵鹫山，便命名为小灵山，灵山之名由此而来。\n文化内涵:照壁是中国传统建筑中的独特元素，具有挡风、遮蔽、装饰和镇宅的作用。在佛教文化中，照壁象征隔尘之意，提醒信众跨过照壁便踏入清净佛地，放下世俗烦恼。灵山大照壁不仅是景区的标志入口，更是佛教文化与中国传统建筑艺术完美融合的典范。\n亮点:华夏第一壁，长39.8米高7米、赵朴初亲笔题写灵山胜境、背面小灵山追溯玄奘法师命名渊源\n游览提示:大照壁是进入景区后的第一个标志性景点，建议在此拍照留念，感受华夏第一壁的恢弘气势。",
+        "chunk_id": "31ebe1af3c8481e27f9fd811",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      },
+      {
+        "title": "佛足坛",
+        "source": "LS-003",
+        "score": 0.3857,
+        "content": "景点:佛足坛\n介绍:佛足坛中央供奉着一枚巨大的青铜佛足印，按1:1比例铸造，足心刻有32种吉祥图案，包括千辐轮、三宝标、宝瓶、双鱼、吉祥结等佛教吉祥纹样。佛足印在佛教中具有极高的崇敬意义，源见识足如见佛的传统——佛陀入灭后，信众通过礼拜佛足印来表达对佛陀的追思与敬仰。\n文化内涵:佛足印是佛教最早的象征符号之一，早于佛像的出现。在佛陀住世时代，信徒不直接塑佛像，而是以佛足印作为礼拜对象。足心的32种吉祥图案对应佛陀的三十二相，是佛陀圆满功德的象征。佛足坛让游客有机会近距离感受这一古老的佛教传统，体验见足如见佛的虔诚心境。\n亮点:1:1比例青铜佛足印、足心32种吉祥图案、见足如见佛的佛教传统\n游览提示:游客可围绕佛足印顺时针绕行三圈以示恭敬，也可用手触摸佛足印感受其庄严。",
+        "chunk_id": "32e8d00ac26b168ab92f278f",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 30.56,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 51.38
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 55.58
+  },
+  {
+    "id": "R-001",
+    "question": "如果只有半天时间，灵山胜境最值得看哪几个景点？",
+    "expected_keywords": [
+      "大佛",
+      "灌浴",
+      "梵宫",
+      "路线"
+    ],
+    "category": "route",
+    "difficulty": "medium",
+    "spot_names": [
+      "灵山大佛",
+      "九龙灌浴",
+      "灵山梵宫"
+    ],
+    "should_refuse": false,
+    "answer": "抱歉，本地景区知识库没有找到可靠依据，请换个问法或咨询景区工作人员。",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.0,
+    "keyword_ok": false,
+    "answer_matched": [],
+    "answer_ok": false,
+    "refusal_correct": false,
+    "wrong_refusal": true,
+    "is_refusal": true,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "f14c2904e279486d947f0831d22ca6b5",
+    "status": "refused",
+    "sources": [],
+    "mode": "demo",
+    "provenance": {
+      "path": "no_evidence_refusal",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_retrieved_evidence",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 26.93,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 45.13
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 49.15
+  },
+  {
+    "id": "R-002",
+    "question": "带小孩的游客适合去灵山胜境的哪些景点？",
+    "expected_keywords": [
+      "灌浴",
+      "小孩",
+      "演艺",
+      "互动"
+    ],
+    "category": "route",
+    "difficulty": "medium",
+    "spot_names": [
+      "九龙灌浴"
+    ],
+    "should_refuse": false,
+    "answer": "抱歉，本地景区知识库没有找到可靠依据，请换个问法或咨询景区工作人员。",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.0,
+    "keyword_ok": false,
+    "answer_matched": [],
+    "answer_ok": false,
+    "refusal_correct": false,
+    "wrong_refusal": true,
+    "is_refusal": true,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "1f0f4bd4937b43108713c3b2cc471c32",
+    "status": "refused",
+    "sources": [],
+    "mode": "demo",
+    "provenance": {
+      "path": "no_evidence_refusal",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_retrieved_evidence",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 28.0,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 46.15
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 50.34
+  },
+  {
+    "id": "R-003",
+    "question": "想看佛教艺术，应该怎么安排灵山胜境的游览路线？",
+    "expected_keywords": [
+      "梵宫",
+      "坛城",
+      "艺术",
+      "博物馆"
+    ],
+    "category": "route",
+    "difficulty": "medium",
+    "spot_names": [
+      "灵山梵宫",
+      "五印坛城"
+    ],
+    "should_refuse": false,
+    "answer": "阿弥陀佛,关于「游览建议」,为您讲解如下:\n**Q19：游览灵山胜境需要多长时间？**\nA：根据游览深度不同，建议预留4-6小时。历史文化爱好者建议安排6小时深度游；自然风光爱好者可安排5小时全景游；亲子家庭4小时轻松游即可。\n**Q20：灵山胜境最佳游览季节是什么时候？**\nA：四季皆宜。春季（3-5月）万物复苏，气候宜人；夏季（6-8月）九龙灌浴表演最为壮观，但天气较热；秋季（9-11月）祥符禅寺银杏金黄，是摄影最佳季节；冬季（12-2月）游客较少，适合静心游览。\n**Q21\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.0,
+    "keyword_ok": false,
+    "answer_matched": [],
+    "answer_ok": false,
+    "refusal_correct": true,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "5dd32bbf5651452e8477e0a79a902015",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "游览建议",
+        "source": "知识库.md",
+        "score": 0.1886,
+        "content": "**Q19：游览灵山胜境需要多长时间？**\nA：根据游览深度不同，建议预留4-6小时。历史文化爱好者建议安排6小时深度游；自然风光爱好者可安排5小时全景游；亲子家庭4小时轻松游即可。\n**Q20：灵山胜境最佳游览季节是什么时候？**\nA：四季皆宜。春季（3-5月）万物复苏，气候宜人；夏季（6-8月）九龙灌浴表演最为壮观，但天气较热；秋季（9-11月）祥符禅寺银杏金黄，是摄影最佳季节；冬季（12-2月）游客较少，适合静心游览。\n**Q21：景区对游客着装有要求吗？**\nA：灵山胜境作为佛教文化景区，建议游客穿着得体、庄重，避免过于暴露的服装。参观寺庙（如祥符禅寺）和大佛基座内部时，请保持安静恭敬。\n**Q22：景区内有存包处吗？**\nA：景区入口处设有寄存服务，大件行李和背包可以寄存，方便轻装游览。具体费用和操作请咨询景区游客服务中心。\n**Q23：灵山胜境的承载量是多少？**\nA：景区最大瞬时承载量为31,500人，当日最大承载量为43,500人。节假日高峰期建议提前购票并尽早入园，避开人流高峰。\n**Q24：景区内有WiFi吗？**\nA：景区主要区域覆盖免费WiFi，游客可连接后使用。如需使用AI数字人导览系统，建议连接景区WiFi以获得最佳体验。\n**Q25：灵山胜境和拈花湾是在一起的吗？可以一起游览吗？**\nA：灵山胜境和拈花湾禅意小镇是两大相邻的板块，可以安排在一天内游览。建议上午游览灵山胜境（参观大佛、梵宫等主要景点），下午和傍晚前往拈花湾（逛花街、看花海、夜间观《禅行》灯光秀）。\n---\n> 本知识库最后更新时间：2026年7月\n>\n> 注：表演时间、门票价格等信息可能因季节调整，请以景区当日公告为准。",
+        "chunk_id": "91d41a27424012d99f43d426",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 29.5,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 48.64
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 52.65
+  },
+  {
+    "id": "R-005",
+    "question": "从灵山大照壁到灵山大佛，中间经过哪些景点？",
+    "expected_keywords": [
+      "照壁",
+      "佛足",
+      "菩提",
+      "大佛"
+    ],
+    "category": "route",
+    "difficulty": "medium",
+    "spot_names": [
+      "灵山大照壁",
+      "佛足坛",
+      "菩提大道",
+      "灵山大佛"
+    ],
+    "should_refuse": false,
+    "answer": "阿弥陀佛,关于「灵山大照壁」,为您讲解如下:\n景点:灵山大照壁\n介绍:灵山大照壁被誉为华夏第一壁，全长39.8米、高7米，是目前中国最大的石材照壁之一。照壁正面由原中国佛教协会会长赵朴初先生亲笔题写灵山胜境四个大字，笔力遒劲，气势磅礴。照壁背面刻有小灵山三字，追溯灵山与唐代高僧玄奘法师的历史渊源——相传玄奘法师西天取经归来后，见无锡马山山峰层峦叠嶂、紫气东来，宛如天竺灵鹫山，便命名为小灵山，灵山之名由此而来。\n文化内涵:照壁是中国传统建筑中的独特元素，具有挡风、遮蔽、装饰和镇宅的作\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.25,
+    "keyword_ok": false,
+    "answer_matched": [
+      "照壁"
+    ],
+    "answer_ok": false,
+    "refusal_correct": true,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "3b42ce06455d449185a2eae3b6a760e3",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "灵山大照壁",
+        "source": "LS-001",
+        "score": 0.4698,
+        "content": "景点:灵山大照壁\n介绍:灵山大照壁被誉为华夏第一壁，全长39.8米、高7米，是目前中国最大的石材照壁之一。照壁正面由原中国佛教协会会长赵朴初先生亲笔题写灵山胜境四个大字，笔力遒劲，气势磅礴。照壁背面刻有小灵山三字，追溯灵山与唐代高僧玄奘法师的历史渊源——相传玄奘法师西天取经归来后，见无锡马山山峰层峦叠嶂、紫气东来，宛如天竺灵鹫山，便命名为小灵山，灵山之名由此而来。\n文化内涵:照壁是中国传统建筑中的独特元素，具有挡风、遮蔽、装饰和镇宅的作用。在佛教文化中，照壁象征隔尘之意，提醒信众跨过照壁便踏入清净佛地，放下世俗烦恼。灵山大照壁不仅是景区的标志入口，更是佛教文化与中国传统建筑艺术完美融合的典范。\n亮点:华夏第一壁，长39.8米高7米、赵朴初亲笔题写灵山胜境、背面小灵山追溯玄奘法师命名渊源\n游览提示:大照壁是进入景区后的第一个标志性景点，建议在此拍照留念，感受华夏第一壁的恢弘气势。",
+        "chunk_id": "31ebe1af3c8481e27f9fd811",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      },
+      {
+        "title": "灵山大佛",
+        "source": "LS-011",
+        "score": 0.3701,
+        "content": "景点:灵山大佛\n介绍:灵山大佛是世界最高露天青铜释迦牟尼佛立像，通高88米（佛体79米+莲花座9米），连同莲花座下基座总高101.5米，共用铜725吨。大佛右手施无畏印，寓意除却众生一切痛苦与恐惧；左手施与愿印，寓意赐予众生一切欢乐与福祉。大佛坐落于太湖之滨的小灵山南麓，面朝太湖，背倚群山，法相庄严。游客需攀登216级台阶方可抵达大佛脚下，在抱佛脚处可以近距离瞻仰大佛，俯瞰太湖全景。\n文化内涵:灵山大佛的建造始于1994年，由中国佛教协会会长赵朴初先生倡导，历时三年落成。大佛选址依据佛教左青龙、右白虎、前朱雀、后玄武的风水理念，背靠小灵山，面朝太湖，山水相依，气势非凡。佛像铸造采用先进的分段铸造、整体组装技术，725吨铜被精密焊接为一体。大佛右手无畏印象征佛陀以大无畏的勇气教化众生，左手与愿印象征佛陀以慈悲心满足众生善愿。抱佛脚源自民间俗语，在此被赋予了积极含义——亲近佛法、获得庇佑。\n亮点:世界最高露天青铜释迦牟尼立像、通高88米，总高101.5米，耗铜725吨、右手无畏印、左手与愿印、216级台阶登顶、抱佛脚祈福、俯瞰太湖全景\n游览提示:攀登216级台阶需要一定体力，建议穿舒适的鞋子。登顶后在大佛脚部可以贴金祈福。天气晴好时在台阶上可以拍到太湖与大佛同框的壮丽照片。",
+        "chunk_id": "07bc5ff6db95768fafa9066d",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 28.43,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 48.96
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 53.18
+  },
+  {
+    "id": "R-006",
+    "question": "喜欢历史文化的游客，灵山胜境推荐什么路线？",
+    "expected_keywords": [
+      "历史",
+      "祥符禅寺",
+      "大佛",
+      "文化"
+    ],
+    "category": "route",
+    "difficulty": "medium",
+    "spot_names": [
+      "祥符禅寺",
+      "灵山大佛"
+    ],
+    "should_refuse": false,
+    "answer": "抱歉，本地景区知识库没有找到可靠依据，请换个问法或咨询景区工作人员。",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.0,
+    "keyword_ok": false,
+    "answer_matched": [],
+    "answer_ok": false,
+    "refusal_correct": false,
+    "wrong_refusal": true,
+    "is_refusal": true,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "ca4b2868237a4bdd9d4c36da329bfd15",
+    "status": "refused",
+    "sources": [],
+    "mode": "demo",
+    "provenance": {
+      "path": "no_evidence_refusal",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_retrieved_evidence",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 28.87,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 46.29
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 50.51
+  },
+  {
+    "id": "R-007",
+    "question": "三天时间怎么安排灵山胜境和拈花湾的行程？",
+    "expected_keywords": [
+      "灵山",
+      "拈花湾",
+      "天",
+      "路线"
+    ],
+    "category": "route",
+    "difficulty": "medium",
+    "spot_names": [
+      "灵山大佛",
+      "拈花湾禅意小镇"
+    ],
+    "should_refuse": false,
+    "answer": "阿弥陀佛,关于「表演和活动」,为您讲解如下:\n**Q14：拈花湾夜间有什么活动？**\nA：拈花湾夜间最不可错过的活动是五灯湖的《禅行》灯光秀，演出时间通常为19:00和20:00。此外，香月花街在夜间也有灯光装饰和夜间商业活动。\n**Q15：拈花堂的讲座时间是什么？**\nA：拈花堂每日10:30和15:30举办禅文化讲座，内容包括禅修入门、禅茶文化等，免费参加，建议提前入场。\n**Q16：拈花湾的开园仪式是什么时间？**\nA：拈花湾每日9:30在拈花广场举行开园仪式，有禅意舞蹈和音\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.25,
+    "keyword_ok": false,
+    "answer_matched": [
+      "拈花湾"
+    ],
+    "answer_ok": false,
+    "refusal_correct": true,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "05ee15099ad0483aa610f6460bf4a597",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "表演和活动",
+        "source": "知识库.md",
+        "score": 0.2285,
+        "content": "**Q14：拈花湾夜间有什么活动？**\nA：拈花湾夜间最不可错过的活动是五灯湖的《禅行》灯光秀，演出时间通常为19:00和20:00。此外，香月花街在夜间也有灯光装饰和夜间商业活动。\n**Q15：拈花堂的讲座时间是什么？**\nA：拈花堂每日10:30和15:30举办禅文化讲座，内容包括禅修入门、禅茶文化等，免费参加，建议提前入场。\n**Q16：拈花湾的开园仪式是什么时间？**\nA：拈花湾每日9:30在拈花广场举行开园仪式，有禅意舞蹈和音乐表演，建议提前到达观看。",
+        "chunk_id": "d6e135484dcca1b44b0d5c54",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      },
+      {
+        "title": "游览建议",
+        "source": "知识库.md",
+        "score": 0.1926,
+        "content": "**Q19：游览灵山胜境需要多长时间？**\nA：根据游览深度不同，建议预留4-6小时。历史文化爱好者建议安排6小时深度游；自然风光爱好者可安排5小时全景游；亲子家庭4小时轻松游即可。\n**Q20：灵山胜境最佳游览季节是什么时候？**\nA：四季皆宜。春季（3-5月）万物复苏，气候宜人；夏季（6-8月）九龙灌浴表演最为壮观，但天气较热；秋季（9-11月）祥符禅寺银杏金黄，是摄影最佳季节；冬季（12-2月）游客较少，适合静心游览。\n**Q21：景区对游客着装有要求吗？**\nA：灵山胜境作为佛教文化景区，建议游客穿着得体、庄重，避免过于暴露的服装。参观寺庙（如祥符禅寺）和大佛基座内部时，请保持安静恭敬。\n**Q22：景区内有存包处吗？**\nA：景区入口处设有寄存服务，大件行李和背包可以寄存，方便轻装游览。具体费用和操作请咨询景区游客服务中心。\n**Q23：灵山胜境的承载量是多少？**\nA：景区最大瞬时承载量为31,500人，当日最大承载量为43,500人。节假日高峰期建议提前购票并尽早入园，避开人流高峰。\n**Q24：景区内有WiFi吗？**\nA：景区主要区域覆盖免费WiFi，游客可连接后使用。如需使用AI数字人导览系统，建议连接景区WiFi以获得最佳体验。\n**Q25：灵山胜境和拈花湾是在一起的吗？可以一起游览吗？**\nA：灵山胜境和拈花湾禅意小镇是两大相邻的板块，可以安排在一天内游览。建议上午游览灵山胜境（参观大佛、梵宫等主要景点），下午和傍晚前往拈花湾（逛花街、看花海、夜间观《禅行》灯光秀）。\n---\n> 本知识库最后更新时间：2026年7月\n>\n> 注：表演时间、门票价格等信息可能因季节调整，请以景区当日公告为准。",
+        "chunk_id": "91d41a27424012d99f43d426",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      },
+      {
+        "title": "餐饮提示",
+        "source": "知识库.md",
+        "score": 0.1856,
+        "content": "- 景区内以素食为主，体现了佛教不杀生的理念\n- 梵宫素斋自助品种较多，建议合理安排用餐时间，避开高峰\n- 拈花湾香月花街也有各类餐饮选择，可结合行程安排\n---",
+        "chunk_id": "0e752792669cc62413196544",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      },
+      {
+        "title": "开放时间相关",
+        "source": "知识库.md",
+        "score": 0.1703,
+        "content": "**Q7：灵山胜境的开放时间是什么？**\nA：夏令（一般为4月-10月）开放时间为7:00-17:30；冬令（一般为11月-次年3月）开放时间为7:00-17:00。建议提前查询景区官方公告确认当日开放时间。\n**Q8：拈花湾的开放时间是什么？**\nA：拈花湾禅意小镇通常在9:30举行开园仪式后正式开放，夜间《禅行》灯光秀结束后关闭（约21:00），具体时间请参考景区当日公告。",
+        "chunk_id": "a2220809e4a03de5d959a9c1",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 29.92,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 50.07
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 54.45
+  },
+  {
+    "id": "R-008",
+    "question": "拈花湾禅意小镇里有哪些必去的打卡点？",
+    "expected_keywords": [
+      "拈花塔",
+      "花街",
+      "广场",
+      "半山"
+    ],
+    "category": "route",
+    "difficulty": "easy",
+    "spot_names": [
+      "拈花塔",
+      "香月花街",
+      "微笑广场",
+      "半山衔日"
+    ],
+    "should_refuse": false,
+    "answer": "阿弥陀佛,关于「表演和活动」,为您讲解如下:\n**Q14：拈花湾夜间有什么活动？**\nA：拈花湾夜间最不可错过的活动是五灯湖的《禅行》灯光秀，演出时间通常为19:00和20:00。此外，香月花街在夜间也有灯光装饰和夜间商业活动。\n**Q15：拈花堂的讲座时间是什么？**\nA：拈花堂每日10:30和15:30举办禅文化讲座，内容包括禅修入门、禅茶文化等，免费参加，建议提前入场。\n**Q16：拈花湾的开园仪式是什么时间？**\nA：拈花湾每日9:30在拈花广场举行开园仪式，有禅意舞蹈和音\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.5,
+    "keyword_ok": false,
+    "answer_matched": [
+      "花街",
+      "广场"
+    ],
+    "answer_ok": false,
+    "refusal_correct": true,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "21a4a7488b404132acdd8765e8321b67",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "表演和活动",
+        "source": "知识库.md",
+        "score": 0.1594,
+        "content": "**Q14：拈花湾夜间有什么活动？**\nA：拈花湾夜间最不可错过的活动是五灯湖的《禅行》灯光秀，演出时间通常为19:00和20:00。此外，香月花街在夜间也有灯光装饰和夜间商业活动。\n**Q15：拈花堂的讲座时间是什么？**\nA：拈花堂每日10:30和15:30举办禅文化讲座，内容包括禅修入门、禅茶文化等，免费参加，建议提前入场。\n**Q16：拈花湾的开园仪式是什么时间？**\nA：拈花湾每日9:30在拈花广场举行开园仪式，有禅意舞蹈和音乐表演，建议提前到达观看。",
+        "chunk_id": "d6e135484dcca1b44b0d5c54",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      },
+      {
+        "title": "拈花广场",
+        "source": "NH-001",
+        "score": 0.1561,
+        "content": "景点:拈花广场\n介绍:拈花广场是拈花湾禅意小镇的核心广场，中央矗立着一尊高12米的拈花微笑鎏金雕塑，再现了佛教拈花微笑的经典典故——佛陀在灵山法会上拈起一朵金色莲花，默然不语，唯有大弟子摩诃迦叶破颜微笑，佛陀便将正法眼藏、涅槃妙心传于迦叶，禅宗由此诞生。每日9:30，拈花广场还会举行盛大的开园仪式。\n文化内涵:拈花微笑是禅宗最核心的起源故事。佛陀不立文字、以心传心的方式，开创了禅宗教外别传、不立文字、直指人心、见性成佛的独特传统。拈花湾小镇的名字正来源于此。这尊12米的鎏金雕塑将拈花与微笑两个瞬间凝固为永恒，是拈花湾的精神象征。每日9:30的开园仪式融入禅意表演，为游客开启一段心灵之旅。\n亮点:12米拈花微笑鎏金雕塑、再现禅宗起源拈花微笑典故、每日9:30开园仪式、拈花湾禅意小镇核心地标\n游览提示:建议9:30前到达广场观看开园仪式，仪式有禅意表演非常值得一看。鎏金雕塑在阳光下金光闪闪，是拈花湾最经典的拍照点。",
+        "chunk_id": "9a63ffd7d4901b373d040cf5",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 29.33,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 48.63
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 52.63
+  },
+  {
+    "id": "R-009",
+    "question": "老年人游览灵山胜境有什么建议？",
+    "expected_keywords": [
+      "路线",
+      "休息",
+      "大佛",
+      "平缓"
+    ],
+    "category": "route",
+    "difficulty": "medium",
+    "spot_names": [
+      "灵山大佛"
+    ],
+    "should_refuse": false,
+    "answer": "阿弥陀佛,关于「游览建议」,为您讲解如下:\n**Q19：游览灵山胜境需要多长时间？**\nA：根据游览深度不同，建议预留4-6小时。历史文化爱好者建议安排6小时深度游；自然风光爱好者可安排5小时全景游；亲子家庭4小时轻松游即可。\n**Q20：灵山胜境最佳游览季节是什么时候？**\nA：四季皆宜。春季（3-5月）万物复苏，气候宜人；夏季（6-8月）九龙灌浴表演最为壮观，但天气较热；秋季（9-11月）祥符禅寺银杏金黄，是摄影最佳季节；冬季（12-2月）游客较少，适合静心游览。\n**Q21\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.0,
+    "keyword_ok": false,
+    "answer_matched": [],
+    "answer_ok": false,
+    "refusal_correct": true,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "a27cbaa9b75d4dae9c34759d91041ec9",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "游览建议",
+        "source": "知识库.md",
+        "score": 0.1733,
+        "content": "**Q19：游览灵山胜境需要多长时间？**\nA：根据游览深度不同，建议预留4-6小时。历史文化爱好者建议安排6小时深度游；自然风光爱好者可安排5小时全景游；亲子家庭4小时轻松游即可。\n**Q20：灵山胜境最佳游览季节是什么时候？**\nA：四季皆宜。春季（3-5月）万物复苏，气候宜人；夏季（6-8月）九龙灌浴表演最为壮观，但天气较热；秋季（9-11月）祥符禅寺银杏金黄，是摄影最佳季节；冬季（12-2月）游客较少，适合静心游览。\n**Q21：景区对游客着装有要求吗？**\nA：灵山胜境作为佛教文化景区，建议游客穿着得体、庄重，避免过于暴露的服装。参观寺庙（如祥符禅寺）和大佛基座内部时，请保持安静恭敬。\n**Q22：景区内有存包处吗？**\nA：景区入口处设有寄存服务，大件行李和背包可以寄存，方便轻装游览。具体费用和操作请咨询景区游客服务中心。\n**Q23：灵山胜境的承载量是多少？**\nA：景区最大瞬时承载量为31,500人，当日最大承载量为43,500人。节假日高峰期建议提前购票并尽早入园，避开人流高峰。\n**Q24：景区内有WiFi吗？**\nA：景区主要区域覆盖免费WiFi，游客可连接后使用。如需使用AI数字人导览系统，建议连接景区WiFi以获得最佳体验。\n**Q25：灵山胜境和拈花湾是在一起的吗？可以一起游览吗？**\nA：灵山胜境和拈花湾禅意小镇是两大相邻的板块，可以安排在一天内游览。建议上午游览灵山胜境（参观大佛、梵宫等主要景点），下午和傍晚前往拈花湾（逛花街、看花海、夜间观《禅行》灯光秀）。\n---\n> 本知识库最后更新时间：2026年7月\n>\n> 注：表演时间、门票价格等信息可能因季节调整，请以景区当日公告为准。",
+        "chunk_id": "91d41a27424012d99f43d426",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      },
+      {
+        "title": "表演和活动",
+        "source": "知识库.md",
+        "score": 0.1598,
+        "content": "**Q14：拈花湾夜间有什么活动？**\nA：拈花湾夜间最不可错过的活动是五灯湖的《禅行》灯光秀，演出时间通常为19:00和20:00。此外，香月花街在夜间也有灯光装饰和夜间商业活动。\n**Q15：拈花堂的讲座时间是什么？**\nA：拈花堂每日10:30和15:30举办禅文化讲座，内容包括禅修入门、禅茶文化等，免费参加，建议提前入场。\n**Q16：拈花湾的开园仪式是什么时间？**\nA：拈花湾每日9:30在拈花广场举行开园仪式，有禅意舞蹈和音乐表演，建议提前到达观看。",
+        "chunk_id": "d6e135484dcca1b44b0d5c54",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 29.72,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 50.22
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 54.13
+  },
+  {
+    "id": "R-010",
+    "question": "灵山胜境的中轴线游览路线是怎样的？",
+    "expected_keywords": [
+      "照壁",
+      "佛足",
+      "菩提",
+      "灌浴",
+      "大佛"
+    ],
+    "category": "route",
+    "difficulty": "medium",
+    "spot_names": [
+      "灵山大照壁",
+      "佛足坛",
+      "菩提大道",
+      "九龙灌浴",
+      "灵山大佛"
+    ],
+    "should_refuse": false,
+    "answer": "阿弥陀佛,关于「游览建议」,为您讲解如下:\n**Q19：游览灵山胜境需要多长时间？**\nA：根据游览深度不同，建议预留4-6小时。历史文化爱好者建议安排6小时深度游；自然风光爱好者可安排5小时全景游；亲子家庭4小时轻松游即可。\n**Q20：灵山胜境最佳游览季节是什么时候？**\nA：四季皆宜。春季（3-5月）万物复苏，气候宜人；夏季（6-8月）九龙灌浴表演最为壮观，但天气较热；秋季（9-11月）祥符禅寺银杏金黄，是摄影最佳季节；冬季（12-2月）游客较少，适合静心游览。\n**Q21\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.2,
+    "keyword_ok": false,
+    "answer_matched": [
+      "灌浴"
+    ],
+    "answer_ok": false,
+    "refusal_correct": true,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "33cd1b231bc247b0896a7aaba2fda986",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "游览建议",
+        "source": "知识库.md",
+        "score": 0.196,
+        "content": "**Q19：游览灵山胜境需要多长时间？**\nA：根据游览深度不同，建议预留4-6小时。历史文化爱好者建议安排6小时深度游；自然风光爱好者可安排5小时全景游；亲子家庭4小时轻松游即可。\n**Q20：灵山胜境最佳游览季节是什么时候？**\nA：四季皆宜。春季（3-5月）万物复苏，气候宜人；夏季（6-8月）九龙灌浴表演最为壮观，但天气较热；秋季（9-11月）祥符禅寺银杏金黄，是摄影最佳季节；冬季（12-2月）游客较少，适合静心游览。\n**Q21：景区对游客着装有要求吗？**\nA：灵山胜境作为佛教文化景区，建议游客穿着得体、庄重，避免过于暴露的服装。参观寺庙（如祥符禅寺）和大佛基座内部时，请保持安静恭敬。\n**Q22：景区内有存包处吗？**\nA：景区入口处设有寄存服务，大件行李和背包可以寄存，方便轻装游览。具体费用和操作请咨询景区游客服务中心。\n**Q23：灵山胜境的承载量是多少？**\nA：景区最大瞬时承载量为31,500人，当日最大承载量为43,500人。节假日高峰期建议提前购票并尽早入园，避开人流高峰。\n**Q24：景区内有WiFi吗？**\nA：景区主要区域覆盖免费WiFi，游客可连接后使用。如需使用AI数字人导览系统，建议连接景区WiFi以获得最佳体验。\n**Q25：灵山胜境和拈花湾是在一起的吗？可以一起游览吗？**\nA：灵山胜境和拈花湾禅意小镇是两大相邻的板块，可以安排在一天内游览。建议上午游览灵山胜境（参观大佛、梵宫等主要景点），下午和傍晚前往拈花湾（逛花街、看花海、夜间观《禅行》灯光秀）。\n---\n> 本知识库最后更新时间：2026年7月\n>\n> 注：表演时间、门票价格等信息可能因季节调整，请以景区当日公告为准。",
+        "chunk_id": "91d41a27424012d99f43d426",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 69.52,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 90.71
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 96.23
+  },
+  {
+    "id": "PR-001",
+    "question": "那个很高的大佛到底有多高啊？",
+    "expected_keywords": [
+      "88"
+    ],
+    "category": "paraphrase",
+    "difficulty": "medium",
+    "spot_names": [
+      "灵山大佛"
+    ],
+    "should_refuse": false,
+    "answer": "抱歉，本地景区知识库没有找到可靠依据，请换个问法或咨询景区工作人员。",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.0,
+    "keyword_ok": false,
+    "answer_matched": [],
+    "answer_ok": false,
+    "refusal_correct": false,
+    "wrong_refusal": true,
+    "is_refusal": true,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "25fdb350e9ab4f7b92d5fd1f8c9dc094",
+    "status": "refused",
+    "sources": [],
+    "mode": "demo",
+    "provenance": {
+      "path": "no_evidence_refusal",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_retrieved_evidence",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 29.5,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 47.24
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 51.23
+  },
+  {
+    "id": "PR-002",
+    "question": "莲花里面升起来的那个佛像表演是什么？",
+    "expected_keywords": [
+      "九龙灌浴",
+      "太子佛",
+      "诞生"
+    ],
+    "category": "paraphrase",
+    "difficulty": "medium",
+    "spot_names": [
+      "九龙灌浴"
+    ],
+    "should_refuse": false,
+    "answer": "【时效提醒】资料更新时间未核实，以下内容不代表实时票价、开放或演出安排，请以景区官方公告为准。\n阿弥陀佛,关于「表演和活动」,为您讲解如下:\n**Q14：拈花湾夜间有什么活动？**\nA：拈花湾夜间最不可错过的活动是五灯湖的《禅行》灯光秀，演出时间通常为19:00和20:00。此外，香月花街在夜间也有灯光装饰和夜间商业活动。\n**Q15：拈花堂的讲座时间是什么？**\nA：拈花堂每日10:30和15:30举办禅文化讲座，内容包括禅修入门、禅茶文化等，免费参加，建议提前入场。\n**Q16：拈花湾的开园仪式是什么时间？**\nA：拈花湾每日9:30在拈花广场举行开园仪式，有禅意舞蹈和音\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.0,
+    "keyword_ok": false,
+    "answer_matched": [],
+    "answer_ok": false,
+    "refusal_correct": true,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "75043227d5f74d63a74b5a1ed91756f9",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "表演和活动",
+        "source": "知识库.md",
+        "score": 0.1751,
+        "content": "**Q14：拈花湾夜间有什么活动？**\nA：拈花湾夜间最不可错过的活动是五灯湖的《禅行》灯光秀，演出时间通常为19:00和20:00。此外，香月花街在夜间也有灯光装饰和夜间商业活动。\n**Q15：拈花堂的讲座时间是什么？**\nA：拈花堂每日10:30和15:30举办禅文化讲座，内容包括禅修入门、禅茶文化等，免费参加，建议提前入场。\n**Q16：拈花湾的开园仪式是什么时间？**\nA：拈花湾每日9:30在拈花广场举行开园仪式，有禅意舞蹈和音乐表演，建议提前到达观看。",
+        "chunk_id": "d6e135484dcca1b44b0d5c54",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      },
+      {
+        "title": "景点相关",
+        "source": "知识库.md",
+        "score": 0.1516,
+        "content": "**Q9：灵山大佛有多高？**\nA：灵山大佛佛像高88米（佛体79米，莲花座9米），连同基座总高101.5米，是世界上最高的露天青铜释迦牟尼佛立像，共用青铜725吨铸造。\n**Q10：九龙灌浴每天有几场表演？**\nA：九龙灌浴每天通常有4-5场表演，具体时间请参考景区当日公告。建议入园时先确认当日表演时间表，合理安排行程。\n**Q11：梵宫《吉祥颂》演出时间是什么？**\nA：《吉祥颂》演出通常安排在10:35、11:30、14:00、16:00，每场约30分钟。具体时间可能因季节和特殊情况调整，请以景区当日公告为准。\n**Q12：五印坛城可以转经筒吗？**\nA：可以。五印坛城周围共有108个转经筒，游客可以亲手转动。请按照顺时针方向转动，每转动一圈相当于诵读一遍经文。\n**Q13：灵山胜境有多少个景点？**\nA：灵山胜境景区共有16个主要景点，加上拈花湾禅意小镇的6个景点，总计22个景点。",
+        "chunk_id": "ffc527655b8bf1024c5d878c",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 29.17,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 47.84
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 51.87
+  },
+  {
+    "id": "PR-003",
+    "question": "灵山里面那个金色的藏式建筑叫什么？",
+    "expected_keywords": [
+      "五印坛城",
+      "藏传",
+      "坛城"
+    ],
+    "category": "paraphrase",
+    "difficulty": "medium",
+    "spot_names": [
+      "五印坛城"
+    ],
+    "should_refuse": false,
+    "answer": "抱歉，本地景区知识库没有找到可靠依据，请换个问法或咨询景区工作人员。",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.0,
+    "keyword_ok": false,
+    "answer_matched": [],
+    "answer_ok": false,
+    "refusal_correct": false,
+    "wrong_refusal": true,
+    "is_refusal": true,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "f95f2ef9c74848e7a621c6338d64c1c8",
+    "status": "refused",
+    "sources": [],
+    "mode": "demo",
+    "provenance": {
+      "path": "no_evidence_refusal",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_retrieved_evidence",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 29.32,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 48.29
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 52.27
+  },
+  {
+    "id": "PR-004",
+    "question": "听说灵山有个博物馆，在哪里？",
+    "expected_keywords": [
+      "梵宫",
+      "博物馆",
+      "廊厅"
+    ],
+    "category": "paraphrase",
+    "difficulty": "medium",
+    "spot_names": [
+      "灵山梵宫"
+    ],
+    "should_refuse": false,
+    "answer": "抱歉，本地景区知识库没有找到可靠依据，请换个问法或咨询景区工作人员。",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.0,
+    "keyword_ok": false,
+    "answer_matched": [],
+    "answer_ok": false,
+    "refusal_correct": false,
+    "wrong_refusal": true,
+    "is_refusal": true,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "e5d12308928c4c0bae87ad5abd9275b1",
+    "status": "refused",
+    "sources": [],
+    "mode": "demo",
+    "provenance": {
+      "path": "no_evidence_refusal",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_retrieved_evidence",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 32.39,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 51.04
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 55.22
+  },
+  {
+    "id": "PR-005",
+    "question": "那个大佛是用什么做的？",
+    "expected_keywords": [
+      "青铜"
+    ],
+    "category": "paraphrase",
+    "difficulty": "easy",
+    "spot_names": [
+      "灵山大佛"
+    ],
+    "should_refuse": false,
+    "answer": "抱歉，本地景区知识库没有找到可靠依据，请换个问法或咨询景区工作人员。",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.0,
+    "keyword_ok": false,
+    "answer_matched": [],
+    "answer_ok": false,
+    "refusal_correct": false,
+    "wrong_refusal": true,
+    "is_refusal": true,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "9f65d5b295cc4ef7baef7f3a8314ebef",
+    "status": "refused",
+    "sources": [],
+    "mode": "demo",
+    "provenance": {
+      "path": "no_evidence_refusal",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_retrieved_evidence",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 29.9,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 48.4
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 52.88
+  },
+  {
+    "id": "PR-007",
+    "question": "玄奘和灵山有什么关系？",
+    "expected_keywords": [
+      "玄奘",
+      "小灵山",
+      "灵鹫山"
+    ],
+    "category": "paraphrase",
+    "difficulty": "medium",
+    "spot_names": [
+      "祥符禅寺",
+      "灵山大佛"
+    ],
+    "should_refuse": false,
+    "answer": "抱歉，本地景区知识库没有找到可靠依据，请换个问法或咨询景区工作人员。",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.0,
+    "keyword_ok": false,
+    "answer_matched": [],
+    "answer_ok": false,
+    "refusal_correct": false,
+    "wrong_refusal": true,
+    "is_refusal": true,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "4002708583b0480b98d37fc90a64e130",
+    "status": "refused",
+    "sources": [],
+    "mode": "demo",
+    "provenance": {
+      "path": "no_evidence_refusal",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_retrieved_evidence",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 26.39,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 43.74
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 47.78
+  },
+  {
+    "id": "PR-008",
+    "question": "灵山最大的表演场地在哪里？能坐多少人？",
+    "expected_keywords": [
+      "梵宫",
+      "圣坛",
+      "2000"
+    ],
+    "category": "paraphrase",
+    "difficulty": "hard",
+    "spot_names": [
+      "灵山梵宫"
+    ],
+    "should_refuse": false,
+    "answer": "【时效提醒】资料更新时间未核实，以下内容不代表实时票价、开放或演出安排，请以景区官方公告为准。\n阿弥陀佛,关于「游览建议」,为您讲解如下:\n**Q19：游览灵山胜境需要多长时间？**\nA：根据游览深度不同，建议预留4-6小时。历史文化爱好者建议安排6小时深度游；自然风光爱好者可安排5小时全景游；亲子家庭4小时轻松游即可。\n**Q20：灵山胜境最佳游览季节是什么时候？**\nA：四季皆宜。春季（3-5月）万物复苏，气候宜人；夏季（6-8月）九龙灌浴表演最为壮观，但天气较热；秋季（9-11月）祥符禅寺银杏金黄，是摄影最佳季节；冬季（12-2月）游客较少，适合静心游览。\n**Q21\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.0,
+    "keyword_ok": false,
+    "answer_matched": [],
+    "answer_ok": false,
+    "refusal_correct": true,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "d83f5a6e96bf492ba8db741e5059b9d0",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "游览建议",
+        "source": "知识库.md",
+        "score": 0.1744,
+        "content": "**Q19：游览灵山胜境需要多长时间？**\nA：根据游览深度不同，建议预留4-6小时。历史文化爱好者建议安排6小时深度游；自然风光爱好者可安排5小时全景游；亲子家庭4小时轻松游即可。\n**Q20：灵山胜境最佳游览季节是什么时候？**\nA：四季皆宜。春季（3-5月）万物复苏，气候宜人；夏季（6-8月）九龙灌浴表演最为壮观，但天气较热；秋季（9-11月）祥符禅寺银杏金黄，是摄影最佳季节；冬季（12-2月）游客较少，适合静心游览。\n**Q21：景区对游客着装有要求吗？**\nA：灵山胜境作为佛教文化景区，建议游客穿着得体、庄重，避免过于暴露的服装。参观寺庙（如祥符禅寺）和大佛基座内部时，请保持安静恭敬。\n**Q22：景区内有存包处吗？**\nA：景区入口处设有寄存服务，大件行李和背包可以寄存，方便轻装游览。具体费用和操作请咨询景区游客服务中心。\n**Q23：灵山胜境的承载量是多少？**\nA：景区最大瞬时承载量为31,500人，当日最大承载量为43,500人。节假日高峰期建议提前购票并尽早入园，避开人流高峰。\n**Q24：景区内有WiFi吗？**\nA：景区主要区域覆盖免费WiFi，游客可连接后使用。如需使用AI数字人导览系统，建议连接景区WiFi以获得最佳体验。\n**Q25：灵山胜境和拈花湾是在一起的吗？可以一起游览吗？**\nA：灵山胜境和拈花湾禅意小镇是两大相邻的板块，可以安排在一天内游览。建议上午游览灵山胜境（参观大佛、梵宫等主要景点），下午和傍晚前往拈花湾（逛花街、看花海、夜间观《禅行》灯光秀）。\n---\n> 本知识库最后更新时间：2026年7月\n>\n> 注：表演时间、门票价格等信息可能因季节调整，请以景区当日公告为准。",
+        "chunk_id": "91d41a27424012d99f43d426",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      },
+      {
+        "title": "景区承载量",
+        "source": "BASE-capacity",
+        "score": 0.1514,
+        "content": "景区承载量:景区最大瞬时承载量：31500人\n当日最大承载量：43500人",
+        "chunk_id": "0fc2f74a2ed0a861072decbd",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      },
+      {
+        "title": "景点相关",
+        "source": "知识库.md",
+        "score": 0.1513,
+        "content": "**Q9：灵山大佛有多高？**\nA：灵山大佛佛像高88米（佛体79米，莲花座9米），连同基座总高101.5米，是世界上最高的露天青铜释迦牟尼佛立像，共用青铜725吨铸造。\n**Q10：九龙灌浴每天有几场表演？**\nA：九龙灌浴每天通常有4-5场表演，具体时间请参考景区当日公告。建议入园时先确认当日表演时间表，合理安排行程。\n**Q11：梵宫《吉祥颂》演出时间是什么？**\nA：《吉祥颂》演出通常安排在10:35、11:30、14:00、16:00，每场约30分钟。具体时间可能因季节和特殊情况调整，请以景区当日公告为准。\n**Q12：五印坛城可以转经筒吗？**\nA：可以。五印坛城周围共有108个转经筒，游客可以亲手转动。请按照顺时针方向转动，每转动一圈相当于诵读一遍经文。\n**Q13：灵山胜境有多少个景点？**\nA：灵山胜境景区共有16个主要景点，加上拈花湾禅意小镇的6个景点，总计22个景点。",
+        "chunk_id": "ffc527655b8bf1024c5d878c",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 28.32,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 48.0
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 52.14
+  },
+  {
+    "id": "PR-009",
+    "question": "那个塔在小镇的哪里？",
+    "expected_keywords": [
+      "拈花塔",
+      "小镇"
+    ],
+    "category": "paraphrase",
+    "difficulty": "easy",
+    "spot_names": [
+      "拈花塔"
+    ],
+    "should_refuse": false,
+    "answer": "阿弥陀佛,关于「曼飞龙塔」,为您讲解如下:\n景点:曼飞龙塔\n介绍:曼飞龙塔主塔高16.9米，是一座九塔组合的南传佛教风格佛塔，白色塔身配以金色塔尖，造型优美独特。曼飞龙塔源于云南西双版纳的南传佛教传统，与汉传佛教的梵宫、藏传佛教的五印坛城形成鲜明对比，展现了佛教三大语系在灵山胜境的和谐共存。塔身洁白如玉，在阳光照耀下金光闪烁，具有浓郁的东南亚佛教风情。\n文化内涵:南传佛教（上座部佛教）主要流传于东南亚和我国云南地区，保留了早期佛教较为原始的修行方式。曼飞龙塔的九塔组合造型源自云南\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.0,
+    "keyword_ok": false,
+    "answer_matched": [],
+    "answer_ok": false,
+    "refusal_correct": true,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "f53f9e03df4c4900b304b81051843813",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "曼飞龙塔",
+        "source": "LS-015",
+        "score": 0.1534,
+        "content": "景点:曼飞龙塔\n介绍:曼飞龙塔主塔高16.9米，是一座九塔组合的南传佛教风格佛塔，白色塔身配以金色塔尖，造型优美独特。曼飞龙塔源于云南西双版纳的南传佛教传统，与汉传佛教的梵宫、藏传佛教的五印坛城形成鲜明对比，展现了佛教三大语系在灵山胜境的和谐共存。塔身洁白如玉，在阳光照耀下金光闪烁，具有浓郁的东南亚佛教风情。\n文化内涵:南传佛教（上座部佛教）主要流传于东南亚和我国云南地区，保留了早期佛教较为原始的修行方式。曼飞龙塔的九塔组合造型源自云南景洪的曼飞龙白塔，是南传佛教的典型建筑形式。九塔环绕主塔的布局象征九九归一的佛教理念。灵山胜境同时汇聚汉传（梵宫）、藏传（五印坛城）、南传（曼飞龙塔）三大佛教语系的代表建筑，这在全国乃至全世界都是独一无二的。\n亮点:主塔高16.9米九塔组合、南传佛教风格，白色塔身金色塔尖、东南亚佛教风情、三大语系汇聚之一\n游览提示:曼飞龙塔的异域风情非常适合拍照，白色塔身在蓝天映衬下格外美丽。可以配合灵山精舍禅意酒店一起参观。",
+        "chunk_id": "341aae034243aa719653fb39",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 30.3,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 51.9
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 56.55
+  },
+  {
+    "id": "PR-010",
+    "question": "灵山入口处那个墙是什么？",
+    "expected_keywords": [
+      "照壁",
+      "入口",
+      "赵朴初"
+    ],
+    "category": "paraphrase",
+    "difficulty": "medium",
+    "spot_names": [
+      "灵山大照壁"
+    ],
+    "should_refuse": false,
+    "answer": "抱歉，本地景区知识库没有找到可靠依据，请换个问法或咨询景区工作人员。",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": true,
+    "keyword_score": 0.0,
+    "keyword_ok": false,
+    "answer_matched": [],
+    "answer_ok": false,
+    "refusal_correct": false,
+    "wrong_refusal": true,
+    "is_refusal": true,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "0de59847552846cc8a79ef73a6106b1b",
+    "status": "refused",
+    "sources": [],
+    "mode": "demo",
+    "provenance": {
+      "path": "no_evidence_refusal",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_retrieved_evidence",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 32.62,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 52.74
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 57.42
+  },
+  {
+    "id": "B-003",
+    "question": "灵山大佛附近有什么好吃的餐厅推荐？",
+    "expected_keywords": [],
+    "category": "boundary",
+    "difficulty": "medium",
+    "spot_names": [],
+    "should_refuse": true,
+    "answer": "阿弥陀佛,关于「灵山大佛」,为您讲解如下:\n景点:灵山大佛\n介绍:灵山大佛是世界最高露天青铜释迦牟尼佛立像，通高88米（佛体79米+莲花座9米），连同莲花座下基座总高101.5米，共用铜725吨。大佛右手施无畏印，寓意除却众生一切痛苦与恐惧；左手施与愿印，寓意赐予众生一切欢乐与福祉。大佛坐落于太湖之滨的小灵山南麓，面朝太湖，背倚群山，法相庄严。游客需攀登216级台阶方可抵达大佛脚下，在抱佛脚处可以近距离瞻仰大佛，俯瞰太湖全景。\n文化内涵:灵山大佛的建造始于1994年，由中国佛教协\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": false,
+    "keyword_score": null,
+    "keyword_ok": null,
+    "answer_matched": [],
+    "answer_ok": false,
+    "refusal_correct": false,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "6c15c833024f421bb8068039f400b2eb",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "灵山大佛",
+        "source": "LS-011",
+        "score": 0.3431,
+        "content": "景点:灵山大佛\n介绍:灵山大佛是世界最高露天青铜释迦牟尼佛立像，通高88米（佛体79米+莲花座9米），连同莲花座下基座总高101.5米，共用铜725吨。大佛右手施无畏印，寓意除却众生一切痛苦与恐惧；左手施与愿印，寓意赐予众生一切欢乐与福祉。大佛坐落于太湖之滨的小灵山南麓，面朝太湖，背倚群山，法相庄严。游客需攀登216级台阶方可抵达大佛脚下，在抱佛脚处可以近距离瞻仰大佛，俯瞰太湖全景。\n文化内涵:灵山大佛的建造始于1994年，由中国佛教协会会长赵朴初先生倡导，历时三年落成。大佛选址依据佛教左青龙、右白虎、前朱雀、后玄武的风水理念，背靠小灵山，面朝太湖，山水相依，气势非凡。佛像铸造采用先进的分段铸造、整体组装技术，725吨铜被精密焊接为一体。大佛右手无畏印象征佛陀以大无畏的勇气教化众生，左手与愿印象征佛陀以慈悲心满足众生善愿。抱佛脚源自民间俗语，在此被赋予了积极含义——亲近佛法、获得庇佑。\n亮点:世界最高露天青铜释迦牟尼立像、通高88米，总高101.5米，耗铜725吨、右手无畏印、左手与愿印、216级台阶登顶、抱佛脚祈福、俯瞰太湖全景\n游览提示:攀登216级台阶需要一定体力，建议穿舒适的鞋子。登顶后在大佛脚部可以贴金祈福。天气晴好时在台阶上可以拍到太湖与大佛同框的壮丽照片。",
+        "chunk_id": "07bc5ff6db95768fafa9066d",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 29.87,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 51.09
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 55.87
+  },
+  {
+    "id": "B-004",
+    "question": "你知道今天股市行情吗？",
+    "expected_keywords": [],
+    "category": "boundary",
+    "difficulty": "easy",
+    "spot_names": [],
+    "should_refuse": true,
+    "answer": "【时效提醒】资料更新时间未核实，以下内容不代表实时票价、开放或演出安排，请以景区官方公告为准。\n阿弥陀佛,关于「游览建议」,为您讲解如下:\n**Q19：游览灵山胜境需要多长时间？**\nA：根据游览深度不同，建议预留4-6小时。历史文化爱好者建议安排6小时深度游；自然风光爱好者可安排5小时全景游；亲子家庭4小时轻松游即可。\n**Q20：灵山胜境最佳游览季节是什么时候？**\nA：四季皆宜。春季（3-5月）万物复苏，气候宜人；夏季（6-8月）九龙灌浴表演最为壮观，但天气较热；秋季（9-11月）祥符禅寺银杏金黄，是摄影最佳季节；冬季（12-2月）游客较少，适合静心游览。\n**Q21\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": false,
+    "keyword_score": null,
+    "keyword_ok": null,
+    "answer_matched": [],
+    "answer_ok": false,
+    "refusal_correct": false,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "97d0756e8cb4439b967407131fa02124",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "游览建议",
+        "source": "知识库.md",
+        "score": 0.2153,
+        "content": "**Q19：游览灵山胜境需要多长时间？**\nA：根据游览深度不同，建议预留4-6小时。历史文化爱好者建议安排6小时深度游；自然风光爱好者可安排5小时全景游；亲子家庭4小时轻松游即可。\n**Q20：灵山胜境最佳游览季节是什么时候？**\nA：四季皆宜。春季（3-5月）万物复苏，气候宜人；夏季（6-8月）九龙灌浴表演最为壮观，但天气较热；秋季（9-11月）祥符禅寺银杏金黄，是摄影最佳季节；冬季（12-2月）游客较少，适合静心游览。\n**Q21：景区对游客着装有要求吗？**\nA：灵山胜境作为佛教文化景区，建议游客穿着得体、庄重，避免过于暴露的服装。参观寺庙（如祥符禅寺）和大佛基座内部时，请保持安静恭敬。\n**Q22：景区内有存包处吗？**\nA：景区入口处设有寄存服务，大件行李和背包可以寄存，方便轻装游览。具体费用和操作请咨询景区游客服务中心。\n**Q23：灵山胜境的承载量是多少？**\nA：景区最大瞬时承载量为31,500人，当日最大承载量为43,500人。节假日高峰期建议提前购票并尽早入园，避开人流高峰。\n**Q24：景区内有WiFi吗？**\nA：景区主要区域覆盖免费WiFi，游客可连接后使用。如需使用AI数字人导览系统，建议连接景区WiFi以获得最佳体验。\n**Q25：灵山胜境和拈花湾是在一起的吗？可以一起游览吗？**\nA：灵山胜境和拈花湾禅意小镇是两大相邻的板块，可以安排在一天内游览。建议上午游览灵山胜境（参观大佛、梵宫等主要景点），下午和傍晚前往拈花湾（逛花街、看花海、夜间观《禅行》灯光秀）。\n---\n> 本知识库最后更新时间：2026年7月\n>\n> 注：表演时间、门票价格等信息可能因季节调整，请以景区当日公告为准。",
+        "chunk_id": "91d41a27424012d99f43d426",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 31.6,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 52.49
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 56.95
+  },
+  {
+    "id": "B-006",
+    "question": "灵山胜境门票多少钱？怎么买票？",
+    "expected_keywords": [],
+    "category": "boundary",
+    "difficulty": "medium",
+    "spot_names": [],
+    "should_refuse": true,
+    "answer": "【时效提醒】资料更新时间未核实，以下内容不代表实时票价、开放或演出安排，请以景区官方公告为准。\n阿弥陀佛,关于「门票相关」,为您讲解如下:\n**Q1：灵山胜境的门票价格是多少？**\nA：灵山胜境成人门票为210元，半价票为105元。联票225元，包含门票和观光车费用。\n**Q2：哪些人群可以享受免票政策？**\nA：以下人群可享受免票：6岁以下儿童或身高1.4米以下的儿童、70周岁以上的老人、现役军人、残疾人。请携带有效证件入园。\n**Q3：哪些人群可以购买半价票？**\nA：6周岁（不含）至18周岁（含）的未成年人、全日制本科及以下学历的学生、60-69周岁的老年人，凭有效证\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": false,
+    "keyword_score": null,
+    "keyword_ok": null,
+    "answer_matched": [],
+    "answer_ok": false,
+    "refusal_correct": false,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "901ee964bfa04341a68482391ddde568",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "门票相关",
+        "source": "知识库.md",
+        "score": 0.2467,
+        "content": "**Q1：灵山胜境的门票价格是多少？**\nA：灵山胜境成人门票为210元，半价票为105元。联票225元，包含门票和观光车费用。\n**Q2：哪些人群可以享受免票政策？**\nA：以下人群可享受免票：6岁以下儿童或身高1.4米以下的儿童、70周岁以上的老人、现役军人、残疾人。请携带有效证件入园。\n**Q3：哪些人群可以购买半价票？**\nA：6周岁（不含）至18周岁（含）的未成年人、全日制本科及以下学历的学生、60-69周岁的老年人，凭有效证件可享受半价优惠。\n**Q4：门票和联票有什么区别？**\nA：门票仅包含灵山胜境景区入园费用；联票（225元）包含门票和景区观光车费用，如果需要在景区内乘坐观光车，建议购买联票。",
+        "chunk_id": "760609f33ed9bd8b1c2ecea8",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      },
+      {
+        "title": "游览建议",
+        "source": "知识库.md",
+        "score": 0.1705,
+        "content": "**Q19：游览灵山胜境需要多长时间？**\nA：根据游览深度不同，建议预留4-6小时。历史文化爱好者建议安排6小时深度游；自然风光爱好者可安排5小时全景游；亲子家庭4小时轻松游即可。\n**Q20：灵山胜境最佳游览季节是什么时候？**\nA：四季皆宜。春季（3-5月）万物复苏，气候宜人；夏季（6-8月）九龙灌浴表演最为壮观，但天气较热；秋季（9-11月）祥符禅寺银杏金黄，是摄影最佳季节；冬季（12-2月）游客较少，适合静心游览。\n**Q21：景区对游客着装有要求吗？**\nA：灵山胜境作为佛教文化景区，建议游客穿着得体、庄重，避免过于暴露的服装。参观寺庙（如祥符禅寺）和大佛基座内部时，请保持安静恭敬。\n**Q22：景区内有存包处吗？**\nA：景区入口处设有寄存服务，大件行李和背包可以寄存，方便轻装游览。具体费用和操作请咨询景区游客服务中心。\n**Q23：灵山胜境的承载量是多少？**\nA：景区最大瞬时承载量为31,500人，当日最大承载量为43,500人。节假日高峰期建议提前购票并尽早入园，避开人流高峰。\n**Q24：景区内有WiFi吗？**\nA：景区主要区域覆盖免费WiFi，游客可连接后使用。如需使用AI数字人导览系统，建议连接景区WiFi以获得最佳体验。\n**Q25：灵山胜境和拈花湾是在一起的吗？可以一起游览吗？**\nA：灵山胜境和拈花湾禅意小镇是两大相邻的板块，可以安排在一天内游览。建议上午游览灵山胜境（参观大佛、梵宫等主要景点），下午和傍晚前往拈花湾（逛花街、看花海、夜间观《禅行》灯光秀）。\n---\n> 本知识库最后更新时间：2026年7月\n>\n> 注：表演时间、门票价格等信息可能因季节调整，请以景区当日公告为准。",
+        "chunk_id": "91d41a27424012d99f43d426",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      },
+      {
+        "title": "景点相关",
+        "source": "知识库.md",
+        "score": 0.1604,
+        "content": "**Q9：灵山大佛有多高？**\nA：灵山大佛佛像高88米（佛体79米，莲花座9米），连同基座总高101.5米，是世界上最高的露天青铜释迦牟尼佛立像，共用青铜725吨铸造。\n**Q10：九龙灌浴每天有几场表演？**\nA：九龙灌浴每天通常有4-5场表演，具体时间请参考景区当日公告。建议入园时先确认当日表演时间表，合理安排行程。\n**Q11：梵宫《吉祥颂》演出时间是什么？**\nA：《吉祥颂》演出通常安排在10:35、11:30、14:00、16:00，每场约30分钟。具体时间可能因季节和特殊情况调整，请以景区当日公告为准。\n**Q12：五印坛城可以转经筒吗？**\nA：可以。五印坛城周围共有108个转经筒，游客可以亲手转动。请按照顺时针方向转动，每转动一圈相当于诵读一遍经文。\n**Q13：灵山胜境有多少个景点？**\nA：灵山胜境景区共有16个主要景点，加上拈花湾禅意小镇的6个景点，总计22个景点。",
+        "chunk_id": "ffc527655b8bf1024c5d878c",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 29.5,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 49.31
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 53.83
+  },
+  {
+    "id": "B-008",
+    "question": "你能帮我算一道数学题吗？123乘以456等于多少？",
+    "expected_keywords": [],
+    "category": "boundary",
+    "difficulty": "easy",
+    "spot_names": [],
+    "should_refuse": true,
+    "answer": "阿弥陀佛,关于「游览建议」,为您讲解如下:\n**Q19：游览灵山胜境需要多长时间？**\nA：根据游览深度不同，建议预留4-6小时。历史文化爱好者建议安排6小时深度游；自然风光爱好者可安排5小时全景游；亲子家庭4小时轻松游即可。\n**Q20：灵山胜境最佳游览季节是什么时候？**\nA：四季皆宜。春季（3-5月）万物复苏，气候宜人；夏季（6-8月）九龙灌浴表演最为壮观，但天气较热；秋季（9-11月）祥符禅寺银杏金黄，是摄影最佳季节；冬季（12-2月）游客较少，适合静心游览。\n**Q21\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": false,
+    "keyword_score": null,
+    "keyword_ok": null,
+    "answer_matched": [],
+    "answer_ok": false,
+    "refusal_correct": false,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "7b877da185374b2389af1edf8eca0abd",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "游览建议",
+        "source": "知识库.md",
+        "score": 0.1737,
+        "content": "**Q19：游览灵山胜境需要多长时间？**\nA：根据游览深度不同，建议预留4-6小时。历史文化爱好者建议安排6小时深度游；自然风光爱好者可安排5小时全景游；亲子家庭4小时轻松游即可。\n**Q20：灵山胜境最佳游览季节是什么时候？**\nA：四季皆宜。春季（3-5月）万物复苏，气候宜人；夏季（6-8月）九龙灌浴表演最为壮观，但天气较热；秋季（9-11月）祥符禅寺银杏金黄，是摄影最佳季节；冬季（12-2月）游客较少，适合静心游览。\n**Q21：景区对游客着装有要求吗？**\nA：灵山胜境作为佛教文化景区，建议游客穿着得体、庄重，避免过于暴露的服装。参观寺庙（如祥符禅寺）和大佛基座内部时，请保持安静恭敬。\n**Q22：景区内有存包处吗？**\nA：景区入口处设有寄存服务，大件行李和背包可以寄存，方便轻装游览。具体费用和操作请咨询景区游客服务中心。\n**Q23：灵山胜境的承载量是多少？**\nA：景区最大瞬时承载量为31,500人，当日最大承载量为43,500人。节假日高峰期建议提前购票并尽早入园，避开人流高峰。\n**Q24：景区内有WiFi吗？**\nA：景区主要区域覆盖免费WiFi，游客可连接后使用。如需使用AI数字人导览系统，建议连接景区WiFi以获得最佳体验。\n**Q25：灵山胜境和拈花湾是在一起的吗？可以一起游览吗？**\nA：灵山胜境和拈花湾禅意小镇是两大相邻的板块，可以安排在一天内游览。建议上午游览灵山胜境（参观大佛、梵宫等主要景点），下午和傍晚前往拈花湾（逛花街、看花海、夜间观《禅行》灯光秀）。\n---\n> 本知识库最后更新时间：2026年7月\n>\n> 注：表演时间、门票价格等信息可能因季节调整，请以景区当日公告为准。",
+        "chunk_id": "91d41a27424012d99f43d426",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 30.15,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 51.27
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 55.63
+  },
+  {
+    "id": "B-009",
+    "question": "灵山附近有什么酒店可以住？",
+    "expected_keywords": [],
+    "category": "boundary",
+    "difficulty": "medium",
+    "spot_names": [],
+    "should_refuse": true,
+    "answer": "阿弥陀佛,关于「餐饮和住宿」,为您讲解如下:\n**Q17：灵山胜境内有什么餐饮选择？**\nA：景区内有梵宫素斋自助（50元/位）和素面套餐（35元/位）等素食餐饮选择。拈花湾香月花街也有各类餐厅和小吃，选择较为丰富。\n**Q18：灵山精舍可以住宿吗？**\nA：可以。灵山精舍是一家禅意主题精品酒店，位于景区内，提供禅修体验和特色住宿服务。建议提前预订。\n(当前为本地资料摘录，片段可能截断；未调用云模型，时效信息请核对景区官方)",
+    "request_success": true,
+    "failure_kind": null,
+    "failure_reason": null,
+    "keyword_applicable": false,
+    "keyword_score": null,
+    "keyword_ok": null,
+    "answer_matched": [],
+    "answer_ok": false,
+    "refusal_correct": false,
+    "wrong_refusal": false,
+    "is_refusal": false,
+    "factual_correctness": null,
+    "citation_support": null,
+    "request_id": "4e2960a6a91e4c12a208b1cc4d5d01c2",
+    "status": "completed",
+    "sources": [
+      {
+        "title": "餐饮和住宿",
+        "source": "知识库.md",
+        "score": 0.1725,
+        "content": "**Q17：灵山胜境内有什么餐饮选择？**\nA：景区内有梵宫素斋自助（50元/位）和素面套餐（35元/位）等素食餐饮选择。拈花湾香月花街也有各类餐厅和小吃，选择较为丰富。\n**Q18：灵山精舍可以住宿吗？**\nA：可以。灵山精舍是一家禅意主题精品酒店，位于景区内，提供禅修体验和特色住宿服务。建议提前预订。",
+        "chunk_id": "2b5eaf8a154b61cc7f971c49",
+        "revision": 0,
+        "updated_at_kind": "unknown",
+        "updated_at": null,
+        "citation_status": "retrieved_unverified",
+        "supports_answer": null
+      }
+    ],
+    "mode": "demo",
+    "provenance": {
+      "path": "local_extractive",
+      "model": null,
+      "attempts": [],
+      "switch_reason": "no_provider_configured",
+      "rejected_citations": 0
+    },
+    "timings": {
+      "first_valid_text_ms": 30.56,
+      "first_content_audio_ready_ms": null,
+      "first_actual_audio_ms": null,
+      "total_ms": 51.44
+    },
+    "knowledge_revision": 0,
+    "elapsed_ms": 55.82
+  }
+]

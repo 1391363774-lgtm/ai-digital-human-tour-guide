@@ -36,7 +36,7 @@ console.log('Live2D:', !!window.PIXI?.live2d?.Live2DModel)
 |------|------|----------|--------|--------|----------|
 | **Haru** | 御姐/成熟女性 | ParamMouthOpenY ✓ | 8 (F01-F08) | Idle + 多个 | 默认导游 |
 | **Hiyori** | 少女/活泼 | ParamMouthOpenY ✓ | 无 | 10 个动作 | 备选形象 |
-| **Natori** | 女学生/温柔 | ParamMouthOpenY ✓ | 11 (含 Smile/Angry/Sad/Surprised) | Idle + TapBody | 表情丰富 |
+| **Natori** | 男性管家（名执尽） | ParamMouthOpenY ✓ | 11 (含 Smile/Angry/Sad/Surprised) | Idle + TapBody | 表情丰富 |
 
 > Cubism 5 模型（Mao、Ren、Wanko）不兼容 pixi-live2d-display@0.4.0，请勿使用。
 
@@ -215,7 +215,7 @@ SVG 降级角色必须始终可用，绝不能白屏。
 
 ## 许可证
 
-所有模型来自 Live2D 官方 CubismWebSamples，遵循 [Live2D Free Material License](https://www.live2d.com/en/download/free-material-license/)。
+历史获取记录指向Live2D官方CubismWebSamples；当前已比对的文件和适用条件见[2026-10-23核查](../assets/RIGHTS-20261023.md)。Natori为合作角色，Haru/Hiyori为原创角色，不能仅引用通用免费素材协议就断言全部用法或再分发均获许可。
 
 - 可免费用于商业和非商业用途
 - 需保留 Live2D 版权声明

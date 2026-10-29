@@ -3,10 +3,12 @@
 """
 import json
 import asyncio
+import time
+import uuid
 from contextlib import aclosing
 from typing import Optional
 
-from fastapi import APIRouter,Depends,HTTPException
+from fastapi import APIRouter,Depends,HTTPException,Request
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel,Field,field_validator
 
@@ -20,9 +22,9 @@ class ChatRequest(BaseModel):
     message: str = Field(min_length=1,max_length=2000)
     tts_enabled: bool = True
     tourist_id: str = "guest"
-    interest: Optional[str] = None        # 兴趣偏好(个性化推荐)
-    time_budget: Optional[str] = None     # 可用时间
-    companions: Optional[str] = None      # 同行人群
+    interest: Optional[str] = Field(default=None,max_length=120)
+    time_budget: Optional[str] = Field(default=None,max_length=80)
+    companions: Optional[str] = Field(default=None,max_length=80)
     dialect: str = "mandarin"
 
     @field_validator('message')
@@ -32,29 +34,40 @@ class ChatRequest(BaseModel):
         return value.strip()
 
 
+async def request_events(req, owner, request_id):
+    """Keep outer failures compatible with the same SSE/HTTP request contract."""
+    started=time.monotonic()
+    text=''
+    done=False
+    try:
+        async with aclosing(chat_service.stream_pipeline(query=req.message,tourist_id=owner,
+            interest=req.interest,time_budget=req.time_budget,companions=req.companions,
+            tts_enabled=req.tts_enabled,request_id=request_id)) as stream:
+            async for event in stream:
+                if event['type']=='delta': text+=event['text']
+                if event['type']=='done': done=True
+                yield event
+    except asyncio.CancelledError: raise
+    except Exception:
+        if done: return
+        yield {'type':'error','message':'请求未能完成，请重试。','partial':bool(text),'request_id':request_id}
+        yield {'type':'done','status':'partial' if text else 'failed','full_text':text,
+               'request_id':request_id,'latency_ms':round((time.monotonic()-started)*1000),
+               'provenance':{'path':'route_error','model':None,'attempts':[],'switch_reason':'pipeline_error'},
+               'timings':{'first_valid_text_ms':None,'first_actual_audio_ms':None,'total_ms':round((time.monotonic()-started)*1000,2)}}
+
+
 @router.post("/stream")
-async def chat_stream(req: ChatRequest, owner: str = Depends(visitor_owner)):
+async def chat_stream(req: ChatRequest, request: Request, owner: str = Depends(visitor_owner)):
     """SSE流式对话:文本增量 + 情感标签 + 逐句语音与口型时间轴"""
 
     async def event_gen():
-        try:
-            async with aclosing(chat_service.stream_pipeline(
-                query=req.message,
-                tourist_id=owner,
-                interest=req.interest,
-                time_budget=req.time_budget,
-                companions=req.companions,
-                tts_enabled=req.tts_enabled,
-            )) as stream:
-                async for evt in stream:
-                    yield f"data: {json.dumps(evt, ensure_ascii=False)}\n\n"
-        except asyncio.CancelledError:
-            raise
-        except Exception:
-            yield 'data: {"type":"error","message":"请求未能完成，请重试。","partial":false}\n\n'
-            yield 'data: {"type":"done","status":"failed","full_text":""}\n\n'
+        async with aclosing(request_events(req,owner,request_id)) as stream:
+            async for evt in stream:
+                yield f"data: {json.dumps(evt, ensure_ascii=False)}\n\n"
         yield "data: [DONE]\n\n"
 
+    request_id=getattr(request.state,'request_id',None) or uuid.uuid4().hex
     return StreamingResponse(
         event_gen(),
         media_type="text/event-stream",
@@ -63,15 +76,12 @@ async def chat_stream(req: ChatRequest, owner: str = Depends(visitor_owner)):
 
 
 @router.post("/send")
-async def chat_send(req: ChatRequest, owner: str = Depends(visitor_owner)):
+async def chat_send(req: ChatRequest, request: Request, owner: str = Depends(visitor_owner)):
     """非流式兼容接口:聚合全部事件后一次性返回"""
     full_text, emotion, sources, intent = "", "calm", [], "general"
-    sentences, latency, status = [], 0, 'failed'
-    async for evt in chat_service.stream_pipeline(
-        query=req.message, tourist_id=owner,
-        interest=req.interest, time_budget=req.time_budget, companions=req.companions,
-        tts_enabled=req.tts_enabled,
-    ):
+    request_id=getattr(request.state,'request_id',None) or uuid.uuid4().hex
+    sentences, latency, status, evidence = [], 0, 'failed', {}
+    async for evt in request_events(req,owner,request_id):
         if evt["type"] == "meta":
             sources, intent = evt["sources"], evt["intent"]
         elif evt["type"] == "emotion":
@@ -81,8 +91,10 @@ async def chat_send(req: ChatRequest, owner: str = Depends(visitor_owner)):
         elif evt["type"] == "done":
             full_text, latency = evt["full_text"], evt["latency_ms"]
             status=evt['status']
+            request_id=evt['request_id']
+            evidence={k:evt.get(k) for k in ('provenance','timings','mode','knowledge_revision')}
     return {"answer": full_text, "emotion": emotion, "intent": intent,
-            "sources": sources, "sentences": sentences, "latency_ms": latency,'status':status}
+            "sources": sources, "sentences": sentences, "latency_ms": latency,'status':status,'request_id':request_id,**evidence}
 
 
 @router.get("/history/{tourist_id}")

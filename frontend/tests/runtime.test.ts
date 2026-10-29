@@ -1,11 +1,21 @@
 import {afterEach,expect,it,vi} from 'vitest'
-import {readEvents,SpeechScheduler,ChatClient} from '../src/runtime'
+import {readEvents,SpeechScheduler,ChatClient,formatCitationText} from '../src/runtime'
 
 afterEach(()=>vi.unstubAllGlobals())
 const encode=(text:string)=>new TextEncoder().encode(text)
 const evt=(type:string,data:object={})=>'data:'+JSON.stringify({type,request_id:'req',...data})+'\r\n\r\n'
 const response=(wire:string)=>new Response(new ReadableStream({start(c){for(const byte of encode(wire))c.enqueue(new Uint8Array([byte]));c.close()}}),{headers:{'Content-Type':'text/event-stream'}})
 async function collect(r:Response) {const out=[];for await(const e of readEvents(r))out.push(e);return out}
+
+it('displays short citations in source order while rejecting unknown IDs',()=>{
+  expect(formatCitationText('甲[cite:b] 乙[cite:a] 丙[cite:forged]',[{chunk_id:'a'},{chunk_id:'b'}]))
+    .toBe('甲[2] 乙[1] 丙[引用编号无效]')
+})
+it('citation numbering belongs to the current reply and remains plain text',()=>{
+  const text='<img src=x onerror=alert(1)>[cite:a]'
+  expect(formatCitationText(text,[{chunk_id:'a'}])).toBe('<img src=x onerror=alert(1)>[1]')
+  expect(formatCitationText(text,[{chunk_id:'b'}])).toContain('[引用编号无效]')
+})
 
 it('preserves split UTF-8/CRLF, final JSON without delimiter, and closes reader',async()=>{
   const r=response(evt('delta',{text:'中文'})+evt('done',{full_text:'中文',status:'completed'}).trimEnd())
@@ -32,4 +42,18 @@ it('new question cancels old stream and prevents old text/audio from changing DO
   const first=client.start({message:'old'},handlers);await vi.waitFor(()=>expect(rendered).toEqual(['old']))
   const second=client.start({message:'new'},handlers);await second;await first
   expect(cancel).toHaveBeenCalledOnce();expect(rendered).toEqual(['old','new']);expect(played).toEqual([0]);expect(handlers.onError).not.toHaveBeenCalled()
+})
+
+it('counts first real content playback, excludes prelude and ignores late cancelled callbacks',async()=>{
+  const samples:any[]=[];const starts:Array<()=>void>=[]
+  vi.stubGlobal('fetch',vi.fn(async()=>response(evt('delta',{text:'notice',notice:true})+evt('delta',{text:'正文'})+evt('sentence',{index:-1,text:'承接语',prelude:true})+evt('sentence',{index:0,text:'正文',prelude:false})+evt('done',{full_text:'正文',status:'completed'}))))
+  const client=new ChatClient()
+  await client.start({message:'test'},{onEvent:vi.fn(),onError:vi.fn(),onMetrics:m=>samples.push(m),play:async(item,_signal,start)=>{
+    starts.push(start!);start?.()
+    if(item.prelude)expect(samples.at(-1).first_actual_audio_ms).toBe(null)
+  }})
+  expect(samples.at(-1).first_valid_text_ms).not.toBe(null)
+  expect(samples.at(-1).first_actual_audio_ms).not.toBe(null)
+  expect(samples.at(-1).total_ms).not.toBe(null)
+  const count=samples.length;client.cancel();starts[1]();expect(samples).toHaveLength(count)
 })

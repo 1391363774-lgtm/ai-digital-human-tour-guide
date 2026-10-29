@@ -78,7 +78,7 @@ def _parse_json_chunks(json_path: str) -> List[Dict]:
         content = (f"游览路线{i+1}:{r.get('name','')}\n时长:{r.get('duration','')} | "
                    f"适合人群:{r.get('target','')}\n路线:{' → '.join(r.get('route') or [])}\n"
                    f"讲解重点:{'；'.join(r.get('focus') or [])}\n特色体验:{'、'.join(r.get('experiences') or [])}")
-        chunks.append({"title": f"路线:{r.get('name','')}", "content": content, "source": f"ROUTE-{i+1}"})
+        chunks.append({"title": f"路线:{r.get('name','')}", "content": content, "source": f"ROUTE-{i+1}", "route_data": r})
     bi = data.get("baseInfo") or {}
     for key, label in [("ticket", "门票信息"), ("freeTicket", "免票政策"), ("openTime", "开放时间"),
                        ("transport", "交通指南"), ("dining", "餐饮信息"), ("accommodation", "住宿推荐"),
@@ -93,15 +93,29 @@ def _parse_json_chunks(json_path: str) -> List[Dict]:
 # TF-IDF 离线引擎
 # ============================================================
 class _TfidfEngine:
+    # Conversational function words and punctuation are not evidence. Apply
+    # the same tokenization to documents and queries; keep content/numeric terms.
+    STOP_WORDS = frozenset('''的 了 是 在 有 和 与 或 也 都 就 很 为 把 被 来 去 到 从
+        啊 吗 呢 吧 呀 嗯 我 你 您 他 她 它 我们 你们 这个 那个 这些 那些
+        怎么 什么 如何 多少 哪个 哪里 为何 为什么 叫 一个 可以 是否 能 帮 请
+        到底 想 知道 了解 那座 多 关系 名字'''.split())
+    PASSAGE_SIZE = 160
+    PASSAGE_STEP = 120
+
     def __init__(self):
         self.vocab: Dict[str, int] = {}
         self.idf: Optional[np.ndarray] = None
         self.matrix: Optional[np.ndarray] = None  # (n_chunks, n_vocab)
+        self.passage_matrix: Optional[np.ndarray] = None
+        self.passage_owners = np.array([], dtype=np.intp)
 
     @staticmethod
     def _tokenize(text: str) -> List[str]:
         import jieba
-        return [w for w in jieba.lcut(text.lower()) if len(w.strip()) >= 1 and not w.isspace()]
+        # Small, explicit lexical equivalence; this is not semantic embedding.
+        text = re.sub(r'晚上|夜晚|夜里', '夜间', text.lower())
+        return [w for w in jieba.lcut_for_search(text)
+                if re.fullmatch(r'[^\W_]+(?:\.[0-9]+)?', w) and w not in _TfidfEngine.STOP_WORDS]
 
     def fit(self, docs: List[str]):
         tokenized = [self._tokenize(d) for d in docs]
@@ -124,6 +138,29 @@ class _TfidfEngine:
         # L2归一化
         self.matrix = self.matrix / np.maximum(
             np.linalg.norm(self.matrix, axis=1, keepdims=True), 1e-9)
+        # Long sections dilute a short question's cosine score. Score bounded
+        # overlapping passages with the same chunk-level IDF, then map their
+        # scores back to the original evidence IDs instead of inventing sources.
+        passages, owners = [], []
+        for i, doc in enumerate(docs):
+            if len(doc) <= self.PASSAGE_SIZE:
+                continue
+            title = doc.partition('\n')[0]
+            for start in range(0, len(doc), self.PASSAGE_STEP):
+                passage = doc[start:start + self.PASSAGE_SIZE]
+                if len(passage) < 30:
+                    continue
+                passages.append(self._tokenize(title + '\n' + passage))
+                owners.append(i)
+        matrix = np.zeros((len(passages), v), dtype=np.float32)
+        for i, tokens in enumerate(passages):
+            for token in tokens:
+                if token in vocab:
+                    matrix[i, vocab[token]] += 1
+        matrix *= self.idf
+        matrix /= np.maximum(np.linalg.norm(matrix, axis=1, keepdims=True), 1e-9)
+        self.passage_matrix = matrix
+        self.passage_owners = np.asarray(owners, dtype=np.intp)
 
     def query(self, text: str, top_k: int) -> np.ndarray:
         toks = self._tokenize(text)
@@ -136,7 +173,10 @@ class _TfidfEngine:
             return np.zeros(self.matrix.shape[0], dtype=np.float32)
         qv = qv / qv.sum() * self.idf
         qv = qv / max(np.linalg.norm(qv), 1e-9)
-        return self.matrix @ qv
+        scores = self.matrix @ qv
+        if self.passage_matrix is not None and len(self.passage_owners):
+            np.maximum.at(scores, self.passage_owners, self.passage_matrix @ qv)
+        return scores
 
 
 # ============================================================
@@ -190,7 +230,9 @@ class RagService:
         chunks = await run_in_threadpool(read_files)
         async with async_session() as db:
             rows=(await db.execute(select(KnowledgeItem).where(KnowledgeItem.status=='published').order_by(KnowledgeItem.id))).scalars().all()
-            chunks += [{'title':r.title,'content':f'{r.title}\n{r.content}','source':f'ADMIN-{r.id}'} for r in rows]
+            chunks += [{'title':r.title,'content':f'{r.title}\n{r.content}','source':f'ADMIN-{r.id}',
+                        'updated_at':r.updated_at.isoformat() if r.updated_at else None,
+                        'updated_at_kind':'record_update_not_fact_verification'} for r in rows]
         return chunks
 
     @staticmethod
@@ -206,7 +248,8 @@ class RagService:
                 end=min(start+size,len(text))
                 content=text[start:end].strip()
                 if content:
-                    chunk=dict(item,content=content)
+                    chunk=dict(item,content=content,updated_at=item.get('updated_at'),
+                               updated_at_kind=item.get('updated_at_kind','unknown'))
                     chunk['chunk_id']=hashlib.sha256(f'{item["source"]}|{item["title"]}|{start}|{content}'.encode()).hexdigest()[:24]
                     records.append(chunk)
                 if end==len(text): break
@@ -223,12 +266,22 @@ class RagService:
             for _ in range(3):
                 state=await self._state()
                 identity=self._identity()
-                chunks,docs,tfidf=await run_in_threadpool(self._prepare,await self._collect(),state)
+                raw=await self._collect()
+                chunks,docs,tfidf=await run_in_threadpool(self._prepare,raw,state)
+                # Structured presets are atomic catalog records, separate from
+                # configurable vector chunks. Their citations contain the full
+                # route even after the search index is rechunked to 100 chars.
+                catalog=[]
+                for item in raw:
+                    if item.get('route_data'):
+                        text=item['content'].strip()
+                        cid=hashlib.sha256(f'{item["source"]}|{item["title"]}|0|{text}'.encode()).hexdigest()[:24]
+                        catalog.append(dict(item,chunk_id=cid,updated_at=None,updated_at_kind='unknown'))
                 vectors=await self._load_or_embed(docs)
                 if state!=await self._state() or identity!=self._identity():
                     continue
                 if vectors is not None: vectors.setflags(write=False)
-                self._snapshot={'state':state,'identity':identity,'chunks':tuple(chunks),'tfidf':tfidf,'vectors':vectors,'engine':'embedding' if vectors is not None else 'tfidf'}
+                self._snapshot={'state':state,'identity':identity,'chunks':tuple(chunks),'route_catalog':tuple(catalog),'tfidf':tfidf,'vectors':vectors,'engine':'embedding' if vectors is not None else 'tfidf'}
                 self._query_cache.clear()
                 self.build_time=time.monotonic()-t0
                 return
@@ -302,7 +355,7 @@ class RagService:
         scores=0.6*semantic+0.25*lexical+0.15*boost if qvec is not None else 0.75*lexical+0.25*boost
         return [dict(chunks[i],score=round(float(scores[i]),4),revision=snapshot['state'][0]) for i in np.argsort(-scores)[:top_k] if scores[i]>=settings.RAG_SCORE_THRESHOLD or boost[i]>0]
 
-    async def retrieve(self,query,top_k=None):
+    async def retrieve(self,query,top_k=None,include_routes=False):
         from starlette.concurrency import run_in_threadpool
         for _ in range(3):
             state=await self._state()
@@ -326,12 +379,20 @@ class RagService:
                                 self._query_cache[key]=qvec
             results=await run_in_threadpool(self._rank,snapshot,query,qvec,top_k or settings.RAG_TOP_K)
             if await self._state()==snapshot['state'] and snapshot['identity']==self._identity():
+                if include_routes:
+                    from copy import deepcopy
+                    # Catalog inclusion is not a similarity score. Preserve the
+                    # same snapshot IDs and revision; never accept client routes.
+                    catalog=[dict(deepcopy(c),revision=snapshot['state'][0],retrieval_method='route_catalog') for c in snapshot['route_catalog']]
+                    results=catalog+[c for c in results if not c.get('route_data')][:1]
                 return results
         raise RuntimeError('knowledge changed repeatedly during retrieval; retry')
 
     @property
     def status(self):
-        return {'ready':self.ready,'chunks':len(self._snapshot['chunks']) if self.ready else 0,'engine':self.engine_mode,'revision':self._snapshot['state'][0] if self.ready else None,'embedding_model':settings.EMBEDDING_MODEL if self.vectors is not None else None,'build_time_s':round(self.build_time,2)}
+        return {'ready':self.ready,'chunks':len(self._snapshot['chunks']) if self.ready else 0,'engine':self.engine_mode,'revision':self._snapshot['state'][0] if self.ready else None,
+                'snapshot_id':hashlib.sha256('|'.join(c['chunk_id'] for c in self._snapshot['chunks']).encode()).hexdigest() if self.ready else None,
+                'embedding_model':settings.EMBEDDING_MODEL if self.vectors is not None else None,'build_time_s':round(self.build_time,2)}
 
 
 rag_service=RagService()
