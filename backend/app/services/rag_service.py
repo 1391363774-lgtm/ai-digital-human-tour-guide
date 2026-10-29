@@ -78,7 +78,7 @@ def _parse_json_chunks(json_path: str) -> List[Dict]:
         content = (f"游览路线{i+1}:{r.get('name','')}\n时长:{r.get('duration','')} | "
                    f"适合人群:{r.get('target','')}\n路线:{' → '.join(r.get('route') or [])}\n"
                    f"讲解重点:{'；'.join(r.get('focus') or [])}\n特色体验:{'、'.join(r.get('experiences') or [])}")
-        chunks.append({"title": f"路线:{r.get('name','')}", "content": content, "source": f"ROUTE-{i+1}"})
+        chunks.append({"title": f"路线:{r.get('name','')}", "content": content, "source": f"ROUTE-{i+1}", "route_data": r})
     bi = data.get("baseInfo") or {}
     for key, label in [("ticket", "门票信息"), ("freeTicket", "免票政策"), ("openTime", "开放时间"),
                        ("transport", "交通指南"), ("dining", "餐饮信息"), ("accommodation", "住宿推荐"),
@@ -266,12 +266,22 @@ class RagService:
             for _ in range(3):
                 state=await self._state()
                 identity=self._identity()
-                chunks,docs,tfidf=await run_in_threadpool(self._prepare,await self._collect(),state)
+                raw=await self._collect()
+                chunks,docs,tfidf=await run_in_threadpool(self._prepare,raw,state)
+                # Structured presets are atomic catalog records, separate from
+                # configurable vector chunks. Their citations contain the full
+                # route even after the search index is rechunked to 100 chars.
+                catalog=[]
+                for item in raw:
+                    if item.get('route_data'):
+                        text=item['content'].strip()
+                        cid=hashlib.sha256(f'{item["source"]}|{item["title"]}|0|{text}'.encode()).hexdigest()[:24]
+                        catalog.append(dict(item,chunk_id=cid,updated_at=None,updated_at_kind='unknown'))
                 vectors=await self._load_or_embed(docs)
                 if state!=await self._state() or identity!=self._identity():
                     continue
                 if vectors is not None: vectors.setflags(write=False)
-                self._snapshot={'state':state,'identity':identity,'chunks':tuple(chunks),'tfidf':tfidf,'vectors':vectors,'engine':'embedding' if vectors is not None else 'tfidf'}
+                self._snapshot={'state':state,'identity':identity,'chunks':tuple(chunks),'route_catalog':tuple(catalog),'tfidf':tfidf,'vectors':vectors,'engine':'embedding' if vectors is not None else 'tfidf'}
                 self._query_cache.clear()
                 self.build_time=time.monotonic()-t0
                 return
@@ -345,7 +355,7 @@ class RagService:
         scores=0.6*semantic+0.25*lexical+0.15*boost if qvec is not None else 0.75*lexical+0.25*boost
         return [dict(chunks[i],score=round(float(scores[i]),4),revision=snapshot['state'][0]) for i in np.argsort(-scores)[:top_k] if scores[i]>=settings.RAG_SCORE_THRESHOLD or boost[i]>0]
 
-    async def retrieve(self,query,top_k=None):
+    async def retrieve(self,query,top_k=None,include_routes=False):
         from starlette.concurrency import run_in_threadpool
         for _ in range(3):
             state=await self._state()
@@ -369,6 +379,12 @@ class RagService:
                                 self._query_cache[key]=qvec
             results=await run_in_threadpool(self._rank,snapshot,query,qvec,top_k or settings.RAG_TOP_K)
             if await self._state()==snapshot['state'] and snapshot['identity']==self._identity():
+                if include_routes:
+                    from copy import deepcopy
+                    # Catalog inclusion is not a similarity score. Preserve the
+                    # same snapshot IDs and revision; never accept client routes.
+                    catalog=[dict(deepcopy(c),revision=snapshot['state'][0],retrieval_method='route_catalog') for c in snapshot['route_catalog']]
+                    results=catalog+[c for c in results if not c.get('route_data')][:1]
                 return results
         raise RuntimeError('knowledge changed repeatedly during retrieval; retry')
 

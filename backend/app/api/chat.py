@@ -22,9 +22,9 @@ class ChatRequest(BaseModel):
     message: str = Field(min_length=1,max_length=2000)
     tts_enabled: bool = True
     tourist_id: str = "guest"
-    interest: Optional[str] = None        # 兴趣偏好(个性化推荐)
-    time_budget: Optional[str] = None     # 可用时间
-    companions: Optional[str] = None      # 同行人群
+    interest: Optional[str] = Field(default=None,max_length=120)
+    time_budget: Optional[str] = Field(default=None,max_length=80)
+    companions: Optional[str] = Field(default=None,max_length=80)
     dialect: str = "mandarin"
 
     @field_validator('message')

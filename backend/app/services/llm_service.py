@@ -142,9 +142,10 @@ class LlmService:
             for i, chunk in enumerate(context_chunks)
         ) if context_chunks else "(本次未检索到相关资料)"
         user_prompt = f"【知识库资料】\n{context_text}\n\n【游客问题】\n{query}"
-        if interest:
+        from app.services.route_service import is_route_question
+        if (interest or time_budget or companions) and is_route_question(query):
             user_prompt += ROUTE_PROMPT_HINT.format(
-                interest=interest,
+                interest=interest or '未说明',
                 time_budget=time_budget or "未说明",
                 companions=companions or "未说明",
             )
@@ -244,7 +245,7 @@ class LlmService:
         if trace is not None:
             trace.update(path='local_extractive',model=None,switch_reason=trace.get('switch_reason') or ('no_provider_configured' if not providers else 'all_providers_failed_before_text'))
         from starlette.concurrency import run_in_threadpool
-        answer = await run_in_threadpool(self._fallback_answer, query, context_chunks)
+        answer = await run_in_threadpool(self._fallback_answer, query, context_chunks, interest, time_budget, companions)
         if trace is not None:
             trace['local_refusal'] = answer.startswith('[emotion:sorry]')
         yield answer
@@ -314,7 +315,15 @@ class LlmService:
         return await self._complete_with_failover(payload, providers)
 
     @staticmethod
-    def _fallback_answer(query: str, chunks: List[Dict]) -> str:
+    def _fallback_answer(query: str, chunks: List[Dict], interest=None, time_budget=None, companions=None) -> str:
+        from app.services.route_service import recommend_route
+        route = recommend_route(query, chunks, interest, time_budget, companions)
+        if route is not None:
+            decision, text = route
+            trace = model_trace.get()
+            if trace is not None:
+                trace.update(path='local_route_rules', route_recommendation=decision)
+            return text
         if chunks:
             import math
             from collections import Counter

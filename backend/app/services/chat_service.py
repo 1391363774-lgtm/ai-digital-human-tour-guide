@@ -150,8 +150,9 @@ class ChatService:
             pending[idx]=asyncio.create_task(synth(idx,text,prelude))
 
         try:
-            chunks=await rag_service.retrieve(query)
-            sources=[{**{k:c[k] for k in ('title','source','score','content','chunk_id','revision','updated_at_kind') if k in c},
+            from app.services.route_service import uses_route_catalog
+            chunks=await rag_service.retrieve(query,include_routes=True) if uses_route_catalog(query) else await rag_service.retrieve(query)
+            sources=[{**{k:c[k] for k in ('title','source','score','content','chunk_id','revision','updated_at_kind','retrieval_method') if k in c},
                       'updated_at':c.get('updated_at'),'citation_status':'retrieved_unverified','supports_answer':None} for c in chunks]
             citation_filter=CitationFilter(chunks)
             generation=rag_service.status.get('revision')
