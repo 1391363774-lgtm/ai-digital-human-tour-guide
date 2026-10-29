@@ -332,18 +332,19 @@ class LlmService:
             candidates = []
             seen = set()
             subjects = set()
-            title_words = set()
+            # Handle an inserted place qualifier without broad fuzzy matching:
+            # "青竹景区的大照壁" can name the title "青竹大照壁".
+            place_query = re.sub(r'(?:风景区|景区|胜境|园区|公园)的', '', query)
+            split_subject = False
             for chunk in chunks[:4]:
                 title = re.sub(r'^(?:(?:LS|NH)-\d+|\d+[.、])\s*', '', chunk['title'])
                 title = re.sub(r'[（(]\d+[)）]$', '', title).strip()
-                title_words.update(_TfidfEngine._tokenize(title))
-                if len(title) >= 2 and title in query:
+                if len(title) >= 2 and (title in query or title in place_query):
                     subjects.add(title)
-            # Query wording can split a title ("景区的大照壁" versus
-            # "景区大照壁"). Shared title tokens still describe the subject;
-            # they must not count as requested details. Keep the stricter full
-            # title match above for evidence filtering and measurement fallback.
-            subject_words = title_words
+                    split_subject = split_subject or title not in query
+            if split_subject:
+                query_words = set(_TfidfEngine._tokenize(place_query))
+            subject_words = set(_TfidfEngine._tokenize(' '.join(subjects)))
             focus_words = query_words - subject_words - {'介绍','一下','特色','特点','什么样','景观','应该','好玩','玩','多高','多重','高','重'}
             weight_question = bool(re.search(r'多重|重量|重多少|几吨|多少吨', query))
             height_question = bool(re.search(r'多高|高度|高多少|高几|几米', query))
@@ -390,8 +391,7 @@ class LlmService:
                 measure = weight_question and bool(re.search(r'\d+(?:\.\d+)?\s*(?:吨|千克|公斤)', text))
                 measure = measure or height_question and bool(re.search(r'\d+(?:\.\d+)?\s*米', text))
                 lexical = sum(math.log(1 + len(candidates) / frequencies[w]) for w in matched) / (1 + math.log1p(len(words))) * candidate[0].get('score', 1)
-                focus = sum(math.log(1 + len(candidates) / frequencies[w]) for w in words & focus_words)
-                return (focus, int(measure), int(intro_question and text.startswith(('介绍:', '介绍：'))), lexical)
+                return (len(words & focus_words), int(measure), int(intro_question and text.startswith(('介绍:', '介绍：'))), lexical)
             selected = sorted(candidates, key=score, reverse=True)
             if not selected:
                 return '[emotion:sorry]抱歉，没有找到能直接回答这个问题的资料，无法提供有依据的讲解，请咨询景区工作人员。'
